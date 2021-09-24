@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 
 
-function HomePage() {
+function LoginPage() {
   
   return (
-   <div>首頁</div>
+   <div>登入</div>
   )
 }
 
-export default HomePage;
+export default LoginPage;

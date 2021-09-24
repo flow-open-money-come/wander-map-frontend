@@ -3,11 +3,11 @@ import styled from 'styled-components'
 
 
 
-function HomePage() {
+function RegisterPage() {
   
   return (
-   <div>首頁</div>
+   <div>註冊</div>
   )
 }
 
-export default HomePage;
+export default RegisterPage;
