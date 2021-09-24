@@ -1,25 +1,33 @@
-import styled from "styled-components";
 import { ResetStyle, GlobalStyle } from "./constants/globalStyle";
-// react router
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
-const Welcome = styled.div`
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  width: 90%;
-  height: 60px;
-  line-height: 60px;
-  text-align: center;
-  margin: 0 auto;
-  background-color: #7f9e23;
-`;
+import NavBar from "./components/common/NavBar";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
     <>
       <ResetStyle />
       <GlobalStyle />
-      <Welcome> 歡迎來到 Wander Map </Welcome>
+      <Router >
+        <NavBar />
+        <Switch>
+          <Route exact path='/'>
+            <HomePage />
+          </Route>
+          <Route path='/login'>
+            <LoginPage />
+          </Route>
+          <Route path='/register'>
+            <RegisterPage />
+          </Route>
+
+        </Switch>
+        
+      </Router>
+      
     </>
   );
 }
