@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { ResetStyle, GlobalStyle } from "./constants/globalStyle";
+import styled from 'styled-components'
+import { ResetStyle, GlobalStyle } from './constants/globalStyle'
 // react router
 
 const Welcome = styled.div`
@@ -12,7 +12,7 @@ const Welcome = styled.div`
   text-align: center;
   margin: 0 auto;
   background-color: #7f9e23;
-`;
+`
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
       <GlobalStyle />
       <Welcome> 歡迎來到 Wander Map </Welcome>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
