@@ -1,7 +1,10 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 
-const TrailsPostWrapper = styled.div``
+const TrailsPostWrapper = styled.div`
+  margin: 0 auto;
+  width: 360px;
+`
 const PageName = styled.div`
   font-size: 30px;
   text-align: center;
@@ -40,6 +43,7 @@ const FormUnit = styled.div`
 const Input = styled.input.attrs((props) => ({
   type: 'text',
 }))`
+  height: 25px;
   width: ${(props) => (props.size === 'short' ? '100px' : '320px')};
 `
 const Textarea = styled.textarea.attrs((props) => ({
