@@ -1,5 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { ReactComponent as ImageSvg } from '../../../icons/image.svg'
+import { COLOR, FONT, EFFECT, RADIUS } from '../../../constants/style'
 
 const ArticlePostWrapper = styled.div`
   margin: 0 auto;
@@ -52,21 +54,43 @@ const Select = styled.select`
   text-align: center;
   color: #909090;
 `
+
+const CategoryBtn = styled.button`
+  border-radius: 15px;
+  border: solid 1.5px ${COLOR.green};
+  font-size: 12px;
+  margin: 6px 3px;
+  padding: 3px 6px;
+`
 const PicHolder = styled.div`
   width: 320px;
   height: 180px;
   background-color: #eee;
   border-radius: 3px;
-  font-size: 10px;
   text-align: center;
+  margin: 0 auto;
 `
-
-const CategoryBtn = styled.button`
-  border-radius: 15px;
-  border: solid 1.5px #7f9e23;
-  font-size: 12px;
-  margin: 6px 3px;
-  padding: 3px 8px;
+const UploadBtn = styled.button`
+  margin: 55px;
+`
+const Image = styled(ImageSvg)`
+  width: 30px;
+  height: 30px;
+`
+const UploadNotice = styled.div`
+  font-size: 10px;
+`
+const Submit = styled.input.attrs((props) => ({
+  type: 'submit',
+  value: '確認送出',
+}))`
+  padding: 4px 10px;
+  background: ${COLOR.green};
+  border-radius: 3px;
+  border: 0;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
 `
 
 function ArticlePostPage() {
@@ -79,7 +103,16 @@ function ArticlePostPage() {
       </FormWrapper>
       <FormWrapper>
         <FormTitle>上傳封面圖片</FormTitle>
-        <PicHolder>檔案小於3MB，建議寬度大於700像素的橫幅照片</PicHolder>
+        <PicHolder>
+          <UploadBtn>
+            <Image />
+            <br />
+            點擊上傳
+          </UploadBtn>
+          <UploadNotice>
+            檔案小於3MB，建議寬度大於700像素的橫幅照片
+          </UploadNotice>
+        </PicHolder>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>行程地點</FormTitle>
@@ -127,12 +160,15 @@ function ArticlePostPage() {
         <CategoryBtn>GPX</CategoryBtn>
       </FormWrapper>
       <FormWrapper>
-        <FormTitle>內文</FormTitle>
+        <FormTitle />
         <Textarea />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>上傳GPX檔案</FormTitle>
         <Input />
+      </FormWrapper>
+      <FormWrapper>
+        <Submit />
       </FormWrapper>
     </ArticlePostWrapper>
   )

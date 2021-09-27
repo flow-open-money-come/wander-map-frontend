@@ -1,5 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
+import { ReactComponent as ImageSvg } from '../../../icons/image.svg'
+import { COLOR, FONT, EFFECT, RADIUS } from '../../../constants/style'
 
 const TrailsPostWrapper = styled.div`
   margin: 0 auto;
@@ -12,6 +14,7 @@ const PageName = styled.div`
 `
 const FormWrapper = styled.div`
   margin: 20px;
+  font-size: 14px;
 `
 const Half = styled.div`
   display: inline-block;
@@ -22,7 +25,6 @@ const InputWrapper = styled.div`
   align-items: center;
 `
 const FormTitle = styled.div`
-  font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
 `
@@ -33,11 +35,9 @@ const FormSubTitleWrapper = styled.div`
   align-items: center;
 `
 const FormSubTitle = styled.div`
-  font-size: 14px;
   margin-right: 10px;
 `
 const FormUnit = styled.div`
-  font-size: 14px;
   margin: 0 15px;
 `
 const Input = styled.input.attrs((props) => ({
@@ -64,6 +64,30 @@ const PicHolder = styled.div`
   height: 180px;
   background-color: #eee;
   border-radius: 3px;
+  text-align: center;
+  margin: 0 auto;
+`
+const UploadBtn = styled.button`
+  margin: 55px;
+`
+const Image = styled(ImageSvg)`
+  width: 30px;
+  height: 30px;
+`
+const UploadNotice = styled.div`
+  font-size: 10px;
+`
+const Submit = styled.input.attrs((props) => ({
+  type: 'submit',
+  value: '確認送出',
+}))`
+  padding: 4px 10px;
+  background: ${COLOR.green};
+  border-radius: 3px;
+  border: 0;
+  color: white;
+  font-weight: 500;
+  margin-left: 245px;
 `
 
 function TrailPostPage() {
@@ -76,7 +100,16 @@ function TrailPostPage() {
       </FormWrapper>
       <FormWrapper>
         <FormTitle>上傳封面圖片</FormTitle>
-        <PicHolder />
+        <PicHolder>
+          <UploadBtn>
+            <Image />
+            <br />
+            點擊上傳
+          </UploadBtn>
+          <UploadNotice>
+            檔案小於3MB，建議寬度大於700像素的橫幅照片
+          </UploadNotice>
+        </PicHolder>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道簡介</FormTitle>
@@ -160,6 +193,9 @@ function TrailPostPage() {
       <FormWrapper>
         <FormTitle>上傳GPX檔案</FormTitle>
         <Input />
+      </FormWrapper>
+      <FormWrapper>
+        <Submit />
       </FormWrapper>
     </TrailsPostWrapper>
   )
