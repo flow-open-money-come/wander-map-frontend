@@ -25,7 +25,7 @@ function App() {
           <Route path='/register'>
             <RegisterPage />
           </Route>
-          <Route path='/all_articles'>
+          <Route path='/articles'>
             <AllArticlesPage />
           </Route>
         </Switch>

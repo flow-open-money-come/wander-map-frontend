@@ -8,12 +8,13 @@ import { ReactComponent as avatar } from '../../../icons/default_avatar.svg'
 import { FONT, COLOR, EFFECT, RADIUS } from '../../../constants/style'
 
 const Wrapper = styled.div`
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
 
   @media screen and (max-width: 500px) {
-    width: 100%;
+    width: 90%;
     display: flex;
     font-size: ${FONT.md};
   }
@@ -154,6 +155,8 @@ const ImageContainer = styled.div`
   }
 `
 
+// 共用心得
+
 const ArticleInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -161,10 +164,14 @@ const ArticleInfoContainer = styled.div`
 
 const ArticlesContainer = styled.div`
   margin: 20px auto;
-  width: 450px;
+  width: 100%;
   height: 150px;
   display: flex;
   border-bottom: ${COLOR.beige} 1px solid;
+
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
 `
 
 const ArticlesImg = styled.img`
@@ -183,19 +190,27 @@ const ArticlesTags = styled.div`
   padding: 5px;
   line-height: 8px;
   font-size: ${FONT.xs};
-  width: 50px;
-  height: 15px;
+  width: 15%;
+  height: 10%;
   border-radius: ${RADIUS.s};
   background-color: ${COLOR.yellow_dark};
+
+  @media screen and (max-width: 500px) {
+    width: 15%;
+  }
 `
 const ArticlesContent = styled.div`
-  width: 350px;
+  width: 80%;
   max-height: 30px;
   font-size: ${FONT.s};
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
   margin: 10px 0;
+
+  @media screen and (max-width: 500px) {
+    width: 15%;
+  }
 `
 const ArticlesTitle = styled.div``
 
