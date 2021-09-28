@@ -13,18 +13,13 @@ export const COLOR = {
 }
 
 export const FONT = {
+  xll: '48px',
+  xl: '36px',
   logo: '30px',
   lg: '24px',
   md: '18px',
   s: '14px',
   xs: '12px',
-  xss: '8px',
-}
-
-export const DISTANCE = {
-  xl: '80px',
-  lg: '60px',
-  md: '30px',
 }
 
 export const EFFECT = {
@@ -38,4 +33,9 @@ export const RADIUS = {
   lg: '15px',
   md: '10px',
   s: '5px',
+}
+
+export const MEDIA_QUERY = {
+  md: '@media screen and (min-width: 500px)',
+  lg: '@media screen and (min-width: 768px)',
 }
