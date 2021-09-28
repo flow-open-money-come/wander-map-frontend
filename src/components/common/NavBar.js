@@ -9,6 +9,7 @@ import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
 import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
 import { ReactComponent as UserSvg } from '../../icons/user.svg'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
+import { NavBarButton } from './Button'
 
 const NavBarContainer = styled.div`
   width: 100%;
@@ -43,12 +44,35 @@ const NavBarLink = styled(Link)`
   font-size: ${FONT.s};
   margin-left: 10px;
   box-shadow: ${EFFECT.shadow_light};
+  ${(props) =>
+    props.$button &&
+    `
+      min-width: 60px;
+      font-size: ${FONT.s};
+      color: ${COLOR.green};
+      margin-left: 15px;
+      text-align: right;
+      transition: ${EFFECT.transition};
+      background-color: transparent;
+      box-shadow: none;
+      &:hover {
+        color: ${COLOR.green_light};
+        cursor: pointer;
+      }
+    `}
   @media (max-width: 768px) {
     background-color: transparent;
     color: black;
     display: flex;
     align-items: center;
     box-shadow: none;
+    ${(props) =>
+      props.$button &&
+      `
+        display: block;
+        color: ${COLOR.green};
+        ${NavBarButton}
+    `}
   }
 `
 const UserInfoWeb = styled.div`
@@ -103,17 +127,7 @@ const NavBarTextLink = styled.div`
     cursor: pointer;
   }
   @media (max-width: 768px) {
-    width: 200px;
-    height: 30px;
-    margin: 15px 0;
-    line-height: 30px;
-    text-align: center;
-    border-radius: ${RADIUS.s};
-    border: 1px solid ${COLOR.green};
-    &:hover {
-      color: white;
-      background-color: ${COLOR.green};
-    }
+    ${NavBarButton}
   }
 `
 const NavBarHambergur = styled.div`
@@ -172,11 +186,11 @@ const NavBarHambergurLine = styled.div`
 
 const NavBarMobile = styled.div`
   @media (max-width: 768px) {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     width: 275px;
     height: 0;
     position: absolute;
-    top: 0;
+    top: 12px;
     right: 0;
     overflow: hidden;
     transition: ${EFFECT.transition};
@@ -299,7 +313,7 @@ function NavBar() {
               </UserInfoWrapperMobile>
               <Divider />
               <NavBarTextLink>登出</NavBarTextLink>
-              <NavBarTextLink>會員登入</NavBarTextLink>
+              <NavBarLink $button>會員註冊 / 登入</NavBarLink>
             </NavBarLinkWrapper>
           </NavBarMobile>
           <NavBarHambergur
