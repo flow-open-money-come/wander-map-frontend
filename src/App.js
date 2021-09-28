@@ -1,17 +1,18 @@
-import { ResetStyle, GlobalStyle } from "./constants/globalStyle";
-import { HashRouter as Router, Switch, Route } from "react-router-dom";
+import { ResetStyle, GlobalStyle } from './constants/globalStyle'
+import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 
-import NavBar from "./components/common/NavBar";
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import NavBar from './components/common/NavBar'
+import HomePage from './pages/HomePage'
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import AllArticlesPage from './pages/ArticlePages/AllArticlesPage'
 
 function App() {
   return (
     <>
       <ResetStyle />
       <GlobalStyle />
-      <Router >
+      <Router>
         <NavBar />
         <Switch>
           <Route exact path='/'>
@@ -23,13 +24,13 @@ function App() {
           <Route path='/register'>
             <RegisterPage />
           </Route>
-
+          <Route path='/all_articles'>
+            <AllArticlesPage />
+          </Route>
         </Switch>
-        
       </Router>
-      
     </>
-  );
+  )
 }
 
-export default App;
+export default App

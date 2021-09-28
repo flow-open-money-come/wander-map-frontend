@@ -1,28 +1,326 @@
-import React from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
-import { Link, useLocation, useHistory } from "react-router-dom"
-
+import { ReactComponent as LogoSvg } from '../../icons/logo_with_name.svg'
+import { ReactComponent as DefaultAvatarSvg } from '../../icons/default_avatar.svg'
+import { Link, useLocation } from 'react-router-dom'
+import { ReactComponent as ArrowUpSvg } from '../../icons/arrow_up.svg'
+import { ReactComponent as ArrowDownSvg } from '../../icons/arrow_down.svg'
+import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
+import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
+import { ReactComponent as UserSvg } from '../../icons/user.svg'
+import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 
 const NavBarContainer = styled.div`
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  width: 90%;
+  width: 100%;
   height: 60px;
-  line-height: 60px;
-  text-align: center;
+  border-top: 12px solid ${COLOR.green};
+  background-color: ${COLOR.white};
+  box-shadow: ${EFFECT.shadow_light};
+`
+const NavBarWrapper = styled.div`
+  width: 90%;
+  height: 48px;
+  display: flex;
   margin: 0 auto;
-  background-color: #7f9e23;
-`;
+  justify-content: space-between;
+  align-items: center;
+`
+const Logo = styled(LogoSvg)`
+  min-width: 120px;
+  min-height: 48px;
+  width: 120px;
+  height: 48px;
+`
 
+const NavBarLink = styled(Link)`
+  width: 120px;
+  height: 48px;
+  border-radius: 0 0 5px 5px;
+  background-color: ${COLOR.green};
+  text-align: center;
+  line-height: 48px;
+  color: ${COLOR.white};
+  font-size: ${FONT.s};
+  margin-left: 10px;
+  box-shadow: ${EFFECT.shadow_light};
+  @media (max-width: 768px) {
+    background-color: transparent;
+    color: black;
+    display: flex;
+    align-items: center;
+    box-shadow: none;
+  }
+`
+const UserInfoWeb = styled.div`
+  display: flex;
+  align-items: center;
+  @media (max-width: 768px) {
+    display: none;
+  }
+`
+const UserInfoMobile = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+  }
+`
+const UserInfoWrapperMobile = styled.div`
+  display: none;
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    align-items: right;
+  }
+`
+const NavBarLinkWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  @media (max-width: 768px) {
+    flex-direction: column;
+    z-index: 3;
+    margin-top: 50px;
+    padding-left: 30px;
+    align-items: baseline;
+  }
+`
+
+const DefaultAvatar = styled(DefaultAvatarSvg)`
+  min-width: 45px;
+  min-height: 45px;
+  margin-left: 35px;
+`
+const NavBarTextLink = styled.div`
+  min-width: 60px;
+  font-size: ${FONT.s};
+  color: ${COLOR.green};
+  margin-left: 15px;
+  text-align: right;
+  transition: ${EFFECT.transition};
+  &:hover {
+    color: ${COLOR.green_light};
+    cursor: pointer;
+  }
+  @media (max-width: 768px) {
+    width: 200px;
+    height: 30px;
+    margin: 15px 0;
+    line-height: 30px;
+    text-align: center;
+    border-radius: ${RADIUS.s};
+    border: 1px solid ${COLOR.green};
+    &:hover {
+      color: white;
+      background-color: ${COLOR.green};
+    }
+  }
+`
+const NavBarHambergur = styled.div`
+  position: relative;
+  width: 25px;
+  height: 15px;
+  cursor: pointer;
+  display: none;
+  &::before {
+    content: '';
+    top: 0;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: ${COLOR.green};
+    transition: ${EFFECT.transition};
+    ${(props) =>
+      props.$isActive &&
+      ` 
+      top: 50%;
+      transform: translateY(-50%);
+      transform: rotate(45deg);`};
+  }
+  &::after {
+    content: '';
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: ${COLOR.green};
+    transition: 0.5s;
+    ${(props) =>
+      props.$isActive &&
+      `
+      top: 50%;
+      transform: translateY(-50%);
+      transform: rotate(-45deg);`};
+  }
+  @media (max-width: 768px) {
+    display: block;
+  }
+`
+
+const NavBarHambergurLine = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: ${COLOR.green};
+  top: 50%;
+  transform: translateY(-50%);
+  ${(props) =>
+    props.$isActive &&
+    `
+      display:none`};
+`
+
+const NavBarMobile = styled.div`
+  @media (max-width: 768px) {
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 275px;
+    height: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: hidden;
+    transition: ${EFFECT.transition};
+    ${(props) => props.$isActive && `height: 100vh;`}
+  }
+`
+const Divider = styled.div`
+  width: 80%;
+  height: 2px;
+  background-color: #f0eeeb;
+  display: none;
+  margin: 50px 0 20px 0;
+  @media (max-width: 768px) {
+    display: block;
+  }
+`
+const UserInfoListMobile = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 70px;
+  height: 0;
+  overflow: hidden;
+  transition: ${EFFECT.transition};
+  ${(props) => props.$isActive && `height: 150px`}
+`
+const Forum = styled(ForumSvg)`
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+    margin-right: 20px;
+  }
+`
+const Trail = styled(TrailSvg)`
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+    margin-right: 20px;
+  }
+`
+const User = styled(UserSvg)`
+  display: none;
+  @media (max-width: 768px) {
+    display: block;
+    margin-right: 20px;
+  }
+`
+
+const ArrowDown = styled(ArrowDownSvg)`
+  ${(props) => props.$isActive && `display:none`}
+`
+const ArrowUp = styled(ArrowUpSvg)`
+  display: none;
+  ${(props) => props.$isActive && `display:block`}
+`
 
 function NavBar() {
-
+  const location = useLocation()
+  const [hambergurToggleClick, setHambergurToggleClick] = useState(false)
+  const [arrowToggleClick, setArrowToggleClick] = useState(false)
+  const handleToggleClick = (e) => {
+    e.target.getAttribute('name') === 'hambergur'
+      ? setHambergurToggleClick(!hambergurToggleClick)
+      : setArrowToggleClick(!arrowToggleClick)
+  }
   return (
-    <NavBarContainer>
-      歡迎來到 Wander Map
-    </NavBarContainer>
+    <>
+      <NavBarContainer>
+        <NavBarWrapper>
+          <Logo />
+          <NavBarMobile $isActive={hambergurToggleClick}>
+            <NavBarLinkWrapper>
+              <NavBarLink
+                to='/allArticlePage'
+                $active={'/allArticlePage' === location.pathname}
+              >
+                <Forum />
+                進入論壇
+              </NavBarLink>
+
+              <NavBarLink
+                to='/allTrailPage'
+                $active={'/allTrailPage' === location.pathname}
+              >
+                <Trail />
+                全部步道
+              </NavBarLink>
+              <UserInfoWeb>
+                <DefaultAvatar />
+                <NavBarTextLink>水怪貓貓</NavBarTextLink>
+              </UserInfoWeb>
+              <UserInfoWrapperMobile>
+                <UserInfoMobile>
+                  <NavBarLink
+                    to='/user'
+                    $active={'/user' === location.pathname}
+                  >
+                    <User />
+                    我的主頁
+                  </NavBarLink>
+                  <ArrowDown
+                    name='arrow'
+                    $isActive={arrowToggleClick}
+                    onClick={(e) => {
+                      handleToggleClick(e)
+                    }}
+                  />
+                  <ArrowUp
+                    name='arrow'
+                    $isActive={arrowToggleClick}
+                    onClick={(e) => {
+                      handleToggleClick(e)
+                    }}
+                  />
+                </UserInfoMobile>
+                <UserInfoListMobile $isActive={arrowToggleClick}>
+                  <NavBarLink>新增文章</NavBarLink>
+                  <NavBarLink>管理文章</NavBarLink>
+                  <NavBarLink>待辦事項</NavBarLink>
+                </UserInfoListMobile>
+              </UserInfoWrapperMobile>
+              <Divider />
+              <NavBarTextLink>登出</NavBarTextLink>
+              <NavBarTextLink>會員登入</NavBarTextLink>
+            </NavBarLinkWrapper>
+          </NavBarMobile>
+          <NavBarHambergur
+            name='hambergur'
+            $isActive={hambergurToggleClick}
+            onClick={(e) => {
+              handleToggleClick(e)
+            }}
+          >
+            <NavBarHambergurLine
+              name='hambergur'
+              $isActive={hambergurToggleClick}
+              onClick={(e) => {
+                handleToggleClick(e)
+              }}
+            />
+          </NavBarHambergur>
+        </NavBarWrapper>
+      </NavBarContainer>
+    </>
   )
 }
 
-export default NavBar;
+export default NavBar
