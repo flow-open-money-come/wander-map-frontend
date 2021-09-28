@@ -2,6 +2,7 @@ import { ResetStyle, GlobalStyle } from './constants/globalStyle'
 import { HashRouter as Router, Switch, Route } from 'react-router-dom'
 
 import NavBar from './components/common/NavBar'
+import Footer from './components/common/Footer'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -28,6 +29,7 @@ function App() {
             <AllArticlesPage />
           </Route>
         </Switch>
+        <Footer />
       </Router>
     </>
   )
