@@ -263,16 +263,16 @@ function NavBar() {
           <NavBarMobile $isActive={hambergurToggleClick}>
             <NavBarLinkWrapper>
               <NavBarLink
-                to='/allArticlePage'
-                $active={'/allArticlePage' === location.pathname}
+                to='/articles'
+                $active={'/articles' === location.pathname}
               >
                 <Forum />
                 進入論壇
               </NavBarLink>
 
               <NavBarLink
-                to='/allTrailPage'
-                $active={'/allTrailPage' === location.pathname}
+                to='/trails'
+                $active={'/trails' === location.pathname}
               >
                 <Trail />
                 全部步道
@@ -284,8 +284,8 @@ function NavBar() {
               <UserInfoWrapperMobile>
                 <UserInfoMobile>
                   <NavBarLink
-                    to='/user'
-                    $active={'/user' === location.pathname}
+                    to='/backstage/userId'
+                    $active={'/backstage/userId' === location.pathname}
                   >
                     <User />
                     我的主頁

@@ -29,21 +29,25 @@ function App() {
           <Route path='/register'>
             <RegisterPage />
           </Route>
-          <Route path='/newTrail'>
+          <Route path='/post-trail'>
             <TrailPostPage />
           </Route>
-          <Route path='/newArticle'>
+          <Route path='/post-article'>
             <ArticlePostPage />
           </Route>
-          <Route path='/allArticlePage'>
+          <Route path='/articles'>
             <AllArticlePage />
           </Route>
-          <Route path='/allTrailPage'>
+          <Route path='/trails'>
             <AllTrailPage />
           </Route>
-          <Route path='/user'>
+          <Route path='/user/userId'>
             <UserOverviewPage />
           </Route>
+          <Route path='/admin'></Route>
+          <Route path='/backstage/userId'></Route>
+          <Route path='/articles/id'></Route>
+          <Route path='/trails/id'></Route>
         </Switch>
         <Footer />
       </Router>
