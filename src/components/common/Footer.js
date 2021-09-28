@@ -9,6 +9,9 @@ const FooterContainer = styled.footer`
   font-size: ${FONT.s};
   text-align: center;
   line-height: 30px;
+  @media (max-width: 768px) {
+    height: 60px;
+  }
 `
 export default function Footer() {
   return (
