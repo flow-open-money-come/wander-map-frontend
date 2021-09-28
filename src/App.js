@@ -9,6 +9,8 @@ import RegisterPage from './pages/RegisterPage'
 import AllTrailPage from './pages/TrailPages/AllTrailsPage/AllTrailPage'
 import AllArticlePage from './pages/ArticlePages/AllArticlesPage/AllArticlesPage'
 import UserOverviewPage from './pages/UserPages/UserOverviewPage/UserOverviewPage'
+import TrailPostPage from './pages/TrailPages/TrailPostPage'
+import ArticlePostPage from './pages/ArticlePages/ArticlePostPage'
 
 function App() {
   return (
@@ -26,6 +28,12 @@ function App() {
           </Route>
           <Route path='/register'>
             <RegisterPage />
+          </Route>
+          <Route path='/newTrail'>
+            <TrailPostPage />
+          </Route>
+          <Route path='/newArticle'>
+            <ArticlePostPage />
           </Route>
           <Route path='/allArticlePage'>
             <AllArticlePage />
