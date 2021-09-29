@@ -167,36 +167,26 @@ const TitleAndTags = styled.div`
   }
 `
 
-export default function ArticleList() {
+export default function ArticleList({ title, content, tags, user, date }) {
   return (
     <ArticlesContainer>
       <ArticlesImg src='https://i.imgur.com/w2Y6y4z.jpg' />
       <ArticlesInfoContainer>
         <TitleAndTags>
-          <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
+          <ArticlesTitle>{title}</ArticlesTitle>
           <ArticlesTags>
-            <ArticlesTag>一日</ArticlesTag>
-            <ArticlesTag>賞花</ArticlesTag>
-            <ArticlesTag>有水源</ArticlesTag>
-            <ArticlesTag>有水源</ArticlesTag>
-            <ArticlesTag>有水源</ArticlesTag>
-            <ArticlesTag>有水源</ArticlesTag>
-            <ArticlesTag>有水源</ArticlesTag>
-            <ArticlesTag>有水源</ArticlesTag>
+            {tags.map((tag) => {
+              return <ArticlesTag>{tag}</ArticlesTag>
+            })}
           </ArticlesTags>
         </TitleAndTags>
-        <ArticlesContent>
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
-        </ArticlesContent>
+        <ArticlesContent>{content}</ArticlesContent>
         <ArticlesInfo>
           <ArticlesUser>
             <UserAvatar />
             <UserInfo>
-              <UserName>水怪貓貓</UserName>
-              <ArticlesDate>2021.9.7 / 20:20:22</ArticlesDate>
+              <UserName>{user}</UserName>
+              <ArticlesDate>{date}</ArticlesDate>
             </UserInfo>
           </ArticlesUser>
           <ReadMore>閱讀全文</ReadMore>

@@ -284,7 +284,15 @@ function AllArticlesPage() {
           })}
         </ImageContainer>
       </Slider>
-      <ArticleList />
+      <ArticleList
+        title={'礁溪林美石磐涼爽一日遊'}
+        user={'水怪貓貓'}
+        tags={['有水源', '賞花', '危險地形']}
+        date={'2021.9.7 / 20:20:22'}
+        content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
+          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+      />
     </Wrapper>
   )
 }
