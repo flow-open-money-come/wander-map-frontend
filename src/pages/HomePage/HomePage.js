@@ -1,8 +1,9 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { COLOR, RADIUS } from '../../constants/style'
+import { COLOR, RADIUS, FONT, MEDIA_QUERY, EFFECT } from '../../constants/style'
 import { ReactComponent as ArrowRightSvg } from '../../icons/arrow_right.svg'
 import Map from '../../components/common/Map'
+import ArticleList from '../../components/forumSystem/Article'
 
 const HomepageContainer = styled.div`
   width: 90%;
@@ -10,46 +11,76 @@ const HomepageContainer = styled.div`
 `
 
 const HomePageWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 120px;
+  margin: 20px 0px;
+  ${MEDIA_QUERY.lg} {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+  }
 `
 const MapWrapper = styled.div`
-  width: 60%;
+  width: 100%;
   height: 600px;
   border: 1px solid ${COLOR.beige};
-  border-radius: 0px ${RADIUS.md} ${RADIUS.md} 0px;
+  border-radius: ${RADIUS.md};
   overflow: hidden;
+  z-index: 0;
+  ${MEDIA_QUERY.lg} {
+    width: 50%;
+    border-radius: 0px ${RADIUS.md} ${RADIUS.md} 0px;
+  }
 `
 const ArticleListWrapper = styled.div`
-  width: 39%;
+  width: 100%;
   height: 600px;
-  border: 1px solid ${COLOR.beige};
-  border-radius: ${RADIUS.md} 0px 0px ${RADIUS.md};
+  margin: 20px auto;
+  border: none;
   padding: 20px;
+  overflow: scroll;
+  transition: ${EFFECT.transition};
+  ${MEDIA_QUERY.lg} {
+    width: 49%;
+    border: 1px solid ${COLOR.beige};
+    border-radius: ${RADIUS.md} 0px 0px ${RADIUS.md};
+  }
 `
 const TrialTitleWrapper = styled.div`
-  width: 100%;
-  border-left: 20px solid ${COLOR.brown};
-  padding-left: 10px;
+  text-align: center;
+  ${MEDIA_QUERY.lg} {
+    text-align: start;
+    border-left: 20px solid ${COLOR.brown};
+    padding-left: 10px;
+  }
 `
 
 const TrialTitleName = styled(Link)`
+  font-size: ${FONT.lg};
   color: black;
-  font-size: 36px;
+  border-left: 20px solid ${COLOR.brown};
+  padding-left: 10px;
+  ${MEDIA_QUERY.lg} {
+    border-left: none;
+    font-size: ${FONT.logo};
+  }
 `
 const TrialTitleLocation = styled.div`
-  font-size: 24px;
+  font-size: ${FONT.md};
 `
 const TrialAriticalNumber = styled.div`
-  font-size: 18px;
+  font-size: ${FONT.s};
   color: ${COLOR.gray};
+  margin-left: 20px;
 `
 const SubTitleWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 20px;
+  ${MEDIA_QUERY.lg} {
+    justify-content: start;
+    padding-left: 10px;
+  }
 `
 const LinkWrapper = styled(Link)`
   display: flex;
@@ -58,12 +89,21 @@ const LinkWrapper = styled(Link)`
 const TrialArticleWrapper = styled.div`
   width: 100%;
 `
+const Divider = styled.div`
+  width: 95%;
+  height: 2px;
+  background-color: ${COLOR.white};
+  margin: 20px auto;
+`
 
 function HomePage() {
   return (
     <>
       <HomepageContainer>
         <HomePageWrapper>
+          <MapWrapper>
+            <Map />
+          </MapWrapper>
           <ArticleListWrapper>
             <TrialTitleWrapper>
               <TrialTitleName>林美石磐步道</TrialTitleName>
@@ -75,13 +115,43 @@ function HomePage() {
                 </LinkWrapper>
               </SubTitleWrapper>
             </TrialTitleWrapper>
+            <Divider />
             <TrialArticleWrapper>
-              這裡面要放切好的共用心得 component
+              <ArticleList
+                src={'https://i.imgur.com/w2Y6y4z.jpg'}
+                title={'礁溪林美石磐涼爽一日遊'}
+                user={'水怪貓貓'}
+                tags={['有水源', '賞花', '危險地形']}
+                date={'2021.9.7 / 20:20:22'}
+                content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
+          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+                lessRwd={true}
+              />
+              <ArticleList
+                src={'https://i.imgur.com/w2Y6y4z.jpg'}
+                title={'礁溪林美石磐涼爽一日遊'}
+                user={'水怪貓貓'}
+                tags={['有水源', '賞花', '危險地形']}
+                date={'2021.9.7 / 20:20:22'}
+                content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
+          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+                lessRwd={true}
+              />
+              <ArticleList
+                src={'https://i.imgur.com/w2Y6y4z.jpg'}
+                title={'礁溪林美石磐涼爽一日遊'}
+                user={'水怪貓貓'}
+                tags={['有水源', '賞花', '危險地形']}
+                date={'2021.9.7 / 20:20:22'}
+                content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
+          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+                lessRwd={true}
+              />
             </TrialArticleWrapper>
           </ArticleListWrapper>
-          <MapWrapper>
-            <Map />
-          </MapWrapper>
         </HomePageWrapper>
       </HomepageContainer>
     </>
