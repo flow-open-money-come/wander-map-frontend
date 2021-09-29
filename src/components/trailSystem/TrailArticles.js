@@ -5,16 +5,11 @@ import { ReactComponent as TitleIcon } from '../../icons/trails/article.svg'
 import ArticleList from '../forumSystem/Article.js'
 
 
-const MEDIA_QUERY_MD = '@media screen and (min-width: 768px)'
-const MEDIA_QUERY_LG = '@media screen and (min-width: 1280px)'
-
-const line = `outline: 1px red solid`
-
 const ArticlesWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 25px;
+  margin-bottom: 35px;
   ${MEDIA_QUERY.lg} {
     margin-bottom: 65px;
   }
@@ -25,7 +20,6 @@ const Title = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 15px;
   svg {
     margin: 0 5px;
     width: 20px;
@@ -44,6 +38,23 @@ const Title = styled.div`
 
 const ArticlesContainer = styled.div`
   width: 100%;
+  position: relative;
+`
+
+const More = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: -1;
+  margin: 10px 0;
+  color: ${COLOR.green};
+  font-size: ${FONT.s};
+  font-weight: bold;
+  &:hover {
+    cursor: pointer;
+  }
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.md};
+  }
 `
 
 
@@ -85,6 +96,7 @@ function TrailArticles() {
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
         />
+        <More>看更多</More>
       </ArticlesContainer>
     </ArticlesWrapper>
   )

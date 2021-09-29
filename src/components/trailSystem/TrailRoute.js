@@ -4,9 +4,6 @@ import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style.
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailRoute.svg'
 
 
-const MEDIA_QUERY_MD = '@media screen and (min-width: 768px)'
-const MEDIA_QUERY_LG = '@media screen and (min-width: 1280px)'
-
 const line = `outline: 1px red solid`
 
 const RouteWrapper = styled.div`
@@ -34,7 +31,7 @@ const Title = styled.div`
   }
   ${MEDIA_QUERY.lg} {
     font-size: 34px;
-    margin-bottom: 35px;
+    margin-bottom: 20px;
     svg {
       margin: 0 10px;
       width: 35px;

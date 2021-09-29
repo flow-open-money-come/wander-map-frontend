@@ -2,13 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/review.svg'
+import Comments from '../forumSystem/Comments.js'
 
-
-const MEDIA_QUERY_MD = '@media screen and (min-width: 768px)'
-const MEDIA_QUERY_LG = '@media screen and (min-width: 1280px)'
 
 const ReviewWrapper = styled.div`
-  width: 100%;
+  width: 90%;
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
@@ -39,13 +37,6 @@ const Title = styled.div`
   }
 `
 
-const ReviewContainer = styled.div`
-  width: 100%;
-  height: 130px;
-  background: #f4f5f4;
-  border-radius: ${RADIUS.lg};
-`
-
 
 function TrailReviews() {
   return (
@@ -54,7 +45,7 @@ function TrailReviews() {
         <TitleIcon />
         評論區
       </Title>
-      <ReviewContainer></ReviewContainer>
+      <Comments />
     </ReviewWrapper>
   )
 }
