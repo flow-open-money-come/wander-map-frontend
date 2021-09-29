@@ -8,7 +8,7 @@ import { ReactComponent as ArrowDownSvg } from '../../icons/arrow_down.svg'
 import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
 import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
 import { ReactComponent as UserSvg } from '../../icons/user.svg'
-import { COLOR, FONT, EFFECT, MEDIA_QUERY } from '../../constants/style'
+import { COLOR, FONT, EFFECT } from '../../constants/style'
 import { NavBarButton } from './Button'
 
 const NavBarContainer = styled.div`
@@ -106,7 +106,6 @@ const NavBarLinkWrapper = styled.div`
   align-items: center;
   @media screen and (max-width: 768px) {
     flex-direction: column;
-    /* z-index: 3; */
     margin-top: 50px;
     padding-left: 30px;
     align-items: baseline;
