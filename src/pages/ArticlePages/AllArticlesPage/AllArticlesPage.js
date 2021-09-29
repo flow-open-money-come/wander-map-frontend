@@ -1,11 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useState, Fragment } from 'react'
 import ArticleList from '../../../components/forumSystem/Article'
+import Carousel from '../../../components/forumSystem/Carousel'
 import { ReactComponent as Hot } from '../../../icons/hot.svg'
-import { ReactComponent as Right_Arrow } from '../../../icons/arrow_right.svg'
-import { ReactComponent as Left_Arrow } from '../../../icons/arrow_left.svg'
-import { ReactComponent as Thumb } from '../../../icons/thumb_up.svg'
+import { ReactComponent as Search } from '../../../icons/search.svg'
 import {
   FONT,
   COLOR,
@@ -68,200 +66,75 @@ const TitleGroup = styled.div`
     margin: 72px 0 41px 0;
   }
 `
-// Carousel
 
-const SlideImage = styled.img`
-  width: 400px;
-  height: 250px;
-  border-radius: ${RADIUS.lg};
-
-  ${MEDIA_QUERY.md} {
-    width: 300px;
-    height: 307px;
-    object-fit: cover;
-    margin-right: 21px;
-  }
-`
-
-const Slider = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-
-const LeftArrow = styled(Left_Arrow)`
-  position: absolute;
-  top: 50%;
-  left: -20px;
-  font-size: 2rem;
-  cursor: pointer;
-  user-select: none;
+const FilterContainer = styled.div`
+  padding-top: 30px;
+  border-top: 1px solid ${COLOR.beige};
+  margin-bottom: 10px;
 
   ${MEDIA_QUERY.md} {
-  }
-`
-
-const RightArrow = styled(Right_Arrow)`
-  position: absolute;
-  top: 50%;
-  right: -20px;
-  font-size: 2rem;
-  cursor: pointer;
-  user-select: none;
-
-  ${MEDIA_QUERY.md} {
-  }
-`
-// 幻燈片文章內容
-
-const ArticleInfoContainer = styled.div`
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: wrap;
-`
-
-const ArticleContent = styled.div`
-  display: none;
-
-  ${MEDIA_QUERY.md} {
-    display: flex;
-    font-size: ${FONT.s};
-    padding: 10px 10px 10px 0;
-    line-height: 30px;
-    line-height: 2rem;
-  }
-
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
-  }
-`
-
-const ArticleTitle = styled.h1`
-  display: none;
-
-  ${MEDIA_QUERY.md} {
-    padding: 10px 10px 8px 0;
-    display: flex;
-    font-size: ${FONT.lg};
-  }
-
-  ${MEDIA_QUERY.lg} {
-    padding: 10px 10px 8px 0;
-    display: flex;
-    font-size: ${FONT.xl};
-  }
-`
-
-const ArticleLikes = styled.span`
-  display: none;
-
-  ${MEDIA_QUERY.md} {
-    display: inline;
-    color: ${COLOR.green};
-    font-size: ${FONT.xl};
-  }
-`
-
-const ThumbUp = styled(Thumb)`
-  display: none;
-
-  ${MEDIA_QUERY.md} {
-    cursor: pointer;
-  }
-`
-
-const ArticleTitleAndLikes = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
-const ArticleTags = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-`
-
-const ArticleTag = styled.div`
-  display: none;
-  color: #ffffff;
-
-  ${MEDIA_QUERY.md} {
-    display: flex;
-    border-radius: ${RADIUS.s};
-    background-color: ${COLOR.yellow_dark};
-    font-size: ${FONT.xs};
-    margin: 5px 3px;
-    padding: 6px 14px;
-  }
-`
-
-const ReadMore = styled.button`
-  display: none;
-
-  ${MEDIA_QUERY.md} {
-    display: inline;
-    color: ${COLOR.gray};
-    cursor: pointer;
-  }
-`
-
-const ArticleInfo = styled.div`
-  display: none;
-
-  ${MEDIA_QUERY.md} {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    margin-right: 20px;
-  }
-`
-
-const UserName = styled.div`
-  margin-bottom: 5px;
-`
-
-const UserInfo = styled.div`
-  font-size: 11px;
-  padding-top: 2px;
-  margin-left: 5px;
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-    padding-top: 10px;
-  }
-`
-const ArticleUser = styled.div`
-  margin-top: 5px;
-  display: flex;
-  justify-content: space-between;
-
-  ${MEDIA_QUERY.md} {
+    padding-top: 23px;
     margin-top: 9px;
   }
 `
-const ArticleDate = styled.div`
-  font-size: 11px;
-`
 
-const UserAvatar = styled.img`
-  width: 45px;
-  height: 45px;
-`
-
-const ImageContainer = styled.div`
-  width: 400px;
-  height: 250px;
-  margin: 20px;
+const Filter = styled.div`
+  padding: 10px;
+  width: 100%;
+  background-color: ${COLOR.white};
+  border-radius: ${RADIUS.lg};
+  box-shadow: ${EFFECT.shadow_light};
 
   ${MEDIA_QUERY.md} {
-    display: flex;
-    border-radius: ${RADIUS.lg};
-    background: ${COLOR.white};
-    width: 1173px;
-    height: 307px;
-    margin: 20px;
-    box-shadow: ${EFFECT.shadow_light};
+    max-width: 1032px;
+    margin: 0 auto;
   }
+`
+
+const UpperPart = styled.div`
+  display: flex;
+`
+
+const SearchInput = styled.input`
+  padding-left: 10px;
+  width: 90%;
+  border: 0;
+  border-bottom: 1px solid ${COLOR.beige};
+  background-color: ${COLOR.white};
+  color: ${COLOR.gray};
+`
+
+const SearchIcon = styled.button`
+  background-image: url('https://i.imgur.com/XG5YxVh.png');
+  background-size: contain;
+  border-bottom: 1px solid ${COLOR.beige};
+  width: 30px;
+  height: 30px;
+`
+
+const FilterTags = styled.div`
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+`
+
+const FilterCheckbox = styled.input`
+  display: none;
+`
+
+const FilterTag = styled.label`
+  cursor: pointer;
+  padding: 12px;
+  border-bottom: 1px solid ${COLOR.beige};
+
+  ${(props) =>
+    props.isChecked === true &&
+    `
+    border: 1px ${COLOR.gray} solid;
+    background: ${COLOR.beige};
+    box-shadow: ${EFFECT.shadow_dark};
+    `}
 `
 
 const BottomButton = styled.button`
@@ -297,7 +170,7 @@ function AllArticlesPage() {
     {
       image:
         'https://pgw.udn.com.tw/gw/photo.php?u=https://uc.udn.com.tw/photo/2020/05/21/draft/7910911.jpg&s=Y&x=0&y=0&sw=1200&sh=801&exp=3600',
-      title: '礁溪林美石磐涼爽一日遊',
+      title: '林美石磐涼爽一日遊',
       content: `林美石磐步道有著低海拔亞熱帶溪谷的景色，
         步道沿舊水圳整建，現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，散發陣陣芬多精，
         ，而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、...`,
@@ -344,20 +217,24 @@ function AllArticlesPage() {
       likes: 300,
     },
   ]
-  const [current, setCurrent] = useState(0)
-  const length = slides.length
 
-  if (!Array.isArray(slides) || slides.length === 0) {
-    return null
-  }
-
-  const nextSlide = () => {
-    setCurrent(current === length - 1 ? 0 : current + 1)
-  }
-
-  const prevSlide = () => {
-    setCurrent(current === 0 ? length - 1 : current - 1)
-  }
+  const tags = [
+    { name: '一日', isChecked: false },
+    { name: '多日', isChecked: true },
+    { name: '海景', isChecked: true },
+    { name: '夜景', isChecked: true },
+    { name: '山景', isChecked: false },
+    { name: '城市景色', isChecked: true },
+    { name: '賞花', isChecked: false },
+    { name: '稀有動植物', isChecked: true },
+    { name: '有水源', isChecked: false },
+    { name: '危險地形', isChecked: true },
+    { name: '需專業裝備', isChecked: false },
+    { name: '登山小白體驗', isChecked: true },
+    { name: '專業老手分享', isChecked: true },
+    { name: 'GPX', isChecked: true },
+    { name: '一日', isChecked: true },
+  ]
 
   return (
     <Wrapper>
@@ -365,48 +242,25 @@ function AllArticlesPage() {
         <HotICon />
         <Title>熱門文章</Title>
       </TitleGroup>
-      <Slider>
-        <LeftArrow onClick={prevSlide}>&lsaquo;</LeftArrow>
-        <RightArrow onClick={nextSlide}>&rsaquo;</RightArrow>
-        <ImageContainer>
-          {slides.map((slide, index) => {
-            return (
-              <>
-                {index === current && (
-                  <>
-                    <SlideImage src={slide.image} alt='' />
-                    <ArticleInfoContainer>
-                      <ArticleTitleAndLikes>
-                        <ArticleTitle>{slide.title}</ArticleTitle>
-                        <ArticleLikes>
-                          {slide.likes}
-                          <ThumbUp />
-                        </ArticleLikes>
-                      </ArticleTitleAndLikes>
-                      <ArticleTags>
-                        {slide.tags.map((tag) => {
-                          return <ArticleTag>{tag}</ArticleTag>
-                        })}
-                      </ArticleTags>
-                      <ArticleContent>{slide.content}</ArticleContent>
-                      <ArticleInfo>
-                        <ArticleUser>
-                          <UserAvatar src={slide.userAvatar} />
-                          <UserInfo>
-                            <UserName>{slide.username}</UserName>
-                            <ArticleDate>{slide.date}</ArticleDate>
-                          </UserInfo>
-                        </ArticleUser>
-                        <ReadMore>閱讀全文</ReadMore>
-                      </ArticleInfo>
-                    </ArticleInfoContainer>
-                  </>
-                )}
-              </>
-            )
-          })}
-        </ImageContainer>
-      </Slider>
+      <Carousel slides={slides} />
+      <FilterContainer>
+        <Filter>
+          <UpperPart>
+            <SearchInput placeholder='關鍵字...' />
+            <SearchIcon />
+          </UpperPart>
+          <FilterTags>
+            {tags.map((tag) => {
+              return (
+                <FilterTag isChecked={tag.isChecked} htmlFor='tags'>
+                  {tag.name}
+                  <FilterCheckbox id='tags' type='checkbox' />
+                </FilterTag>
+              )
+            })}
+          </FilterTags>
+        </Filter>
+      </FilterContainer>
       <ArticleList
         src={'https://i.imgur.com/w2Y6y4z.jpg'}
         title={'礁溪林美石磐涼爽一日遊'}
