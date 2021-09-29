@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style.js'
+import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailRoute.svg'
 
 
@@ -15,36 +15,37 @@ const RouteWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 25px;
-  ${MEDIA_QUERY_LG} {
+  margin-bottom: 30px;
+  ${MEDIA_QUERY.lg} {
     margin-bottom: 65px;
   }
 `
 
 const Title = styled.div`
-  font-size: ${FONT.s};
+  font-size: ${FONT.md};
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 5px;
   svg {
     margin: 0 5px;
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
   }
-  ${MEDIA_QUERY_LG} {
-    font-size: 36px;
-    margin-bottom: 20px;
+  ${MEDIA_QUERY.lg} {
+    font-size: 34px;
+    margin-bottom: 35px;
     svg {
       margin: 0 10px;
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
     }
   }
 `
 
 const RouteImg = styled.img`
-  width: 100%;
+  margin: 0 auto;
+  width: 80%;
   max-width: 800px;
 `
 
@@ -56,9 +57,9 @@ function TrailRoute() {
         <TitleIcon />
         路線資訊
       </Title>
-      <a href='https://recreation.forest.gov.tw/Files/RT/Photo/001/01/001_MAP201902152.jpg'>
+      
         <RouteImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/01/001_MAP201902152.jpg' />
-      </a>
+      
     </RouteWrapper>
   )
 }

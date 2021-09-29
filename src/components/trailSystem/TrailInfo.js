@@ -1,11 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style.js'
+import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailInfo.svg'
 
-
-const MEDIA_QUERY_MD = '@media screen and (min-width: 768px)'
-const MEDIA_QUERY_LG = '@media screen and (min-width: 1280px)'
 
 const line = `outline: 1px red solid`
 
@@ -14,29 +11,29 @@ const InfoWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 30px;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     width: 40%;
   }
 `
 
 const Title = styled.div`
-  font-size: ${FONT.s};
+  font-size: ${FONT.md};
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
   svg {
     margin: 0 5px;
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
   }
-  ${MEDIA_QUERY_LG} {
-    font-size: 36px;
+  ${MEDIA_QUERY.lg} {
+    font-size: 34px;
     margin-bottom: 35px;
     svg {
       margin: 0 10px;
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
     }
   }
 `
@@ -46,13 +43,16 @@ const InfoContainer = styled.div``
 const InfoLocation = styled.div`
   width: 320px;
   display: flex;
-  font-size: ${FONT.xs};
-  margin-bottom: 5px;
+  font-size: ${FONT.s};
+  margin-bottom: 10px;
 
   div:nth-child(1) {
     width: 40%;
   }
-  ${MEDIA_QUERY_LG} {
+  div:nth-child(2) {
+    width: 60%;
+  }
+  ${MEDIA_QUERY.lg} {
     width: 100%;
     margin-bottom: 12px;
     font-size: ${FONT.lg};

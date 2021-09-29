@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT } from '../../constants/style'
+import { COLOR, FONT, MEDIA_QUERY } from '../../constants/style'
 import UsersManagement from '../../components/adminSystem/UsersManagement'
 import TrailsManagement from '../../components/adminSystem/TrailsManagement'
 import ArticlesManagement from '../../components/adminSystem/ArticlesManagement'
 
-const MEDIA_QUERY_MD = '@media screen and (min-width: 768px)'
-const MEDIA_QUERY_LG = '@media screen and (min-width: 1280px)'
 
 
 const AdminPageContainer = styled.div`
@@ -25,7 +23,7 @@ const PageTitle = styled.div`
   width: 100%;
   text-align: center;
   padding: 5px 0;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     font-size: 48px;
     padding: 20px 0;
   }
@@ -36,7 +34,7 @@ const PageDesc = styled.div`
   font-size: ${FONT.xs};
   margin: 10px 0;
   text-align: center;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     font-size: ${FONT.lg};
     margin: 20px 0;
   }
@@ -45,16 +43,20 @@ const PageDesc = styled.div`
 
 function AdminPage() {
 
-  const [ tab, setTab ] = useState('Users')
-  console.log(tab)
+  const [tab, setTab] = useState('Users')
+  const [recycle, setRecycle] = useState(false)
 
   return (
     <AdminPageContainer>
       <PageTitle>管理員後台</PageTitle>
       <PageDesc>Hello！Wander Map 的管理員~ 今天要做些什麼呢？</PageDesc>
-       <UsersManagement setTab={setTab} />
-      <TrailsManagement setTab={setTab} />
-      <ArticlesManagement setTab={setTab} />
+      {tab === 'Users' && <UsersManagement setTab={setTab} />}
+      {tab === 'Trails' && (
+        <TrailsManagement setTab={setTab} recycle={recycle} setRecycle={setRecycle} />
+      )}
+      {tab === 'Articles' && (
+        <ArticlesManagement setTab={setTab} recycle={recycle} setRecycle={setRecycle} />
+      )}
     </AdminPageContainer>
   )
 }

@@ -1,13 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, RADIUS } from '../../constants/style.js'
+import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailWeather.svg'
 import { ReactComponent as TemperatureIcon } from '../../icons/weather/weather-Temperature.svg'
 import { ReactComponent as PopIcon } from '../../icons/weather/weather-RainProbability.svg'
 import { ReactComponent as CloudyIcon } from '../../icons/weather/weather-Cloudy.svg'
 
-const MEDIA_QUERY_MD = '@media screen and (min-width: 768px)'
-const MEDIA_QUERY_LG = '@media screen and (min-width: 1270px)'
 
 const line = `outline: 1px red solid`
 
@@ -15,42 +13,42 @@ const WeatherWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 25px;
-  ${MEDIA_QUERY_LG} {
-    width: 60%;
+  margin-bottom: 30px;
+  ${MEDIA_QUERY.lg} {
+    width: 55%;
   }
 `
 
 const Title = styled.div`
-  font-size: ${FONT.s};
+  font-size: ${FONT.md};
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
   svg {
     margin: 0 5px;
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
   }
-  ${MEDIA_QUERY_LG} {
-    font-size: 36px;
+  ${MEDIA_QUERY.lg} {
+    font-size: 34px;
     margin-bottom: 35px;
     svg {
       margin: 0 10px;
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
     }
   }
 `
 
 const CardContainer = styled.div`
   display: flex;
-  overflow: auto;
+  overflow: auto; 
 `
 
 const Card = styled.div`
-  width: 100px;
-  height: 100px;
+  min-width: 30%;
+  height: 30%;
   background: ${COLOR.white};
   border-radius: ${RADIUS.lg};
   padding: 5px 15px;
@@ -59,31 +57,44 @@ const Card = styled.div`
   justify-content: space-around;
   align-items: center;
   margin: 0 4px;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.md} {
+    min-width: 30%;
+    height: 30%;
+  }
+  ${MEDIA_QUERY.lg} {
     padding: 15px 15px;
     margin: 0 10px;
     min-width: 210px;
-    height: 210px;
+    min-height: 210px;
   }
 `
 
 const Date = styled.div`
-  font-size: xx-small;
+  font-size: ${FONT.s};
   display: flex;
   justify-content: center;
   align-items: center;
-  ${MEDIA_QUERY_LG} {
-     font-size: ${FONT.md};
+  ${MEDIA_QUERY.md} {
+    margin-bottom: 3px;
+  }
+  ${MEDIA_QUERY.lg} {
+    font-size: 22px;
   }
 `
 
 const WeatherIcon = styled.div`
   margin-top: 1px;
   svg {
-    width: 70px;
-    height: 60px;
+    width: 80px;
+    height: 70px;
   }
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.md} {
+    svg {
+      width: 100px;
+      height: 100px;
+    }
+  }
+  ${MEDIA_QUERY.lg} {
     svg {
       width: 140px;
       height: 140px;
@@ -98,15 +109,22 @@ const WeatherInfo = styled.div`
 `
 
 const Temperature = styled.div`
-  font-size: 10px;
-  -webkit-transform: scale(0.9);
+  font-size: ${FONT.xs};
   display: flex;
   align-items: center;
   svg {
     width: 12px;
     height: 12px;
   }
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.s};
+    margin: 0 5px;
+    svg {
+      width: 15px;
+      height: 15px;
+    }
+  }
+  ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
     -webkit-transform: scale(1);
     margin: 0 5px;

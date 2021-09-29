@@ -1,11 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style.js'
+import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailMap.svg'
 
-
-const MEDIA_QUERY_MD = '@media screen and (min-width: 768px)'
-const MEDIA_QUERY_LG = '@media screen and (min-width: 1280px)'
 
 const line = `outline: 1px red solid`
 
@@ -13,30 +10,30 @@ const MapWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin-bottom: 25px;
-  ${MEDIA_QUERY_LG} {
+  margin-bottom: 30px;
+  ${MEDIA_QUERY.lg} {
     margin-bottom: 65px;
   }
 `
 
 const Title = styled.div`
-  font-size: ${FONT.s};
+  font-size: ${FONT.md};
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 15px;
   svg {
     margin: 0 5px;
-    width: 15px;
-    height: 15px;
+    width: 20px;
+    height: 20px;
   }
-  ${MEDIA_QUERY_LG} {
-    font-size: 36px;
+  ${MEDIA_QUERY.lg} {
+    font-size: 34px;
     margin-bottom: 35px;
     svg {
       margin: 0 10px;
-      width: 40px;
-      height: 40px;
+      width: 35px;
+      height: 35px;
     }
   }
 `
@@ -46,7 +43,7 @@ const MapContainer = styled.div`
   height: 130px;
   background: #f4f5f4;
   border-radius: ${RADIUS.lg};
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     height: 410px;
   }
 `

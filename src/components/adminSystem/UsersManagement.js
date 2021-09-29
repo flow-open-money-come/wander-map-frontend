@@ -1,14 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, RADIUS } from '../../constants/style'
+import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as UserIcon } from '../../icons/backstage/adminUser.svg'
 import { ReactComponent as TrailIcon } from '../../icons/backstage/adminTrail.svg'
 import { ReactComponent as ArticleIcon } from '../../icons/backstage/adminArticle.svg'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 
-
-const MEDIA_QUERY_MD = '@media screen and (min-width: 768px)'
-const MEDIA_QUERY_LG = '@media screen and (min-width: 1280px)'
 
 const line = `outline: 1px red solid`
 
@@ -22,13 +19,13 @@ const Tabs = styled.div`
 `
 
 const UsersTab = styled.div`
-  width: 90px;
-  height: 25px;
+  width: 30%;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 5px;
-  font-size: ${FONT.xs};
+  font-size: ${FONT.s};
   border-radius: ${RADIUS.s} ${RADIUS.s} 0 0;
   border: 2px solid ${COLOR.green};
   border-bottom: none;
@@ -46,7 +43,10 @@ const UsersTab = styled.div`
     fill: white;
     stroke: white;
   }
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+  }
+  ${MEDIA_QUERY.lg} {
     width: 200px;
     height: 50px;
     margin-right: 20px;
@@ -103,10 +103,10 @@ const SearchBar = styled.div`
   display: flex;
   align-items: center;
   padding-left: 3px;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     margin: 30px auto;
     height: 45px;
-    svg{
+    svg {
       width: 30px;
       height: 30px;
       margin: 0 5px;
@@ -118,7 +118,7 @@ const SearchField = styled.input`
   width: calc(100% - 20px);
   border: none;
   outline: none;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     width: calc(100% - 30px);
     font-size: ${FONT.lg};
   }
@@ -132,8 +132,12 @@ const UsersTable = styled.table`
 const TableHeader = styled.tr`
   border-bottom: 1px solid ${COLOR.green};
   text-align: center;
-  ${MEDIA_QUERY_LG} {
+  font-size: ${FONT.s};
+  ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
+  }
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.lg};
     font-weight: bold;
   }
 `
@@ -144,8 +148,12 @@ const HeaderTd = styled.td`
 const TableContent = styled.tr`
   border-bottom: 0.5px solid #8f8f8f;
   text-align: center;
-  ${MEDIA_QUERY_LG} {
+  font-size: ${FONT.s};
+  ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
+  }
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.lg};
   }
 `
 const ContentTd = styled.td`
@@ -155,7 +163,7 @@ const ContentTd = styled.td`
 const NicknameTd = styled(ContentTd)`
   width: 60px;
   overflow: auto;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     width: 200px;
   }
 `
@@ -163,7 +171,7 @@ const NicknameTd = styled(ContentTd)`
 const EmailTd = styled(ContentTd)`
   width: 120px;
   overflow: auto;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     width: 400px;
   }
 `
@@ -181,7 +189,7 @@ const StatusBtn = styled.button`
     cursor: pointer;
   }
 
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
     padding: 2px 12px;
   }

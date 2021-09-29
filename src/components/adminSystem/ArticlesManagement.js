@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, RADIUS } from '../../constants/style'
+import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as UserIcon } from '../../icons/backstage/adminUser.svg'
 import { ReactComponent as TrailIcon } from '../../icons/backstage/adminTrail.svg'
 import { ReactComponent as ArticleIcon } from '../../icons/backstage/adminArticle.svg'
@@ -8,10 +8,6 @@ import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
 
-
-
-const MEDIA_QUERY_MD = '@media screen and (min-width: 768px)'
-const MEDIA_QUERY_LG = '@media screen and (min-width: 1280px)'
 
 const line = `outline: 1px red solid`
 
@@ -25,13 +21,13 @@ const Tabs = styled.div`
 `
 
 const UsersTab = styled.div`
-  width: 90px;
-  height: 25px;
+  width: 30%;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-right: 5px;
-  font-size: ${FONT.xs};
+  font-size: ${FONT.s};
   border-radius: ${RADIUS.s} ${RADIUS.s} 0 0;
   border: 2px solid ${COLOR.green};
   border-bottom: none;
@@ -44,7 +40,10 @@ const UsersTab = styled.div`
   rect {
     stroke: none;
   }
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+  }
+  ${MEDIA_QUERY.lg} {
     width: 200px;
     height: 50px;
     margin-right: 20px;
@@ -98,7 +97,7 @@ const SearchBar = styled.div`
   display: flex;
   align-items: center;
   padding-left: 3px;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     margin: 30px auto;
     height: 45px;
     svg{
@@ -113,9 +112,77 @@ const SearchField = styled.input`
   width: calc(100% - 20px);
   border: none;
   outline: none;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     width: calc(100% - 30px);
     font-size: ${FONT.lg};
+  }
+`
+
+const RecycleBlock = styled.div`
+  display: flex;
+  justify-content: center;
+  position: relative;
+  height: 15px;
+  ${MEDIA_QUERY.md} {
+    height: 25px;
+  }
+  ${MEDIA_QUERY.lg} {
+    height: 40px;
+  }
+`
+
+const RecycleTitle = styled.div`
+  font-size: ${FONT.s};
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.lg};
+  }
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.logo};
+  }
+`
+
+const BackBtn = styled.button`
+  position: absolute;
+  right: 0;
+  margin: 0 10px;
+  font-size: ${FONT.xs};
+  color: ${COLOR.green};
+  &:hover {
+    cursor: pointer;
+  }
+  ${MEDIA_QUERY.md} {
+    margin: 0 20px;
+    font-size: ${FONT.md};
+  }
+  ${MEDIA_QUERY.lg} {
+    margin: 0 50px;
+    font-size: ${FONT.lg};
+  }
+`
+
+const RecycleBin = styled.div`
+  position: absolute;
+  right: 0;
+  margin: 0 10px;
+  path {
+    fill: ${COLOR.pink};
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  ${MEDIA_QUERY.md} {
+    margin: 0 20px;
+    svg {
+      width: 25px;
+      height: 25px;
+    }
+  }
+  ${MEDIA_QUERY.lg} {
+    margin: 0 50px;
+    svg {
+      width: 35px;
+      height: 35px;
+    }
   }
 `
 
@@ -131,55 +198,62 @@ const TrailsTable = styled.table`
 
 const TableContent = styled.tr`
   text-align: center;
-  ${MEDIA_QUERY_LG} {
+  font-size: ${FONT.s};
+  ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
+  }
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.lg};
   }
 `
 
 const CoverTd = styled.td`
   text-align: start;
   padding: 5px 0 3px 0;
-  min-width: 30px;
-  height: 40px;
-  ${MEDIA_QUERY_LG} {
-    width: 50px;
-    height: 50px;
+  width: 10%;
+  ${MEDIA_QUERY.lg} {
+    width: 5%;
   }
 `
 
 const TrailImg = styled.img`
-  width: 100%;
-  min-height: 100%;
+  width: 40px;
+  height: 40px;
   border-radius: ${RADIUS.s};
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     width: 80px;
     height: 80px;
   }
 `
 
 const TrailsTd = styled.td`
+  width: 60%;
   min-width: 180px;
   overflow: auto;
   text-align: start;
-  padding-left: 3px;
+  padding: 0 3px;
   vertical-align: middle;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     width: 600px;
     padding-left: 30px;
   }
 `
 
 const CreatorTd = styled.td`
+  width: 10%;
   min-width: 50px;
+  padding: 0 3px;
   vertical-align: middle;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     width: 150px;
   }
 `
 const DateTd = styled.td`
+  width: 20%;
   min-width: 50px;
+  padding: 0 3px;
   vertical-align: middle;
-  ${MEDIA_QUERY_LG} {
+  ${MEDIA_QUERY.lg} {
     width: 150px;
   }
 `
@@ -190,8 +264,8 @@ const BtnTd = styled.td`
   svg {
     margin: 0 2px;
   }
-  ${MEDIA_QUERY_LG} {
-    width: 120px;
+  ${MEDIA_QUERY.lg} {
+    width: 5%;
     svg {
       width: 30px;
       height: 30px;
@@ -201,7 +275,7 @@ const BtnTd = styled.td`
 `
 
 
-function ArticlesManagement({ setTab }) {
+function ArticlesManagement({ setTab, recycle, setRecycle }) {
   return (
     <UsersManagementContainer>
       <Tabs>
@@ -235,6 +309,29 @@ function ArticlesManagement({ setTab }) {
           <SearchIcon />
           <SearchField></SearchField>
         </SearchBar>
+        <RecycleBlock>
+          {recycle && (
+            <>
+              <RecycleTitle>刪除列表</RecycleTitle>
+              <BackBtn
+                onClick={() => {
+                  setRecycle(false)
+                }}
+              >
+                返回
+              </BackBtn>
+            </>
+          )}
+          {!recycle && (
+            <RecycleBin
+              onClick={() => {
+                setRecycle(true)
+              }}
+            >
+              <BinIcon />
+            </RecycleBin>
+          )}
+        </RecycleBlock>
         <TrailsTable>
           <TableContent>
             <CoverTd>
