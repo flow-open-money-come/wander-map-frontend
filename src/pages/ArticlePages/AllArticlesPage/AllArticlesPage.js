@@ -5,7 +5,7 @@ import ArticleList from '../../../components/forumSystem/Article'
 import { ReactComponent as Hot } from '../../../icons/hot.svg'
 import { ReactComponent as Right_Arrow } from '../../../icons/arrow_right.svg'
 import { ReactComponent as Left_Arrow } from '../../../icons/arrow_left.svg'
-import { ReactComponent as avatar } from '../../../icons/default_avatar.svg'
+import { ReactComponent as Thumb } from '../../../icons/thumb_up.svg'
 import {
   FONT,
   COLOR,
@@ -114,18 +114,26 @@ const RightArrow = styled(Right_Arrow)`
   }
 `
 // 幻燈片文章內容
+
+const ArticleInfoContainer = styled.div`
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: wrap;
+`
+
 const ArticleContent = styled.div`
   display: none;
 
   ${MEDIA_QUERY.md} {
     display: flex;
-    font-size: ${FONT.md};
+    font-size: ${FONT.s};
     padding: 10px 10px 10px 0;
     line-height: 30px;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: wrap;
     line-height: 2rem;
+  }
+
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.md};
   }
 `
 
@@ -135,15 +143,43 @@ const ArticleTitle = styled.h1`
   ${MEDIA_QUERY.md} {
     padding: 10px 10px 8px 0;
     display: flex;
-    font-size: 36px;
+    font-size: ${FONT.lg};
   }
+
+  ${MEDIA_QUERY.lg} {
+    padding: 10px 10px 8px 0;
+    display: flex;
+    font-size: ${FONT.xl};
+  }
+`
+
+const ArticleLikes = styled.span`
+  display: none;
+
+  ${MEDIA_QUERY.md} {
+    display: inline;
+    color: ${COLOR.green};
+    font-size: ${FONT.xl};
+  }
+`
+
+const ThumbUp = styled(Thumb)`
+  display: none;
+
+  ${MEDIA_QUERY.md} {
+    cursor: pointer;
+  }
+`
+
+const ArticleTitleAndLikes = styled.div`
+  display: flex;
+  justify-content: space-between;
 `
 
 const ArticleTags = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
-// 待修改
 
 const ArticleTag = styled.div`
   display: none;
@@ -156,22 +192,60 @@ const ArticleTag = styled.div`
     font-size: ${FONT.xs};
     margin: 5px 3px;
     padding: 6px 14px;
-
-    &:first-child {
-    }
   }
+`
 
-  ${MEDIA_QUERY.lg} {
+const ReadMore = styled.button`
+  display: none;
+
+  ${MEDIA_QUERY.md} {
+    display: inline;
+    color: ${COLOR.gray};
+    cursor: pointer;
+  }
+`
+
+const ArticleInfo = styled.div`
+  display: none;
+
+  ${MEDIA_QUERY.md} {
     display: flex;
-    border-radius: ${RADIUS.s};
-    background-color: ${COLOR.yellow_dark};
-    font-size: ${FONT.xs};
-    margin: 5px 3px;
-    padding: 6px 14px;
-
-    &:first-child {
-    }
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-right: 20px;
   }
+`
+
+const UserName = styled.div`
+  margin-bottom: 5px;
+`
+
+const UserInfo = styled.div`
+  font-size: 11px;
+  padding-top: 2px;
+  margin-left: 5px;
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.s};
+    padding-top: 10px;
+  }
+`
+const ArticleUser = styled.div`
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+
+  ${MEDIA_QUERY.md} {
+    margin-top: 9px;
+  }
+`
+const ArticleDate = styled.div`
+  font-size: 11px;
+`
+
+const UserAvatar = styled.img`
+  width: 45px;
+  height: 45px;
 `
 
 const ImageContainer = styled.div`
@@ -189,7 +263,34 @@ const ImageContainer = styled.div`
     box-shadow: ${EFFECT.shadow_light};
   }
 `
-const ArticleInfoContainer = styled.div``
+
+const BottomButton = styled.button`
+  border-radius: ${RADIUS.lg};
+  font-size: ${FONT.xs};
+  border: 1px ${COLOR.green} solid;
+  border-width: medium;
+  box-shadow: ${EFFECT.shadow_dark};
+  margin: 25px auto;
+  padding: 5px 44px;
+  cursor: pointer;
+
+  &:hover {
+    background: ${COLOR.green};
+    color: #ffffff;
+  }
+
+  ${MEDIA_QUERY.md} {
+    margin: 100px auto;
+    font-size: ${FONT.lg};
+    padding: 12px 100px;
+  }
+
+  ${MEDIA_QUERY.lg} {
+    margin: 123px auto;
+    font-size: ${FONT.xl};
+    padding: 18px 131px;
+  }
+`
 
 function AllArticlesPage() {
   const slides = [
@@ -207,18 +308,16 @@ function AllArticlesPage() {
         '登山小白體驗',
         '登山小白體驗',
         '登山小白體驗',
-        ,
         '登山小白體驗',
-        ,
         '登山小白體驗',
-        ,
         '登山小白體驗',
-        ,
         '登山小白體驗',
-        ,
         '登山小白體驗',
       ],
-      name: '水怪貓貓',
+      username: '水怪貓貓',
+      date: '2021.9.7 / 20:20:22',
+      userAvatar: 'https://i.imgur.com/eGREu6v.png',
+      likes: 100,
     },
     {
       image: 'https://i.imgur.com/w2Y6y4z.jpg',
@@ -227,6 +326,10 @@ function AllArticlesPage() {
         步道沿舊水圳整建，現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，散發陣陣芬多精，
         走在其中清爽無比，非常適合闔家一起健行。...`,
       tags: ['一日', '有水源', '危險地形'],
+      username: '水怪貓貓',
+      date: '2021.9.7 / 20:20:22',
+      userAvatar: 'https://i.imgur.com/eGREu6v.png',
+      likes: 120,
     },
     {
       image: 'https://i.imgur.com/iG8fKuf.jpg',
@@ -235,6 +338,10 @@ function AllArticlesPage() {
         步道名稱是由「林美」與「石磐」兩個名字組成，「林美」是指礁溪鄉林美村
         ，而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、...`,
       tags: ['一日', '有水源', '專業裝備'],
+      username: '水怪貓貓',
+      date: '2021.9.7 / 20:20:22',
+      userAvatar: 'https://i.imgur.com/eGREu6v.png',
+      likes: 300,
     },
   ]
   const [current, setCurrent] = useState(0)
@@ -269,13 +376,29 @@ function AllArticlesPage() {
                   <>
                     <SlideImage src={slide.image} alt='' />
                     <ArticleInfoContainer>
-                      <ArticleTitle>{slide.title}</ArticleTitle>
+                      <ArticleTitleAndLikes>
+                        <ArticleTitle>{slide.title}</ArticleTitle>
+                        <ArticleLikes>
+                          {slide.likes}
+                          <ThumbUp />
+                        </ArticleLikes>
+                      </ArticleTitleAndLikes>
                       <ArticleTags>
                         {slide.tags.map((tag) => {
                           return <ArticleTag>{tag}</ArticleTag>
                         })}
                       </ArticleTags>
                       <ArticleContent>{slide.content}</ArticleContent>
+                      <ArticleInfo>
+                        <ArticleUser>
+                          <UserAvatar src={slide.userAvatar} />
+                          <UserInfo>
+                            <UserName>{slide.username}</UserName>
+                            <ArticleDate>{slide.date}</ArticleDate>
+                          </UserInfo>
+                        </ArticleUser>
+                        <ReadMore>閱讀全文</ReadMore>
+                      </ArticleInfo>
                     </ArticleInfoContainer>
                   </>
                 )}
@@ -294,6 +417,27 @@ function AllArticlesPage() {
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
       />
+      <ArticleList
+        src={'https://i.imgur.com/w2Y6y4z.jpg'}
+        title={'礁溪林美石磐涼爽一日遊'}
+        user={'水怪貓貓'}
+        tags={['有水源', '賞花', '危險地形']}
+        date={'2021.9.7 / 20:20:22'}
+        content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
+          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+      />
+      <ArticleList
+        src={'https://i.imgur.com/w2Y6y4z.jpg'}
+        title={'礁溪林美石磐涼爽一日遊'}
+        user={'水怪貓貓'}
+        tags={['有水源', '賞花', '危險地形']}
+        date={'2021.9.7 / 20:20:22'}
+        content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
+          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+      />
+      <BottomButton>看更多</BottomButton>
     </Wrapper>
   )
 }
