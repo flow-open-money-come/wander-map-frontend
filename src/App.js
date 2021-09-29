@@ -48,6 +48,7 @@ function App() {
           <Route path='/backstage/userId'></Route>
           <Route path='/articles/id'></Route>
           <Route path='/trails/id'></Route>
+          
         </Switch>
         <Footer />
       </Router>
