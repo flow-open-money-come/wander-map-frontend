@@ -285,6 +285,7 @@ function AllArticlesPage() {
         </ImageContainer>
       </Slider>
       <ArticleList
+        src={'https://i.imgur.com/w2Y6y4z.jpg'}
         title={'礁溪林美石磐涼爽一日遊'}
         user={'水怪貓貓'}
         tags={['有水源', '賞花', '危險地形']}

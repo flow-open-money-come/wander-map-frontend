@@ -167,10 +167,10 @@ const TitleAndTags = styled.div`
   }
 `
 
-export default function ArticleList({ title, content, tags, user, date }) {
+export default function ArticleList({ title, content, tags, user, date, src }) {
   return (
     <ArticlesContainer>
-      <ArticlesImg src='https://i.imgur.com/w2Y6y4z.jpg' />
+      <ArticlesImg src={src} />
       <ArticlesInfoContainer>
         <TitleAndTags>
           <ArticlesTitle>{title}</ArticlesTitle>
