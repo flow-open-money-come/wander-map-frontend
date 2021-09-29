@@ -5,7 +5,13 @@ import { ReactComponent as Hot } from '../../../icons/hot.svg'
 import { ReactComponent as Right_Arrow } from '../../../icons/arrow_right.svg'
 import { ReactComponent as Left_Arrow } from '../../../icons/arrow_left.svg'
 import { ReactComponent as avatar } from '../../../icons/default_avatar.svg'
-import { FONT, COLOR, EFFECT, RADIUS } from '../../../constants/style'
+import {
+  FONT,
+  COLOR,
+  EFFECT,
+  RADIUS,
+  MEDIA_QUERY,
+} from '../../../constants/style'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -13,7 +19,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  @media screen and (max-width: 500px) {
+  ${MEDIA_QUERY.md} {
     width: 90%;
     display: flex;
     font-size: ${FONT.md};
@@ -21,41 +27,57 @@ const Wrapper = styled.div`
 `
 
 const Title = styled.span`
-  font-size: 48px;
-  @media screen and (max-width: 500px) {
-    font-size: ${FONT.md};
+  font-size: ${FONT.md};
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.lg};
+  }
+
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.xll};
   }
 `
 
 const HotICon = styled(Hot)`
-  width: 50px;
-  height: 50px;
-  transform: translate(4px, 6px);
+  width: 29px;
+  height: 29px;
+  padding-top: 10px;
+  transform: translate(4px, 2px);
 
-  @media screen and (max-width: 500px) {
-    width: 29px;
-    height: 29px;
-    padding-top: 10px;
-    transform: translate(4px, 2px);
+  ${MEDIA_QUERY.md} {
+    width: 40px;
+    height: 40px;
+    transform: translate(4px, 6px);
+  }
+
+  ${MEDIA_QUERY.lg} {
+    width: 50px;
+    height: 50px;
   }
 `
 
 const TitleGroup = styled.div`
-  margin-top: 20px;
-  @media screen and (max-width: 500px) {
-    margin: 0 auto;
+  margin: 0 auto;
+
+  ${MEDIA_QUERY.md} {
+    margin: 30px 0 20px 0;
+  }
+
+  ${MEDIA_QUERY.lg} {
+    margin: 72px 0 41px 0;
   }
 `
+// Carousel
 
 const SlideImage = styled.img`
-  width: 300px;
-  height: 300px;
-  object-fit: cover;
+  width: 400px;
+  height: 250px;
   border-radius: ${RADIUS.lg};
 
-  @media screen and (max-width: 500px) {
-    width: 400px;
-    height: 250px;
+  ${MEDIA_QUERY.md} {
+    width: 300px;
+    height: 307px;
+    object-fit: cover;
   }
 `
 
@@ -67,152 +89,188 @@ const Slider = styled.div`
 `
 
 const LeftArrow = styled(Left_Arrow)`
-  width: 49%;
   position: absolute;
   top: 50%;
-  left: -100px;
+  left: -20px;
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
-  opacity: 0;
 
-  &:hover {
-    opacity: 1;
-  }
-
-  @media screen and (max-width: 500px) {
+  ${MEDIA_QUERY.md} {
   }
 `
 
 const RightArrow = styled(Right_Arrow)`
-  width: 49%;
   position: absolute;
   top: 50%;
-  right: -100px;
+  right: -20px;
   font-size: 2rem;
-  opacity: 0;
   cursor: pointer;
   user-select: none;
 
-  &:hover {
-    opacity: 1;
-  }
-
-  @media screen and (max-width: 500px) {
+  ${MEDIA_QUERY.md} {
   }
 `
-
+// 幻燈片文章內容
 const ArticleContent = styled.div`
-  font-size: ${FONT.md};
-  padding: 20px;
-  line-height: 30px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: wrap;
+  display: none;
 
-  @media screen and (max-width: 500px) {
-    display: none;
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+    padding: 20px;
+    line-height: 30px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: wrap;
   }
 `
 
 const ArticleTitle = styled.h1`
-  padding: 20px;
-  font-size: 36px;
+  display: none;
 
-  @media screen and (max-width: 500px) {
-    display: none;
+  ${MEDIA_QUERY.md} {
+    padding: 20px;
+    font-size: 36px;
   }
 `
 
 const ArticleTags = styled.div`
-  line-height: 5px;
-  margin: 10px;
-  padding: 10px;
-  font-size: ${FONT.xs};
-  width: 50px;
-  height: 15px;
-  border-radius: ${RADIUS.s};
-  background-color: ${COLOR.yellow_dark};
+  display: none;
 
-  @media screen and (max-width: 500px) {
-    display: none;
+  ${MEDIA_QUERY.md} {
+    line-height: 5px;
+    margin: 10px;
+    padding: 10px;
+    font-size: ${FONT.xs};
+    width: 50px;
+    height: 15px;
+    border-radius: ${RADIUS.s};
+    background-color: ${COLOR.yellow_dark};
   }
 `
 
 const ImageContainer = styled.div`
-  display: flex;
-  border-radius: ${RADIUS.lg};
-  background: ${COLOR.white};
-  width: 872px;
-  height: 300px;
+  width: 400px;
+  height: 250px;
   margin: 20px;
-  box-shadow: ${EFFECT.shadow_light};
 
-  @media screen and (max-width: 500px) {
-    width: 400px;
-    height: 250px;
+  ${MEDIA_QUERY.md} {
+    display: flex;
+    border-radius: ${RADIUS.lg};
+    background: ${COLOR.white};
+    width: 1173px;
+    height: 307px;
     margin: 20px;
+    box-shadow: ${EFFECT.shadow_light};
   }
 `
 
 // 共用心得
 
+const ArticlesContainer = styled.div`
+  width: 100%;
+  display: flex;
+  margin: 35px auto 0px auto;
+  padding-bottom: 20px;
+  border-bottom: ${COLOR.beige} 1px solid;
+
+  ${MEDIA_QUERY.md} {
+    width: 100%;
+    border-bottom: ${COLOR.beige} 1px solid;
+  }
+`
 const ArticleInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
 `
 
-const ArticlesContainer = styled.div`
-  margin: 20px auto;
-  width: 100%;
-  height: 150px;
-  display: flex;
-  border-bottom: ${COLOR.beige} 1px solid;
-
-  @media screen and (max-width: 500px) {
-    width: 100%;
-  }
-`
-
 const ArticlesImg = styled.img`
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   border-radius: ${RADIUS.lg};
+  align-self: center;
+
+  ${MEDIA_QUERY.md} {
+    width: 130px;
+    height: 130px;
+    margin-right: 13px;
+  }
+
+  ${MEDIA_QUERY.lg} {
+    width: 160px;
+    height: 160px;
+    margin-right: 13px;
+  }
 `
 const UserAvatar = styled(avatar)`
   width: 30px;
   height: 30px;
-`
 
+  ${MEDIA_QUERY.md} {
+    width: 45px;
+    height: 45px;
+    margin-right: 13px;
+  }
+`
 const ArticlesTags = styled.div`
-  text-align: center;
-  margin: 5px 0;
-  padding: 5px;
-  line-height: 8px;
-  font-size: ${FONT.xs};
-  width: 15%;
-  height: 10%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  ${MEDIA_QUERY.md} {
+  }
+`
+const ArticlesTag = styled.span`
   border-radius: ${RADIUS.s};
   background-color: ${COLOR.yellow_dark};
+  font-size: ${FONT.xs};
+  margin: 5px 3px;
+  padding: 4px;
 
-  @media screen and (max-width: 500px) {
-    width: 15%;
+  ${MEDIA_QUERY.md} {
+    padding: 6px 15px;
+    margin-right: 10px;
+  }
+
+  ${MEDIA_QUERY.lg} {
+    &:first-child {
+      margin-left: 30px;
+    }
+    padding: 6px 15px;
+    margin-right: 17px;
   }
 `
 const ArticlesContent = styled.div`
-  width: 80%;
-  max-height: 30px;
-  font-size: ${FONT.s};
+  width: 100%;
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: nowrap;
-  margin: 10px 0;
+  white-space: wrap;
+  font-size: ${FONT.s};
+  max-height: 3em;
+  line-height: 1.5em;
 
-  @media screen and (max-width: 500px) {
-    width: 15%;
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.s};
+  }
+
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.md};
   }
 `
-const ArticlesTitle = styled.div``
+const ArticlesTitle = styled.div`
+  margin-bottom: 5px;
+  font-weight: bold;
+
+  ${MEDIA_QUERY.md} {
+    line-height: 1.5em;
+    font-size: ${FONT.md};
+  }
+
+  ${MEDIA_QUERY.lg} {
+    line-height: 1.5em;
+    font-size: ${FONT.lg};
+  }
+`
 
 const ArticlesInfoContainer = styled.div`
   margin-left: 10px;
@@ -220,17 +278,56 @@ const ArticlesInfoContainer = styled.div`
 const ArticlesUser = styled.div`
   margin-top: 5px;
   display: flex;
+  justify-content: space-between;
+
+  ${MEDIA_QUERY.md} {
+    margin-top: 9px;
+  }
 `
-const Date = styled.div`
+const ArticlesDate = styled.div`
   font-size: 11px;
 `
 
-const UserName = styled.div``
+const UserName = styled.div`
+  margin-bottom: 5px;
+`
 
 const UserInfo = styled.div`
   font-size: 11px;
-  padding-top: 5px;
+  padding-top: 2px;
   margin-left: 5px;
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.s};
+    padding-top: 10px;
+  }
+`
+
+const ReadMore = styled.button`
+  display: none;
+
+  ${MEDIA_QUERY.md} {
+    display: inline;
+    color: ${COLOR.gray};
+    cursor: pointer;
+  }
+`
+
+const ArticlesInfo = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+
+  ${MEDIA_QUERY.md} {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+`
+const TitleAndTags = styled.div`
+  ${MEDIA_QUERY.lg} {
+    display: flex;
+  }
 `
 
 function AllArticlesPage() {
@@ -289,18 +386,18 @@ function AllArticlesPage() {
           {slides.map((slide, index) => {
             return (
               <>
-                {index === current && <SlideImage src={slide.image} alt='' />}
-                <ArticleInfoContainer>
-                  {index === current && (
-                    <ArticleTitle>{slide.title}</ArticleTitle>
-                  )}
-                  {index === current && (
-                    <ArticleTags>{slide.tags[0]}</ArticleTags>
-                  )}
-                  {index === current && (
-                    <ArticleContent>{slide.content}</ArticleContent>
-                  )}
-                </ArticleInfoContainer>
+                {index === current && (
+                  <>
+                    <SlideImage src={slide.image} alt='' />
+                    <ArticleInfoContainer>
+                      <ArticleTitle>{slide.title}</ArticleTitle>
+                      {slide.tags.map((tag) => {
+                        ;<ArticleTags>{tag}</ArticleTags>
+                      })}
+                      <ArticleContent>{slide.content}</ArticleContent>
+                    </ArticleInfoContainer>
+                  </>
+                )}
               </>
             )
           })}
@@ -309,21 +406,103 @@ function AllArticlesPage() {
       <ArticlesContainer>
         <ArticlesImg src='https://i.imgur.com/w2Y6y4z.jpg' />
         <ArticlesInfoContainer>
-          <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
-          <ArticlesTags>一日</ArticlesTags>
+          <TitleAndTags>
+            <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
+            <ArticlesTags>
+              <ArticlesTag>一日</ArticlesTag>
+              <ArticlesTag>賞花</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+            </ArticlesTags>
+          </TitleAndTags>
           <ArticlesContent>
             林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
             林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
             林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
             林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
           </ArticlesContent>
-          <ArticlesUser>
-            <UserAvatar />
-            <UserInfo>
-              <UserName>水怪貓貓</UserName>
-              <Date>2021.9.7 / 20:20:22</Date>
-            </UserInfo>
-          </ArticlesUser>
+          <ArticlesInfo>
+            <ArticlesUser>
+              <UserAvatar />
+              <UserInfo>
+                <UserName>水怪貓貓</UserName>
+                <ArticlesDate>2021.9.7 / 20:20:22</ArticlesDate>
+              </UserInfo>
+            </ArticlesUser>
+            <ReadMore>閱讀全文</ReadMore>
+          </ArticlesInfo>
+        </ArticlesInfoContainer>
+      </ArticlesContainer>
+      <ArticlesContainer>
+        <ArticlesImg src='https://i.imgur.com/w2Y6y4z.jpg' />
+        <ArticlesInfoContainer>
+          <TitleAndTags>
+            <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
+            <ArticlesTags>
+              <ArticlesTag>一日</ArticlesTag>
+              <ArticlesTag>賞花</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+            </ArticlesTags>
+          </TitleAndTags>
+          <ArticlesContent>
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
+          </ArticlesContent>
+          <ArticlesInfo>
+            <ArticlesUser>
+              <UserAvatar />
+              <UserInfo>
+                <UserName>水怪貓貓</UserName>
+                <ArticlesDate>2021.9.7 / 20:20:22</ArticlesDate>
+              </UserInfo>
+            </ArticlesUser>
+            <ReadMore>閱讀全文</ReadMore>
+          </ArticlesInfo>
+        </ArticlesInfoContainer>
+      </ArticlesContainer>
+      <ArticlesContainer>
+        <ArticlesImg src='https://i.imgur.com/w2Y6y4z.jpg' />
+        <ArticlesInfoContainer>
+          <TitleAndTags>
+            <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
+            <ArticlesTags>
+              <ArticlesTag>一日</ArticlesTag>
+              <ArticlesTag>賞花</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+              <ArticlesTag>有水源</ArticlesTag>
+            </ArticlesTags>
+          </TitleAndTags>
+          <ArticlesContent>
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好...
+          </ArticlesContent>
+          <ArticlesInfo>
+            <ArticlesUser>
+              <UserAvatar />
+              <UserInfo>
+                <UserName>水怪貓貓</UserName>
+                <ArticlesDate>2021.9.7 / 20:20:22</ArticlesDate>
+              </UserInfo>
+            </ArticlesUser>
+            <ReadMore>閱讀全文</ReadMore>
+          </ArticlesInfo>
         </ArticlesInfoContainer>
       </ArticlesContainer>
     </Wrapper>
