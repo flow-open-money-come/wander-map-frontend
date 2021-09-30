@@ -15,10 +15,6 @@ const ArticlesContainer = styled.div`
     border-bottom: ${COLOR.beige} 1px solid;
   }
 `
-const ArticleInfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`
 
 const ArticlesImg = styled.img`
   width: 120px;
@@ -110,6 +106,8 @@ const ArticlesTitle = styled.div`
 `
 
 const ArticlesInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-left: 10px;
 `
 const ArticlesUser = styled.div`
