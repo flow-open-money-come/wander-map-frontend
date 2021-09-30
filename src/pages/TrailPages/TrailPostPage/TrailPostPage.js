@@ -18,7 +18,7 @@ const FormWrapper = styled.div`
 `
 const Half = styled.div`
   display: inline-block;
-  width: 170px;
+  width: 50%;
 `
 const InputWrapper = styled.div`
   display: flex;
@@ -149,16 +149,26 @@ function TrailPostPage() {
       <FormWrapper>
         <FormTitle>步道難度</FormTitle>
         <FormSubTitleWrapper>
-          <Radio value='1' />
-          <label>新手</label>
-          <Radio value='2' />
-          <label>入門</label>
-          <Radio value='3' />
-          <label>進階</label>
-          <Radio value='4' />
-          <label>挑戰</label>
-          <Radio value='5' />
-          <label>困難</label>
+          <label>
+            <Radio value='1' />
+            新手
+          </label>
+          <label>
+            <Radio value='2' />
+            入門
+          </label>
+          <label>
+            <Radio value='3' />
+            進階
+          </label>
+          <label>
+            <Radio value='4' />
+            挑戰
+          </label>
+          <label>
+            <Radio value='5' />
+            困難
+          </label>
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
