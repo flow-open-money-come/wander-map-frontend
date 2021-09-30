@@ -68,11 +68,15 @@ const ArticleContent = styled.div`
   display: none;
 
   ${MEDIA_QUERY.md} {
-    display: flex;
+    width: 100%;
+    max-height: 7rem;
+    display: block;
     font-size: ${FONT.s};
     padding: 10px 10px 10px 0;
-    line-height: 30px;
     line-height: 2rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: wrap;
   }
 
   ${MEDIA_QUERY.lg} {

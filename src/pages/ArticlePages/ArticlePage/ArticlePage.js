@@ -9,8 +9,25 @@ import {
   MEDIA_QUERY,
 } from '../../../constants/style'
 
+const Wrapper = styled.div`
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+
+  ${MEDIA_QUERY.md} {
+    width: 90%;
+    display: flex;
+    font-size: ${FONT.md};
+  }
+`
+
 function ArticlePage() {
-  return <div>123</div>
+  return (
+    <Wrapper>
+      <Comment />
+    </Wrapper>
+  )
 }
 
 export default ArticlePage
