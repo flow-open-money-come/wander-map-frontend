@@ -9,6 +9,8 @@ const FooterContainer = styled.footer`
   font-size: ${FONT.s};
   text-align: center;
   line-height: 30px;
+  position: fixed;
+  bottom: 0;
   @media (max-width: 768px) {
     height: 60px;
   }

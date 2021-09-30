@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import styled from 'styled-components'
 import { ReactComponent as LogoSvg } from '../../icons/logo_with_name.svg'
 import { ReactComponent as DefaultAvatarSvg } from '../../icons/default_avatar.svg'
@@ -8,8 +7,9 @@ import { ReactComponent as ArrowDownSvg } from '../../icons/arrow_down.svg'
 import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
 import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
 import { ReactComponent as UserSvg } from '../../icons/user.svg'
-import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
+import { COLOR, FONT, EFFECT } from '../../constants/style'
 import { NavBarButton } from './Button'
+import useToggle from '../../hooks/useToggle'
 
 const NavBarContainer = styled.div`
   width: 100%;
@@ -17,6 +17,9 @@ const NavBarContainer = styled.div`
   border-top: 12px solid ${COLOR.green};
   background-color: ${COLOR.white};
   box-shadow: ${EFFECT.shadow_light};
+  position: sticky;
+  top: 0;
+  z-index: 5;
 `
 const NavBarWrapper = styled.div`
   width: 90%;
@@ -60,7 +63,7 @@ const NavBarLink = styled(Link)`
         cursor: pointer;
       }
     `}
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     background-color: transparent;
     color: black;
     display: flex;
@@ -78,20 +81,20 @@ const NavBarLink = styled(Link)`
 const UserInfoWeb = styled.div`
   display: flex;
   align-items: center;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: none;
   }
 `
 const UserInfoMobile = styled.div`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: flex;
     align-items: center;
   }
 `
 const UserInfoWrapperMobile = styled.div`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: flex;
     flex-direction: column;
     align-items: right;
@@ -101,9 +104,8 @@ const NavBarLinkWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     flex-direction: column;
-    z-index: 3;
     margin-top: 50px;
     padding-left: 30px;
     align-items: baseline;
@@ -126,7 +128,7 @@ const NavBarTextLink = styled.div`
     color: ${COLOR.green_light};
     cursor: pointer;
   }
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     ${NavBarButton}
   }
 `
@@ -136,6 +138,7 @@ const NavBarHambergur = styled.div`
   height: 15px;
   cursor: pointer;
   display: none;
+  z-index: 3;
   &::before {
     content: '';
     top: 0;
@@ -166,7 +169,7 @@ const NavBarHambergur = styled.div`
       transform: translateY(-50%);
       transform: rotate(-45deg);`};
   }
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: block;
   }
 `
@@ -185,16 +188,16 @@ const NavBarHambergurLine = styled.div`
 `
 
 const NavBarMobile = styled.div`
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     background-color: rgba(255, 255, 255, 0.9);
     width: 275px;
     height: 0;
     position: absolute;
-    top: 12px;
+    top: 0;
     right: 0;
     overflow: hidden;
     transition: ${EFFECT.transition};
-    ${(props) => props.$isActive && `height: 100vh;`}
+    ${(props) => props.$isActive && `height: 530px;`}
   }
 `
 const Divider = styled.div`
@@ -202,8 +205,8 @@ const Divider = styled.div`
   height: 2px;
   background-color: #f0eeeb;
   display: none;
-  margin: 50px 0 20px 0;
-  @media (max-width: 768px) {
+  margin: 20px 0 20px 0;
+  @media screen and (max-width: 768px) {
     display: block;
   }
 `
@@ -218,21 +221,21 @@ const UserInfoListMobile = styled.div`
 `
 const Forum = styled(ForumSvg)`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: block;
     margin-right: 20px;
   }
 `
 const Trail = styled(TrailSvg)`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: block;
     margin-right: 20px;
   }
 `
 const User = styled(UserSvg)`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: block;
     margin-right: 20px;
   }
@@ -248,13 +251,9 @@ const ArrowUp = styled(ArrowUpSvg)`
 
 function NavBar() {
   const location = useLocation()
-  const [hambergurToggleClick, setHambergurToggleClick] = useState(false)
-  const [arrowToggleClick, setArrowToggleClick] = useState(false)
-  const handleToggleClick = (e) => {
-    e.target.getAttribute('name') === 'hambergur'
-      ? setHambergurToggleClick(!hambergurToggleClick)
-      : setArrowToggleClick(!arrowToggleClick)
-  }
+  const [hambergurToggleClick, setHambergurToggleClick] = useToggle(false)
+  const [arrowToggleClick, setArrowToggleClick] = useToggle(false)
+
   return (
     <>
       <NavBarContainer>
@@ -291,18 +290,12 @@ function NavBar() {
                     我的主頁
                   </NavBarLink>
                   <ArrowDown
-                    name='arrow'
                     $isActive={arrowToggleClick}
-                    onClick={(e) => {
-                      handleToggleClick(e)
-                    }}
+                    onClick={setArrowToggleClick}
                   />
                   <ArrowUp
-                    name='arrow'
                     $isActive={arrowToggleClick}
-                    onClick={(e) => {
-                      handleToggleClick(e)
-                    }}
+                    onClick={setArrowToggleClick}
                   />
                 </UserInfoMobile>
                 <UserInfoListMobile $isActive={arrowToggleClick}>
@@ -317,18 +310,12 @@ function NavBar() {
             </NavBarLinkWrapper>
           </NavBarMobile>
           <NavBarHambergur
-            name='hambergur'
             $isActive={hambergurToggleClick}
-            onClick={(e) => {
-              handleToggleClick(e)
-            }}
+            onClick={setHambergurToggleClick}
           >
             <NavBarHambergurLine
-              name='hambergur'
               $isActive={hambergurToggleClick}
-              onClick={(e) => {
-                handleToggleClick(e)
-              }}
+              onClick={setHambergurToggleClick}
             />
           </NavBarHambergur>
         </NavBarWrapper>
