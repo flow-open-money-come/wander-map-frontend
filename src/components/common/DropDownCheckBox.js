@@ -16,21 +16,18 @@ const TitleText = styled.div`
 `
 const DropDownCheckBoxTitle = styled.div`
   min-width: 70px;
-  height: 25px;
+  height: 42px;
   border-bottom: none;
   padding: 20px 3px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: ${FONT.xs};
+  color: ${COLOR.gray};
   background-color: ${COLOR.white};
   box-shadow: ${EFFECT.shadow_light};
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
-  }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
-    padding: 25px 20px;
   }
 `
 const DropDownCheckBoxs = styled.div`
@@ -41,12 +38,13 @@ const DropDownCheckBoxs = styled.div`
   border-top: 0.5px solid ${COLOR.gray_light};
   background-color: ${COLOR.white};
   overflow: hidden;
-  box-shadow: ${EFFECT.shadow_light};
+  box-shadow: none;
   ${(props) =>
     props.$isActive &&
     `
     height: 130px;
     overflow: scroll;
+    box-shadow: ${EFFECT.shadow_light};
     `}
 `
 const DropDownCheckBoxInput = styled.input`
@@ -68,9 +66,6 @@ const DropDownCheckBoxWrapper = styled.label`
   border-bottom: 0.5px solid ${COLOR.gray_light};
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
-  }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
   }
 `
 const ArrowDown = styled(ArrowDownSvg)`

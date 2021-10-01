@@ -1,17 +1,11 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import {
-  COLOR,
-  FONT,
-  EFFECT,
-  MEDIA_QUERY,
-  RADIUS,
-} from '../../../constants/style'
+import { FONT, MEDIA_QUERY, RADIUS } from '../../../constants/style'
 import { ReactComponent as StarSvg } from '../../../icons/star.svg'
-import { ReactComponent as LocationSvg } from '../../../icons/location_s.svg'
 import SearchBar from '../../../components/common/SearchBar'
 import DropDownCheckBoxList from '../../../components/common/DropDownCheckBox'
 import { NavBarButton } from '../../../components/common/Button'
+import TrailCard from '../../../components/trailSystem/TrailCard'
 
 const AllTrialPageWrapper = styled.div`
   width: 90%;
@@ -29,11 +23,17 @@ const AllTrailPageTitleWrapper = styled.div`
   }
 `
 const SearchBarWrapper = styled.div`
-  width: 80%;
-  margin: 0 auto;
-  ${MEDIA_QUERY.lg} {
-    width: 50%;
-  }
+  ${(props) =>
+    props.$combined
+      ? `
+    display:none;
+    ${MEDIA_QUERY.lg}{
+      display: block;
+    };
+    `
+      : `${MEDIA_QUERY.lg}{
+      display: none;
+    };`}
 `
 const FeaturedTrailsCarousel = styled.img`
   width: 100%;
@@ -45,7 +45,8 @@ const FeaturedTrailsCarousel = styled.img`
     height: 200px;
   }
   ${MEDIA_QUERY.lg} {
-    height: 250px;
+    height: 300px;
+    margin-top: 5px;
   }
 `
 const FeaturedTrailName = styled.div`
@@ -71,8 +72,6 @@ const DropDownContainer = styled.div`
   justify-content: center;
   position: relative;
   top: -20px;
-  border-radius: ${RADIUS.md};
-  overflow: hidden;
 `
 const FilteredTrailsWrapper = styled.div`
   width: 80%;
@@ -84,61 +83,7 @@ const FilteredTrailsWrapper = styled.div`
     flex-wrap: wrap;
   }
 `
-const FilteredTrailCard = styled.div`
-  width: 250px;
-  height: 280px;
-  border-radius: ${RADIUS.md};
-  margin: 20px auto;
-  overflow: hidden;
-  text-align: center;
-  box-shadow: ${EFFECT.shadow_dark};
-  background-color: ${COLOR.white};
-  ${MEDIA_QUERY.md} {
-    width: 270px;
-    height: 300px;
-  }
-`
-const FilteredTrailImg = styled.img`
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-`
 
-const FilteredTrailTitle = styled.div`
-  margin-top: 5px;
-  font-size: ${FONT.md};
-  ${MEDIA_QUERY.md} {
-    margin-top: 10px;
-  }
-`
-
-const FilteredTrailLocation = styled.div`
-  margin-top: 10px;
-  font-size: ${FONT.xs};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-  }
-`
-const FilteredTrailTages = styled.div`
-  color: ${COLOR.gray};
-  margin-top: 10px;
-  font-size: ${FONT.xs};
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-  }
-`
-const Location = styled(LocationSvg)`
-  width: 15px;
-  height: 15px;
-  margin-right: 8px;
-  ${MEDIA_QUERY.md} {
-    width: 20px;
-    height: 20px;
-  }
-`
 const LoadMoreBtn = styled.div`
   ${NavBarButton}
   margin: 50px auto 100px auto;
@@ -164,6 +109,15 @@ function AllTrailPage() {
   useEffect(() => {
     setTimeout(handelCarousel, 5000)
   })
+
+  const trailInfo = {
+    title: '林美石磐步道',
+    location: '宜蘭縣礁溪鄉',
+    cover_picture_url:
+      'https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1806&q=80',
+    required_time: '一天',
+    season: '四季皆宜',
+  }
 
   return (
     <>
@@ -200,35 +154,15 @@ function AllTrailPage() {
             title='難度'
             options={['新手', '一般', '困難', '進階', '挑戰']}
           />
+          <SearchBarWrapper $combined>
+            <SearchBar placeholder='關鍵字...' noBorderRadius={true} />
+          </SearchBarWrapper>
         </DropDownContainer>
         <FilteredTrailsWrapper>
-          <FilteredTrailCard>
-            <FilteredTrailImg src='https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1806&q=80' />
-            <FilteredTrailTitle>林美石磐步道</FilteredTrailTitle>
-            <FilteredTrailLocation>
-              <Location />
-              宜蘭縣礁溪鄉
-            </FilteredTrailLocation>
-            <FilteredTrailTages> 一般 | 四季皆宜 </FilteredTrailTages>
-          </FilteredTrailCard>
-          <FilteredTrailCard>
-            <FilteredTrailImg src='https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1806&q=80' />
-            <FilteredTrailTitle>林美石磐步道</FilteredTrailTitle>
-            <FilteredTrailLocation>
-              <Location />
-              宜蘭縣礁溪鄉
-            </FilteredTrailLocation>
-            <FilteredTrailTages> 一般 | 四季皆宜 </FilteredTrailTages>
-          </FilteredTrailCard>
-          <FilteredTrailCard>
-            <FilteredTrailImg src='https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1806&q=80' />
-            <FilteredTrailTitle>林美石磐步道</FilteredTrailTitle>
-            <FilteredTrailLocation>
-              <Location />
-              宜蘭縣礁溪鄉
-            </FilteredTrailLocation>
-            <FilteredTrailTages> 一般 | 四季皆宜 </FilteredTrailTages>
-          </FilteredTrailCard>
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
         </FilteredTrailsWrapper>
         <LoadMoreBtn>看更多</LoadMoreBtn>
       </AllTrialPageWrapper>

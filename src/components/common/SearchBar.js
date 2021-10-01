@@ -4,11 +4,14 @@ import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import { ReactComponent as CloseSvg } from '../../icons/close.svg'
 
 const SearchBarWrapper = styled.div`
-  width: 70%;
+  width: 300px;
   z-index: 1;
   display: flex;
   align-items: center;
-  ${(props) => props.$horizontalAlign && `margin: 0 auto`}
+  ${(props) => props.$horizontalAlign && `margin: 0 auto;`}
+  border-radius: ${RADIUS.md};
+  ${(props) => props.$noBorderRadius && `border-radius:0;`}
+  box-shadow: ${EFFECT.shadow_light};
 `
 
 const SearchIcon = styled(SearchSvg)`
@@ -21,9 +24,9 @@ const SearchIconWrapper = styled.div`
   min-width: 42px;
   min-height: 42px;
   background-color: ${COLOR.white};
-  border-radius: 0 ${RADIUS.md} ${RADIUS.md} 0;
-  box-shadow: ${EFFECT.shadow_light};
   border: 1px solid ${COLOR.white};
+  ${(props) =>
+    !props.$noBorderRadius && `border-radius: 0 ${RADIUS.md} ${RADIUS.md} 0;`}
   position: relative;
   transition: ${EFFECT.transition};
 `
@@ -37,7 +40,6 @@ const CloseIconWrapper = styled.div`
   min-width: 42px;
   min-height: 42px;
   background-color: ${COLOR.white};
-  box-shadow: ${EFFECT.shadow_light};
   border: 1px solid ${COLOR.white};
   position: relative;
   transition: ${EFFECT.transition};
@@ -48,27 +50,31 @@ const SearchBarInput = styled.input`
   background-color: ${COLOR.white};
   outline: none;
   border: 1px solid ${COLOR.white};
-  border-radius: ${RADIUS.md} 0 0 ${RADIUS.md};
+  ${(props) =>
+    !props.$noBorderRadius && `border-radius: ${RADIUS.md} 0 0 ${RADIUS.md};`}
   padding: 20px;
-  box-shadow: ${EFFECT.shadow_light};
   transition: ${EFFECT.transition};
-  &:focus ~ ${SearchIconWrapper}, &:focus ~ ${CloseIconWrapper} {
-    border: 1px solid ${COLOR.gray_light};
-  }
-  &:focus {
-    border: 1px solid ${COLOR.gray_light};
-  }
 `
 
-export default function SearchBar({ placeholder, horizontalAlign }) {
+export default function SearchBar({
+  placeholder,
+  horizontalAlign,
+  noBorderRadius,
+}) {
   return (
     <>
-      <SearchBarWrapper $horizontalAlign={horizontalAlign}>
-        <SearchBarInput placeholder={placeholder} />
+      <SearchBarWrapper
+        $horizontalAlign={horizontalAlign}
+        $noBorderRadius={noBorderRadius}
+      >
+        <SearchBarInput
+          placeholder={placeholder}
+          $noBorderRadius={noBorderRadius}
+        />
         <CloseIconWrapper>
           <CloseIcon />
         </CloseIconWrapper>
-        <SearchIconWrapper>
+        <SearchIconWrapper $noBorderRadius={noBorderRadius}>
           <SearchIcon />
         </SearchIconWrapper>
       </SearchBarWrapper>
