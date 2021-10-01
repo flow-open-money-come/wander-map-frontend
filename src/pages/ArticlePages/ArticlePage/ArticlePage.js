@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   }
 `
 
-const ArticleTitle = styled.span`
+const ArticleTitle = styled.div`
   font-weight: bold;
   display: flex;
   padding: 5px;
@@ -76,9 +76,13 @@ const ArticleTitleAndLikes = styled.div`
 `
 
 const ArticleTags = styled.div`
-  display: flex;
   border-radius: ${RADIUS.md};
   flex-wrap: wrap;
+  display: flex;
+
+  ${MEDIA_QUERY.lg} {
+    height: 50px;
+  }
 `
 
 const ArticleTag = styled.div`
@@ -122,21 +126,17 @@ const UserName = styled.div`
 
 const UserInfo = styled.div`
   font-size: 11px;
-  padding-top: 2px;
-  margin-left: 5px;
-  justify-content: center;
+  align-items: center;
+  margin-left: 15px;
 
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
-    margin-top: 10px;
   }
 `
 const ArticleUser = styled.div`
-  margin-top: 5px;
   display: flex;
 
   ${MEDIA_QUERY.md} {
-    margin-top: 9px;
   }
 `
 const ArticleDate = styled.div`
@@ -167,10 +167,11 @@ const ArticleContentContainer = styled.div`
   box-shadow: ${EFFECT.shadow_light};
   width: 100$;
   margin: 21px 0 50px 0;
-  padding: 20px;
+  padding: 10px 15px 15px 15px;
 
-  ${MEDIA_QUERY.lg} {
+  ${MEDIA_QUERY.md} {
     margin-bottom: 78px;
+    padding: 19px 35px 35px 35px;
   }
 `
 const ArticleLocation = styled.div`
@@ -179,17 +180,17 @@ const ArticleLocation = styled.div`
 const ArticleContent = styled.div`
   align-self: center;
   border-top: 1px solid ${COLOR.beige};
-  margin: 15px;
+  margin: 15px 0;
   width: 100%;
-  max-height: 60rem;
+  max-height: 50rem;
   font-size: ${FONT.s};
-  padding: 10px;
-  line-height: 3rem;
+  line-height: 2rem;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: wrap;
 
   ${MEDIA_QUERY.md} {
+    line-height: 3rem;
     max-height: 90rem;
     font-size: ${FONT.md};
   }
@@ -218,13 +219,14 @@ const FlexGroup = styled.div`
   margin: 20px auto;
 `
 
-const Unfold = styled.button`
+const UnfoldButton = styled.button`
   margin-top: 10px;
   align-self: flex-end;
   cursor: pointer;
   color: ${COLOR.green};
   font-size: ${FONT.s};
   font-weight: bold;
+  margin: 0 5px 13px 0;
 
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
@@ -254,6 +256,7 @@ const TitleAndTags = styled.div`
 
   ${MEDIA_QUERY.lg} {
     flex-direction: row;
+    align-items: center;
   }
 `
 
@@ -327,7 +330,7 @@ function ArticlePage() {
           ，景色秀麗，有「宜蘭的小太魯閣」之稱。當陽光透過樹葉射在步道上時，光影迷人，時有樹蛙及昆蟲在葉片上休息，
           是一條可以呼吸到大自然生動氣息的野趣步道。
         </ArticleContent>
-        <Unfold>展開全文</Unfold>
+        <UnfoldButton>展開全文</UnfoldButton>
       </ArticleContentContainer>
       <FlexGroup>
         <ReviewIcon />
