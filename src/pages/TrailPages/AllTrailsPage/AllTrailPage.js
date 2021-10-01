@@ -28,6 +28,13 @@ const AllTrailPageTitleWrapper = styled.div`
     font-size: ${FONT.logo};
   }
 `
+const SearchBarWrapper = styled.div`
+  width: 80%;
+  margin: 0 auto;
+  ${MEDIA_QUERY.lg} {
+    width: 50%;
+  }
+`
 const FeaturedTrailsCarousel = styled.img`
   width: 100%;
   height: 150px;
@@ -64,11 +71,12 @@ const DropDownContainer = styled.div`
   justify-content: center;
   position: relative;
   top: -20px;
+  border-radius: ${RADIUS.md};
+  overflow: hidden;
 `
 const FilteredTrailsWrapper = styled.div`
   width: 80%;
   margin: 0 auto;
-  padding-bottom: 100px;
   ${MEDIA_QUERY.lg} {
     width: 90%;
     display: flex;
@@ -133,7 +141,7 @@ const Location = styled(LocationSvg)`
 `
 const LoadMoreBtn = styled.div`
   ${NavBarButton}
-  margin: 0 auto;
+  margin: 50px auto 100px auto;
 `
 function AllTrailPage() {
   const FeaturedTrailInfo = {
@@ -164,7 +172,9 @@ function AllTrailPage() {
           <StarSvg />
           精選步道
         </AllTrailPageTitleWrapper>
-        <SearchBar horizontalAlign={true} placeholder='關鍵字...' />
+        <SearchBarWrapper>
+          <SearchBar horizontalAlign={true} placeholder='關鍵字...' />
+        </SearchBarWrapper>
         <FeaturedTrailsCarouselWrapper>
           <FeaturedTrailsCarousel
             src={Object.values(FeaturedTrailInfo)[currentImgIndex]}
@@ -219,8 +229,8 @@ function AllTrailPage() {
             </FilteredTrailLocation>
             <FilteredTrailTages> 一般 | 四季皆宜 </FilteredTrailTages>
           </FilteredTrailCard>
-          <LoadMoreBtn>看更多</LoadMoreBtn>
         </FilteredTrailsWrapper>
+        <LoadMoreBtn>看更多</LoadMoreBtn>
       </AllTrialPageWrapper>
     </>
   )

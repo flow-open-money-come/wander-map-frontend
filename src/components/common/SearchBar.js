@@ -18,8 +18,8 @@ const SearchIcon = styled(SearchSvg)`
   transform: translate(-50%, -50%);
 `
 const SearchIconWrapper = styled.div`
-  width: 15%;
-  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
   background-color: ${COLOR.white};
   border-radius: 0 ${RADIUS.md} ${RADIUS.md} 0;
   box-shadow: ${EFFECT.shadow_light};
@@ -34,8 +34,8 @@ const CloseIcon = styled(CloseSvg)`
   transform: translate(-50%, -50%);
 `
 const CloseIconWrapper = styled.div`
-  width: 15%;
-  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
   background-color: ${COLOR.white};
   box-shadow: ${EFFECT.shadow_light};
   border: 1px solid ${COLOR.white};

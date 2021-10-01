@@ -11,13 +11,12 @@ const TitleText = styled.div`
     max-width: 50px;
   }
   ${MEDIA_QUERY.lg} {
-    max-width: 60px;
+    max-width: 100px;
   }
 `
 const DropDownCheckBoxTitle = styled.div`
   min-width: 70px;
   height: 25px;
-  border: 1px solid ${COLOR.gray_light};
   border-bottom: none;
   padding: 20px 3px;
   display: flex;
@@ -25,6 +24,7 @@ const DropDownCheckBoxTitle = styled.div`
   justify-content: center;
   font-size: ${FONT.xs};
   background-color: ${COLOR.white};
+  box-shadow: ${EFFECT.shadow_light};
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
   }
@@ -38,8 +38,7 @@ const DropDownCheckBoxs = styled.div`
   flex-direction: column;
   height: 0;
   transition: ${EFFECT.transition};
-  border: 1px solid ${COLOR.gray_light};
-  border-bottom: none;
+  border-top: 0.5px solid ${COLOR.gray_light};
   background-color: ${COLOR.white};
   overflow: hidden;
   box-shadow: ${EFFECT.shadow_light};
@@ -48,7 +47,6 @@ const DropDownCheckBoxs = styled.div`
     `
     height: 130px;
     overflow: scroll;
-    border: 1px solid ${COLOR.gray_light};
     `}
 `
 const DropDownCheckBoxInput = styled.input`
@@ -67,7 +65,7 @@ const DropDownCheckBoxWrapper = styled.label`
   padding: 10px;
   font-size: 10px;
   color: ${COLOR.gray};
-  border-bottom: 1px solid ${COLOR.gray_light};
+  border-bottom: 0.5px solid ${COLOR.gray_light};
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
   }
