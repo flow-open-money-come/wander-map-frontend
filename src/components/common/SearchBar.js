@@ -20,9 +20,10 @@ const SearchIcon = styled(SearchSvg)`
 const SearchIconWrapper = styled.div`
   width: 15%;
   height: 42px;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: ${COLOR.white};
   border-radius: 0 ${RADIUS.md} ${RADIUS.md} 0;
   box-shadow: ${EFFECT.shadow_light};
+  border: 1px solid ${COLOR.white};
   position: relative;
   transition: ${EFFECT.transition};
 `
@@ -35,15 +36,16 @@ const CloseIcon = styled(CloseSvg)`
 const CloseIconWrapper = styled.div`
   width: 15%;
   height: 42px;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: ${COLOR.white};
   box-shadow: ${EFFECT.shadow_light};
+  border: 1px solid ${COLOR.white};
   position: relative;
   transition: ${EFFECT.transition};
 `
 const SearchBarInput = styled.input`
   width: 80%;
   height: 30px;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: ${COLOR.white};
   outline: none;
   border: 1px solid ${COLOR.white};
   border-radius: ${RADIUS.md} 0 0 ${RADIUS.md};
@@ -51,10 +53,10 @@ const SearchBarInput = styled.input`
   box-shadow: ${EFFECT.shadow_light};
   transition: ${EFFECT.transition};
   &:focus ~ ${SearchIconWrapper}, &:focus ~ ${CloseIconWrapper} {
-    background-color: white;
+    border: 1px solid ${COLOR.gray_light};
   }
   &:focus {
-    background-color: white;
+    border: 1px solid ${COLOR.gray_light};
   }
 `
 

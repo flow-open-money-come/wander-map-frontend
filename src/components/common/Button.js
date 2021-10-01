@@ -1,4 +1,4 @@
-import { COLOR, RADIUS } from '../../constants/style'
+import { COLOR, RADIUS, EFFECT } from '../../constants/style'
 
 export const NavBarButton = `
   width: 200px;
@@ -8,6 +8,7 @@ export const NavBarButton = `
   text-align: center;
   border-radius: ${RADIUS.s};
   border: 1px solid ${COLOR.green};
+  transition: ${EFFECT.transition};
   &:hover {
     color: white;
     background-color: ${COLOR.green};
