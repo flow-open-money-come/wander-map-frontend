@@ -14,7 +14,7 @@ const SlideImage = styled.img`
 
   ${MEDIA_QUERY.md} {
     width: 250px;
-    height: 307px;
+    height: auto;
     object-fit: cover;
     margin-right: 21px;
   }
@@ -57,30 +57,13 @@ const RightArrow = styled(Right_Arrow)`
 // 幻燈片文章內容
 
 const ArticleInfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
   ${MEDIA_QUERY.md} {
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: wrap;
-  }
-`
-
-const ArticleContent = styled.div`
-  display: none;
-
-  ${MEDIA_QUERY.md} {
-    width: 100%;
-    max-height: 7rem;
-    display: block;
-    font-size: ${FONT.s};
-    padding: 10px 10px 10px 0;
-    line-height: 2rem;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: wrap;
-  }
-
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
   }
 `
 
@@ -146,17 +129,44 @@ const ArticleTitleAndLikes = styled.div`
   }
 `
 
+const ArticleContent = styled.div`
+  display: none;
+
+  ${MEDIA_QUERY.md} {
+    width: 100%;
+    display: block;
+    font-size: ${FONT.s};
+    padding: 10px 10px 10px 0;
+    line-height: 2rem;
+    overflow: hidden;
+    height: 108px;
+  }
+
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.md};
+  }
+`
+
 const ArticleTags = styled.div`
   display: flex;
   border-radius: ${RADIUS.md};
   justify-content: center;
-  transform: translate(-10%, -200%);
+  transform: translate(-5%, -200%);
   flex-wrap: wrap;
+  max-height: 2rem;
+  overflow: hidden;
 
   ${MEDIA_QUERY.md} {
     display: flex;
     transform: translate(0, 0);
     justify-content: flex-start;
+    align-items: center;
+    overflow: hidden;
+    max-height: 65px;
+  }
+
+  ${MEDIA_QUERY.lg} {
+    max-height: 60px;
   }
 `
 
@@ -165,7 +175,7 @@ const ArticleTag = styled.div`
   border-radius: ${RADIUS.s};
   background-color: ${COLOR.yellow_dark};
   font-size: 11px;
-  margin: 5px 3px;
+  margin: 4px 3px;
   color: #ffffff;
   padding: 6px 10px;
 
@@ -192,7 +202,7 @@ const ArticleInfo = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-right: 20px;
+    margin: 0 20px 11px 0;
   }
 `
 
@@ -232,13 +242,17 @@ const ImageContainer = styled.div`
   width: 400px;
   height: 250px;
   margin: 20px;
+  transition-property: font-size;
+  transition-duration: 4s;
+  transition-delay: 2s;
+  z-index: -1;
 
   ${MEDIA_QUERY.md} {
     display: flex;
     border-radius: ${RADIUS.lg};
     background: ${COLOR.white};
     width: 1173px;
-    height: 307px;
+    height: auto;
     margin: 20px;
     box-shadow: ${EFFECT.shadow_light};
   }

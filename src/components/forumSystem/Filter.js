@@ -13,12 +13,13 @@ const FilterContainer = styled.div`
   }
 
   ${MEDIA_QUERY.lg} {
-    margin-bottom: 117px;
+    margin-bottom: 82px;
   }
 `
 
 const Filter = styled.div`
   padding: 10px;
+  padding-bottom: 0;
   width: 100%;
   background-color: ${COLOR.white};
   border-radius: ${RADIUS.lg};
@@ -32,6 +33,7 @@ const Filter = styled.div`
 
 const UpperPart = styled.div`
   display: flex;
+  justify-content: space-between;
 `
 
 const SearchInput = styled.input`
@@ -41,6 +43,14 @@ const SearchInput = styled.input`
   border-bottom: 1px solid ${COLOR.beige};
   background-color: ${COLOR.white};
   color: ${COLOR.gray};
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+  }
+
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.lg};
+  }
 `
 
 const SearchIcon = styled.button`
@@ -50,6 +60,11 @@ const SearchIcon = styled.button`
   width: 30px;
   height: 30px;
   cursor: pointer;
+
+  ${MEDIA_QUERY.md} {
+    width: 50px;
+    height: 50px;
+  }
 `
 
 const FilterTags = styled.div`
@@ -63,6 +78,14 @@ const FilterTag = styled.button`
   cursor: pointer;
   padding: 12px;
   border-bottom: 1px solid ${COLOR.beige};
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+  }
+
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.lg};
+  }
 
   ${(props) =>
     props.isChecked === true &&

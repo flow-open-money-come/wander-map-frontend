@@ -1,14 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comment'
-import {
-  FONT,
-  COLOR,
-  EFFECT,
-  RADIUS,
-  MEDIA_QUERY,
-} from '../../../constants/style'
+import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import { ReactComponent as Review } from '../../../icons/articles/review.svg'
+import Tags from '../../../components/forumSystem/ArticleTags'
+import ArticleContent from '../../../components/forumSystem/ArticleContent'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -75,34 +71,6 @@ const ArticleTitleAndLikes = styled.div`
   justify-content: space-between;
 `
 
-const ArticleTags = styled.div`
-  border-radius: ${RADIUS.md};
-  flex-wrap: wrap;
-  display: flex;
-
-  ${MEDIA_QUERY.lg} {
-    height: 50px;
-  }
-`
-
-const ArticleTag = styled.div`
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  border-radius: ${RADIUS.s};
-  background-color: ${COLOR.yellow_dark};
-  font-size: 11px;
-  margin: 5px 3px;
-  color: #ffffff;
-  padding: 6px 10px;
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md};
-    padding: 6px 14px;
-    flex: 0 1 auto;
-  }
-`
-
 const CoverImg = styled.img`
   width: 100%;
   height: 40%;
@@ -115,126 +83,12 @@ const CoverImg = styled.img`
   }
 `
 
-const UserName = styled.div`
-  margin-bottom: 5px;
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md};
-    padding-bottom: 5px;
-  }
-`
-
-const UserInfo = styled.div`
-  font-size: 11px;
-  align-items: center;
-  margin-left: 15px;
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-  }
-`
-const ArticleUser = styled.div`
-  display: flex;
-
-  ${MEDIA_QUERY.md} {
-  }
-`
-const ArticleDate = styled.div`
-  font-size: 11px;
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md};
-  }
-`
-
-const UserAvatar = styled.img`
-  width: 30px;
-  height: 30px;
-
-  ${MEDIA_QUERY.md} {
-    width: 45px;
-    height: 45px;
-  }
-`
-
 const ArticleDepartureTime = styled.div`
   margin: 7px 0;
 `
-const ArticleContentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  border: ${COLOR.beige} 1px solid;
-  box-shadow: ${EFFECT.shadow_light};
-  width: 100$;
-  margin: 21px 0 50px 0;
-  padding: 10px 15px 15px 15px;
 
-  ${MEDIA_QUERY.md} {
-    margin-bottom: 78px;
-    padding: 19px 35px 35px 35px;
-  }
-`
 const ArticleLocation = styled.div`
   margin: 21px 0 7px 0;
-`
-const ArticleContent = styled.div`
-  align-self: center;
-  border-top: 1px solid ${COLOR.beige};
-  margin: 15px 0;
-  width: 100%;
-  max-height: 50rem;
-  font-size: ${FONT.s};
-  line-height: 2rem;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: wrap;
-
-  ${MEDIA_QUERY.md} {
-    line-height: 3rem;
-    max-height: 90rem;
-    font-size: ${FONT.md};
-  }
-
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
-  }
-`
-
-const CommentTitle = styled.h1`
-  font-size: ${FONT.md};
-  margin-left: 5px;
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.lg};
-  }
-
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.xl};
-  }
-`
-
-const FlexGroup = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 20px auto;
-`
-
-const UnfoldButton = styled.button`
-  margin-top: 10px;
-  align-self: flex-end;
-  cursor: pointer;
-  color: ${COLOR.green};
-  font-size: ${FONT.s};
-  font-weight: bold;
-  margin: 0 5px 13px 0;
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-  }
-
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
-  }
 `
 
 const ReviewIcon = styled(Review)`
@@ -260,6 +114,25 @@ const TitleAndTags = styled.div`
   }
 `
 
+const CommentTitle = styled.h1`
+  font-size: ${FONT.md};
+  margin-left: 5px;
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.lg};
+  }
+
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.xl};
+  }
+`
+
+const FlexGroup = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 20px auto;
+`
+
 function ArticlePage() {
   return (
     <Wrapper>
@@ -267,16 +140,7 @@ function ArticlePage() {
       <ArticleTitleAndLikes>
         <TitleAndTags>
           <ArticleTitle>林美石磐步道</ArticleTitle>
-          <ArticleTags>
-            <ArticleTag>一日</ArticleTag>
-            <ArticleTag>有水源</ArticleTag>
-            <ArticleTag>新手小白體驗</ArticleTag>
-            <ArticleTag>一日</ArticleTag>
-            <ArticleTag>一日</ArticleTag>
-            <ArticleTag>有水源</ArticleTag>
-            <ArticleTag>新手小白體驗</ArticleTag>
-            <ArticleTag>一日</ArticleTag>
-          </ArticleTags>
+          <Tags />
         </TitleAndTags>
         <ArticleLikes>
           <ThumbUp />
@@ -287,51 +151,7 @@ function ArticlePage() {
       <ArticleDepartureTime>
         出發時間：2000.01.02 ~ 2000.01.03
       </ArticleDepartureTime>
-      <ArticleContentContainer>
-        <ArticleUser>
-          <UserAvatar src='https://i.imgur.com/eGREu6v.png' />
-          <UserInfo>
-            <UserName>水貓怪怪</UserName>
-            <ArticleDate>2021.9.7 / 20:20:22</ArticleDate>
-          </UserInfo>
-        </ArticleUser>
-        <ArticleContent>
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好走、
-          又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，散發陣陣芬多精，走在其中清爽無比，非常適合闔家一起健行。
-          步道名稱是由「林美」與「石磐」兩個名字組成，「林美」是指礁溪鄉林美村，
-          而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、大小不一的水潭與峽谷地形，
-          景色秀麗，有「宜蘭的小太魯閣」之稱。當陽光透過樹葉射在步道上時，光影迷人，時有樹蛙及昆蟲在葉片上休息，是一條可以呼吸到大自然生動氣息的野趣步道。
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，
-          散發陣陣芬多精，走在其中清爽無比，非常適合闔家一起健行。
-          步道名稱是由「林美」與「石磐」兩個名字組成，「林美」是指礁溪鄉林美村，
-          而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、大小不一的水潭與峽谷地形
-          ，景色秀麗，有「宜蘭的小太魯閣」之稱。當陽光透過樹葉射在步道上時，光影迷人，時有樹蛙及昆蟲在葉片上休息，
-          是一條可以呼吸到大自然生動氣息的野趣步道。
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好走、
-          又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，散發陣陣芬多精，走在其中清爽無比，非常適合闔家一起健行。
-          步道名稱是由「林美」與「石磐」兩個名字組成，「林美」是指礁溪鄉林美村，
-          而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、大小不一的水潭與峽谷地形，
-          景色秀麗，有「宜蘭的小太魯閣」之稱。當陽光透過樹葉射在步道上時，光影迷人，時有樹蛙及昆蟲在葉片上休息，是一條可以呼吸到大自然生動氣息的野趣步道。
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，
-          散發陣陣芬多精，走在其中清爽無比，非常適合闔家一起健行。
-          步道名稱是由「林美」與「石磐」兩個名字組成，「林美」是指礁溪鄉林美村，
-          而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、大小不一的水潭與峽谷地形
-          ，景色秀麗，有「宜蘭的小太魯閣」之稱。當陽光透過樹葉射在步道上時，光影迷人，時有樹蛙及昆蟲在葉片上休息，
-          是一條可以呼吸到大自然生動氣息的野趣步道。
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好走、
-          又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，散發陣陣芬多精，走在其中清爽無比，非常適合闔家一起健行。
-          步道名稱是由「林美」與「石磐」兩個名字組成，「林美」是指礁溪鄉林美村，
-          而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、大小不一的水潭與峽谷地形，
-          景色秀麗，有「宜蘭的小太魯閣」之稱。當陽光透過樹葉射在步道上時，光影迷人，時有樹蛙及昆蟲在葉片上休息，是一條可以呼吸到大自然生動氣息的野趣步道。
-          林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，
-          散發陣陣芬多精，走在其中清爽無比，非常適合闔家一起健行。
-          步道名稱是由「林美」與「石磐」兩個名字組成，「林美」是指礁溪鄉林美村，
-          而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、大小不一的水潭與峽谷地形
-          ，景色秀麗，有「宜蘭的小太魯閣」之稱。當陽光透過樹葉射在步道上時，光影迷人，時有樹蛙及昆蟲在葉片上休息，
-          是一條可以呼吸到大自然生動氣息的野趣步道。
-        </ArticleContent>
-        <UnfoldButton>展開全文</UnfoldButton>
-      </ArticleContentContainer>
+      <ArticleContent />
       <FlexGroup>
         <ReviewIcon />
         <CommentTitle>討論區</CommentTitle>
