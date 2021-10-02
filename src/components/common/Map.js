@@ -5,12 +5,39 @@ import React, { useState } from 'react'
 import { COLOR, EFFECT, RADIUS } from '../../constants/style'
 import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import { ReactComponent as CloseSvg } from '../../icons/close.svg'
+import { ReactComponent as PinSvg } from '../../icons/pin.svg'
+import useToggle from '../../hooks/useToggle'
 
-const AnyReactComponent = styled.div`
-  font-size: 12px;
-  min-width: 100px;
+const Marker = styled(PinSvg)`
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
 `
-
+const InfoWindow = styled.div`
+  width: 200px;
+  height: 150px;
+  position: relative;
+  box-shadow: ${EFFECT.shadow_light};
+  top: -175px;
+  left: -105px;
+  background-color: ${COLOR.white};
+  border-radius: ${RADIUS.md};
+  overflow: hidden;
+  display: none;
+  ${(props) =>
+    props.$isOpen &&
+    `
+    display:block;
+  `}
+`
+const TrailImg = styled.img`
+  width: 200px;
+  height: 100px;
+`
+const TrailName = styled.div`
+  font-size: 18px;
+  padding: 10px;
+`
 const SearchIcon = styled(SearchSvg)`
   width: 20px;
   height: 20px;
@@ -79,27 +106,25 @@ const Map = (props) => {
   const [mapApiLoaded, setMapApiLoaded] = useState(false)
   const [mapInstance, setMapInstance] = useState(null)
   const [mapApi, setMapApi] = useState(null)
+  const [isInfoWindowOpen, setInfoWindowToggleClick] = useToggle(false)
 
-  // 當地圖載入完成，將地圖實體與地圖 API 傳入 state 供之後使用
   const apiHasLoaded = (map, maps) => {
     console.log('載入完成!')
     setMapInstance(map)
     setMapApi(maps)
     setMapApiLoaded(true)
   }
-
-  const handleCenterChange = () => {
-    if (mapApiLoaded) {
-      setMyPosition({
-        // center.lat() 與 center.lng() 會回傳正中心的經緯度
-        lat: mapInstance.center.lat(),
-        lng: mapInstance.center.lng(),
-      })
-    }
-  }
+  // 進階： 移動位置自動搜尋附近的步道
+  // const handleCenterChange = () => {
+  //   if (mapApiLoaded) {
+  //     setMyPosition({
+  //       lat: mapInstance.center.lat(),
+  //       lng: mapInstance.center.lng(),
+  //     })
+  //   }
+  // }
 
   return (
-    // Important! Always set the container height explicitly
     <div
       style={{
         height: '100%',
@@ -122,11 +147,21 @@ const Map = (props) => {
         defaultZoom={props.zoom}
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
-        onBoundsChange={handleCenterChange}
+        // onBoundsChange={handleCenterChange}
       >
-        <AnyReactComponent lat={myPosition.lat} lng={myPosition.lng}>
-          當前位置
-        </AnyReactComponent>
+        <Marker
+          lat={props.center.lat}
+          lng={props.center.lng}
+          onClick={setInfoWindowToggleClick}
+        ></Marker>
+        <InfoWindow
+          lat={props.center.lat}
+          lng={props.center.lng}
+          $isOpen={isInfoWindowOpen}
+        >
+          <TrailImg src='https://i.imgur.com/w2Y6y4z.jpg' />
+          <TrailName>林美石磐步道</TrailName>
+        </InfoWindow>
       </GoogleMapReact>
     </div>
   )
@@ -141,3 +176,23 @@ Map.defaultProps = {
 }
 
 export default Map
+/*
+1. default: 顯示 demo 用「有較多文章」的步道，以他當作初始點，旁邊的文章列表也顯示
+2. 當使用者搜尋：
+  2.1 依據使用者輸入的關鍵字去後端拿資料
+  2.2 將顯示地點改成拿到的資料當中的所有經緯度，並顯示出步道資料
+
+states:
+  - filteredTrails: [{
+    'trail 1': {
+      trail_id: 1,
+      coordinate: {
+        x: 24, y: 121.7
+      }
+      ...
+    }
+  }]
+map trails marker and info window:
+  - after getting response...
+    - filteredTrails.map(trail => return <Map key={trail.trail_id} ><InfoWindow /></Map>)
+*/
