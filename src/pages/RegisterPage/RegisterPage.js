@@ -10,6 +10,7 @@ const RegisterPageWrapper = styled.div`
       rgba(0, 0, 0, 0.2) 100%
     ),
     url('https://i.imgur.com/Y5790Kx.png');
+  background-size: cover;
   padding: 40px 0px;
 `
 const RegisterFormsWrapper = styled.div`
@@ -65,24 +66,23 @@ const Input = styled.input`
   }
 `
 
-const FormWrapper = styled.div`
+const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
 `
 
-const SubmitBtn = styled.div`
+const SubmitBtn = styled.input`
   width: 250px;
   height: 40px;
-  padding: 10px 20px;
   border: 1px solid ${COLOR.gray};
   border-radius: ${RADIUS.lg};
   margin-top: 25px;
-  font-size: 16px;
   color: ${COLOR.white};
   text-align: center;
-  transition: 0.5s linear;
+  transition: ${EFFECT.transition};
   font-size: ${FONT.s};
+  background-color: transparent;
   &:hover {
     cursor: pointer;
     background-color: ${COLOR.green};
@@ -113,14 +113,24 @@ export default function RegisterPage() {
         <RegisterFormsWrapper>
           <FormWrapper>
             <AlertMsg $error>資料不齊全，請再次檢查。</AlertMsg>
-            <Input placeholder='使用者名稱' />
+            <Input placeholder='使用者名稱' required />
             <AlertMsg>至多 20 個字元</AlertMsg>
-            <Input placeholder='帳號' />
-            <Input type='password' placeholder='密碼' />
+            <Input type='email' placeholder='電子郵件' required />
+            <Input
+              type='password'
+              placeholder='密碼'
+              pattern='(?=.*\d)(?=.*[a-zA-Z])^[a-zA-Z0-9!@#$%^&*]{8,}$'
+              required
+            />
             <AlertMsg>8 位以上的英數組合</AlertMsg>
-            <Input type='password' placeholder='確認密碼' />
+            <Input
+              type='password'
+              placeholder='確認密碼'
+              pattern='(?=.*\d)(?=.*[a-zA-Z])^[a-zA-Z0-9!@#$%^&*]{8,}$'
+              required
+            />
             <AlertMsg>請再次輸入密碼</AlertMsg>
-            <SubmitBtn> 註冊 </SubmitBtn>
+            <SubmitBtn type='submit' value='註冊'></SubmitBtn>
             <AlertMsg>
               已是會員？<OuterLink>登入</OuterLink>
             </AlertMsg>

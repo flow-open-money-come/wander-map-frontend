@@ -2,7 +2,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 
-const RegisterPageWrapper = styled.div`
+const LoginPageWrapper = styled.div`
   width: 100%;
   background-image: linear-gradient(
       to bottom,
@@ -12,7 +12,7 @@ const RegisterPageWrapper = styled.div`
     url('https://i.imgur.com/Y5790Kx.png');
   padding: 40px 0px;
 `
-const RegisterFormsWrapper = styled.div`
+const LoginFormsWrapper = styled.form`
   width: 80%;
   margin: 0 auto;
 `
@@ -71,18 +71,18 @@ const FormWrapper = styled.div`
   align-items: center;
 `
 
-const SubmitBtn = styled.div`
+const SubmitBtn = styled.input`
   width: 250px;
   height: 40px;
   padding: 10px 20px;
   border: 1px solid ${COLOR.gray};
   border-radius: ${RADIUS.lg};
   margin-top: 25px;
-  font-size: 16px;
   color: ${COLOR.white};
   text-align: center;
-  transition: 0.5s linear;
+  transition: ${EFFECT.transition};
   font-size: ${FONT.s};
+  background-color: transparent;
   &:hover {
     cursor: pointer;
     background-color: ${COLOR.green};
@@ -108,20 +108,25 @@ const OuterLink = styled(Link)`
 export default function LoginPage() {
   return (
     <>
-      <RegisterPageWrapper>
+      <LoginPageWrapper>
         <Title> 會員登入 </Title>
-        <RegisterFormsWrapper>
+        <LoginFormsWrapper>
           <FormWrapper>
             <AlertMsg $error>資料不齊全，請再次檢查。</AlertMsg>
-            <Input placeholder='帳號' />
-            <Input type='password' placeholder='密碼' />
-            <SubmitBtn> 登入 </SubmitBtn>
+            <Input type='email' placeholder='電子郵件' required />
+            <Input
+              type='password'
+              placeholder='密碼'
+              pattern='(?=.*\d)(?=.*[a-zA-Z])^[a-zA-Z0-9!@#$%^&*]{8,}$'
+              required
+            />
+            <SubmitBtn type='submit' value='登入'></SubmitBtn>
             <AlertMsg>
               還不是會員？<OuterLink>註冊</OuterLink>
             </AlertMsg>
           </FormWrapper>
-        </RegisterFormsWrapper>
-      </RegisterPageWrapper>
+        </LoginFormsWrapper>
+      </LoginPageWrapper>
     </>
   )
 }
