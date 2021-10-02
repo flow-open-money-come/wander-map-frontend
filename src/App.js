@@ -49,7 +49,7 @@ function App() {
           <Route path='/articles/id'></Route>
           <Route path='/trails/id'></Route>
         </Switch>
-        <Footer />
+        {/* <Footer /> */}
       </Router>
     </>
   )
