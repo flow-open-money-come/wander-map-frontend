@@ -81,10 +81,11 @@ const InputWrapper = styled.div`
 const FormTitle = styled.div`
   font-weight: 600;
   margin-bottom: 8px;
+  font-family: Arial, Helvetica, sans-serif;
   ${MEDIA_QUERY.md} {
     margin: 10px 20px;
     width: 100px;
-    text-align: right;
+    text-align: center;
   }
   ${MEDIA_QUERY.lg} {
     margin: 10px 40px;
@@ -152,19 +153,23 @@ const PicHolder = styled.label`
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
 `
-const UploadBtn = styled.button`
-  margin: 50px auto;
-  font-size: ${FONT.md};
-`
+
 const UploadInput = styled.input.attrs({
   type: 'file',
   accept: 'image/png, image/jpeg',
 })`
-  opacity: 0;
-  z-index: -1;
   position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 `
 const Image = styled(ImageSvg)`
   width: 30px;
@@ -173,7 +178,9 @@ const Image = styled(ImageSvg)`
 `
 const UploadNotice = styled.div`
   font-size: ${FONT.xs};
+  margin-top: 30px;
 `
+
 const SubmitBtn = styled.div`
   text-align: right;
   ${MEDIA_QUERY.md} {
@@ -237,11 +244,9 @@ export default function TrailPostPage() {
         <FormTitle>封面圖片</FormTitle>
         <FormSubTitleWrapper>
           <PicHolder>
-            <UploadBtn>
-              <Image />
-              <br />
-              點擊上傳
-            </UploadBtn>
+            <Image />
+            <br />
+            點擊上傳
             <UploadInput />
             <UploadNotice>
               建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
@@ -345,11 +350,9 @@ export default function TrailPostPage() {
         <FormTitle>路線圖片</FormTitle>
         <FormSubTitleWrapper>
           <PicHolder>
-            <UploadBtn>
-              <Image />
-              <br />
-              點擊上傳
-            </UploadBtn>
+            <Image />
+            <br />
+            點擊上傳
             <UploadInput />
             <UploadNotice>
               建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
