@@ -9,9 +9,6 @@ import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
 
 
-
-const line = `outline: 1px red solid`
-
 const UsersManagementContainer = styled.div`
   width: 100%;
   margin: 20px auto;

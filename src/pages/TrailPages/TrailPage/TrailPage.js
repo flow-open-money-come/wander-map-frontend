@@ -9,8 +9,6 @@ import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
 
-const line = `outline: 1px red solid`
-
 const TrailPageContainer = styled.div`
   width: 90%;
   margin: 30px auto;
@@ -28,6 +26,7 @@ const Cover = styled.img`
   min-height: 160px;
   border-radius: ${RADIUS.lg} ${RADIUS.lg} 0 0;
   margin-bottom: 10px;
+  object-fit: cover;
   ${MEDIA_QUERY.lg} {
     width: 60%;
     height: 400px;
@@ -149,7 +148,7 @@ function TrailPage() {
   return (
     <TrailPageContainer>
       <HeadFlex>
-        <Cover src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
+        <Cover src='https://tluxe-aws.hmgcdn.com/public/article/2017/atl_20180628130517_581.jpg' />
         <TitleAndDesc>
           <Title>蘇花古道：大南澳越嶺段</Title>
           <Desc>
@@ -158,7 +157,8 @@ function TrailPage() {
           </Desc>
         </TitleAndDesc>
         <CollectBlock>
-          <CollectIcon />77
+          <CollectIcon />
+          77
         </CollectBlock>
       </HeadFlex>
 

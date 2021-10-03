@@ -7,8 +7,6 @@ import { ReactComponent as ArticleIcon } from '../../icons/backstage/adminArticl
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 
 
-const line = `outline: 1px red solid`
-
 const UsersManagementContainer = styled.div`
   width: 100%;
   margin: 20px auto;

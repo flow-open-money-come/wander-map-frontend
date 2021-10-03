@@ -1,10 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
+import { FONT, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailInfo.svg'
 
-
-const line = `outline: 1px red solid`
 
 const InfoWrapper = styled.div`
   width: 100%;

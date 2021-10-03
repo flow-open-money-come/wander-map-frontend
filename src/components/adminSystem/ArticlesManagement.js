@@ -6,10 +6,7 @@ import { ReactComponent as TrailIcon } from '../../icons/backstage/adminTrail.sv
 import { ReactComponent as ArticleIcon } from '../../icons/backstage/adminArticle.svg'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
-import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
 
-
-const line = `outline: 1px red solid`
 
 const UsersManagementContainer = styled.div`
   width: 100%;

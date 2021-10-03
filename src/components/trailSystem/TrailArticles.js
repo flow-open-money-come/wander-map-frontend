@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
+import { COLOR, FONT, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/article.svg'
 import ArticleList from '../forumSystem/Article.js'
 
@@ -26,7 +26,7 @@ const Title = styled.div`
     height: 20px;
   }
   ${MEDIA_QUERY.lg} {
-    font-size: 36px;
+    font-size: 34px;
     margin-bottom: 10px;
     svg {
       margin: 0 10px;

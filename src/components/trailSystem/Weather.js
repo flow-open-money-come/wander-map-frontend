@@ -7,8 +7,6 @@ import { ReactComponent as PopIcon } from '../../icons/weather/weather-RainProba
 import { ReactComponent as CloudyIcon } from '../../icons/weather/weather-Cloudy.svg'
 
 
-const line = `outline: 1px red solid`
-
 const WeatherWrapper = styled.div`
   width: 100%;
   display: flex;
