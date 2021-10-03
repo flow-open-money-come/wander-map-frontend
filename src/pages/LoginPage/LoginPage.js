@@ -4,12 +4,14 @@ import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 
 const LoginPageWrapper = styled.div`
   width: 100%;
+  height: 100vh;
   background-image: linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0.2) 0%,
       rgba(0, 0, 0, 0.2) 100%
     ),
     url('https://i.imgur.com/Y5790Kx.png');
+  background-size: cover;
   padding: 40px 0px;
 `
 const LoginFormsWrapper = styled.form`
@@ -122,7 +124,7 @@ export default function LoginPage() {
             />
             <SubmitBtn type='submit' value='登入'></SubmitBtn>
             <AlertMsg>
-              還不是會員？<OuterLink>註冊</OuterLink>
+              還不是會員？<OuterLink to='/register'>註冊</OuterLink>
             </AlertMsg>
           </FormWrapper>
         </LoginFormsWrapper>

@@ -4,6 +4,7 @@ import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 
 const RegisterPageWrapper = styled.div`
   width: 100%;
+  height: 100vh;
   background-image: linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0.2) 0%,
@@ -132,7 +133,7 @@ export default function RegisterPage() {
             <AlertMsg>請再次輸入密碼</AlertMsg>
             <SubmitBtn type='submit' value='註冊'></SubmitBtn>
             <AlertMsg>
-              已是會員？<OuterLink>登入</OuterLink>
+              已是會員？<OuterLink to='/login'>登入</OuterLink>
             </AlertMsg>
           </FormWrapper>
         </RegisterFormsWrapper>

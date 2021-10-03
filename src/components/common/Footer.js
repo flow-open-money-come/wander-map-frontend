@@ -4,12 +4,15 @@ import { COLOR, FONT } from '../../constants/style'
 const FooterContainer = styled.footer`
   width: 100%;
   height: 30px;
+  padding: 0 10px;
   background-color: ${COLOR.green};
   color: ${COLOR.white};
   font-size: ${FONT.s};
   text-align: center;
   line-height: 30px;
-  @media (max-width: 768px) {
+  position: fixed;
+  bottom: 0;
+  @media screen and (max-width: 768px) {
     height: 60px;
   }
 `
