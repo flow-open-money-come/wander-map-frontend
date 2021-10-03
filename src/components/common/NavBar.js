@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { ReactComponent as LogoSvg } from '../../icons/logo_with_name.svg'
 import { ReactComponent as DefaultAvatarSvg } from '../../icons/default_avatar.svg'
-import { Link, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { ReactComponent as ArrowUpSvg } from '../../icons/arrow_up.svg'
 import { ReactComponent as ArrowDownSvg } from '../../icons/arrow_down.svg'
 import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
@@ -32,7 +32,6 @@ const NavBarWrapper = styled.div`
 const Logo = styled(LogoSvg)`
   min-width: 120px;
   min-height: 48px;
-  width: 120px;
   height: 48px;
 `
 
@@ -92,7 +91,7 @@ const UserInfoMobile = styled.div`
     align-items: center;
   }
 `
-const UserInfoWrapperMobile = styled.div`
+const UserInfoMobileWrapper = styled.div`
   display: none;
   @media screen and (max-width: 768px) {
     display: flex;
@@ -117,7 +116,7 @@ const DefaultAvatar = styled(DefaultAvatarSvg)`
   min-height: 45px;
   margin-left: 35px;
 `
-const NavBarTextLink = styled.div`
+const NavBarText = styled.div`
   min-width: 60px;
   font-size: ${FONT.s};
   color: ${COLOR.green};
@@ -138,11 +137,10 @@ const NavBarHambergur = styled.div`
   height: 15px;
   cursor: pointer;
   display: none;
-  z-index: 3;
   &::before {
     content: '';
-    top: 0;
     position: absolute;
+    top: 0;
     width: 100%;
     height: 2px;
     background-color: ${COLOR.green};
@@ -156,12 +154,12 @@ const NavBarHambergur = styled.div`
   }
   &::after {
     content: '';
-    bottom: 0;
     position: absolute;
+    bottom: 0;
     width: 100%;
     height: 2px;
     background-color: ${COLOR.green};
-    transition: 0.5s;
+    transition: ${EFFECT.transition};
     ${(props) =>
       props.$isActive &&
       `
@@ -189,9 +187,9 @@ const NavBarHambergurLine = styled.div`
 
 const NavBarMobile = styled.div`
   @media screen and (max-width: 768px) {
-    background-color: rgba(255, 255, 255, 0.9);
     width: 275px;
     height: 0;
+    background-color: rgba(255, 255, 255, 0.9);
     position: absolute;
     top: 0;
     right: 0;
@@ -203,7 +201,7 @@ const NavBarMobile = styled.div`
 const Divider = styled.div`
   width: 80%;
   height: 2px;
-  background-color: #f0eeeb;
+  background-color: ${COLOR.beige};
   display: none;
   margin: 20px 0 20px 0;
   @media screen and (max-width: 768px) {
@@ -250,7 +248,6 @@ const ArrowUp = styled(ArrowUpSvg)`
 `
 
 function NavBar() {
-  const location = useLocation()
   const [hambergurToggleClick, setHambergurToggleClick] = useToggle(false)
   const [arrowToggleClick, setArrowToggleClick] = useToggle(false)
 
@@ -261,31 +258,22 @@ function NavBar() {
           <Logo />
           <NavBarMobile $isActive={hambergurToggleClick}>
             <NavBarLinkWrapper>
-              <NavBarLink
-                to='/articles'
-                $active={'/articles' === location.pathname}
-              >
+              <NavBarLink to='/articles'>
                 <Forum />
                 進入論壇
               </NavBarLink>
 
-              <NavBarLink
-                to='/trails'
-                $active={'/trails' === location.pathname}
-              >
+              <NavBarLink to='/trails'>
                 <Trail />
                 全部步道
               </NavBarLink>
               <UserInfoWeb>
                 <DefaultAvatar />
-                <NavBarTextLink>水怪貓貓</NavBarTextLink>
+                <NavBarText>水怪貓貓</NavBarText>
               </UserInfoWeb>
-              <UserInfoWrapperMobile>
+              <UserInfoMobileWrapper>
                 <UserInfoMobile>
-                  <NavBarLink
-                    to='/backstage/userId'
-                    $active={'/backstage/userId' === location.pathname}
-                  >
+                  <NavBarLink to='/backstage/userId'>
                     <User />
                     我的主頁
                   </NavBarLink>
@@ -303,10 +291,12 @@ function NavBar() {
                   <NavBarLink>管理文章</NavBarLink>
                   <NavBarLink>待辦事項</NavBarLink>
                 </UserInfoListMobile>
-              </UserInfoWrapperMobile>
+              </UserInfoMobileWrapper>
               <Divider />
-              <NavBarTextLink>登出</NavBarTextLink>
-              <NavBarLink $button>會員註冊 / 登入</NavBarLink>
+              <NavBarText>登出</NavBarText>
+              <NavBarLink $button to='/register'>
+                會員註冊 / 登入
+              </NavBarLink>
             </NavBarLinkWrapper>
           </NavBarMobile>
           <NavBarHambergur

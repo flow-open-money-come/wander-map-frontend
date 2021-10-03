@@ -10,7 +10,7 @@ export const NavBarButton = `
   border: 1px solid ${COLOR.green};
   transition: ${EFFECT.transition};
   &:hover {
-    color: white;
+    color: ${COLOR.white};
     background-color: ${COLOR.green};
   }
 `

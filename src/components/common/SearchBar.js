@@ -4,14 +4,14 @@ import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import { ReactComponent as CloseSvg } from '../../icons/close.svg'
 
 const SearchBarWrapper = styled.div`
-  width: 300px;
+  width: 70%;
   z-index: 1;
   display: flex;
   align-items: center;
-  ${(props) => props.$horizontalAlign && `margin: 0 auto;`}
   border-radius: ${RADIUS.md};
-  ${(props) => props.$noBorderRadius && `border-radius:0;`}
   box-shadow: ${EFFECT.shadow_light};
+  ${(props) => props.$horizontalAlign && `margin: 0 auto;`}
+  ${(props) => props.$noBorderRadius && `border-radius:0;`}
 `
 
 const SearchIcon = styled(SearchSvg)`
@@ -25,10 +25,10 @@ const SearchIconWrapper = styled.div`
   min-height: 42px;
   background-color: ${COLOR.white};
   border: 1px solid ${COLOR.white};
-  ${(props) =>
-    !props.$noBorderRadius && `border-radius: 0 ${RADIUS.md} ${RADIUS.md} 0;`}
   position: relative;
   transition: ${EFFECT.transition};
+  ${(props) =>
+    !props.$noBorderRadius && `border-radius: 0 ${RADIUS.md} ${RADIUS.md} 0;`}
 `
 const CloseIcon = styled(CloseSvg)`
   position: absolute;
@@ -48,12 +48,12 @@ const SearchBarInput = styled.input`
   width: 80%;
   height: 30px;
   background-color: ${COLOR.white};
+  padding: 20px;
   outline: none;
   border: 1px solid ${COLOR.white};
+  transition: ${EFFECT.transition};
   ${(props) =>
     !props.$noBorderRadius && `border-radius: ${RADIUS.md} 0 0 ${RADIUS.md};`}
-  padding: 20px;
-  transition: ${EFFECT.transition};
 `
 
 export default function SearchBar({

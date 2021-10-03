@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { FONT, MEDIA_QUERY, RADIUS } from '../../../constants/style'
+import { COLOR, FONT, MEDIA_QUERY, RADIUS } from '../../../constants/style'
 import { ReactComponent as StarSvg } from '../../../icons/star.svg'
 import SearchBar from '../../../components/common/SearchBar'
-import DropDownCheckBoxList from '../../../components/common/DropDownCheckBox'
+import DropDownCheckBoxList from '../../../components/common/DropDownCheckBoxList'
 import { NavBarButton } from '../../../components/common/Button'
 import TrailCard from '../../../components/trailSystem/TrailCard'
+import BackToTopBtn from '../../../components/common/BackToTopBtn'
 
-const AllTrialPageWrapper = styled.div`
+const AllTrialsPageWrapper = styled.div`
   width: 90%;
   margin: 0 auto;
+  position: relative;
 `
-const AllTrailPageTitleWrapper = styled.div`
+const AllTrailsPageTitleWrapper = styled.div`
   font-size: ${FONT.lg};
   font-weight: bold;
   margin: 20px 0px;
@@ -51,8 +53,8 @@ const FeaturedTrailsCarousel = styled.img`
 `
 const FeaturedTrailName = styled.div`
   font-size: ${FONT.md};
+  color: ${COLOR.white};
   background-color: rgba(0, 0, 0, 0.3);
-  color: white;
   padding: 10px 20px;
   position: absolute;
   top: 40px;
@@ -74,10 +76,9 @@ const DropDownContainer = styled.div`
   top: -20px;
 `
 const FilteredTrailsWrapper = styled.div`
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   ${MEDIA_QUERY.lg} {
-    width: 90%;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -87,9 +88,13 @@ const FilteredTrailsWrapper = styled.div`
 const LoadMoreBtn = styled.div`
   ${NavBarButton}
   margin: 50px auto 100px auto;
+  &:hover {
+    cursor: pointer;
+  }
 `
+
 function AllTrailPage() {
-  const FeaturedTrailInfo = {
+  const FeaturedTrailsInfo = {
     林美石磐步道:
       'https://images.unsplash.com/photo-1581339538525-978298a19203?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=774&q=80',
     枕頭山步道:
@@ -97,7 +102,7 @@ function AllTrailPage() {
     加里山登山步道:
       'https://images.unsplash.com/photo-1558734918-dfc4fe470147?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1770&q=80',
   }
-  const FeaturedTrailLength = Object.keys(FeaturedTrailInfo).length
+  const FeaturedTrailLength = Object.keys(FeaturedTrailsInfo).length
   const [currentImgIndex, setCurrentImageIndex] = useState(0)
 
   const handelCarousel = () => {
@@ -121,20 +126,20 @@ function AllTrailPage() {
 
   return (
     <>
-      <AllTrialPageWrapper>
-        <AllTrailPageTitleWrapper>
+      <AllTrialsPageWrapper>
+        <AllTrailsPageTitleWrapper>
           <StarSvg />
           精選步道
-        </AllTrailPageTitleWrapper>
+        </AllTrailsPageTitleWrapper>
         <SearchBarWrapper>
           <SearchBar horizontalAlign={true} placeholder='關鍵字...' />
         </SearchBarWrapper>
         <FeaturedTrailsCarouselWrapper>
           <FeaturedTrailsCarousel
-            src={Object.values(FeaturedTrailInfo)[currentImgIndex]}
+            src={Object.values(FeaturedTrailsInfo)[currentImgIndex]}
           />
           <FeaturedTrailName>
-            {Object.keys(FeaturedTrailInfo)[currentImgIndex]}
+            {Object.keys(FeaturedTrailsInfo)[currentImgIndex]}
           </FeaturedTrailName>
         </FeaturedTrailsCarouselWrapper>
         <DropDownContainer>
@@ -163,9 +168,18 @@ function AllTrailPage() {
           <TrailCard trailInfo={trailInfo} />
           <TrailCard trailInfo={trailInfo} />
           <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
         </FilteredTrailsWrapper>
         <LoadMoreBtn>看更多</LoadMoreBtn>
-      </AllTrialPageWrapper>
+        <BackToTopBtn />
+      </AllTrialsPageWrapper>
     </>
   )
 }

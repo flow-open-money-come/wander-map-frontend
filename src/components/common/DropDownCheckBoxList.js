@@ -17,26 +17,26 @@ const TitleText = styled.div`
 const DropDownCheckBoxTitle = styled.div`
   min-width: 70px;
   height: 42px;
+  font-size: ${FONT.xs};
+  color: ${COLOR.gray};
+  background-color: ${COLOR.white};
   border-bottom: none;
   padding: 20px 3px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: ${FONT.xs};
-  color: ${COLOR.gray};
-  background-color: ${COLOR.white};
   box-shadow: ${EFFECT.shadow_light};
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
   }
 `
 const DropDownCheckBoxs = styled.div`
-  display: flex;
-  flex-direction: column;
   height: 0;
-  transition: ${EFFECT.transition};
   border-top: 0.5px solid ${COLOR.gray_light};
   background-color: ${COLOR.white};
+  display: flex;
+  flex-direction: column;
+  transition: ${EFFECT.transition};
   overflow: hidden;
   box-shadow: none;
   ${(props) =>
@@ -48,22 +48,22 @@ const DropDownCheckBoxs = styled.div`
     `}
 `
 const DropDownCheckBoxInput = styled.input`
-  display: block;
   width: 10px;
   height: 10px;
   margin-right: 8px;
   background-color: ${COLOR.white};
+  display: block;
   ${MEDIA_QUERY.md} {
     width: 15px;
     height: 15px;
   }
 `
 const DropDownCheckBoxWrapper = styled.label`
-  display: flex;
-  padding: 10px;
   font-size: 10px;
   color: ${COLOR.gray};
   border-bottom: 0.5px solid ${COLOR.gray_light};
+  display: flex;
+  padding: 10px;
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
   }
