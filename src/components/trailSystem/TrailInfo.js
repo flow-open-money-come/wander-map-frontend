@@ -26,7 +26,7 @@ const Title = styled.div`
     height: 20px;
   }
   ${MEDIA_QUERY.lg} {
-    font-size: 34px;
+    font-size: ${FONT.logo};
     margin-bottom: 35px;
     svg {
       margin: 0 10px;
@@ -52,8 +52,8 @@ const InfoLocation = styled.div`
   }
   ${MEDIA_QUERY.lg} {
     width: 100%;
-    margin-bottom: 12px;
-    font-size: ${FONT.lg};
+    margin-bottom: 20px;
+    font-size: ${FONT.md};
   }
 `
 const InfoDifficulty = styled(InfoLocation)``

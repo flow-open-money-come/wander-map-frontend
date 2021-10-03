@@ -29,7 +29,7 @@ const Title = styled.div`
     height: 20px;
   }
   ${MEDIA_QUERY.lg} {
-    font-size: 34px;
+    font-size: ${FONT.logo};
     margin-bottom: 35px;
     svg {
       margin: 0 10px;
@@ -76,7 +76,7 @@ const Date = styled.div`
     margin-bottom: 3px;
   }
   ${MEDIA_QUERY.lg} {
-    font-size: 22px;
+    font-size: ${FONT.md};
   }
 `
 

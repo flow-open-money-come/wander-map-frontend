@@ -26,7 +26,7 @@ const Title = styled.div`
     height: 20px;
   }
   ${MEDIA_QUERY.lg} {
-    font-size: 34px;
+    font-size: ${FONT.logo};
     margin-bottom: 35px;
     svg {
       margin: 0 10px;

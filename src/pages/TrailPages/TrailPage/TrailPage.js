@@ -10,13 +10,23 @@ import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
 
 const TrailPageContainer = styled.div`
-  width: 90%;
+  width: 80%;
   margin: 30px auto;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   position: relative;
+`
+
+const HeadFlex = styled.div`
+  position: relative;
+  ${MEDIA_QUERY.lg} {
+    margin-bottom: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 `
 
 const Cover = styled.img`
@@ -28,11 +38,25 @@ const Cover = styled.img`
   margin-bottom: 10px;
   object-fit: cover;
   ${MEDIA_QUERY.lg} {
-    width: 60%;
+    width: 55%;
     height: 400px;
     border-radius: ${RADIUS.lg} 0 ${RADIUS.lg} 0;
   }
 `
+
+const TitleAndDesc = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  ${MEDIA_QUERY.lg} {
+    align-items: start;
+    width: 40%;
+    margin-left: 20px;
+    height: 400px;
+  }
+`
+
 
 const Title = styled.div`
   width: fit-content;
@@ -49,7 +73,7 @@ const Title = styled.div`
   }
   ${MEDIA_QUERY.lg} {
     max-width: 100%;
-    font-size: ${FONT.xl};
+    font-size: ${FONT.logo};
     display: flex;
     justify-content: center;
     align-items: center;
@@ -60,7 +84,6 @@ const Title = styled.div`
 `
 
 const CollectBlock = styled.div`
-  margin: 5px;
   font-size: ${FONT.s};
   display: flex;
   justify-content: center;
@@ -68,6 +91,9 @@ const CollectBlock = styled.div`
   position: absolute;
   top: 0;
   left: 0;
+  background: ${COLOR.white};
+  border-radius: ${RADIUS.md};
+  padding: 2px 5px;
   svg {
     margin: 0 2px;
     width: 15px;
@@ -82,9 +108,13 @@ const CollectBlock = styled.div`
       stroke: ${COLOR.green};
     }
   }
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+    padding: 4px 6px;
+  }
   ${MEDIA_QUERY.lg} {
-    margin: 10px;
     font-size: ${FONT.lg};
+    padding: 5px 8px;
     svg {
       margin: 0 5px;
       width: 25px;
@@ -101,35 +131,13 @@ const Desc = styled.div`
   height: 100px;
   overflow: auto;
   ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.lg};
+    font-size: ${FONT.md};
     line-height: ${FONT.xl};
     height: 70%;
     letter-spacing: 2px;
   }
 `
 
-const HeadFlex = styled.div`
-  position: relative;
-  ${MEDIA_QUERY.lg} {
-    margin-bottom: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-`
-
-const TitleAndDesc = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  ${MEDIA_QUERY.lg} {
-    align-items: start;
-    width: 40%;
-    margin-left: 20px;
-    height: 400px;
-  }
-`
 
 const InfoAndWeather = styled.div`
   width: 100%;
