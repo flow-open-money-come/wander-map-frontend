@@ -245,7 +245,6 @@ const ImageContainer = styled.div`
   transition-property: font-size;
   transition-duration: 4s;
   transition-delay: 2s;
-  z-index: -1;
 
   ${MEDIA_QUERY.md} {
     display: flex;
