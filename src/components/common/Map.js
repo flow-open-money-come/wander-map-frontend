@@ -6,6 +6,7 @@ import SearchBar from './SearchBar'
 import LocationMarker from './LocationMarker'
 
 const MapSearchBarWrapper = styled.div`
+  width: 100%;
   position: absolute;
   top: 10px;
   left: 10px;
