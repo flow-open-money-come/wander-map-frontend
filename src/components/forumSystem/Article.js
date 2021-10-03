@@ -21,13 +21,13 @@ const ArticlesImg = styled.img`
   border-radius: ${RADIUS.lg};
   align-self: center;
   ${MEDIA_QUERY.md} {
-    width: 130px;
-    height: 130px;
+    width: 150px;
+    height: 150px;
     margin-right: 13px;
   }
   ${MEDIA_QUERY.lg} {
-    width: 160px;
-    height: 160px;
+    width: 150px;
+    height: 150px;
     margin-right: 13px;
   }
 `
@@ -65,7 +65,7 @@ const ArticlesTag = styled.span`
     &:first-child {
       margin-left: 30px;
     }
-    padding: 6px 15px;
+    /* padding: 6px 15px; */
     margin-right: 17px;
   }
   `}
@@ -81,9 +81,6 @@ const ArticlesContent = styled.div`
   ${(props) =>
     !props.$lessRwd &&
     `
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-  }
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
   }
@@ -95,13 +92,11 @@ const ArticlesTitle = styled.div`
   ${(props) =>
     !props.$lessRwd &&
     `
-  
   ${MEDIA_QUERY.md} {
     line-height: 1.5em;
     font-size: ${FONT.md};
   }
   ${MEDIA_QUERY.lg} {
-    line-height: 1.5em;
     font-size: ${FONT.lg};
   }
   `}
@@ -174,7 +169,7 @@ export default function ArticleList({
   user,
   date,
   src,
-  lessRwd = false,
+  lessRwd,
 }) {
   return (
     <ArticlesContainer>

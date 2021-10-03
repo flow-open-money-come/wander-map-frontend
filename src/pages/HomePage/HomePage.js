@@ -36,7 +36,7 @@ const ArticleListWrapper = styled.div`
   height: 600px;
   margin: 20px auto;
   border: none;
-  padding: 20px;
+  padding: 20px 20px 40px 20px;
   overflow: scroll;
   transition: ${EFFECT.transition};
   ${MEDIA_QUERY.lg} {
