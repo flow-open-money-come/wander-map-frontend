@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { useState, Fragment } from 'react'
 import { ReactComponent as Right_Arrow } from '../../icons/arrow_right.svg'
 import { ReactComponent as Left_Arrow } from '../../icons/arrow_left.svg'
+import { ReactComponent as Thumb } from '../../icons/thumb_up.svg'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 
 // Carousel
@@ -13,14 +14,15 @@ const SlideImage = styled.img`
   border-radius: ${RADIUS.lg};
 
   ${MEDIA_QUERY.md} {
-    width: 250px;
-    height: auto;
-    object-fit: cover;
-    margin-right: 21px;
+    width: 100%;
+    height: 100%;
   }
 
   ${MEDIA_QUERY.lg} {
     width: 300px;
+    height: auto;
+    margin-right: 21px;
+    object-fit: cover;
   }
 `
 
@@ -29,6 +31,22 @@ const Slider = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`
+
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  margin: 20px;
+
+  ${MEDIA_QUERY.lg} {
+    display: flex;
+    border-radius: ${RADIUS.lg};
+    background: ${COLOR.white};
+    width: 1173px;
+    height: auto;
+    margin: 20px;
+    box-shadow: ${EFFECT.shadow_light};
+  }
 `
 
 const LeftArrow = styled(Left_Arrow)`
@@ -61,7 +79,7 @@ const ArticleInfoContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
 
-  ${MEDIA_QUERY.md} {
+  ${MEDIA_QUERY.lg} {
     text-overflow: ellipsis;
     overflow: hidden;
   }
@@ -69,6 +87,7 @@ const ArticleInfoContainer = styled.div`
 
 const ArticleTitle = styled.h1`
   display: flex;
+  position: absolute;
   width: 60%;
   padding: 5px;
   border-radius: ${RADIUS.md};
@@ -78,15 +97,15 @@ const ArticleTitle = styled.h1`
   opacity: 0.6;
 
   ${MEDIA_QUERY.md} {
-    justify-content: flex-start;
-    transform: translate(0, 0);
-    background: 0;
-    opacity: 1;
-    padding: 10px 10px 8px 0;
     font-size: ${FONT.lg};
   }
 
   ${MEDIA_QUERY.lg} {
+    position: static;
+    justify-content: flex-start;
+    transform: translate(0, 0);
+    background: 0;
+    opacity: 1;
     padding: 10px 10px 8px 0;
     display: flex;
     font-size: ${FONT.xl};
@@ -96,25 +115,18 @@ const ArticleTitle = styled.h1`
 const ArticleLikes = styled.span`
   display: none;
 
-  ${MEDIA_QUERY.md} {
+  ${MEDIA_QUERY.lg} {
     align-items: flex-end;
     display: flex;
     margin-right: 7px;
     color: ${COLOR.green};
-    font-size: ${FONT.logo};
-  }
-
-  ${MEDIA_QUERY.lg} {
     font-size: ${FONT.xl};
   }
 `
 
-const ThumbUp = styled.button`
-  background-image: url('https://i.imgur.com/hSHxTME.png');
-  background-size: contain;
+const ThumbUp = styled(Thumb)`
   width: 30px;
   height: 30px;
-  cursor: pointer;
 
   ${MEDIA_QUERY.lg} {
     width: 45px;
@@ -132,41 +144,38 @@ const ArticleTitleAndLikes = styled.div`
 const ArticleContent = styled.div`
   display: none;
 
-  ${MEDIA_QUERY.md} {
+  ${MEDIA_QUERY.lg} {
     width: 100%;
     display: block;
-    font-size: ${FONT.s};
     padding: 10px 10px 10px 0;
     line-height: 2rem;
     overflow: hidden;
     height: 108px;
-  }
-
-  ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
   }
 `
 
 const ArticleTags = styled.div`
+  position: absolute;
   display: flex;
   border-radius: ${RADIUS.md};
   justify-content: center;
-  transform: translate(-5%, -200%);
+  transform: translate(3%, -150%);
   flex-wrap: wrap;
   max-height: 2rem;
+  justify-content: flex-start;
+  align-items: center;
   overflow: hidden;
 
   ${MEDIA_QUERY.md} {
-    display: flex;
-    transform: translate(0, 0);
-    justify-content: flex-start;
-    align-items: center;
-    overflow: hidden;
-    max-height: 65px;
+    transform: translate(3%, -200%);
   }
 
   ${MEDIA_QUERY.lg} {
+    position: static;
     max-height: 60px;
+    flex-wrap: wrap;
+    transform: translate(0);
   }
 `
 
@@ -198,7 +207,7 @@ const ReadMore = styled.button`
 const ArticleInfo = styled.div`
   display: none;
 
-  ${MEDIA_QUERY.md} {
+  ${MEDIA_QUERY.lg} {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -238,24 +247,6 @@ const UserAvatar = styled.img`
   height: 45px;
 `
 
-const ImageContainer = styled.div`
-  width: 400px;
-  height: 250px;
-  margin: 20px;
-  transition-property: font-size;
-  transition-duration: 4s;
-  transition-delay: 2s;
-
-  ${MEDIA_QUERY.md} {
-    display: flex;
-    border-radius: ${RADIUS.lg};
-    background: ${COLOR.white};
-    width: 1173px;
-    height: auto;
-    margin: 20px;
-    box-shadow: ${EFFECT.shadow_light};
-  }
-`
 export default function Carousel({ slides }) {
   const [current, setCurrent] = useState(0)
   const length = slides.length

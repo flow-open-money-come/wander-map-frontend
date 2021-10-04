@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import SearchBar from '../common/SearchBar'
 
 const FilterContainer = styled.div`
   padding-top: 30px;
@@ -77,6 +78,7 @@ const FilterTags = styled.div`
 const FilterTag = styled.button`
   cursor: pointer;
   padding: 12px;
+  border: 1px transparent solid;
   border-bottom: 1px solid ${COLOR.beige};
 
   ${MEDIA_QUERY.md} {
@@ -96,17 +98,40 @@ const FilterTag = styled.button`
     `}
 `
 
-export default function ForumFilter({ tags }) {
+export default function ForumFilter({ tags, setTags }) {
+  const handleIsChecked = (id) => {
+    setTags(
+      tags.map((tag) => {
+        if (tag.tag_id !== id) return tag
+        return {
+          ...tag,
+          isChecked: !tag.isChecked,
+        }
+      })
+    )
+  }
+
   return (
     <FilterContainer>
       <Filter>
-        <UpperPart>
-          <SearchInput placeholder='關鍵字...' />
-          <SearchIcon />
-        </UpperPart>
+        <SearchBar
+          placeholder='關鍵字...'
+          horizontalAlign
+          noBorderRadius
+          fontAndWidthFilter
+          widthFilter
+        />
         <FilterTags>
           {tags.map((tag) => {
-            return <FilterTag isChecked={tag.isChecked}>{tag.name}</FilterTag>
+            return (
+              <FilterTag
+                key={tag.tag_id}
+                isChecked={tag.isChecked}
+                onClick={() => handleIsChecked(tag.tag_id)}
+              >
+                {tag.tag_name}
+              </FilterTag>
+            )
           })}
         </FilterTags>
       </Filter>

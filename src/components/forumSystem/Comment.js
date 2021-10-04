@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ReactComponent as AvatarIcon } from '../../icons/default_avatar.svg'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
 import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
@@ -22,22 +21,14 @@ const CommentsHeader = styled.div`
   margin-bottom: 5px;
 `
 
-const UserAvatar = styled.div`
-  svg {
-    width: 30px;
-    height: 30px;
-  }
-  ${MEDIA_QUERY.md} {
-    svg {
-      width: 40px;
-      height: 40px;
-    }
-  }
+const UserAvatar = styled.img`
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+
   ${MEDIA_QUERY.lg} {
-    svg {
-      width: 50px;
-      height: 50px;
-    }
+    width: 50px;
+    height: 50px;
   }
 `
 
@@ -115,19 +106,6 @@ const CommentInfo = styled.div`
   position: relative;
 `
 
-const CommentAvatar = styled.div`
-  svg {
-    width: 35px;
-    height: 35px;
-  }
-  ${MEDIA_QUERY.lg} {
-    svg {
-      width: 50px;
-      height: 50px;
-    }
-  }
-`
-
 const CommentNickname = styled.div`
   font-size: ${FONT.s};
   font-weight: bold;
@@ -202,9 +180,7 @@ export default function Comments() {
   return (
     <CommentsContainer>
       <CommentsHeader>
-        <UserAvatar>
-          <AvatarIcon />
-        </UserAvatar>
+        <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
         <InputField placeholder='請輸入留言...' />
         <SentBtn>
           <SendIcon />
@@ -212,9 +188,7 @@ export default function Comments() {
       </CommentsHeader>
       <Card>
         <CommentInfo>
-          <CommentAvatar>
-            <AvatarIcon />
-          </CommentAvatar>
+          <UserAvatar src='https://i.ppfocus.com/2020/8/285a2ad.jpg' />
           <CommentNickname>甄環</CommentNickname>
           <CommentTime>2020.09.08 / 20:20:22</CommentTime>
           <CommentBtn>
@@ -228,9 +202,7 @@ export default function Comments() {
       </Card>
       <Card>
         <CommentInfo>
-          <CommentAvatar>
-            <AvatarIcon />
-          </CommentAvatar>
+          <UserAvatar src='https://datansuo.net/img/201505/14323334952.jpg' />
           <CommentNickname>甄環</CommentNickname>
           <CommentTime>2020.09.08 / 20:20:22</CommentTime>
           <CommentBtn>

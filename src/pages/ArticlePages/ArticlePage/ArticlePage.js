@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comment'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import { ReactComponent as Review } from '../../../icons/articles/review.svg'
+import { ReactComponent as thumb } from '../../../icons/thumb_up.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
 
@@ -53,17 +54,24 @@ const ArticleLikes = styled.span`
   }
 `
 
-const ThumbUp = styled.button`
-  background-image: url('https://i.imgur.com/hSHxTME.png');
+const ThumbUp = styled.span`
+  background-image: url('https://i.imgur.com/gE3TYlC.png');
   background-size: contain;
   width: 30px;
   height: 30px;
   cursor: pointer;
+  margin-right: 5px;
 
   ${MEDIA_QUERY.lg} {
     width: 45px;
     height: 45px;
   }
+
+  ${(props) =>
+    props.thumb &&
+    `
+    background-image: url('https://i.imgur.com/aJBAUDX.png');
+    `}
 `
 
 const ArticleTitleAndLikes = styled.div`
@@ -104,15 +112,6 @@ const ReviewIcon = styled(Review)`
     height: 40px;
   }
 `
-const TitleAndTags = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  ${MEDIA_QUERY.lg} {
-    flex-direction: row;
-    align-items: center;
-  }
-`
 
 const CommentTitle = styled.h1`
   font-size: ${FONT.md};
@@ -134,19 +133,24 @@ const FlexGroup = styled.div`
 `
 
 function ArticlePage() {
+  const [thumb, setThumb] = useState(false)
+
   return (
     <Wrapper>
       <CoverImg src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Dawu_Mt%2BHunag_Chung_Yu%E9%BB%83%E4%B8%AD%E4%BD%91%2B17755.jpg/2560px-Dawu_Mt%2BHunag_Chung_Yu%E9%BB%83%E4%B8%AD%E4%BD%91%2B17755.jpg' />
       <ArticleTitleAndLikes>
-        <TitleAndTags>
-          <ArticleTitle>林美石磐步道</ArticleTitle>
-          <Tags />
-        </TitleAndTags>
+        <ArticleTitle>林美石磐步道</ArticleTitle>
         <ArticleLikes>
-          <ThumbUp />
-          222
+          <ThumbUp
+            thumb={thumb}
+            onClick={() => {
+              setThumb(!thumb)
+            }}
+          />
+          300
         </ArticleLikes>
       </ArticleTitleAndLikes>
+      <Tags />
       <ArticleLocation>地點：宜蘭縣礁溪鄉 林美石磐步道</ArticleLocation>
       <ArticleDepartureTime>
         出發時間：2000.01.02 ~ 2000.01.03

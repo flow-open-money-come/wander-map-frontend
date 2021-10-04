@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import ArticleList from '../../../components/forumSystem/Article'
 import Carousel from '../../../components/forumSystem/Carousel'
@@ -69,29 +69,24 @@ const TitleGroup = styled.div`
 
 const BottomButton = styled.button`
   border-radius: ${RADIUS.lg};
-  font-size: ${FONT.xs};
+  font-size: ${FONT.s};
   border: 1px ${COLOR.green} solid;
   border-width: medium;
   box-shadow: ${EFFECT.shadow_dark};
-  margin: 25px auto;
-  padding: 5px 44px;
+  margin: 30px auto;
+  padding: 6px 44px;
   cursor: pointer;
+  transition: ${EFFECT.transition};
 
   &:hover {
     background: ${COLOR.green};
     color: #ffffff;
   }
 
-  ${MEDIA_QUERY.md} {
+  ${MEDIA_QUERY.lg} {
     margin: 100px auto;
     font-size: ${FONT.lg};
     padding: 12px 100px;
-  }
-
-  ${MEDIA_QUERY.lg} {
-    margin: 123px auto;
-    font-size: ${FONT.xl};
-    padding: 18px 131px;
   }
 `
 
@@ -148,23 +143,22 @@ function AllArticlesPage() {
     },
   ]
 
-  const tags = [
-    { name: '一日', isChecked: false },
-    { name: '多日', isChecked: true },
-    { name: '海景', isChecked: true },
-    { name: '夜景', isChecked: true },
-    { name: '山景', isChecked: false },
-    { name: '城市景色', isChecked: true },
-    { name: '賞花', isChecked: false },
-    { name: '稀有動植物', isChecked: true },
-    { name: '有水源', isChecked: false },
-    { name: '危險地形', isChecked: true },
-    { name: '需專業裝備', isChecked: false },
-    { name: '登山小白體驗', isChecked: true },
-    { name: '專業老手分享', isChecked: true },
-    { name: 'GPX', isChecked: true },
-    { name: '一日', isChecked: true },
-  ]
+  const [tags, setTags] = useState([
+    { tag_id: 1, tag_name: '一日', isChecked: false },
+    { tag_id: 2, tag_name: '多日', isChecked: false },
+    { tag_id: 3, tag_name: '海景', isChecked: false },
+    { tag_id: 4, tag_name: '夜景', isChecked: false },
+    { tag_id: 5, tag_name: '山景', isChecked: false },
+    { tag_id: 6, tag_name: '城市景色', isChecked: false },
+    { tag_id: 7, tag_name: '賞花', isChecked: false },
+    { tag_id: 8, tag_name: '稀有動植物', isChecked: false },
+    { tag_id: 9, tag_name: '有水源', isChecked: false },
+    { tag_id: 10, tag_name: '危險地形', isChecked: false },
+    { tag_id: 11, tag_name: '需專業裝備', isChecked: false },
+    { tag_id: 12, tag_name: '登山小白體驗', isChecked: false },
+    { tag_id: 13, tag_name: '專業老手分享', isChecked: false },
+    { tag_id: 14, tag_name: 'GPX', isChecked: false },
+  ])
 
   return (
     <Wrapper>
@@ -173,9 +167,9 @@ function AllArticlesPage() {
         <Title>熱門文章</Title>
       </TitleGroup>
       <Carousel slides={slides} />
-      <ForumFilter tags={tags} />
+      <ForumFilter tags={tags} setTags={setTags} />
       <ArticleList
-        src={'https://i.imgur.com/w2Y6y4z.jpg'}
+        articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
         title={'礁溪林美石磐涼爽一日遊'}
         user={'水怪貓貓'}
         tags={['有水源', '賞花', '危險地形']}
@@ -183,9 +177,10 @@ function AllArticlesPage() {
         content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+        avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
       />
       <ArticleList
-        src={'https://i.imgur.com/w2Y6y4z.jpg'}
+        articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
         title={'礁溪林美石磐涼爽一日遊'}
         user={'水怪貓貓'}
         tags={['有水源', '賞花', '危險地形']}
@@ -193,9 +188,10 @@ function AllArticlesPage() {
         content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+        avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
       />
       <ArticleList
-        src={'https://i.imgur.com/w2Y6y4z.jpg'}
+        articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
         title={'礁溪林美石磐涼爽一日遊'}
         user={'水怪貓貓'}
         tags={['有水源', '賞花', '危險地形']}
@@ -203,6 +199,7 @@ function AllArticlesPage() {
         content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+        avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
       />
       <BottomButton>看更多</BottomButton>
     </Wrapper>

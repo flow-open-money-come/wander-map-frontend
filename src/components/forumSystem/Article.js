@@ -34,9 +34,10 @@ const ArticlesImg = styled.img`
     margin-right: 13px;
   }
 `
-const UserAvatar = styled(avatar)`
+const UserAvatar = styled.img`
   width: 30px;
   height: 30px;
+  border-radius: 50%;
 
   ${MEDIA_QUERY.md} {
     width: 45px;
@@ -165,10 +166,18 @@ const TitleAndTags = styled.div`
   }
 `
 
-export default function ArticleList({ title, content, tags, user, date, src }) {
+export default function ArticleList({
+  title,
+  content,
+  tags,
+  user,
+  date,
+  articleImgSrc,
+  avatarImgSrc,
+}) {
   return (
     <ArticlesContainer>
-      <ArticlesImg src={src} />
+      <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <TitleAndTags>
           <ArticlesTitle>{title}</ArticlesTitle>
@@ -181,7 +190,7 @@ export default function ArticleList({ title, content, tags, user, date, src }) {
         <ArticlesContent>{content}</ArticlesContent>
         <ArticlesInfo>
           <ArticlesUser>
-            <UserAvatar />
+            <UserAvatar src={avatarImgSrc} />
             <UserInfo>
               <UserName>{user}</UserName>
               <ArticlesDate>{date}</ArticlesDate>

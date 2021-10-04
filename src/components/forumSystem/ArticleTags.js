@@ -6,6 +6,7 @@ const ArticleTags = styled.div`
   border-radius: ${RADIUS.md};
   flex-wrap: wrap;
   display: flex;
+  margin: 10px auto;
 
   ${MEDIA_QUERY.lg} {
     height: 50px;
@@ -36,6 +37,11 @@ export default function Tags() {
       <ArticleTag>一日</ArticleTag>
       <ArticleTag>有水源</ArticleTag>
       <ArticleTag>新手小白體驗</ArticleTag>
+      <ArticleTag>一日</ArticleTag>
+      <ArticleTag>一日</ArticleTag>
+      <ArticleTag>有水源</ArticleTag>
+      <ArticleTag>新手小白體驗</ArticleTag>
+      <ArticleTag>一日</ArticleTag>
       <ArticleTag>一日</ArticleTag>
       <ArticleTag>一日</ArticleTag>
       <ArticleTag>有水源</ArticleTag>
