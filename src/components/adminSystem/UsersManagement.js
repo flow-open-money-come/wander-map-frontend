@@ -48,9 +48,9 @@ const UsersTab = styled.div`
     width: 200px;
     height: 50px;
     margin-right: 20px;
-    font-size: ${FONT.lg};
+    font-size: ${FONT.md};
     svg {
-      width: 40px;
+      width: 30px;
       margin: 0 2px;
     }
 
@@ -70,7 +70,7 @@ const UsersTab = styled.div`
 `
 
 const TrailsTab = styled(UsersTab)`
-  color: black;
+  color: ${COLOR.black};
   background: white;
   rect {
     fill: white;
@@ -135,7 +135,7 @@ const TableHeader = styled.tr`
     font-size: ${FONT.md};
   }
   ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.lg};
+    font-size: ${FONT.md};
     font-weight: bold;
   }
 `
@@ -151,7 +151,7 @@ const TableContent = styled.tr`
     font-size: ${FONT.md};
   }
   ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.lg};
+    font-size: ${FONT.md};
   }
 `
 const ContentTd = styled.td`
@@ -188,7 +188,7 @@ const StatusBtn = styled.button`
   }
 
   ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
+    font-size: ${FONT.s};
     padding: 2px 12px;
   }
 `

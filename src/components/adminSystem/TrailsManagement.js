@@ -45,9 +45,9 @@ const UsersTab = styled.div`
     width: 200px;
     height: 50px;
     margin-right: 20px;
-    font-size: ${FONT.lg};
+    font-size: ${FONT.md};
     svg {
-      width: 40px;
+      width: 30px;
       margin: 0 2px;
     }
 
@@ -135,9 +135,6 @@ const RecycleTitle = styled.div`
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.lg};
   }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.logo};
-  }
 `
 
 const BackBtn = styled.button`
@@ -155,7 +152,6 @@ const BackBtn = styled.button`
   }
   ${MEDIA_QUERY.lg} {
     margin: 0 50px;
-    font-size: ${FONT.lg};
   }
 `
 
@@ -179,8 +175,8 @@ const RecycleBin = styled.div`
   ${MEDIA_QUERY.lg} {
     margin: 0 50px;
     svg {
-      width: 35px;
-      height: 35px;
+      width: 25px;
+      height: 25px;
     }
   }
 `
@@ -202,9 +198,6 @@ const TableContent = styled.tr`
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
   }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.lg};
-  }
 `
 
 const CoverTd = styled.td`
@@ -221,8 +214,8 @@ const TrailImg = styled.img`
   height: 40px;
   border-radius: ${RADIUS.s};
   ${MEDIA_QUERY.lg} {
-    width: 80px;
-    height: 80px;
+    width: 60px;
+    height: 60px;
   }
 `
 
@@ -233,7 +226,7 @@ const TrailsTd = styled.td`
   padding: 0 3px;
   vertical-align: middle;
   ${MEDIA_QUERY.lg} {
-    width: 500px;
+    width: 600px;
     padding-left: 20px;
   }
 `
@@ -243,7 +236,7 @@ const CreatorTd = styled.td`
   vertical-align: middle;
   padding: 0 3px;
   ${MEDIA_QUERY.lg} {
-    width: 120px;
+    width: 140px;
   }
 `
 
@@ -254,10 +247,10 @@ const BtnTd = styled.td`
     margin: 0 2px;
   }
   ${MEDIA_QUERY.lg} {
-    width: 100px;
+    width: 80px;
     svg {
-      width: 30px;
-      height: 30px;
+      width: 20px;
+      height: 20px;
       margin: 0 8px;
     }
   }

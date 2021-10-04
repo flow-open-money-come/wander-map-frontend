@@ -8,7 +8,7 @@ import ArticlesManagement from '../../components/adminSystem/ArticlesManagement'
 
 
 const AdminPageContainer = styled.div`
-  width: 90%;
+  width: 80%;
   margin: 20px auto;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@ const PageTitle = styled.div`
   text-align: center;
   padding: 5px 0;
   ${MEDIA_QUERY.lg} {
-    font-size: 48px;
+    font-size: ${FONT.logo};
     padding: 20px 0;
   }
 `
@@ -35,7 +35,7 @@ const PageDesc = styled.div`
   margin: 10px 0;
   text-align: center;
   ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.lg};
+    font-size: ${FONT.md};
     margin: 20px 0;
   }
 `
