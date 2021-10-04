@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ReactComponent as avatar } from '../../icons/default_avatar.svg'
-import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 
 const ArticlesContainer = styled.div`
   width: 100%;

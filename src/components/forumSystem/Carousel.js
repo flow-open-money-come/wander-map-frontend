@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useState, Fragment } from 'react'
+import { useState } from 'react'
 import { ReactComponent as Right_Arrow } from '../../icons/arrow_right.svg'
 import { ReactComponent as Left_Arrow } from '../../icons/arrow_left.svg'
 import { ReactComponent as Thumb } from '../../icons/thumb_up.svg'
