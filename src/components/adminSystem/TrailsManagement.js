@@ -307,16 +307,12 @@ function TrailsManagement({ setTab, recycle, setRecycle }) {
               <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
             </CoverTd>
             <TrailsTd>
-              <a>大雪山國家森林遊樂區步道群</a>
+              大雪山國家森林遊樂區步道群
             </TrailsTd>
             <CreatorTd>admin</CreatorTd>
             <BtnTd>
-              <a>
-                <EditIcon />
-              </a>
-              <a>
-                <BinIcon />
-              </a>
+              <EditIcon />
+              <BinIcon />
             </BtnTd>
           </TableContent>
 
@@ -325,16 +321,12 @@ function TrailsManagement({ setTab, recycle, setRecycle }) {
               <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
             </CoverTd>
             <TrailsTd>
-              <a>大雪山國家森林遊樂區步道群</a>
+              大雪山國家森林遊樂區步道群
             </TrailsTd>
             <CreatorTd>admin</CreatorTd>
             <BtnTd>
-              <a>
-                <EditIcon />
-              </a>
-              <a>
-                <BinIcon />
-              </a>
+              <EditIcon />
+              <BinIcon />
             </BtnTd>
           </TableContent>
         </TrailsTable>
