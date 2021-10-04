@@ -56,9 +56,6 @@ const LeftArrow = styled(Left_Arrow)`
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
-
-  ${MEDIA_QUERY.md} {
-  }
 `
 
 const RightArrow = styled(Right_Arrow)`
@@ -68,9 +65,6 @@ const RightArrow = styled(Right_Arrow)`
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
-
-  ${MEDIA_QUERY.md} {
-  }
 `
 // 幻燈片文章內容
 
@@ -107,7 +101,6 @@ const ArticleTitle = styled.h1`
     background: 0;
     opacity: 1;
     padding: 10px 10px 8px 0;
-    display: flex;
     font-size: ${FONT.xl};
   }
 `
@@ -174,7 +167,6 @@ const ArticleTags = styled.div`
   ${MEDIA_QUERY.lg} {
     position: static;
     max-height: 60px;
-    flex-wrap: wrap;
     transform: translate(0);
   }
 `

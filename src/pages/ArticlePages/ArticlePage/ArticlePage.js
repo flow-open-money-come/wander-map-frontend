@@ -13,8 +13,6 @@ const Wrapper = styled.div`
   flex-direction: column;
 
   ${MEDIA_QUERY.md} {
-    width: 90%;
-    display: flex;
     font-size: ${FONT.md};
   }
 `
@@ -32,7 +30,6 @@ const ArticleTitle = styled.div`
   }
 
   ${MEDIA_QUERY.lg} {
-    padding: 10px 10px 8px 0;
     font-size: ${FONT.xll};
   }
 `

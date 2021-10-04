@@ -20,7 +20,6 @@ const Wrapper = styled.div`
 
   ${MEDIA_QUERY.md} {
     width: 90%;
-    display: flex;
     font-size: ${FONT.md};
   }
 `

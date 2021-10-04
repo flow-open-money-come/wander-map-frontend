@@ -8,10 +8,6 @@ const ArticlesContainer = styled.div`
   margin: 35px auto 0px auto;
   padding-bottom: 20px;
   border-bottom: ${COLOR.beige} 1px solid;
-  ${MEDIA_QUERY.md} {
-    width: 100%;
-    border-bottom: ${COLOR.beige} 1px solid;
-  }
 `
 
 const ArticlesImg = styled.img`
@@ -20,11 +16,6 @@ const ArticlesImg = styled.img`
   border-radius: ${RADIUS.lg};
   align-self: center;
   ${MEDIA_QUERY.md} {
-    width: 150px;
-    height: 150px;
-    margin-right: 13px;
-  }
-  ${MEDIA_QUERY.lg} {
     width: 150px;
     height: 150px;
     margin-right: 13px;
@@ -45,8 +36,6 @@ const ArticlesTags = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  ${MEDIA_QUERY.md} {
-  }
 `
 const ArticlesTag = styled.span`
   border-radius: ${RADIUS.s};
@@ -148,9 +137,7 @@ const ArticlesInfo = styled.div`
   justify-content: flex-end;
   align-items: flex-end;
   ${MEDIA_QUERY.md} {
-    display: flex;
     justify-content: space-between;
-    align-items: flex-end;
   }
 `
 const TitleAndTags = styled.div`
