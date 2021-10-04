@@ -1,90 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import { ReactComponent as UserIcon } from '../../icons/backstage/adminUser.svg'
-import { ReactComponent as TrailIcon } from '../../icons/backstage/adminTrail.svg'
-import { ReactComponent as ArticleIcon } from '../../icons/backstage/adminArticle.svg'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 
-
-const UsersManagementContainer = styled.div`
-  width: 100%;
-  margin: 20px auto;
-`
-const Tabs = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-const UsersTab = styled.div`
-  width: 30%;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 5px;
-  font-size: ${FONT.s};
-  border-radius: ${RADIUS.s} ${RADIUS.s} 0 0;
-  border: 2px solid ${COLOR.green};
-  border-bottom: none;
-  color: white;
-  background: ${COLOR.green};
-  svg {
-    width: 20px;
-    margin: 0 2px;
-  }
-  rect {
-    fill: ${COLOR.green};
-    stroke: none;
-  }
-  path {
-    fill: white;
-    stroke: white;
-  }
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md};
-  }
-  ${MEDIA_QUERY.lg} {
-    width: 200px;
-    height: 50px;
-    margin-right: 20px;
-    font-size: ${FONT.md};
-    svg {
-      width: 30px;
-      margin: 0 2px;
-    }
-
-    &:hover {
-      cursor: pointer;
-      background: ${COLOR.green};
-      color: ${COLOR.white};
-      path {
-        fill: white;
-        stroke: white;
-      }
-      rect {
-        fill: ${COLOR.green};
-      }
-    }
-  }
-`
-
-const TrailsTab = styled(UsersTab)`
-  color: ${COLOR.black};
-  background: white;
-  rect {
-    fill: white;
-  }
-  path {
-    fill: ${COLOR.green};
-    stroke: ${COLOR.green};
-  }
-`
-
-const ArticlesTab = styled(TrailsTab)`
-  color: ${COLOR.black};
-  background: white;
-`
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -194,66 +112,38 @@ const StatusBtn = styled.button`
 `
 
 
-function UsersManagement({ setTab }) {
+function UsersManagement() {
   return (
-    <UsersManagementContainer>
-      <Tabs>
-        <UsersTab
-          onClick={() => {
-            setTab('Users')
-          }}
-        >
-          <UserIcon />
-          會員資料
-        </UsersTab>
-        <TrailsTab
-          onClick={() => {
-            setTab('Trails')
-          }}
-        >
-          <TrailIcon />
-          步道列表
-        </TrailsTab>
-        <ArticlesTab
-          onClick={() => {
-            setTab('Articles')
-          }}
-        >
-          <ArticleIcon />
-          心得列表
-        </ArticlesTab>
-      </Tabs>
-      <Block>
-        <SearchBar>
-          <SearchIcon />
-          <SearchField></SearchField>
-        </SearchBar>
-        <UsersTable>
-          <TableHeader>
-            <HeaderTd>暱稱</HeaderTd>
-            <HeaderTd>帳號</HeaderTd>
-            <HeaderTd>入會日期</HeaderTd>
-            <HeaderTd>狀態</HeaderTd>
-          </TableHeader>
-          <TableContent>
-            <NicknameTd>胖虎</NicknameTd>
-            <EmailTd>woo.123.com</EmailTd>
-            <ContentTd>2000.01.01</ContentTd>
-            <ContentTd>
-              <StatusBtn>一般</StatusBtn>
-            </ContentTd>
-          </TableContent>
-          <TableContent>
-            <NicknameTd>胖虎</NicknameTd>
-            <EmailTd>woo.123.com</EmailTd>
-            <ContentTd>2000.01.01</ContentTd>
-            <ContentTd>
-              <StatusBtn>停權</StatusBtn>
-            </ContentTd>
-          </TableContent>
-        </UsersTable>
-      </Block>
-    </UsersManagementContainer>
+    <Block>
+      <SearchBar>
+        <SearchIcon />
+        <SearchField></SearchField>
+      </SearchBar>
+      <UsersTable>
+        <TableHeader>
+          <HeaderTd>暱稱</HeaderTd>
+          <HeaderTd>帳號</HeaderTd>
+          <HeaderTd>入會日期</HeaderTd>
+          <HeaderTd>狀態</HeaderTd>
+        </TableHeader>
+        <TableContent>
+          <NicknameTd>胖虎</NicknameTd>
+          <EmailTd>woo.123.com</EmailTd>
+          <ContentTd>2000.01.01</ContentTd>
+          <ContentTd>
+            <StatusBtn>一般</StatusBtn>
+          </ContentTd>
+        </TableContent>
+        <TableContent>
+          <NicknameTd>胖虎</NicknameTd>
+          <EmailTd>woo.123.com</EmailTd>
+          <ContentTd>2000.01.01</ContentTd>
+          <ContentTd>
+            <StatusBtn>停權</StatusBtn>
+          </ContentTd>
+        </TableContent>
+      </UsersTable>
+    </Block>
   )
 }
 

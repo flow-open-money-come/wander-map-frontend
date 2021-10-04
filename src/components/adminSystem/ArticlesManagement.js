@@ -1,83 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import { ReactComponent as UserIcon } from '../../icons/backstage/adminUser.svg'
-import { ReactComponent as TrailIcon } from '../../icons/backstage/adminTrail.svg'
-import { ReactComponent as ArticleIcon } from '../../icons/backstage/adminArticle.svg'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 
-
-const UsersManagementContainer = styled.div`
-  width: 100%;
-  margin: 20px auto;
-`
-const Tabs = styled.div`
-  display: flex;
-  align-items: center;
-`
-
-const UsersTab = styled.div`
-  width: 30%;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 5px;
-  font-size: ${FONT.s};
-  border-radius: ${RADIUS.s} ${RADIUS.s} 0 0;
-  border: 2px solid ${COLOR.green};
-  border-bottom: none;
-  color: black;
-  background: white;
-  svg {
-    width: 20px;
-    margin: 0 2px;
-  }
-  rect {
-    stroke: none;
-  }
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md};
-  }
-  ${MEDIA_QUERY.lg} {
-    width: 200px;
-    height: 50px;
-    margin-right: 20px;
-    font-size: ${FONT.md};
-    svg {
-      width: 30px;
-      margin: 0 2px;
-    }
-
-    &:hover {
-      cursor: pointer;
-      background: ${COLOR.green};
-      color: ${COLOR.white};
-      path {
-        fill: white;
-        stroke: white;
-      }
-      rect {
-        fill: ${COLOR.green};
-      }
-    }
-  }
-`
-
-const TrailsTab = styled(UsersTab)``
-
-const ArticlesTab = styled(UsersTab)`
-  color: white;
-  background: ${COLOR.green};
-  rect {
-    fill: ${COLOR.green};
-  }
-  path {
-    fill: white;
-    stroke: white;
-  }
-`
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -265,97 +191,69 @@ const BtnTd = styled.td`
 `
 
 
-function ArticlesManagement({ setTab, recycle, setRecycle }) {
+function ArticlesManagement({ recycle, setRecycle }) {
   return (
-    <UsersManagementContainer>
-      <Tabs>
-        <UsersTab
-          onClick={() => {
-            setTab('Users')
-          }}
-        >
-          <UserIcon />
-          會員資料
-        </UsersTab>
-        <TrailsTab
-          onClick={() => {
-            setTab('Trails')
-          }}
-        >
-          <TrailIcon />
-          步道列表
-        </TrailsTab>
-        <ArticlesTab
-          onClick={() => {
-            setTab('Articles')
-          }}
-        >
-          <ArticleIcon />
-          心得列表
-        </ArticlesTab>
-      </Tabs>
-      <Block>
-        <SearchBar>
-          <SearchIcon />
-          <SearchField></SearchField>
-        </SearchBar>
-        <RecycleBlock>
-          {recycle && (
-            <>
-              <RecycleTitle>刪除列表</RecycleTitle>
-              <BackBtn
-                onClick={() => {
-                  setRecycle(false)
-                }}
-              >
-                返回
-              </BackBtn>
-            </>
-          )}
-          {!recycle && (
-            <RecycleBin
+    <Block>
+      <SearchBar>
+        <SearchIcon />
+        <SearchField></SearchField>
+      </SearchBar>
+      <RecycleBlock>
+        {recycle && (
+          <>
+            <RecycleTitle>刪除列表</RecycleTitle>
+            <BackBtn
               onClick={() => {
-                setRecycle(true)
+                setRecycle(false)
               }}
             >
-              <BinIcon />
-            </RecycleBin>
-          )}
-        </RecycleBlock>
-        <TrailsTable>
-          <TableContent>
-            <CoverTd>
-              <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
-            </CoverTd>
-            <TrailsTd>
-              大雪山國家森林遊樂區一日遊
-            </TrailsTd>
-            <CreatorTd>
-              admin
-            </CreatorTd>
-            <DateTd>2000-01-01</DateTd>
-            <BtnTd>
-              <BinIcon />
-            </BtnTd>
-          </TableContent>
-          <TableContent>
-            <CoverTd>
-              <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
-            </CoverTd>
-            <TrailsTd>
-              大雪山國家森林遊樂區一日遊
-            </TrailsTd>
-            <CreatorTd>
-              admin
-            </CreatorTd>
-            <DateTd>2000-01-01</DateTd>
-            <BtnTd>
-              <BinIcon />
-            </BtnTd>
-          </TableContent>
-        </TrailsTable>
-      </Block>
-    </UsersManagementContainer>
+              返回
+            </BackBtn>
+          </>
+        )}
+        {!recycle && (
+          <RecycleBin
+            onClick={() => {
+              setRecycle(true)
+            }}
+          >
+            <BinIcon />
+          </RecycleBin>
+        )}
+      </RecycleBlock>
+      <TrailsTable>
+        <TableContent>
+          <CoverTd>
+            <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
+          </CoverTd>
+          <TrailsTd>
+            大雪山國家森林遊樂區一日遊
+          </TrailsTd>
+          <CreatorTd>
+            admin
+          </CreatorTd>
+          <DateTd>2000-01-01</DateTd>
+          <BtnTd>
+            <BinIcon />
+          </BtnTd>
+        </TableContent>
+        <TableContent>
+          <CoverTd>
+            <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
+          </CoverTd>
+          <TrailsTd>
+            大雪山國家森林遊樂區一日遊
+          </TrailsTd>
+          <CreatorTd>
+            admin
+          </CreatorTd>
+          <DateTd>2000-01-01</DateTd>
+          <BtnTd>
+            <BinIcon />
+          </BtnTd>
+        </TableContent>
+      </TrailsTable>
+    </Block>
   )
 }
 
