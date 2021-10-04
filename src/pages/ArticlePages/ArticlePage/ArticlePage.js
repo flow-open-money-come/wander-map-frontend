@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comment'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import { ReactComponent as Review } from '../../../icons/articles/review.svg'
-import { ReactComponent as thumb } from '../../../icons/thumb_up.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
 
