@@ -8,7 +8,6 @@ const ArticlesContainer = styled.div`
   margin: 35px auto 0px auto;
   padding-bottom: 20px;
   border-bottom: ${COLOR.beige} 1px solid;
-
   ${MEDIA_QUERY.md} {
     width: 100%;
     border-bottom: ${COLOR.beige} 1px solid;
@@ -20,16 +19,14 @@ const ArticlesImg = styled.img`
   height: 120px;
   border-radius: ${RADIUS.lg};
   align-self: center;
-
   ${MEDIA_QUERY.md} {
-    width: 130px;
-    height: 130px;
+    width: 150px;
+    height: 150px;
     margin-right: 13px;
   }
-
   ${MEDIA_QUERY.lg} {
-    width: 160px;
-    height: 160px;
+    width: 150px;
+    height: 150px;
     margin-right: 13px;
   }
 `
@@ -48,7 +45,6 @@ const ArticlesTags = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-
   ${MEDIA_QUERY.md} {
   }
 `
@@ -59,19 +55,21 @@ const ArticlesTag = styled.span`
   margin: 5px 3px;
   padding: 4px;
   color: #ffffff;
-
+  ${(props) =>
+    !props.$lessRwd &&
+    `
   ${MEDIA_QUERY.md} {
     padding: 6px 15px;
     margin-right: 10px;
   }
-
   ${MEDIA_QUERY.lg} {
     &:first-child {
       margin-left: 30px;
     }
-    padding: 6px 15px;
+    /* padding: 6px 15px; */
     margin-right: 17px;
   }
+  `}
 `
 const ArticlesContent = styled.div`
   width: 100%;
@@ -81,28 +79,28 @@ const ArticlesContent = styled.div`
   font-size: ${FONT.s};
   max-height: 3em;
   line-height: 1.5em;
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-  }
-
+  ${(props) =>
+    !props.$lessRwd &&
+    `
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
   }
+  `}
 `
 const ArticlesTitle = styled.div`
   margin-bottom: 5px;
   font-weight: bold;
-
+  ${(props) =>
+    !props.$lessRwd &&
+    `
   ${MEDIA_QUERY.md} {
     line-height: 1.5em;
     font-size: ${FONT.md};
   }
-
   ${MEDIA_QUERY.lg} {
-    line-height: 1.5em;
     font-size: ${FONT.lg};
   }
+  `}
 `
 
 const ArticlesInfoContainer = styled.div`
@@ -114,7 +112,6 @@ const ArticlesUser = styled.div`
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
-
   ${MEDIA_QUERY.md} {
     margin-top: 9px;
   }
@@ -131,7 +128,6 @@ const UserInfo = styled.div`
   font-size: 11px;
   padding-top: 2px;
   margin-left: 5px;
-
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
     padding-top: 10px;
@@ -140,7 +136,6 @@ const UserInfo = styled.div`
 
 const ReadMore = styled.button`
   display: none;
-
   ${MEDIA_QUERY.md} {
     display: inline;
     color: ${COLOR.gray};
@@ -152,7 +147,6 @@ const ArticlesInfo = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
-
   ${MEDIA_QUERY.md} {
     display: flex;
     justify-content: space-between;
@@ -160,9 +154,13 @@ const ArticlesInfo = styled.div`
   }
 `
 const TitleAndTags = styled.div`
-  ${MEDIA_QUERY.lg} {
-    display: flex;
-  }
+  ${(props) =>
+    !props.$lessRwd &&
+    `
+    ${MEDIA_QUERY.lg} {
+        display: flex;
+      }
+    `}
 `
 
 export default function ArticleList({
@@ -173,20 +171,21 @@ export default function ArticleList({
   date,
   articleImgSrc,
   avatarImgSrc,
+  lessRwd,
 }) {
   return (
     <ArticlesContainer>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
-        <TitleAndTags>
-          <ArticlesTitle>{title}</ArticlesTitle>
+        <TitleAndTags $lessRwd={lessRwd}>
+          <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
           <ArticlesTags>
             {tags.map((tag) => {
-              return <ArticlesTag>{tag}</ArticlesTag>
+              return <ArticlesTag $lessRwd={lessRwd}>{tag}</ArticlesTag>
             })}
           </ArticlesTags>
         </TitleAndTags>
-        <ArticlesContent>{content}</ArticlesContent>
+        <ArticlesContent $lessRwd={lessRwd}>{content}</ArticlesContent>
         <ArticlesInfo>
           <ArticlesUser>
             <UserAvatar src={avatarImgSrc} />
