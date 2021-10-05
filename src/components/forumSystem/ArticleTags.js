@@ -6,7 +6,7 @@ const ArticleTags = styled.div`
   border-radius: ${RADIUS.md};
   flex-wrap: wrap;
   display: flex;
-  margin: 10px auto;
+  margin: 10px 0;
 
   ${MEDIA_QUERY.lg} {
     height: 50px;
@@ -19,7 +19,7 @@ const ArticleTag = styled.div`
   display: flex;
   border-radius: ${RADIUS.s};
   background-color: ${COLOR.yellow_dark};
-  font-size: 11px;
+  font-size: ${FONT.xs};
   margin: 5px 3px;
   color: #ffffff;
   padding: 6px 10px;

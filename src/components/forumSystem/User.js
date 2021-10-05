@@ -12,7 +12,7 @@ const UserName = styled.div`
 `
 
 const UserInfo = styled.div`
-  font-size: 11px;
+  font-size: ${FONT.xs};
   align-items: center;
   margin-left: 15px;
 
@@ -27,7 +27,7 @@ const ArticleUser = styled.div`
   }
 `
 const ArticleDate = styled.div`
-  font-size: 11px;
+  font-size: ${FONT.xs};
 
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};

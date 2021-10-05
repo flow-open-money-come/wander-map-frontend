@@ -175,7 +175,7 @@ const ArticleTag = styled.div`
   display: flex;
   border-radius: ${RADIUS.s};
   background-color: ${COLOR.yellow_dark};
-  font-size: 11px;
+  font-size: ${FONT.xs};
   margin: 4px 3px;
   color: #ffffff;
   padding: 6px 10px;
@@ -212,11 +212,9 @@ const UserName = styled.div`
 `
 
 const UserInfo = styled.div`
-  font-size: 11px;
-  padding-top: 2px;
-  margin-left: 5px;
-
   ${MEDIA_QUERY.md} {
+    padding-top: 2px;
+    margin-left: 5px;
     font-size: ${FONT.s};
     padding-top: 10px;
   }
@@ -231,7 +229,7 @@ const ArticleUser = styled.div`
   }
 `
 const ArticleDate = styled.div`
-  font-size: 11px;
+  font-size: ${FONT.xs};
 `
 
 const UserAvatar = styled.img`
