@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ReactComponent as avatar } from '../../icons/default_avatar.svg'
-import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 
 const ArticlesContainer = styled.div`
   width: 100%;
@@ -9,10 +8,6 @@ const ArticlesContainer = styled.div`
   margin: 35px auto 0px auto;
   padding-bottom: 20px;
   border-bottom: ${COLOR.beige} 1px solid;
-  ${MEDIA_QUERY.md} {
-    width: 100%;
-    border-bottom: ${COLOR.beige} 1px solid;
-  }
 `
 
 const ArticlesImg = styled.img`
@@ -25,15 +20,12 @@ const ArticlesImg = styled.img`
     height: 150px;
     margin-right: 13px;
   }
-  ${MEDIA_QUERY.lg} {
-    width: 150px;
-    height: 150px;
-    margin-right: 13px;
-  }
 `
-const UserAvatar = styled(avatar)`
+const UserAvatar = styled.img`
   width: 30px;
   height: 30px;
+  border-radius: 50%;
+
   ${MEDIA_QUERY.md} {
     width: 45px;
     height: 45px;
@@ -44,8 +36,6 @@ const ArticlesTags = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  ${MEDIA_QUERY.md} {
-  }
 `
 const ArticlesTag = styled.span`
   border-radius: ${RADIUS.s};
@@ -147,9 +137,7 @@ const ArticlesInfo = styled.div`
   justify-content: flex-end;
   align-items: flex-end;
   ${MEDIA_QUERY.md} {
-    display: flex;
     justify-content: space-between;
-    align-items: flex-end;
   }
 `
 const TitleAndTags = styled.div`
@@ -168,12 +156,13 @@ export default function ArticleList({
   tags,
   user,
   date,
-  src,
+  articleImgSrc,
+  avatarImgSrc,
   lessRwd,
 }) {
   return (
     <ArticlesContainer>
-      <ArticlesImg src={src} />
+      <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <TitleAndTags $lessRwd={lessRwd}>
           <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
@@ -186,7 +175,7 @@ export default function ArticleList({
         <ArticlesContent $lessRwd={lessRwd}>{content}</ArticlesContent>
         <ArticlesInfo>
           <ArticlesUser>
-            <UserAvatar />
+            <UserAvatar src={avatarImgSrc} />
             <UserInfo>
               <UserName>{user}</UserName>
               <ArticlesDate>{date}</ArticlesDate>

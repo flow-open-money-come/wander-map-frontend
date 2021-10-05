@@ -15,6 +15,7 @@ import ArticlePostPage from './pages/ArticlePages/ArticlePostPage'
 import AdminPage from './pages/AdminPage'
 import TrailPage from './pages/TrailPages/TrailPage'
 import BackToTopBtn from './components/common/BackToTopBtn'
+import ArticlePage from './pages/ArticlePages/ArticlePage'
 
 function App() {
   return (
@@ -39,8 +40,8 @@ function App() {
           <Route path='/post-article'>
             <ArticlePostPage />
           </Route>
-          <Route path='/articles'>
-            <AllArticlePage />
+          <Route exact path='/articles'>
+            <AllArticlesPage />
           </Route>
           <Route exact path='/trails'>
             <AllTrailPage />

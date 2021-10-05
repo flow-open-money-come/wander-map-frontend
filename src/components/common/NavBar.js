@@ -256,6 +256,90 @@ function NavBar() {
   const [HamburgerToggleClick, setHamburgerToggleClick] = useToggle(false)
   const [arrowToggleClick, setArrowToggleClick] = useToggle(false)
 
+const NavBarHambergurLine = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: ${COLOR.green};
+  top: 50%;
+  transform: translateY(-50%);
+  ${(props) =>
+    props.$isActive &&
+    `
+      display:none`};
+`
+
+const NavBarMobile = styled.div`
+  @media screen and (max-width: 768px) {
+    background-color: rgba(255, 255, 255, 0.9);
+    width: 275px;
+    height: 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: hidden;
+    transition: ${EFFECT.transition};
+    ${(props) => props.$isActive && `height: 530px;`}
+  }
+`
+const Divider = styled.div`
+  width: 80%;
+  height: 2px;
+  background-color: #f0eeeb;
+  display: none;
+  margin: 20px 0 20px 0;
+  @media screen and (max-width: 768px) {
+    display: block;
+  }
+`
+const UserInfoListMobile = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding-left: 70px;
+  height: 0;
+  overflow: hidden;
+  transition: ${EFFECT.transition};
+  ${(props) => props.$isActive && `height: 150px`}
+`
+const Forum = styled(ForumSvg)`
+  display: none;
+  @media screen and (max-width: 768px) {
+    display: block;
+    margin-right: 20px;
+  }
+`
+const Trail = styled(TrailSvg)`
+  display: none;
+  @media screen and (max-width: 768px) {
+    display: block;
+    margin-right: 20px;
+  }
+`
+const User = styled(UserSvg)`
+  display: none;
+  @media screen and (max-width: 768px) {
+    display: block;
+    margin-right: 20px;
+  }
+`
+
+const ArrowDown = styled(ArrowDownSvg)`
+  ${(props) => props.$isActive && `display:none`}
+`
+const ArrowUp = styled(ArrowUpSvg)`
+  display: none;
+  ${(props) => props.$isActive && `display:block`}
+`
+
+function NavBar() {
+  const location = useLocation()
+  const [hambergurToggleClick, setHambergurToggleClick] = useState(false)
+  const [arrowToggleClick, setArrowToggleClick] = useState(false)
+  const handleToggleClick = (e) => {
+    e.target.getAttribute('name') === 'hambergur'
+      ? setHambergurToggleClick(!hambergurToggleClick)
+      : setArrowToggleClick(!arrowToggleClick)
+  }
   return (
     <>
       <NavBarContainer>
