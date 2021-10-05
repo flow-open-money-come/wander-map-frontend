@@ -12,6 +12,8 @@ import UserOverviewPage from './pages/UserPages/UserOverviewPage/UserOverviewPag
 import UserBackstage from './pages/UserPages/UserBackstage/UserBackstage'
 import TrailPostPage from './pages/TrailPages/TrailPostPage'
 import ArticlePostPage from './pages/ArticlePages/ArticlePostPage'
+import AdminPage from './pages/AdminPage'
+import TrailPage from './pages/TrailPages/TrailPage'
 import BackToTopBtn from './components/common/BackToTopBtn'
 
 function App() {
@@ -40,18 +42,22 @@ function App() {
           <Route path='/articles'>
             <AllArticlePage />
           </Route>
-          <Route path='/trails'>
+          <Route exact path='/trails'>
             <AllTrailPage />
           </Route>
           <Route path='/user/userId'>
             <UserOverviewPage />
           </Route>
-          <Route path='/admin'></Route>
+          <Route path='/admin'>
+            <AdminPage />
+          </Route>
           <Route path='/backstage/userId'>
             <UserBackstage />
           </Route>
           <Route path='/articles/id'></Route>
-          <Route path='/trails/id'></Route>
+          <Route path='/trails/1'>
+            <TrailPage />
+          </Route>
         </Switch>
         <BackToTopBtn />
         <Footer />
