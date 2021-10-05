@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import ArticleList from '../../../components/forumSystem/Article'
@@ -207,14 +206,3 @@ function AllArticlesPage() {
 }
 
 export default AllArticlesPage
-=======
-import styled from 'styled-components'
-
-export default function AllArticlePage() {
-  return (
-    <>
-      <div>this is all article page</div>
-    </>
-  )
-}
->>>>>>> 57568a521783372e80ab1be6ba0d5e89e231b4b8
