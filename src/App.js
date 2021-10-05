@@ -6,11 +6,15 @@ import Footer from './components/common/Footer'
 import HomePage from './pages/HomePage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-import AllTrailPage from './pages/TrailPages/AllTrailsPage/AllTrailPage.js'
-import AllArticlesPage from './pages/ArticlePages/AllArticlesPage'
+import AllTrailPage from './pages/TrailPages/AllTrailsPage/AllTrailPage'
+import AllArticlePage from './pages/ArticlePages/AllArticlesPage/AllArticlesPage'
 import UserOverviewPage from './pages/UserPages/UserOverviewPage/UserOverviewPage'
+import UserBackstage from './pages/UserPages/UserBackstage/UserBackstage'
 import TrailPostPage from './pages/TrailPages/TrailPostPage'
 import ArticlePostPage from './pages/ArticlePages/ArticlePostPage'
+import AdminPage from './pages/AdminPage'
+import TrailPage from './pages/TrailPages/TrailPage'
+import BackToTopBtn from './components/common/BackToTopBtn'
 import ArticlePage from './pages/ArticlePages/ArticlePage'
 
 function App() {
@@ -39,19 +43,24 @@ function App() {
           <Route exact path='/articles'>
             <AllArticlesPage />
           </Route>
-          <Route path='/trails'>
+          <Route exact path='/trails'>
             <AllTrailPage />
           </Route>
           <Route path='/user/userId'>
             <UserOverviewPage />
           </Route>
-          <Route path='/admin'></Route>
-          <Route path='/backstage/userId'></Route>
-          <Route path='/articles/:id'>
-            <ArticlePage />
+          <Route path='/admin'>
+            <AdminPage />
           </Route>
-          <Route path='/trails/id'></Route>
+          <Route path='/backstage/userId'>
+            <UserBackstage />
+          </Route>
+          <Route path='/articles/id'></Route>
+          <Route path='/trails/1'>
+            <TrailPage />
+          </Route>
         </Switch>
+        <BackToTopBtn />
         <Footer />
       </Router>
     </>

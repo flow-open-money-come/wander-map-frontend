@@ -4,7 +4,9 @@ import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import { ReactComponent as CloseSvg } from '../../icons/close.svg'
 
 const SearchBarWrapper = styled.div`
-  width: 300px;
+  width: ${(props) => {
+    return props.$width ? props.$width : '70%'
+  }};
   z-index: 1;
   display: flex;
   align-items: center;
