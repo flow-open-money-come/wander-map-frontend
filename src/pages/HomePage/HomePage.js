@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { COLOR, RADIUS, FONT, MEDIA_QUERY, EFFECT } from '../../constants/style'
-import { ReactComponent as ArrowRightSvg } from '../../icons/arrow_right.svg'
+import { ReactComponent as ArrowRightSvg } from '../../icons/arrow_right_slim.svg'
 import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
 
