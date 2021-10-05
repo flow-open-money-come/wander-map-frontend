@@ -9,6 +9,7 @@ import RegisterPage from './pages/RegisterPage'
 import AllTrailPage from './pages/TrailPages/AllTrailsPage/AllTrailPage'
 import AllArticlePage from './pages/ArticlePages/AllArticlesPage/AllArticlesPage'
 import UserOverviewPage from './pages/UserPages/UserOverviewPage/UserOverviewPage'
+import UserBackstage from './pages/UserPages/UserBackstage/UserBackstage'
 import TrailPostPage from './pages/TrailPages/TrailPostPage'
 import ArticlePostPage from './pages/ArticlePages/ArticlePostPage'
 import BackToTopBtn from './components/common/BackToTopBtn'
@@ -46,7 +47,9 @@ function App() {
             <UserOverviewPage />
           </Route>
           <Route path='/admin'></Route>
-          <Route path='/backstage/userId'></Route>
+          <Route path='/backstage/userId'>
+            <UserBackstage />
+          </Route>
           <Route path='/articles/id'></Route>
           <Route path='/trails/id'></Route>
         </Switch>
