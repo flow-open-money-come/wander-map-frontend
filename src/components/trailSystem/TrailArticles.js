@@ -4,7 +4,6 @@ import { COLOR, FONT, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/article.svg'
 import ArticleList from '../forumSystem/Article.js'
 
-
 const ArticlesWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -57,7 +56,6 @@ const More = styled.div`
   }
 `
 
-
 function TrailArticles() {
   return (
     <ArticlesWrapper>
@@ -67,7 +65,8 @@ function TrailArticles() {
       </Title>
       <ArticlesContainer>
         <ArticleList
-          src={'https://i.imgur.com/w2Y6y4z.jpg'}
+          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
+          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
           title={'礁溪林美石磐涼爽一日遊'}
           user={'水怪貓貓'}
           tags={['有水源', '賞花', '危險地形']}
@@ -77,7 +76,8 @@ function TrailArticles() {
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
         />
         <ArticleList
-          src={'https://i.imgur.com/w2Y6y4z.jpg'}
+          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
+          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
           title={'礁溪林美石磐涼爽一日遊'}
           user={'水怪貓貓'}
           tags={['有水源', '賞花', '危險地形']}
@@ -87,7 +87,8 @@ function TrailArticles() {
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
         />
         <ArticleList
-          src={'https://i.imgur.com/w2Y6y4z.jpg'}
+          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
+          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
           title={'礁溪林美石磐涼爽一日遊'}
           user={'水怪貓貓'}
           tags={['有水源', '賞花', '危險地形']}
