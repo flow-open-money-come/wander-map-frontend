@@ -103,7 +103,14 @@ const Card = styled.div`
 const CommentInfo = styled.div`
   display: flex;
   align-items: center;
-  position: relative;
+  justify-content: space-between;
+`
+
+const CommentViewInfo = styled.div`
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  width: 70%;
 `
 
 const CommentNickname = styled.div`
@@ -122,20 +129,24 @@ const CommentNickname = styled.div`
 `
 
 const CommentTime = styled.div`
+  display: flex;
+  align-items: center;
+  max-width: 60px;
+  text-align: right;
   font-size: ${FONT.xs};
   color: ${COLOR.gray};
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
+    max-width: 80px;
   }
   ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.s};
+    max-width: 150px;
   }
 `
 
 const CommentBtn = styled.div`
   display: flex;
-  position: absolute;
-  right: 0;
+ 
   svg {
     margin: 0 3px;
     width: 15px;
@@ -189,10 +200,12 @@ export default function Comments() {
       </CommentsHeader>
       <Card>
         <CommentInfo>
-          <UserAvatar src='https://i.ppfocus.com/2020/8/285a2ad.jpg' />
-          <CommentNickname>甄環</CommentNickname>
-          <CommentTime>2020.09.08 / 20:20:22</CommentTime>
+          <CommentViewInfo>
+            <UserAvatar src='https://i.ppfocus.com/2020/8/285a2ad.jpg' />
+            <CommentNickname>甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環</CommentNickname>
+          </CommentViewInfo>
           <CommentBtn>
+            <CommentTime>2020.09.08 / 20:20:22</CommentTime>
             <EditIcon />
             <BinIcon />
           </CommentBtn>
@@ -203,10 +216,12 @@ export default function Comments() {
       </Card>
       <Card>
         <CommentInfo>
-          <UserAvatar src='https://datansuo.net/img/201505/14323334952.jpg' />
-          <CommentNickname>甄環</CommentNickname>
-          <CommentTime>2020.09.08 / 20:20:22</CommentTime>
+          <CommentViewInfo>
+            <UserAvatar src='https://datansuo.net/img/201505/14323334952.jpg' />
+            <CommentNickname>甄環</CommentNickname>
+          </CommentViewInfo>
           <CommentBtn>
+            <CommentTime>2020.09.08 / 20:20:22</CommentTime>
             <EditIcon />
             <BinIcon />
           </CommentBtn>
