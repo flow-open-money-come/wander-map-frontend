@@ -141,6 +141,7 @@ const NavBarHamburger = styled.div`
   height: 15px;
   cursor: pointer;
   display: none;
+  z-index: 3;
   &::before {
     content: '';
     position: absolute;
