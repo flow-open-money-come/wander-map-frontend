@@ -12,6 +12,7 @@ import UserOverviewPage from './pages/UserPages/UserOverviewPage/UserOverviewPag
 import UserBackstage from './pages/UserPages/UserBackstage/UserBackstage'
 import TrailPostPage from './pages/TrailPages/TrailPostPage'
 import ArticlePostPage from './pages/ArticlePages/ArticlePostPage'
+import BackToTopBtn from './components/common/BackToTopBtn'
 
 function App() {
   return (
@@ -52,6 +53,7 @@ function App() {
           <Route path='/articles/id'></Route>
           <Route path='/trails/id'></Route>
         </Switch>
+        <BackToTopBtn />
         <Footer />
       </Router>
     </>

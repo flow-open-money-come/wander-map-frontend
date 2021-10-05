@@ -1,15 +1,14 @@
-import { useState } from 'react'
 import styled from 'styled-components'
-import { ReactComponent as LogoSvg } from '../../icons/logo_with_name.svg'
-import { ReactComponent as DefaultAvatarSvg } from '../../icons/default_avatar.svg'
-import { Link, useLocation } from 'react-router-dom'
+// import { ReactComponent as DefaultAvatarSvg } from '../../icons/default_avatar.svg'
+import { Link } from 'react-router-dom'
 import { ReactComponent as ArrowUpSvg } from '../../icons/arrow_up.svg'
 import { ReactComponent as ArrowDownSvg } from '../../icons/arrow_down.svg'
 import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
 import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
 import { ReactComponent as UserSvg } from '../../icons/user.svg'
-import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
+import { COLOR, FONT, EFFECT } from '../../constants/style'
 import { NavBarButton } from './Button'
+import useToggle from '../../hooks/useToggle'
 
 const NavBarContainer = styled.div`
   width: 100%;
@@ -17,6 +16,9 @@ const NavBarContainer = styled.div`
   border-top: 12px solid ${COLOR.green};
   background-color: ${COLOR.white};
   box-shadow: ${EFFECT.shadow_light};
+  position: sticky;
+  top: 0;
+  z-index: 5;
 `
 const NavBarWrapper = styled.div`
   width: 90%;
@@ -26,11 +28,13 @@ const NavBarWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-const Logo = styled(LogoSvg)`
+
+const Logo = styled(Link)`
   min-width: 120px;
-  min-height: 48px;
-  width: 120px;
-  height: 48px;
+  min-height: 52px;
+  height: 52px;
+  background: url(https://i.imgur.com/782yeHS.png) center/cover;
+  margin-top: 3px;
 `
 
 const NavBarLink = styled(Link)`
@@ -60,7 +64,7 @@ const NavBarLink = styled(Link)`
         cursor: pointer;
       }
     `}
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     background-color: transparent;
     color: black;
     display: flex;
@@ -78,20 +82,20 @@ const NavBarLink = styled(Link)`
 const UserInfoWeb = styled.div`
   display: flex;
   align-items: center;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: none;
   }
 `
 const UserInfoMobile = styled.div`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: flex;
     align-items: center;
   }
 `
-const UserInfoWrapperMobile = styled.div`
+const UserInfoMobileWrapper = styled.div`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: flex;
     flex-direction: column;
     align-items: right;
@@ -101,21 +105,22 @@ const NavBarLinkWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     flex-direction: column;
-    z-index: 3;
     margin-top: 50px;
     padding-left: 30px;
     align-items: baseline;
   }
 `
 
-const DefaultAvatar = styled(DefaultAvatarSvg)`
+const DefaultAvatar = styled(Link)`
   min-width: 45px;
   min-height: 45px;
   margin-left: 35px;
+  background: url(https://i.imgur.com/r50z0vv.png) center/cover;
 `
-const NavBarTextLink = styled.div`
+
+const NavBarText = styled.div`
   min-width: 60px;
   font-size: ${FONT.s};
   color: ${COLOR.green};
@@ -126,11 +131,11 @@ const NavBarTextLink = styled.div`
     color: ${COLOR.green_light};
     cursor: pointer;
   }
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     ${NavBarButton}
   }
 `
-const NavBarHambergur = styled.div`
+const NavBarHamburger = styled.div`
   position: relative;
   width: 25px;
   height: 15px;
@@ -138,8 +143,8 @@ const NavBarHambergur = styled.div`
   display: none;
   &::before {
     content: '';
-    top: 0;
     position: absolute;
+    top: 0;
     width: 100%;
     height: 2px;
     background-color: ${COLOR.green};
@@ -153,12 +158,12 @@ const NavBarHambergur = styled.div`
   }
   &::after {
     content: '';
-    bottom: 0;
     position: absolute;
+    bottom: 0;
     width: 100%;
     height: 2px;
     background-color: ${COLOR.green};
-    transition: 0.5s;
+    transition: ${EFFECT.transition};
     ${(props) =>
       props.$isActive &&
       `
@@ -166,12 +171,12 @@ const NavBarHambergur = styled.div`
       transform: translateY(-50%);
       transform: rotate(-45deg);`};
   }
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: block;
   }
 `
 
-const NavBarHambergurLine = styled.div`
+const NavBarHamburgerLine = styled.div`
   position: absolute;
   width: 100%;
   height: 2px;
@@ -185,25 +190,25 @@ const NavBarHambergurLine = styled.div`
 `
 
 const NavBarMobile = styled.div`
-  @media (max-width: 768px) {
-    background-color: rgba(255, 255, 255, 0.9);
+  @media screen and (max-width: 768px) {
     width: 275px;
     height: 0;
+    background-color: rgba(255, 255, 255, 0.9);
     position: absolute;
-    top: 12px;
+    top: 0;
     right: 0;
     overflow: hidden;
     transition: ${EFFECT.transition};
-    ${(props) => props.$isActive && `height: 100vh;`}
+    ${(props) => props.$isActive && `height: 530px;`}
   }
 `
 const Divider = styled.div`
   width: 80%;
   height: 2px;
-  background-color: #f0eeeb;
+  background-color: ${COLOR.beige};
   display: none;
-  margin: 50px 0 20px 0;
-  @media (max-width: 768px) {
+  margin: 20px 0 20px 0;
+  @media screen and (max-width: 768px) {
     display: block;
   }
 `
@@ -218,21 +223,21 @@ const UserInfoListMobile = styled.div`
 `
 const Forum = styled(ForumSvg)`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: block;
     margin-right: 20px;
   }
 `
 const Trail = styled(TrailSvg)`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: block;
     margin-right: 20px;
   }
 `
 const User = styled(UserSvg)`
   display: none;
-  @media (max-width: 768px) {
+  @media screen and (max-width: 768px) {
     display: block;
     margin-right: 20px;
   }
@@ -247,62 +252,42 @@ const ArrowUp = styled(ArrowUpSvg)`
 `
 
 function NavBar() {
-  const location = useLocation()
-  const [hambergurToggleClick, setHambergurToggleClick] = useState(false)
-  const [arrowToggleClick, setArrowToggleClick] = useState(false)
-  const handleToggleClick = (e) => {
-    e.target.getAttribute('name') === 'hambergur'
-      ? setHambergurToggleClick(!hambergurToggleClick)
-      : setArrowToggleClick(!arrowToggleClick)
-  }
+  const [HamburgerToggleClick, setHamburgerToggleClick] = useToggle(false)
+  const [arrowToggleClick, setArrowToggleClick] = useToggle(false)
+
   return (
     <>
       <NavBarContainer>
         <NavBarWrapper>
-          <Logo />
-          <NavBarMobile $isActive={hambergurToggleClick}>
+          <Logo to='/' />
+          <NavBarMobile $isActive={HamburgerToggleClick}>
             <NavBarLinkWrapper>
-              <NavBarLink
-                to='/articles'
-                $active={'/articles' === location.pathname}
-              >
+              <NavBarLink to='/articles'>
                 <Forum />
                 進入論壇
               </NavBarLink>
 
-              <NavBarLink
-                to='/trails'
-                $active={'/trails' === location.pathname}
-              >
+              <NavBarLink to='/trails'>
                 <Trail />
                 全部步道
               </NavBarLink>
               <UserInfoWeb>
-                <DefaultAvatar />
-                <NavBarTextLink>水怪貓貓</NavBarTextLink>
+                <DefaultAvatar to='/backstage/1' />
+                <NavBarText>水怪貓貓</NavBarText>
               </UserInfoWeb>
-              <UserInfoWrapperMobile>
+              <UserInfoMobileWrapper>
                 <UserInfoMobile>
-                  <NavBarLink
-                    to='/backstage/userId'
-                    $active={'/backstage/userId' === location.pathname}
-                  >
+                  <NavBarLink to='/backstage/userId'>
                     <User />
                     我的主頁
                   </NavBarLink>
                   <ArrowDown
-                    name='arrow'
                     $isActive={arrowToggleClick}
-                    onClick={(e) => {
-                      handleToggleClick(e)
-                    }}
+                    onClick={setArrowToggleClick}
                   />
                   <ArrowUp
-                    name='arrow'
                     $isActive={arrowToggleClick}
-                    onClick={(e) => {
-                      handleToggleClick(e)
-                    }}
+                    onClick={setArrowToggleClick}
                   />
                 </UserInfoMobile>
                 <UserInfoListMobile $isActive={arrowToggleClick}>
@@ -310,27 +295,23 @@ function NavBar() {
                   <NavBarLink>管理文章</NavBarLink>
                   <NavBarLink>待辦事項</NavBarLink>
                 </UserInfoListMobile>
-              </UserInfoWrapperMobile>
+              </UserInfoMobileWrapper>
               <Divider />
-              <NavBarTextLink>登出</NavBarTextLink>
-              <NavBarLink $button>會員註冊 / 登入</NavBarLink>
+              <NavBarText>登出</NavBarText>
+              <NavBarLink $button to='/register'>
+                會員註冊 / 登入
+              </NavBarLink>
             </NavBarLinkWrapper>
           </NavBarMobile>
-          <NavBarHambergur
-            name='hambergur'
-            $isActive={hambergurToggleClick}
-            onClick={(e) => {
-              handleToggleClick(e)
-            }}
+          <NavBarHamburger
+            $isActive={HamburgerToggleClick}
+            onClick={setHamburgerToggleClick}
           >
-            <NavBarHambergurLine
-              name='hambergur'
-              $isActive={hambergurToggleClick}
-              onClick={(e) => {
-                handleToggleClick(e)
-              }}
+            <NavBarHamburgerLine
+              $isActive={HamburgerToggleClick}
+              onClick={setHamburgerToggleClick}
             />
-          </NavBarHambergur>
+          </NavBarHamburger>
         </NavBarWrapper>
       </NavBarContainer>
     </>
