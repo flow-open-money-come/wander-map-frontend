@@ -164,15 +164,7 @@ const CreatorTd = styled.td`
     width: 150px;
   }
 `
-const DateTd = styled.td`
-  width: 20%;
-  min-width: 50px;
-  padding: 0 3px;
-  vertical-align: middle;
-  ${MEDIA_QUERY.lg} {
-    width: 150px;
-  }
-`
+const DateTd = styled(CreatorTd)``
 
 const BtnTd = styled.td`
   min-width: 40px;

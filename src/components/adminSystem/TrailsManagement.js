@@ -101,10 +101,6 @@ const RecycleBin = styled.div`
   }
   ${MEDIA_QUERY.lg} {
     margin: 0 50px;
-    svg {
-      width: 25px;
-      height: 25px;
-    }
   }
 `
 
