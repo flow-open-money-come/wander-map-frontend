@@ -47,7 +47,7 @@ const FilteredTrailLocation = styled.div`
     font-size: ${FONT.s};
   }
 `
-const FilteredTrailTages = styled.div`
+const FilteredTrailTags = styled.div`
   color: ${COLOR.gray};
   margin-top: 10px;
   font-size: ${FONT.xs};
@@ -77,9 +77,9 @@ export default function TrailCard({ trailInfo }) {
           <Location />
           {trailInfo.location}
         </FilteredTrailLocation>
-        <FilteredTrailTages>
+        <FilteredTrailTags>
           {trailInfo.required_time} | {trailInfo.season}
-        </FilteredTrailTages>
+        </FilteredTrailTags>
       </FilteredTrailCard>
     </>
   )

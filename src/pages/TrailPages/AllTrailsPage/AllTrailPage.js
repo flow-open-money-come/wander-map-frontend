@@ -8,7 +8,7 @@ import { NavBarButton } from '../../../components/common/Button'
 import TrailCard from '../../../components/trailSystem/TrailCard'
 import BackToTopBtn from '../../../components/common/BackToTopBtn'
 
-const AllTrialsPageWrapper = styled.div`
+const AllTrailsPageWrapper = styled.div`
   width: 90%;
   margin: 0 auto;
   position: relative;
@@ -126,7 +126,7 @@ function AllTrailPage() {
 
   return (
     <>
-      <AllTrialsPageWrapper>
+      <AllTrailsPageWrapper>
         <AllTrailsPageTitleWrapper>
           <StarSvg />
           精選步道
@@ -160,7 +160,11 @@ function AllTrailPage() {
             options={['新手', '一般', '困難', '進階', '挑戰']}
           />
           <SearchBarWrapper $combined>
-            <SearchBar placeholder='關鍵字...' noBorderRadius={true} />
+            <SearchBar
+              placeholder='關鍵字...'
+              noBorderRadius={true}
+              width='100%'
+            />
           </SearchBarWrapper>
         </DropDownContainer>
         <FilteredTrailsWrapper>
@@ -179,7 +183,7 @@ function AllTrailPage() {
         </FilteredTrailsWrapper>
         <LoadMoreBtn>看更多</LoadMoreBtn>
         <BackToTopBtn />
-      </AllTrialsPageWrapper>
+      </AllTrailsPageWrapper>
     </>
   )
 }

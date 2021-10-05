@@ -30,7 +30,7 @@ const DropDownCheckBoxTitle = styled.div`
     font-size: ${FONT.s};
   }
 `
-const DropDownCheckBoxs = styled.div`
+const DropDownCheckBoxes = styled.div`
   height: 0;
   border-top: 0.5px solid ${COLOR.gray_light};
   background-color: ${COLOR.white};
@@ -42,7 +42,7 @@ const DropDownCheckBoxs = styled.div`
   ${(props) =>
     props.$isActive &&
     `
-    height: 130px;
+    height: 145px;
     overflow: scroll;
     box-shadow: ${EFFECT.shadow_light};
     `}
@@ -100,11 +100,11 @@ export default function DropDownCheckBoxList({ title, options }) {
           />
           <ArrowUp $isActive={arrowToggleClick} onClick={setArrowToggleClick} />
         </DropDownCheckBoxTitle>
-        <DropDownCheckBoxs $isActive={arrowToggleClick}>
+        <DropDownCheckBoxes $isActive={arrowToggleClick}>
           {options.map((option) => {
             return <DropDownCheckBox option={option}></DropDownCheckBox>
           })}
-        </DropDownCheckBoxs>
+        </DropDownCheckBoxes>
       </div>
     </>
   )

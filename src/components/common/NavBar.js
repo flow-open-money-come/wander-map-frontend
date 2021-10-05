@@ -1,6 +1,5 @@
 import styled from 'styled-components'
-import { ReactComponent as LogoSvg } from '../../icons/logo_with_name.svg'
-import { ReactComponent as DefaultAvatarSvg } from '../../icons/default_avatar.svg'
+// import { ReactComponent as DefaultAvatarSvg } from '../../icons/default_avatar.svg'
 import { Link } from 'react-router-dom'
 import { ReactComponent as ArrowUpSvg } from '../../icons/arrow_up.svg'
 import { ReactComponent as ArrowDownSvg } from '../../icons/arrow_down.svg'
@@ -29,10 +28,13 @@ const NavBarWrapper = styled.div`
   justify-content: space-between;
   align-items: center;
 `
-const Logo = styled(LogoSvg)`
+
+const Logo = styled(Link)`
   min-width: 120px;
-  min-height: 48px;
-  height: 48px;
+  min-height: 52px;
+  height: 52px;
+  background: url(https://i.imgur.com/782yeHS.png) center/cover;
+  margin-top: 3px;
 `
 
 const NavBarLink = styled(Link)`
@@ -111,11 +113,13 @@ const NavBarLinkWrapper = styled.div`
   }
 `
 
-const DefaultAvatar = styled(DefaultAvatarSvg)`
+const DefaultAvatar = styled(Link)`
   min-width: 45px;
   min-height: 45px;
   margin-left: 35px;
+  background: url(https://i.imgur.com/r50z0vv.png) center/cover;
 `
+
 const NavBarText = styled.div`
   min-width: 60px;
   font-size: ${FONT.s};
@@ -131,7 +135,7 @@ const NavBarText = styled.div`
     ${NavBarButton}
   }
 `
-const NavBarHambergur = styled.div`
+const NavBarHamburger = styled.div`
   position: relative;
   width: 25px;
   height: 15px;
@@ -172,7 +176,7 @@ const NavBarHambergur = styled.div`
   }
 `
 
-const NavBarHambergurLine = styled.div`
+const NavBarHamburgerLine = styled.div`
   position: absolute;
   width: 100%;
   height: 2px;
@@ -248,15 +252,15 @@ const ArrowUp = styled(ArrowUpSvg)`
 `
 
 function NavBar() {
-  const [hambergurToggleClick, setHambergurToggleClick] = useToggle(false)
+  const [HamburgerToggleClick, setHamburgerToggleClick] = useToggle(false)
   const [arrowToggleClick, setArrowToggleClick] = useToggle(false)
 
   return (
     <>
       <NavBarContainer>
         <NavBarWrapper>
-          <Logo />
-          <NavBarMobile $isActive={hambergurToggleClick}>
+          <Logo to='/' />
+          <NavBarMobile $isActive={HamburgerToggleClick}>
             <NavBarLinkWrapper>
               <NavBarLink to='/articles'>
                 <Forum />
@@ -268,7 +272,7 @@ function NavBar() {
                 全部步道
               </NavBarLink>
               <UserInfoWeb>
-                <DefaultAvatar />
+                <DefaultAvatar to='/backstage/1' />
                 <NavBarText>水怪貓貓</NavBarText>
               </UserInfoWeb>
               <UserInfoMobileWrapper>
@@ -299,15 +303,15 @@ function NavBar() {
               </NavBarLink>
             </NavBarLinkWrapper>
           </NavBarMobile>
-          <NavBarHambergur
-            $isActive={hambergurToggleClick}
-            onClick={setHambergurToggleClick}
+          <NavBarHamburger
+            $isActive={HamburgerToggleClick}
+            onClick={setHamburgerToggleClick}
           >
-            <NavBarHambergurLine
-              $isActive={hambergurToggleClick}
-              onClick={setHambergurToggleClick}
+            <NavBarHamburgerLine
+              $isActive={HamburgerToggleClick}
+              onClick={setHamburgerToggleClick}
             />
-          </NavBarHambergur>
+          </NavBarHamburger>
         </NavBarWrapper>
       </NavBarContainer>
     </>
