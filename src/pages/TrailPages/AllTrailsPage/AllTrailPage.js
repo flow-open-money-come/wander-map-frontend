@@ -182,7 +182,6 @@ function AllTrailPage() {
           <TrailCard trailInfo={trailInfo} />
         </FilteredTrailsWrapper>
         <LoadMoreBtn>看更多</LoadMoreBtn>
-        <BackToTopBtn />
       </AllTrailsPageWrapper>
     </>
   )

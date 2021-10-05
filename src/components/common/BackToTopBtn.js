@@ -7,7 +7,7 @@ const BackToTopBtnItem = styled(BackToTopBtnSvg)`
   width: 50px;
   height: 50px;
   padding: 10px;
-  background-color: ${COLOR.beige};
+  background-color: ${COLOR.white};
   border-radius: ${RADIUS.md};
   box-shadow: ${EFFECT.shadow_dark};
   position: fixed;
@@ -15,6 +15,11 @@ const BackToTopBtnItem = styled(BackToTopBtnSvg)`
   right: 10px;
   display: none;
   ${(props) => props.$display && `display: block`};
+  transition: ${EFFECT.transition};
+  &:hover {
+    transform: scale(0.9);
+    background-color: ${COLOR.beige};
+  }
   ${MEDIA_QUERY.md} {
     right: 50px;
   }
