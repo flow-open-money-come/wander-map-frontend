@@ -4,7 +4,9 @@ import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import { ReactComponent as CloseSvg } from '../../icons/close.svg'
 
 const SearchBarWrapper = styled.div`
-  width: 70%;
+  width: ${(props) => {
+    return props.$width ? props.$width : '70%'
+  }};
   z-index: 1;
   display: flex;
   align-items: center;
@@ -60,12 +62,14 @@ export default function SearchBar({
   placeholder,
   horizontalAlign,
   noBorderRadius,
+  width,
 }) {
   return (
     <>
       <SearchBarWrapper
         $horizontalAlign={horizontalAlign}
         $noBorderRadius={noBorderRadius}
+        $width={width}
       >
         <SearchBarInput
           placeholder={placeholder}
