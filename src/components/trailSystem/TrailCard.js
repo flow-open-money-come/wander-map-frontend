@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, MEDIA_QUERY, RADIUS } from '../../constants/style'
+import { ReactComponent as LocationSvg } from '../../icons/location_s.svg'
 
 const FilteredTrailCard = styled.div`
   width: 250px;
@@ -46,12 +47,21 @@ const FilteredTrailLocation = styled.div`
     font-size: ${FONT.s};
   }
 `
-const FilteredTrailTages = styled.div`
+const FilteredTrailTags = styled.div`
   color: ${COLOR.gray};
   margin-top: 10px;
   font-size: ${FONT.xs};
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
+  }
+`
+const Location = styled(LocationSvg)`
+  width: 15px;
+  height: 15px;
+  margin-right: 8px;
+  ${MEDIA_QUERY.md} {
+    width: 20px;
+    height: 20px;
   }
 `
 
@@ -63,10 +73,13 @@ export default function TrailCard({ trailInfo }) {
           <FilteredTrailImg src={trailInfo.cover_picture_url} />
         </FilteredTrailImgWrapper>
         <FilteredTrailTitle>{trailInfo.title}</FilteredTrailTitle>
-        <FilteredTrailLocation>{trailInfo.location}</FilteredTrailLocation>
-        <FilteredTrailTages>
+        <FilteredTrailLocation>
+          <Location />
+          {trailInfo.location}
+        </FilteredTrailLocation>
+        <FilteredTrailTags>
           {trailInfo.required_time} | {trailInfo.season}
-        </FilteredTrailTages>
+        </FilteredTrailTags>
       </FilteredTrailCard>
     </>
   )
