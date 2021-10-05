@@ -21,13 +21,13 @@ const ArticlesImg = styled.img`
   border-radius: ${RADIUS.lg};
   align-self: center;
   ${MEDIA_QUERY.md} {
-    width: 130px;
-    height: 130px;
+    width: 150px;
+    height: 150px;
     margin-right: 13px;
   }
   ${MEDIA_QUERY.lg} {
-    width: 160px;
-    height: 160px;
+    width: 150px;
+    height: 150px;
     margin-right: 13px;
   }
 `
@@ -54,6 +54,9 @@ const ArticlesTag = styled.span`
   margin: 5px 3px;
   padding: 4px;
   color: #ffffff;
+  ${(props) =>
+    !props.$lessRwd &&
+    `
   ${MEDIA_QUERY.md} {
     padding: 6px 15px;
     margin-right: 10px;
@@ -62,9 +65,10 @@ const ArticlesTag = styled.span`
     &:first-child {
       margin-left: 30px;
     }
-    padding: 6px 15px;
+    /* padding: 6px 15px; */
     margin-right: 17px;
   }
+  `}
 `
 const ArticlesContent = styled.div`
   width: 100%;
@@ -74,24 +78,28 @@ const ArticlesContent = styled.div`
   font-size: ${FONT.s};
   max-height: 3em;
   line-height: 1.5em;
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-  }
+  ${(props) =>
+    !props.$lessRwd &&
+    `
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
   }
+  `}
 `
 const ArticlesTitle = styled.div`
   margin-bottom: 5px;
   font-weight: bold;
+  ${(props) =>
+    !props.$lessRwd &&
+    `
   ${MEDIA_QUERY.md} {
     line-height: 1.5em;
     font-size: ${FONT.md};
   }
   ${MEDIA_QUERY.lg} {
-    line-height: 1.5em;
     font-size: ${FONT.lg};
   }
+  `}
 `
 
 const ArticlesInfoContainer = styled.div`
@@ -145,25 +153,37 @@ const ArticlesInfo = styled.div`
   }
 `
 const TitleAndTags = styled.div`
-  ${MEDIA_QUERY.lg} {
-    display: flex;
-  }
+  ${(props) =>
+    !props.$lessRwd &&
+    `
+    ${MEDIA_QUERY.lg} {
+        display: flex;
+      }
+    `}
 `
 
-export default function ArticleList({ title, content, tags, user, date, src }) {
+export default function ArticleList({
+  title,
+  content,
+  tags,
+  user,
+  date,
+  src,
+  lessRwd,
+}) {
   return (
     <ArticlesContainer>
       <ArticlesImg src={src} />
       <ArticlesInfoContainer>
-        <TitleAndTags>
-          <ArticlesTitle>{title}</ArticlesTitle>
+        <TitleAndTags $lessRwd={lessRwd}>
+          <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
           <ArticlesTags>
             {tags.map((tag) => {
-              return <ArticlesTag>{tag}</ArticlesTag>
+              return <ArticlesTag $lessRwd={lessRwd}>{tag}</ArticlesTag>
             })}
           </ArticlesTags>
         </TitleAndTags>
-        <ArticlesContent>{content}</ArticlesContent>
+        <ArticlesContent $lessRwd={lessRwd}>{content}</ArticlesContent>
         <ArticlesInfo>
           <ArticlesUser>
             <UserAvatar />

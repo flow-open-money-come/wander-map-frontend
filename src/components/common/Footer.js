@@ -3,15 +3,14 @@ import { COLOR, FONT } from '../../constants/style'
 
 const FooterContainer = styled.footer`
   width: 100%;
-  height: 30px;
+  max-height: 60px;
   background-color: ${COLOR.green};
   color: ${COLOR.white};
   font-size: ${FONT.s};
   text-align: center;
   line-height: 30px;
-  @media (max-width: 768px) {
-    height: 60px;
-  }
+  position: fixed;
+  bottom: 0;
 `
 export default function Footer() {
   return (
