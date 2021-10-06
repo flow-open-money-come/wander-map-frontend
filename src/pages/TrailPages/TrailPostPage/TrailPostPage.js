@@ -1,13 +1,9 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
-import {
-  FONT,
-  COLOR,
-  EFFECT,
-  RADIUS,
-  MEDIA_QUERY,
-} from '../../../constants/style'
-import { ReactComponent as ImageSvg } from '../../../icons/image.svg'
+import styled from 'styled-components'
+import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
+import UploadImg from '../../../components/formSystem/UploadImg'
+import SelectLocation from '../../../components/formSystem/SelectLocation'
+import UploadGpx from '../../../components/formSystem/UploadGpx'
 
 const TrailsPostWrapper = styled.div`
   margin: 0 auto;
@@ -81,7 +77,6 @@ const InputWrapper = styled.div`
 const FormTitle = styled.div`
   font-weight: 600;
   margin-bottom: 8px;
-  font-family: Arial, Helvetica, sans-serif;
   ${MEDIA_QUERY.md} {
     margin: 10px 20px;
     width: 100px;
@@ -117,7 +112,7 @@ const Input = styled.input.attrs((props) => ({
     font-size: ${FONT.md};
   }
 `
-const Textarea = styled.textarea.attrs((props) => ({
+const Textarea = styled.textarea.attrs(() => ({
   rows: '6',
 }))`
   width: 320px;
@@ -145,44 +140,10 @@ const Select = styled.select`
     font-size: ${FONT.md};
   }
 `
-const PicHolder = styled.label`
-  width: 320px;
-  height: 180px;
-  background-color: #eee;
-  border-radius: 3px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  text-align: center;
-`
-
-const UploadInput = styled.input.attrs({
-  type: 'file',
-  accept: 'image/png, image/jpeg',
-})`
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-`
-const Image = styled(ImageSvg)`
-  width: 30px;
-  height: 30px;
-  color: ${COLOR.green};
-`
-const UploadNotice = styled.div`
-  font-size: ${FONT.xs};
-  margin-top: 30px;
-`
 
 const SubmitBtn = styled.div`
   text-align: right;
+  margin-bottom: 50px;
   ${MEDIA_QUERY.md} {
     width: 320px;
   }
@@ -196,8 +157,9 @@ const Submit = styled.input.attrs((props) => ({
 }))`
   padding: 4px 10px;
   background: ${COLOR.white};
+  background: white;
   border-radius: 3px;
-  border: solid 1.5px ${COLOR.green};
+  border: solid 1px ${COLOR.green};
   color: ${COLOR.green};
   font-size: ${FONT.s};
   font-weight: 500;
@@ -207,28 +169,10 @@ const Submit = styled.input.attrs((props) => ({
     color: ${COLOR.white};
   }
   ${MEDIA_QUERY.lg} {
-    padding: 12px 25px;
+    padding: 12px 20px;
     font-size: ${FONT.lg};
     border-radius: ${RADIUS.md};
   }
-`
-const GPXBtn = styled.label`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 25px;
-  width: 320px;
-  background-color: #eee;
-  border-radius: 3px;
-  ${MEDIA_QUERY.lg} {
-    width: 500px;
-    font-size: ${FONT.md};
-  }
-`
-const GPXInput = styled.input.attrs((props) => ({
-  type: 'file',
-}))`
-  cursor: pointer;
 `
 
 export default function TrailPostPage() {
@@ -243,15 +187,7 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>封面圖片</FormTitle>
         <FormSubTitleWrapper>
-          <PicHolder>
-            <Image />
-            <br />
-            點擊上傳
-            <UploadInput />
-            <UploadNotice>
-              建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
-            </UploadNotice>
-          </PicHolder>
+          <UploadImg />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -261,16 +197,7 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>步道地點</FormTitle>
         <FormSubTitleWrapper>
-          <Select>
-            <option>臺北市</option>
-            <option>新北市</option>
-            <option>桃園市</option>
-          </Select>
-          <Select>
-            <option>北投區</option>
-            <option>信義區</option>
-            <option>大安區</option>
-          </Select>
+          <SelectLocation />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -349,22 +276,12 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>路線圖片</FormTitle>
         <FormSubTitleWrapper>
-          <PicHolder>
-            <Image />
-            <br />
-            點擊上傳
-            <UploadInput />
-            <UploadNotice>
-              建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
-            </UploadNotice>
-          </PicHolder>
+          <UploadImg />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>GPX</FormTitle>
-        <GPXBtn>
-          <GPXInput />
-        </GPXBtn>
+        <UploadGpx />
       </FormWrapper>
       <FormWrapper>
         <FormTitle />
