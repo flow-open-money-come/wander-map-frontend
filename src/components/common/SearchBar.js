@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { COLOR, EFFECT, RADIUS, FONT, MEDIA_QUERY } from '../../constants/style'
+import { COLOR, EFFECT, RADIUS } from '../../constants/style'
 import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import { ReactComponent as CloseSvg } from '../../icons/close.svg'
 
@@ -14,12 +14,6 @@ const SearchBarWrapper = styled.div`
   box-shadow: ${EFFECT.shadow_light};
   ${(props) => props.$horizontalAlign && `margin: 0 auto;`}
   ${(props) => props.$noBorderRadius && `border-radius:0;`}
-  ${(props) =>
-    props.$widthFilter &&
-    `
-    min-width: 100%;
-    box-shadow: none;
-  `}
 `
 
 const SearchIcon = styled(SearchSvg)`
@@ -62,35 +56,24 @@ const SearchBarInput = styled.input`
   transition: ${EFFECT.transition};
   ${(props) =>
     !props.$noBorderRadius && `border-radius: ${RADIUS.md} 0 0 ${RADIUS.md};`}
-
-  ${(props) =>
-    props.$fontAndWidthFilter &&
-    `
-    ${MEDIA_QUERY.md} {
-      font-size: ${FONT.md};
-      width: 100%;
-    }
-  `}
 `
 
 export default function SearchBar({
   placeholder,
   horizontalAlign,
   noBorderRadius,
-  fontAndWidthFilter,
-  widthFilter,
+  width,
 }) {
   return (
     <>
       <SearchBarWrapper
         $horizontalAlign={horizontalAlign}
         $noBorderRadius={noBorderRadius}
-        $widthFilter={widthFilter}
+        $width={width}
       >
         <SearchBarInput
           placeholder={placeholder}
           $noBorderRadius={noBorderRadius}
-          $fontAndWidthFilter={fontAndWidthFilter}
         />
         <CloseIconWrapper>
           <CloseIcon />

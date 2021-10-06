@@ -6,7 +6,6 @@ import SearchBar from '../../../components/common/SearchBar'
 import DropDownCheckBoxList from '../../../components/common/DropDownCheckBoxList'
 import { NavBarButton } from '../../../components/common/Button'
 import TrailCard from '../../../components/trailSystem/TrailCard'
-import BackToTopBtn from '../../../components/common/BackToTopBtn'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
@@ -163,7 +162,7 @@ function AllTrailPage() {
             <SearchBar
               placeholder='關鍵字...'
               noBorderRadius={true}
-              width='100%'
+              widthFilter
             />
           </SearchBarWrapper>
         </DropDownContainer>
