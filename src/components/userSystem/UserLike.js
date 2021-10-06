@@ -1,89 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import { ReactComponent as ArticleManageIcon } from '../../icons/user/user_article_manage.svg'
-import { ReactComponent as TodosIcon } from '../../icons/user/user_todos.svg'
-import { ReactComponent as LikeArticlesIcon } from '../../icons/user/user_like_article.svg'
-import { ReactComponent as CollectTrailsIcon } from '../../icons/user/user_collect_trail.svg'
+import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 
-const Tabs = styled.div`
-  display: flex;
-  align-items: center;
-`
-const UsersManagementContainer = styled.div`
-  width: 100%;
-  margin: 20px auto;
-  ${MEDIA_QUERY.lg} {
-    width: 70%;
-  }
-`
-const ArticlesTab = styled.div`
-  width: 30%;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 5px;
-  font-size: ${FONT.s};
-  border-radius: ${RADIUS.s} ${RADIUS.s} 0 0;
-  border: 2px solid ${COLOR.green};
-  border-bottom: none;
-  color: black;
-  background: white;
-  svg {
-    width: 20px;
-    margin: 0 2px;
-  }
-  rect {
-    stroke: none;
-  }
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md};
-  }
-  ${MEDIA_QUERY.lg} {
-    width: 200px;
-    height: 50px;
-    margin-right: 20px;
-    font-size: ${FONT.lg};
-    svg {
-      width: 40px;
-      margin: 0 2px;
-    }
-
-    &:hover {
-      cursor: pointer;
-      background: ${COLOR.green};
-      color: ${COLOR.white};
-      path {
-        fill: white;
-        stroke: white;
-      }
-      rect {
-        fill: ${COLOR.green};
-      }
-    }
-  }
-`
-const TodosTab = styled(ArticlesTab)``
-const CollectTab = styled(ArticlesTab)``
-const LikeTab = styled(ArticlesTab)`
-  color: white;
-  background: ${COLOR.green};
-  rect {
-    fill: ${COLOR.green};
-  }
-  path {
-    fill: white;
-    stroke: white;
-  }
-`
-const TabTitle = styled.div`
-  display: none;
-  ${MEDIA_QUERY.md} {
-    display: block;
-  }
-`
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
   border-radius: 0 ${RADIUS.s} ${RADIUS.s} ${RADIUS.s};
@@ -195,80 +114,43 @@ const ArticlesRead = styled.div`
 `
 export default function UserLike({ setTab, recycle, setRecycle }) {
   return (
-    <UsersManagementContainer>
-      <Tabs>
-        <ArticlesTab
-          onClick={() => {
-            setTab('Articles')
-          }}
-        >
-          <ArticleManageIcon />
-          <TabTitle>文章管理</TabTitle>
-        </ArticlesTab>
-        <TodosTab
-          onClick={() => {
-            setTab('Todos')
-          }}
-        >
-          <TodosIcon />
-          <TabTitle>裝備清單</TabTitle>
-        </TodosTab>
-        <CollectTab
-          onClick={() => {
-            setTab('Collect')
-          }}
-        >
-          <CollectTrailsIcon />
-          <TabTitle>收藏步道</TabTitle>
-        </CollectTab>
-        <LikeTab
-          onClick={() => {
-            setTab('Like')
-          }}
-        >
-          <LikeArticlesIcon />
-          <TabTitle>按讚心得</TabTitle>
-        </LikeTab>
-      </Tabs>
-      <Block>
-        <SearchBar>
-          <SearchIcon />
-          <SearchField></SearchField>
-        </SearchBar>
-        <ArticlesWrapper>
-          <Pic src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwNfDwVwTVqqfBMLpi_e2MHnkmqRBHpvhow&usqp=CAU' />
-          <Articles>
-            <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
-            <ArticlesContent>
-              林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建...
-            </ArticlesContent>
-            <ArticlesRead>閱讀全文</ArticlesRead>
-          </Articles>
-        </ArticlesWrapper>
-        <ArticlesWrapper>
-          <Pic src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwNfDwVwTVqqfBMLpi_e2MHnkmqRBHpvhow&usqp=CAU' />
-          <Articles>
-            <ArticlesTitle>
-              礁溪林美石磐涼爽一日遊礁溪林美石磐涼爽一日遊
-              礁溪林美石磐涼爽一日遊
-            </ArticlesTitle>
-            <ArticlesContent>
-              林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好現寬敞平緩好現寬敞平緩好現寬敞平緩好
-            </ArticlesContent>
-            <ArticlesRead>閱讀全文</ArticlesRead>
-          </Articles>
-        </ArticlesWrapper>
-        <ArticlesWrapper>
-          <Pic src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwNfDwVwTVqqfBMLpi_e2MHnkmqRBHpvhow&usqp=CAU' />
-          <Articles>
-            <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
-            <ArticlesContent>
-              林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建...
-            </ArticlesContent>
-            <ArticlesRead>閱讀全文</ArticlesRead>
-          </Articles>
-        </ArticlesWrapper>
-      </Block>
-    </UsersManagementContainer>
+    <Block>
+      <SearchBar>
+        <SearchIcon />
+        <SearchField></SearchField>
+      </SearchBar>
+      <ArticlesWrapper>
+        <Pic src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwNfDwVwTVqqfBMLpi_e2MHnkmqRBHpvhow&usqp=CAU' />
+        <Articles>
+          <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
+          <ArticlesContent>
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建...
+          </ArticlesContent>
+          <ArticlesRead>閱讀全文</ArticlesRead>
+        </Articles>
+      </ArticlesWrapper>
+      <ArticlesWrapper>
+        <Pic src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwNfDwVwTVqqfBMLpi_e2MHnkmqRBHpvhow&usqp=CAU' />
+        <Articles>
+          <ArticlesTitle>
+            礁溪林美石磐涼爽一日遊礁溪林美石磐涼爽一日遊 礁溪林美石磐涼爽一日遊
+          </ArticlesTitle>
+          <ArticlesContent>
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好現寬敞平緩好現寬敞平緩好現寬敞平緩好
+          </ArticlesContent>
+          <ArticlesRead>閱讀全文</ArticlesRead>
+        </Articles>
+      </ArticlesWrapper>
+      <ArticlesWrapper>
+        <Pic src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwNfDwVwTVqqfBMLpi_e2MHnkmqRBHpvhow&usqp=CAU' />
+        <Articles>
+          <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
+          <ArticlesContent>
+            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建...
+          </ArticlesContent>
+          <ArticlesRead>閱讀全文</ArticlesRead>
+        </Articles>
+      </ArticlesWrapper>
+    </Block>
   )
 }

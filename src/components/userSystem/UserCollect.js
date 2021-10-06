@@ -1,92 +1,10 @@
 import { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import { ReactComponent as ArticleManageIcon } from '../../icons/user/user_article_manage.svg'
-import { ReactComponent as TodosIcon } from '../../icons/user/user_todos.svg'
-import { ReactComponent as LikeArticlesIcon } from '../../icons/user/user_like_article.svg'
-import { ReactComponent as CollectTrailsIcon } from '../../icons/user/user_collect_trail.svg'
+import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 
 import TrailCard from '../trailSystem/TrailCard'
 
-const Tabs = styled.div`
-  display: flex;
-  align-items: center;
-`
-const UsersManagementContainer = styled.div`
-  width: 100%;
-  margin: 20px auto;
-  ${MEDIA_QUERY.lg} {
-    width: 70%;
-  }
-`
-const ArticlesTab = styled.div`
-  width: 30%;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-right: 5px;
-  font-size: ${FONT.s};
-  border-radius: ${RADIUS.s} ${RADIUS.s} 0 0;
-  border: 2px solid ${COLOR.green};
-  border-bottom: none;
-  color: black;
-  background: white;
-  svg {
-    width: 20px;
-    margin: 0 2px;
-  }
-  rect {
-    stroke: none;
-  }
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md};
-  }
-  ${MEDIA_QUERY.lg} {
-    width: 200px;
-    height: 50px;
-    margin-right: 20px;
-    font-size: ${FONT.lg};
-    svg {
-      width: 40px;
-      margin: 0 2px;
-    }
-
-    &:hover {
-      cursor: pointer;
-      background: ${COLOR.green};
-      color: ${COLOR.white};
-      path {
-        fill: white;
-        stroke: white;
-      }
-      rect {
-        fill: ${COLOR.green};
-      }
-    }
-  }
-`
-const TodosTab = styled(ArticlesTab)``
-const CollectTab = styled(ArticlesTab)`
-  color: white;
-  background: ${COLOR.green};
-  rect {
-    fill: ${COLOR.green};
-  }
-  path {
-    fill: white;
-    stroke: white;
-  }
-`
-const LikeTab = styled(ArticlesTab)``
-
-const TabTitle = styled.div`
-  display: none;
-  ${MEDIA_QUERY.md} {
-    display: block;
-  }
-`
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
   border-radius: 0 ${RADIUS.s} ${RADIUS.s} ${RADIUS.s};
@@ -179,55 +97,19 @@ export default function UserCollect({ setTab, recycle, setRecycle }) {
     season: '四季皆宜',
   }
   return (
-    <UsersManagementContainer>
-      <Tabs>
-        <ArticlesTab
-          onClick={() => {
-            setTab('Articles')
-          }}
-        >
-          <ArticleManageIcon />
-          <TabTitle>文章管理</TabTitle>
-        </ArticlesTab>
-        <TodosTab
-          onClick={() => {
-            setTab('Todos')
-          }}
-        >
-          <TodosIcon />
-          <TabTitle>裝備清單</TabTitle>
-        </TodosTab>
-        <CollectTab
-          onClick={() => {
-            setTab('Collect')
-          }}
-        >
-          <CollectTrailsIcon />
-          <TabTitle>收藏步道</TabTitle>
-        </CollectTab>
-        <LikeTab
-          onClick={() => {
-            setTab('Like')
-          }}
-        >
-          <LikeArticlesIcon />
-          <TabTitle>按讚心得</TabTitle>
-        </LikeTab>
-      </Tabs>
-      <Block>
-        <SearchBar>
-          <SearchIcon />
-          <SearchField></SearchField>
-        </SearchBar>
-        <AllTrialPageWrapper>
-          <FilteredTrailsWrapper>
-            <TrailCard trailInfo={trailInfo} />
-            <TrailCard trailInfo={trailInfo} />
-            <TrailCard trailInfo={trailInfo} />
-            <TrailCard trailInfo={trailInfo} />
-          </FilteredTrailsWrapper>
-        </AllTrialPageWrapper>
-      </Block>
-    </UsersManagementContainer>
+    <Block>
+      <SearchBar>
+        <SearchIcon />
+        <SearchField></SearchField>
+      </SearchBar>
+      <AllTrialPageWrapper>
+        <FilteredTrailsWrapper>
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+          <TrailCard trailInfo={trailInfo} />
+        </FilteredTrailsWrapper>
+      </AllTrialPageWrapper>
+    </Block>
   )
 }

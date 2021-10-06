@@ -1,16 +1,11 @@
 import React, { useState } from 'react'
-import styled, { css } from 'styled-components'
-import {
-  COLOR,
-  FONT,
-  EFFECT,
-  RADIUS,
-  MEDIA_QUERY,
-} from '../../../constants/style'
+import styled from 'styled-components'
+import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import UserArticlesManage from '../../../components/userSystem/UserArticlesManage'
 import UserTodoItems from '../../../components/userSystem/UserTodoItems'
 import UserCollect from '../../../components/userSystem/UserCollect'
 import UserLike from '../../../components/userSystem/UserLike'
+import UserBackstageTabs from '../../../components/userSystem/UserBackstageTabs'
 import { ReactComponent as EditIcon } from '../../../icons/backstage/edit.svg'
 
 const Wrapper = styled.div`
@@ -98,14 +93,19 @@ const Info = styled.div`
     font-size: ${FONT.lg};
   }
 `
+const UsersManagementContainer = styled.div`
+  width: 100%;
+  margin: 20px auto;
+  ${MEDIA_QUERY.lg} {
+    width: 70%;
+  }
+`
 
-export default function UserBackstage() {
-  const [tab, setTab] = useState('Articles')
+export default function UserBackstage({ tab, setTab }) {
   const [recycle, setRecycle] = useState(false)
 
   return (
     <Wrapper>
-      <PageName>會員後台</PageName>
       <MemberProfileWrapper>
         <Avatar />
         <Profile>
@@ -114,24 +114,32 @@ export default function UserBackstage() {
           <Info>hehe@123.com</Info>
         </Profile>
       </MemberProfileWrapper>
-      {tab === 'Articles' && <UserArticlesManage setTab={setTab} />}
-      {tab === 'Todos' && (
-        <UserTodoItems
-          setTab={setTab}
-          recycle={recycle}
-          setRecycle={setRecycle}
-        />
-      )}
-      {tab === 'Collect' && (
-        <UserCollect
-          setTab={setTab}
-          recycle={recycle}
-          setRecycle={setRecycle}
-        />
-      )}
-      {tab === 'Like' && (
-        <UserLike setTab={setTab} recycle={recycle} setRecycle={setRecycle} />
-      )}
+      <UsersManagementContainer>
+        <UserBackstageTabs>
+          {tab === 'Articles' && <UserArticlesManage setTab={setTab} />}
+          {tab === 'Todos' && (
+            <UserTodoItems
+              setTab={setTab}
+              recycle={recycle}
+              setRecycle={setRecycle}
+            />
+          )}
+          {tab === 'Collect' && (
+            <UserCollect
+              setTab={setTab}
+              recycle={recycle}
+              setRecycle={setRecycle}
+            />
+          )}
+          {tab === 'Like' && (
+            <UserLike
+              setTab={setTab}
+              recycle={recycle}
+              setRecycle={setRecycle}
+            />
+          )}
+        </UserBackstageTabs>
+      </UsersManagementContainer>
     </Wrapper>
   )
 }
