@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailWeather.svg'
 import { ReactComponent as TemperatureIcon } from '../../icons/weather/weather-Temperature.svg'
 import { ReactComponent as PopIcon } from '../../icons/weather/weather-RainProbability.svg'
-import { ReactComponent as CloudyIcon } from '../../icons/weather/weather-Cloudy.svg'
-
+import WeatherIcon from './WeatherIcon.js'
+import { locationNameToCode } from './weatherUtils.js'
 
 const WeatherWrapper = styled.div`
   width: 100%;
@@ -41,7 +41,7 @@ const Title = styled.div`
 
 const CardContainer = styled.div`
   display: flex;
-  overflow: auto; 
+  overflow: auto;
 `
 
 const Card = styled.div`
@@ -80,26 +80,6 @@ const Date = styled.div`
   }
 `
 
-const WeatherIcon = styled.div`
-  margin-top: 1px;
-  svg {
-    width: 80px;
-    height: 70px;
-  }
-  ${MEDIA_QUERY.md} {
-    svg {
-      width: 100px;
-      height: 100px;
-    }
-  }
-  ${MEDIA_QUERY.lg} {
-    svg {
-      width: 140px;
-      height: 140px;
-    }
-  }
-`
-
 const WeatherInfo = styled.div`
   display: flex;
   justify-content: space-around;
@@ -135,7 +115,65 @@ const Temperature = styled.div`
 
 const RainProbability = styled(Temperature)``
 
-function Weather() {
+const Weather = ({ location }) => {
+  // const location = '宜蘭縣礁溪鄉'
+  const country = location.slice(0, 3)
+  const town = location.slice(3, 6)
+
+  const [weatherElement, setWeatherElement] = useState({
+    temperature: 0,
+    weatherCode: 0,
+    rainPossibility: 0
+  })
+
+  const weatherDate = (i) => {
+    let dateTime = new window.Date()
+    dateTime = dateTime.setDate(dateTime.getDate() + i)
+    return new Intl.DateTimeFormat('zh-TW', {
+      month: 'numeric',
+      day: 'numeric',
+      weekday: 'long'
+    }).format(new window.Date(dateTime))
+  }
+
+  useEffect(() => {
+    fetch(
+      `https://opendata.cwb.gov.tw/api/v1/rest/datastore/${locationNameToCode(country)}?Authorization=${process.env.REACT_APP_WEATHER_TOKEN}&locationName=${town}&elementName=T,Wx,PoP12h`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const locationData = data.records.locations[0].location[0]
+        const weatherInfo = []
+        for (let i = 0; i < 14; i += 2) {
+          const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
+            neededElements[item.elementName] = item.time[i].elementValue[0].value
+            neededElements['weatherCode'] =
+              locationData.weatherElement[2].time[i].elementValue[1].value
+            return neededElements
+          }, {})
+          weatherInfo.push(weatherElements)
+        }
+        console.log('weatherInfo', weatherInfo)
+
+        let [weekTemperature, weekWeatherCode, weekRainPossibility] = [[], [], []]
+
+        for (let day = 0; day < 7; day++) {
+          weekTemperature.push(weatherInfo[day].T)
+          weekWeatherCode.push(weatherInfo[day].weatherCode)
+          weekRainPossibility.push(weatherInfo[day].PoP12h)
+        }
+        setWeatherElement({
+          temperature: weekTemperature,
+          weatherCode: weekWeatherCode,
+          rainPossibility: weekRainPossibility
+        })
+      })
+  }, [country, town])
+
+  console.log(weatherElement)
+
+  const dayLoop = [0, 1, 2, 3, 4, 5, 6]
+
   return (
     <WeatherWrapper>
       <Title>
@@ -143,92 +181,22 @@ function Weather() {
         近期天氣
       </Title>
       <CardContainer>
-        <Card>
-          <Date>9/7 星期一</Date>
-          <WeatherIcon>
-            <CloudyIcon />
-          </WeatherIcon>
-          <WeatherInfo>
-            <Temperature>
-              <TemperatureIcon />
-              30℃
-            </Temperature>
-            <RainProbability>
-              <PopIcon />
-              10%
-            </RainProbability>
-          </WeatherInfo>
-        </Card>
-
-        <Card>
-          <Date>9/7 星期二</Date>
-          <WeatherIcon>
-            <CloudyIcon />
-          </WeatherIcon>
-          <WeatherInfo>
-            <Temperature>
-              <TemperatureIcon />
-              30℃
-            </Temperature>
-            <RainProbability>
-              <PopIcon />
-              10%
-            </RainProbability>
-          </WeatherInfo>
-        </Card>
-
-        <Card>
-          <Date>9/7 星期三</Date>
-          <WeatherIcon>
-            <CloudyIcon />
-          </WeatherIcon>
-          <WeatherInfo>
-            <Temperature>
-              <TemperatureIcon />
-              30℃
-            </Temperature>
-            <RainProbability>
-              <PopIcon />
-              10%
-            </RainProbability>
-          </WeatherInfo>
-        </Card>
-
-        <Card>
-          <Date>9/7 星期四</Date>
-          <WeatherIcon>
-            <CloudyIcon />
-          </WeatherIcon>
-          <WeatherInfo>
-            <Temperature>
-              <TemperatureIcon />
-              30℃
-            </Temperature>
-            <RainProbability>
-              <PopIcon />
-              10%
-            </RainProbability>
-          </WeatherInfo>
-        </Card>
-
-        <Card>
-          <Date>9/7 星期五</Date>
-          <WeatherIcon>
-            <CloudyIcon />
-          </WeatherIcon>
-          <WeatherInfo>
-            <Temperature>
-              <TemperatureIcon />
-              30℃
-            </Temperature>
-            <RainProbability>
-              <PopIcon />
-              10%
-            </RainProbability>
-          </WeatherInfo>
-        </Card>
-
-        
+        {dayLoop.map((day) => (
+          <Card key={day}>
+            <Date>{weatherDate(day)}</Date>
+            <WeatherIcon currentWeatherCode={weatherElement.weatherCode[day]} />
+            <WeatherInfo>
+              <Temperature>
+                <TemperatureIcon />
+                {Math.round(weatherElement.temperature[day])}℃
+              </Temperature>
+              <RainProbability>
+                <PopIcon />
+                {Math.round(weatherElement.rainPossibility[day])}%
+              </RainProbability>
+            </WeatherInfo>
+          </Card>
+        ))}
       </CardContainer>
     </WeatherWrapper>
   )
