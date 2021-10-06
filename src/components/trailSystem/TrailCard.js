@@ -68,17 +68,20 @@ const Location = styled(LocationSvg)`
 export default function TrailCard({ trailInfo }) {
   return (
     <>
-      <FilteredTrailCard>
+      <FilteredTrailCard key={trailInfo.trail_id}>
         <FilteredTrailImgWrapper>
           <FilteredTrailImg src={trailInfo.cover_picture_url} />
         </FilteredTrailImgWrapper>
-        <FilteredTrailTitle>{trailInfo.title}</FilteredTrailTitle>
+        <FilteredTrailTitle>
+          {trailInfo.title.split('；')[0]}
+        </FilteredTrailTitle>
         <FilteredTrailLocation>
           <Location />
           {trailInfo.location}
         </FilteredTrailLocation>
         <FilteredTrailTags>
-          {trailInfo.required_time} | {trailInfo.season}
+          {trailInfo.required_time}{' '}
+          {trailInfo.season ? `| ${trailInfo.season}` : null}
         </FilteredTrailTags>
       </FilteredTrailCard>
     </>

@@ -19,6 +19,7 @@ const InfoWindow = styled.div`
   top: -130px;
   overflow: hidden;
   display: none;
+  z-index: 1;
   ${(props) =>
     props.$isOpen &&
     `
@@ -40,8 +41,8 @@ export default function LocationMarker({ trailInfo }) {
     <>
       <Marker onClick={setInfoWindowToggleClick}></Marker>
       <InfoWindow $isOpen={isInfoWindowOpen}>
-        <TrailImg src={trailInfo.trailImageUrl} />
-        <TrailName>{trailInfo.trailTitle}</TrailName>
+        <TrailImg src={trailInfo.cover_picture_url} />
+        <TrailName>{trailInfo.title}</TrailName>
       </InfoWindow>
     </>
   )

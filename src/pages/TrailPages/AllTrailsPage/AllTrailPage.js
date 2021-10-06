@@ -6,6 +6,7 @@ import SearchBar from '../../../components/common/SearchBar'
 import DropDownCheckBoxList from '../../../components/common/DropDownCheckBoxList'
 import { NavBarButton } from '../../../components/common/Button'
 import TrailCard from '../../../components/trailSystem/TrailCard'
+import { getTrails } from '../../../WebAPI'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
@@ -103,7 +104,7 @@ function AllTrailPage() {
   }
   const FeaturedTrailLength = Object.keys(FeaturedTrailsInfo).length
   const [currentImgIndex, setCurrentImageIndex] = useState(0)
-
+  const [trailInfos, setTrailInfos] = useState([])
   const handelCarousel = () => {
     if (currentImgIndex < FeaturedTrailLength - 1) {
       return setCurrentImageIndex(currentImgIndex + 1)
@@ -114,14 +115,13 @@ function AllTrailPage() {
     setTimeout(handelCarousel, 5000)
   })
 
-  const trailInfo = {
-    title: '林美石磐步道',
-    location: '宜蘭縣礁溪鄉',
-    cover_picture_url:
-      'https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1806&q=80',
-    required_time: '一天',
-    season: '四季皆宜',
-  }
+  useEffect(() => {
+    getTrails()
+      .then((res) => {
+        if (res.data.success) setTrailInfos(res.data.data)
+      })
+      .catch((err) => console.log(err))
+  }, [])
 
   return (
     <>
@@ -167,18 +167,9 @@ function AllTrailPage() {
           </SearchBarWrapper>
         </DropDownContainer>
         <FilteredTrailsWrapper>
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
+          {trailInfos.map((trailInfo) => (
+            <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
+          ))}
         </FilteredTrailsWrapper>
         <LoadMoreBtn>看更多</LoadMoreBtn>
       </AllTrailsPageWrapper>

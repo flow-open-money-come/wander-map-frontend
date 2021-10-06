@@ -1,5 +1,5 @@
 const config = {
-  apiHost: 'https://wandermap.tw/api/v1',
+  apiHost: 'http://wandermap.tw:8888/api/v1',
 }
 
 export default config

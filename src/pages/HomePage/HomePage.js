@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { COLOR, RADIUS, FONT, MEDIA_QUERY, EFFECT } from '../../constants/style'
-import { ReactComponent as ArrowRightSvg } from '../../icons/arrow_right_slim.svg'
 import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
 
@@ -67,14 +66,14 @@ const TrialTitleName = styled(Link)`
 const TrialTitleLocation = styled.div`
   font-size: ${FONT.md};
 `
-const TrialAriticalNumber = styled.div`
+const TrialArticleNumber = styled.div`
   font-size: ${FONT.s};
   color: ${COLOR.gray};
   margin-left: 20px;
 `
 const SubTitleWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin-top: 20px;
   ${MEDIA_QUERY.lg} {
@@ -110,8 +109,7 @@ function HomePage() {
               <SubTitleWrapper>
                 <TrialTitleLocation>宜蘭縣礁溪鄉</TrialTitleLocation>
                 <LinkWrapper>
-                  <TrialAriticalNumber>222 篇心得</TrialAriticalNumber>
-                  <ArrowRightSvg />
+                  <TrialArticleNumber>222 篇心得</TrialArticleNumber>
                 </LinkWrapper>
               </SubTitleWrapper>
             </TrialTitleWrapper>
