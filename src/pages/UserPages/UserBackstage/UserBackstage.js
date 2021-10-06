@@ -7,6 +7,8 @@ import UserCollect from '../../../components/userSystem/UserCollect'
 import UserLike from '../../../components/userSystem/UserLike'
 import UserBackstageTabs from '../../../components/userSystem/UserBackstageTabs'
 import { ReactComponent as EditIcon } from '../../../icons/backstage/edit.svg'
+import { ReactComponent as EmailIcon } from '../../../icons/user/user_email.svg'
+import { ReactComponent as NicknameIcon } from '../../../icons/user/user_nickname.svg'
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -14,24 +16,12 @@ const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
-const PageName = styled.div`
-  font-size: ${FONT.lg};
-  font-weight: bold;
-  border-bottom: 5px solid ${COLOR.green};
-  width: 100%;
-  text-align: center;
-  padding: 5px 0;
-  margin: 20px;
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.xll};
-    padding: 15px 0;
-  }
-`
+
 const MemberProfileWrapper = styled.div`
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  margin: 20px;
+  margin: 20px auto;
   width: 90%;
   ${MEDIA_QUERY.lg} {
     flex-direction: column;
@@ -39,23 +29,29 @@ const MemberProfileWrapper = styled.div`
     border-radius: ${RADIUS.lg};
     padding: 10px 0;
     margin-top: 50px;
-    height: 350px;
-    width: 22%;
+    height: 50%;
+    width: 25%;
+    min-width: 30vmin;
   }
 `
 const Avatar = styled.div`
-  min-width: 120px;
-  height: 120px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
   border-radius: 50%;
   background-color: #eee;
-  ${MEDIA_QUERY.lg} {
-    width: 150px;
-    min-height: 150px;
-  }
+  margin: 20px auto;
+  min-width: 30vmin;
+`
+const AvatarPic = styled.img`
+  width: 30vmin;
+  height: 30vmin;
+  object-fit: cover;
+  object-position: center;
 `
 const Profile = styled.div`
-  padding: 20px;
-  margin: 0 20px;
+  padding: 10px;
+  margin: 20px auto;
   border-radius: 3px;
   border: solid 1.5px ${COLOR.green};
   position: relative;
@@ -84,13 +80,21 @@ const Info = styled.div`
   margin: 6px;
   word-break: break-all;
   white-space: pre-wrap;
+  svg {
+    width: 12px;
+    height: 12px;
+    margin: 0 6px;
+  }
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
   }
   ${MEDIA_QUERY.lg} {
     margin-top: 15px;
-    text-align: center;
     font-size: ${FONT.lg};
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 `
 const UsersManagementContainer = styled.div`
@@ -98,47 +102,37 @@ const UsersManagementContainer = styled.div`
   margin: 20px auto;
   ${MEDIA_QUERY.lg} {
     width: 70%;
+    margin: 50px auto;
   }
 `
 
-export default function UserBackstage({ tab, setTab }) {
-  const [recycle, setRecycle] = useState(false)
+export default function UserBackstage() {
+  const [tab, setTab] = useState('Articles')
 
   return (
     <Wrapper>
       <MemberProfileWrapper>
-        <Avatar />
+        <Avatar>
+          <AvatarPic src='https://s.yimg.com/os/creatr-uploaded-images/2021-09/50aee8d0-0cca-11ec-afd6-ddd0414a9b75' />
+        </Avatar>
         <Profile>
           <ModifyBtn />
-          <Info>野原新之助</Info>
-          <Info>hehe@123.com</Info>
+          <Info>
+            <NicknameIcon />
+            野原新之助
+          </Info>
+          <Info>
+            <EmailIcon />
+            hehe@123.com
+          </Info>
         </Profile>
       </MemberProfileWrapper>
       <UsersManagementContainer>
-        <UserBackstageTabs>
-          {tab === 'Articles' && <UserArticlesManage setTab={setTab} />}
-          {tab === 'Todos' && (
-            <UserTodoItems
-              setTab={setTab}
-              recycle={recycle}
-              setRecycle={setRecycle}
-            />
-          )}
-          {tab === 'Collect' && (
-            <UserCollect
-              setTab={setTab}
-              recycle={recycle}
-              setRecycle={setRecycle}
-            />
-          )}
-          {tab === 'Like' && (
-            <UserLike
-              setTab={setTab}
-              recycle={recycle}
-              setRecycle={setRecycle}
-            />
-          )}
-        </UserBackstageTabs>
+        <UserBackstageTabs tab={tab} setTab={setTab} />
+        {tab === 'Articles' && <UserArticlesManage setTab={setTab} />}
+        {tab === 'Todos' && <UserTodoItems setTab={setTab} />}
+        {tab === 'Collect' && <UserCollect setTab={setTab} />}
+        {tab === 'Like' && <UserLike setTab={setTab} />}
       </UsersManagementContainer>
     </Wrapper>
   )

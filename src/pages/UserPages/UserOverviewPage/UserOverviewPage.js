@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import {
   COLOR,
   FONT,
@@ -8,60 +8,56 @@ import {
   MEDIA_QUERY,
 } from '../../../constants/style'
 import { ReactComponent as ArticleIcon } from '../../../icons/user/user_article.svg'
+import { ReactComponent as EmailIcon } from '../../../icons/user/user_email.svg'
+import { ReactComponent as NicknameIcon } from '../../../icons/user/user_nickname.svg'
 
 const Wrapper = styled.div`
   margin: 0 auto;
-  min-width: 360px;
   width: 90%;
-  ${MEDIA_QUERY.md} {
-  }
-  ${MEDIA_QUERY.lg} {
-  }
+  display: flex;
+  flex-wrap: wrap;
 `
-const PageName = styled.div`
-  font-size: ${FONT.lg};
-  font-weight: bold;
-  border-bottom: 5px solid ${COLOR.green};
-  width: 100%;
-  text-align: center;
-  padding: 5px 0;
-  margin: 20px;
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.xll};
-    padding: 15px 0;
-  }
-`
+
 const MemberProfileWrapper = styled.div`
   text-align: center;
+  margin: 20px;
+  width: 90%;
   ${MEDIA_QUERY.md} {
     box-shadow: ${EFFECT.shadow_light};
     border-radius: ${RADIUS.lg};
+  }
+  ${MEDIA_QUERY.lg} {
     margin: 50px auto;
-    width: 450px;
+    width: 25%;
+    min-width: 30vmin;
   }
 `
 const Avatar = styled.div`
-  width: 120px;
-  height: 120px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
   border-radius: 50%;
   background-color: #eee;
   margin: 20px auto;
+`
+const AvatarPic = styled.img`
+  width: 40vmin;
+  height: 40vmin;
+  object-fit: cover;
+  object-position: center;
   ${MEDIA_QUERY.lg} {
-    width: 150px;
-    height: 150px;
-    margin-top: 50px;
+    width: 30vmin;
+    height: 30vmin;
   }
 `
 const Profile = styled.div`
-  margin: 20px;
-  padding: 20px;
-  min-width: 320px;
+  padding: 15px;
   box-shadow: ${EFFECT.shadow_dark};
   border-radius: ${RADIUS.md};
   margin: 20px auto;
   ${MEDIA_QUERY.md} {
-    width: 450px;
     box-shadow: none;
+    margin: 0 auto;
   }
 `
 
@@ -70,6 +66,7 @@ const Info = styled.div`
   margin: 6px;
   word-break: break-all;
   white-space: pre-wrap;
+  text-align: center;
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
   }
@@ -78,7 +75,14 @@ const Info = styled.div`
     font-size: ${FONT.lg};
   }
 `
-const ArticlesSectionWrapper = styled.div``
+const SectionWrapper = styled.div`
+  margin: 0 auto;
+  width: 90%;
+  ${MEDIA_QUERY.lg} {
+    width: 60%;
+    margin: 20px auto;
+  }
+`
 const SectionTitle = styled.div`
   text-align: center;
   margin-top: 25px;
@@ -92,7 +96,6 @@ const SectionTitle = styled.div`
     font-size: ${FONT.md};
   }
   ${MEDIA_QUERY.lg} {
-    margin-top: 30px;
     font-size: ${FONT.lg};
     svg {
       width: 30px;
@@ -102,23 +105,22 @@ const SectionTitle = styled.div`
   }
 `
 const ArticlesWrapper = styled.div`
-  display: felx;
+  display: flex;
   margin: 20px auto;
-  min-width: 320px;
+  padding: 0 5px;
   border-radius: ${RADIUS.md};
   box-shadow: ${EFFECT.shadow_dark};
   ${MEDIA_QUERY.md} {
-    width: 450px;
-    margin: 50px auto;
+    margin: 30px auto;
   }
 `
-const Pic = styled.img`
+const ArticlesPic = styled.img`
   margin: 10px;
   width: 80px;
   height: 80px;
   border-radius: ${RADIUS.lg};
   background-color: #eee;
-  ${MEDIA_QUERY.lg} {
+  ${MEDIA_QUERY.md} {
     width: 120px;
     height: 120px;
   }
@@ -126,9 +128,10 @@ const Pic = styled.img`
 const Articles = styled.div`
   padding: 15px 10px;
   line-height: 1.2em;
-  width: 70%;
+  width: calc(100% - 90px);
   ${MEDIA_QUERY.md} {
     line-height: 2em;
+    width: calc(100% - 140px);
   }
 `
 const ArticlesTitle = styled.div`
@@ -177,21 +180,28 @@ const ArticlesDate = styled.div`
 export default function UserOverviewPage() {
   return (
     <Wrapper>
-      <PageName>會員前台</PageName>
       <MemberProfileWrapper>
-        <Avatar />
+        <Avatar>
+          <AvatarPic src='https://s.yimg.com/os/creatr-uploaded-images/2021-09/50aee8d0-0cca-11ec-afd6-ddd0414a9b75' />
+        </Avatar>
         <Profile>
-          <Info>野原新之助</Info>
-          <Info>hehe@123.com</Info>
+          <Info>
+            <NicknameIcon />
+            野原新之助
+          </Info>
+          <Info>
+            <EmailIcon />
+            hehe@123.com
+          </Info>
         </Profile>
       </MemberProfileWrapper>
-      <ArticlesSectionWrapper>
+      <SectionWrapper>
         <SectionTitle>
           <ArticleIcon />
           心得
         </SectionTitle>
         <ArticlesWrapper>
-          <Pic src='http://shuj.shu.edu.tw/wp-content/uploads/2020/04/%E5%85%A7%E6%94%BF%E9%83%A8%E7%87%9F%E5%BB%BA%E7%BD%B2%E6%8F%90%E4%BE%9B%EF%BC%BF%E9%82%B1%E5%AE%B6%E7%B5%82_%E6%9D%9C%E9%B5%91%E6%BB%BF%E5%B1%B1%E7%B4%85_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92.jpg' />
+          <ArticlesPic src='http://shuj.shu.edu.tw/wp-content/uploads/2020/04/%E5%85%A7%E6%94%BF%E9%83%A8%E7%87%9F%E5%BB%BA%E7%BD%B2%E6%8F%90%E4%BE%9B%EF%BC%BF%E9%82%B1%E5%AE%B6%E7%B5%82_%E6%9D%9C%E9%B5%91%E6%BB%BF%E5%B1%B1%E7%B4%85_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92.jpg' />
           <Articles>
             <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
             <ArticlesContent>
@@ -201,7 +211,20 @@ export default function UserOverviewPage() {
           </Articles>
         </ArticlesWrapper>
         <ArticlesWrapper>
-          <Pic src='http://shuj.shu.edu.tw/wp-content/uploads/2020/04/%E5%85%A7%E6%94%BF%E9%83%A8%E7%87%9F%E5%BB%BA%E7%BD%B2%E6%8F%90%E4%BE%9B%EF%BC%BF%E9%82%B1%E5%AE%B6%E7%B5%82_%E6%9D%9C%E9%B5%91%E6%BB%BF%E5%B1%B1%E7%B4%85_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92.jpg' />
+          <ArticlesPic src='http://shuj.shu.edu.tw/wp-content/uploads/2020/04/%E5%85%A7%E6%94%BF%E9%83%A8%E7%87%9F%E5%BB%BA%E7%BD%B2%E6%8F%90%E4%BE%9B%EF%BC%BF%E9%82%B1%E5%AE%B6%E7%B5%82_%E6%9D%9C%E9%B5%91%E6%BB%BF%E5%B1%B1%E7%B4%85_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92.jpg' />
+          <Articles>
+            <ArticlesTitle>
+              礁溪林美石磐涼爽一日遊礁溪林美石磐涼爽一日遊
+            </ArticlesTitle>
+            <ArticlesContent>
+              林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建
+            </ArticlesContent>
+            <ArticlesDate>2021.9.7 / 20:20:22</ArticlesDate>
+          </Articles>
+        </ArticlesWrapper>
+
+        <ArticlesWrapper>
+          <ArticlesPic src='http://shuj.shu.edu.tw/wp-content/uploads/2020/04/%E5%85%A7%E6%94%BF%E9%83%A8%E7%87%9F%E5%BB%BA%E7%BD%B2%E6%8F%90%E4%BE%9B%EF%BC%BF%E9%82%B1%E5%AE%B6%E7%B5%82_%E6%9D%9C%E9%B5%91%E6%BB%BF%E5%B1%B1%E7%B4%85_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92.jpg' />
           <Articles>
             <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
             <ArticlesContent>
@@ -210,7 +233,7 @@ export default function UserOverviewPage() {
             <ArticlesDate>2021.9.7 / 20:20:22</ArticlesDate>
           </Articles>
         </ArticlesWrapper>
-      </ArticlesSectionWrapper>
+      </SectionWrapper>
     </Wrapper>
   )
 }

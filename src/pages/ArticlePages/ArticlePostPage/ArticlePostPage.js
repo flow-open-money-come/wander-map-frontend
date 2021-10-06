@@ -1,13 +1,10 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
-import {
-  FONT,
-  COLOR,
-  EFFECT,
-  RADIUS,
-  MEDIA_QUERY,
-} from '../../../constants/style'
-import { ReactComponent as ImageSvg } from '../../../icons/image.svg'
+import styled from 'styled-components'
+import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
+import UploadImg from '../../../components/formSystem/UploadImg'
+import SelectLocation from '../../../components/formSystem/SelectLocation'
+import UploadGpx from '../../../components/formSystem/UploadGpx'
+import ContentCKEditor from '../../../components/formSystem/ContentCKEditor'
 
 const ArticlePostWrapper = styled.div`
   margin: 0 auto;
@@ -96,7 +93,7 @@ const Date = styled.input.attrs((props) => ({
   type: 'date',
 }))`
   height: 25px;
-  width: 100px;
+  width: 150px;
   ${MEDIA_QUERY.lg} {
     height: 30px;
     width: 200px;
@@ -104,27 +101,6 @@ const Date = styled.input.attrs((props) => ({
   }
 `
 
-const Textarea = styled.textarea.attrs((props) => ({
-  rows: '6',
-}))`
-  width: 320px;
-  height: 300px;
-  ${MEDIA_QUERY.lg} {
-    width: 500px;
-    font-size: ${FONT.md};
-  }
-`
-
-const Select = styled.select`
-  height: 25px;
-  width: 150px;
-  text-align: center;
-  ${MEDIA_QUERY.lg} {
-    height: 30px;
-    width: 230px;
-    font-size: ${FONT.md};
-  }
-`
 const CategoryWrapper = styled.div`
   width: 320px;
   display: flex;
@@ -145,44 +121,10 @@ const CategoryBtn = styled.button`
     font-size: ${FONT.s};
   }
 `
-const PicHolder = styled.label`
-  width: 320px;
-  height: 180px;
-  background-color: #eee;
-  border-radius: 3px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  text-align: center;
-`
-
-const UploadInput = styled.input.attrs({
-  type: 'file',
-  accept: 'image/png, image/jpeg',
-})`
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-`
-const Image = styled(ImageSvg)`
-  width: 30px;
-  height: 30px;
-  color: ${COLOR.green};
-`
-const UploadNotice = styled.div`
-  font-size: ${FONT.xs};
-  margin-top: 30px;
-`
 
 const SubmitBtn = styled.div`
   text-align: right;
+  margin-bottom: 50px;
   ${MEDIA_QUERY.md} {
     width: 320px;
   }
@@ -190,14 +132,14 @@ const SubmitBtn = styled.div`
     width: 500px;
   }
 `
-const Submit = styled.input.attrs((props) => ({
+const Submit = styled.input.attrs(() => ({
   type: 'submit',
   value: '確認送出',
 }))`
   padding: 4px 10px;
-  background: ${COLOR.white};
+  background: white;
   border-radius: 3px;
-  border: solid 1.5px ${COLOR.green};
+  border: solid 1px ${COLOR.green};
   color: ${COLOR.green};
   font-size: ${FONT.s};
   font-weight: 500;
@@ -207,31 +149,13 @@ const Submit = styled.input.attrs((props) => ({
     color: ${COLOR.white};
   }
   ${MEDIA_QUERY.lg} {
-    padding: 12px 25px;
+    padding: 12px 20px;
     font-size: ${FONT.lg};
     border-radius: ${RADIUS.md};
   }
 `
-const GPXBtn = styled.label`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 25px;
-  width: 320px;
-  background-color: #eee;
-  border-radius: 3px;
-  ${MEDIA_QUERY.lg} {
-    width: 500px;
-    font-size: ${FONT.md};
-  }
-`
-const GPXInput = styled.input.attrs((props) => ({
-  type: 'file',
-}))`
-  cursor: pointer;
-`
 
-function ArticlePostPage() {
+export default function ArticlePostPage() {
   return (
     <ArticlePostWrapper>
       <PageName>新增心得</PageName>
@@ -243,51 +167,13 @@ function ArticlePostPage() {
       <FormWrapper>
         <FormTitle>封面圖片</FormTitle>
         <FormSubTitleWrapper>
-          <PicHolder>
-            <Image />
-            <br />
-            點擊上傳
-            <UploadInput />
-            <UploadNotice>
-              建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
-            </UploadNotice>
-          </PicHolder>
+          <UploadImg />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>行程地點</FormTitle>
         <FormSubTitleWrapper>
-          <Select>
-            <option>請選擇</option>
-            <option value='基隆市'>基隆市</option>
-            <option value='臺北市'>臺北市</option>
-            <option value='新北市'>新北市</option>
-            <option value='新竹市'>新竹市</option>
-            <option value='新竹縣'>新竹縣</option>
-            <option value='桃園市'>桃園市</option>
-            <option value='宜蘭縣'>宜蘭縣</option>
-            <option value='苗栗縣'>苗栗縣</option>
-            <option value='臺中市'>臺中市</option>
-            <option value='彰化縣'>彰化縣</option>
-            <option value='南投縣'>南投縣</option>
-            <option value='嘉義市'>嘉義市</option>
-            <option value='嘉義縣'>嘉義縣</option>
-            <option value='雲林縣'>雲林縣</option>
-            <option value='臺南市'>臺南市</option>
-            <option value='高雄市'>高雄市</option>
-            <option value='澎湖縣'>澎湖縣</option>
-            <option value='屏東縣'>屏東縣</option>
-            <option value='臺東縣'>臺東縣</option>
-            <option value='花蓮縣'>花蓮縣</option>
-            <option value='金門縣'>金門縣</option>
-            <option value='連江縣'>連江縣</option>
-          </Select>
-          <Select>
-            <option>請選擇</option>
-            <option>北投區</option>
-            <option>信義區</option>
-            <option>大安區</option>
-          </Select>
+          <SelectLocation />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -325,13 +211,11 @@ function ArticlePostPage() {
       </FormWrapper>
       <FormWrapper>
         <FormTitle />
-        <Textarea />
+        <ContentCKEditor />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>GPX</FormTitle>
-        <GPXBtn>
-          <GPXInput />
-        </GPXBtn>
+        <UploadGpx />
       </FormWrapper>
       <FormWrapper>
         <FormTitle />
@@ -342,5 +226,3 @@ function ArticlePostPage() {
     </ArticlePostWrapper>
   )
 }
-
-export default ArticlePostPage

@@ -2,7 +2,6 @@ import TodoItem from '../todoSystem/TodoList'
 import { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import { ReactComponent as PlusIcon } from '../../icons/user/plus.svg'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -20,28 +19,17 @@ const TodoInput = styled.input.attrs((props) => ({
   outline: none;
   text-align: center;
   width: calc(100% - 100px);
-  font-size: ${FONT.md};
+  border-bottom: 1px solid #f0eeeb;
+  margin: 0 auto;
+  font-size: ${FONT.s};
   ${MEDIA_QUERY.lg} {
     height: 60px;
-    margin: 0 auto;
-    font-size: ${FONT.lg};
+
+    font-size: ${FONT.md};
   }
 `
 
-const AddButton = styled.button.attrs((props) => ({
-  type: 'submit',
-}))`
-  margin: 20px auto;
-  svg {
-    width: 40px;
-    height: 40px;
-    color: ${COLOR.green};
-  }
-  ${MEDIA_QUERY.lg} {
-  }
-`
-
-export default function UserTodoItems({ setTab, recycle, setRecycle }) {
+export default function UserTodoItems() {
   const [todos, setTodos] = useState([
     { id: 1, content: '水壺', isDone: true },
     { id: 2, content: '要帶水壺', isDone: false },
@@ -53,16 +41,18 @@ export default function UserTodoItems({ setTab, recycle, setRecycle }) {
   const [value, setValue] = useState('')
   const id = useRef(6)
   //新增
-  const handleButtonClick = () => {
-    setTodos([
-      {
-        id: id.current,
-        content: value,
-      },
-      ...todos,
-    ])
-    setValue('')
-    id.current++
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      setTodos([
+        {
+          id: id.current,
+          content: value,
+        },
+        ...todos,
+      ])
+      setValue('')
+      id.current++
+    }
   }
 
   const handleInputChange = (e) => {
@@ -91,10 +81,8 @@ export default function UserTodoItems({ setTab, recycle, setRecycle }) {
         placeholder='點擊新增待辦清單'
         value={value}
         onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
       />
-      <AddButton onClick={handleButtonClick}>
-        <PlusIcon />
-      </AddButton>
       {todos.map((todo) => (
         <TodoItem
           key={todo.id}

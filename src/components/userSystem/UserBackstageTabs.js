@@ -1,4 +1,3 @@
-import { useState, useRef } from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as ArticleManageIcon } from '../../icons/user/user_article_manage.svg'
@@ -7,73 +6,74 @@ import { ReactComponent as LikeArticlesIcon } from '../../icons/user/user_like_a
 import { ReactComponent as CollectTrailsIcon } from '../../icons/user/user_collect_trail.svg'
 
 const Tabs = styled.div`
-  display: flex
+  display: flex;
   align-items: center;
 `
 
 const unActiveTabColor = `
-  color: ${COLOR.black}
-  background: white
+  color: ${COLOR.black};
+  background: white;
   rect{
-    fill: white
-    stroke: none
+    fill: white;
+    stroke: none;
   }
   path{
-    fill: ${COLOR.green}
-    stroke: ${COLOR.green}
+    fill: ${COLOR.green};
+    stroke: ${COLOR.green};
   }
   &:hover {
-    cursor: pointer
-    background: ${COLOR.green}
-    color: ${COLOR.white}
+    cursor: pointer;
+    background: ${COLOR.green};
+    color: ${COLOR.white};
     path {
-      fill: white
-      stroke: white
+      fill: white;
+      stroke: white;
     }
     rect {
-    fill: ${COLOR.green}
+    fill: ${COLOR.green};
     }
   }
 `
+
 const activeTabColor = `
-  color: white
-  background: ${COLOR.green}
+  color: white;
+  background: ${COLOR.green};
   rect {
-    fill: ${COLOR.green}
+    fill: ${COLOR.green};
   }
    path {
-    fill: white
-    stroke: white
+    fill: white;
+    stroke: white;
   }
 `
 
 const ArticlesTab = styled.div`
   ${unActiveTabColor}
-  width: 30%
-  height: 30px
-  display: flex
-  justify-content: center
-  align-items: center
-  margin-right: 5px
-  font-size: ${FONT.s}
-  border-radius: ${RADIUS.s} ${RADIUS.s} 0 0
-  border: 2px solid ${COLOR.green}
-  border-bottom: none
+  width: 30%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 5px;
+  font-size: ${FONT.s};
+  border-radius: ${RADIUS.s} ${RADIUS.s} 0 0;
+  border: 2px solid ${COLOR.green};
+  border-bottom: none;
   svg {
-    width: 20px
-    margin: 0 2px
+    width: 20px;
+    margin: 0 2px;
   }
   ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md}
+    font-size: ${FONT.md};
   }
   ${MEDIA_QUERY.lg} {
-    width: 200px
-    height: 50px
-    margin-right: 20px
-    font-size: ${FONT.md}
+    width: 200px;
+    height: 50px;
+    margin-right: 20px;
+    font-size: ${FONT.md};
     svg {
-      width: 30px
-      margin: 0 2px
+      width: 30px;
+      margin: 0 2px;
     }
   }
   ${(props) => props.tab === 'Articles' && activeTabColor}
@@ -97,8 +97,7 @@ const TabTitle = styled.div`
   }
 `
 
-export default function UserBackstageTabs() {
-  const [tab, setTab] = useState('Articles')
+export default function UserBackstageTabs({ tab, setTab }) {
   return (
     <Tabs>
       <ArticlesTab

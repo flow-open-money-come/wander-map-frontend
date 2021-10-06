@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
+import ArticleList from '../forumSystem/Article'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -38,81 +39,36 @@ const SearchField = styled.input`
     font-size: ${FONT.lg};
   }
 `
+
 const ArticlesWrapper = styled.div`
-  display: felx;
-  justify-content: center;
-  margin: 5px;
-  border-bottom: 1px solid #f0eeeb;
+  margin: 20px auto;
   width: 90%;
+  position: relative;
   ${MEDIA_QUERY.md} {
     width: 95%;
   }
   ${MEDIA_QUERY.lg} {
-    margin: 10px;
+    margin: 50px auto;
   }
 `
-const Pic = styled.img`
-  margin: 20px 5px;
-  width: 80px;
-  height: 80px;
-  border-radius: ${RADIUS.lg};
-  background-color: #eee;
-  ${MEDIA_QUERY.lg} {
-    width: 120px;
-    height: 120px;
-  }
-`
-const Articles = styled.div`
-  padding: 15px 10px;
-  line-height: 1.2em;
-  width: 80%;
-  ${MEDIA_QUERY.md} {
-    line-height: 2em;
-  }
-`
-const ArticlesTitle = styled.div`
+
+const More = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: -1;
+  margin: 10px 0;
+  color: ${COLOR.green};
   font-size: ${FONT.s};
-  font-weight: 700;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md};
-  }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.lg};
-  }
-`
-const ArticlesContent = styled.div`
-  font-size: ${FONT.xs};
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  white-space: normal;
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
+  font-weight: bold;
+  &:hover {
+    cursor: pointer;
   }
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
   }
 `
-const ArticlesRead = styled.div`
-  font-size: ${FONT.xs};
-  color: ${COLOR.gray};
-  text-align: right;
-  margin: 5px;
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-  }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
-    margin: 10px;
-  }
-`
-export default function UserLike({ setTab, recycle, setRecycle }) {
+
+export default function UserLike() {
   return (
     <Block>
       <SearchBar>
@@ -120,36 +76,40 @@ export default function UserLike({ setTab, recycle, setRecycle }) {
         <SearchField></SearchField>
       </SearchBar>
       <ArticlesWrapper>
-        <Pic src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwNfDwVwTVqqfBMLpi_e2MHnkmqRBHpvhow&usqp=CAU' />
-        <Articles>
-          <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
-          <ArticlesContent>
-            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建...
-          </ArticlesContent>
-          <ArticlesRead>閱讀全文</ArticlesRead>
-        </Articles>
-      </ArticlesWrapper>
-      <ArticlesWrapper>
-        <Pic src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwNfDwVwTVqqfBMLpi_e2MHnkmqRBHpvhow&usqp=CAU' />
-        <Articles>
-          <ArticlesTitle>
-            礁溪林美石磐涼爽一日遊礁溪林美石磐涼爽一日遊 礁溪林美石磐涼爽一日遊
-          </ArticlesTitle>
-          <ArticlesContent>
-            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，現寬敞平緩好現寬敞平緩好現寬敞平緩好現寬敞平緩好
-          </ArticlesContent>
-          <ArticlesRead>閱讀全文</ArticlesRead>
-        </Articles>
-      </ArticlesWrapper>
-      <ArticlesWrapper>
-        <Pic src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUwNfDwVwTVqqfBMLpi_e2MHnkmqRBHpvhow&usqp=CAU' />
-        <Articles>
-          <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
-          <ArticlesContent>
-            林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建...
-          </ArticlesContent>
-          <ArticlesRead>閱讀全文</ArticlesRead>
-        </Articles>
+        <ArticleList
+          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
+          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
+          title={'礁溪林美石磐涼爽一日遊'}
+          user={'水怪貓貓'}
+          tags={['有水源', '賞花', '危險地形']}
+          date={'2021.9.7 / 20:20:22'}
+          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
+          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+        />
+        <ArticleList
+          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
+          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
+          title={'礁溪林美石磐涼爽一日遊'}
+          user={'水怪貓貓'}
+          tags={['有水源', '賞花', '危險地形']}
+          date={'2021.9.7 / 20:20:22'}
+          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
+          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+        />
+        <ArticleList
+          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
+          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
+          title={'礁溪林美石磐涼爽一日遊'}
+          user={'水怪貓貓'}
+          tags={['有水源', '賞花', '危險地形']}
+          date={'2021.9.7 / 20:20:22'}
+          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
+          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+        />
+        <More>看更多</More>
       </ArticlesWrapper>
     </Block>
   )

@@ -30,7 +30,6 @@ const SearchBar = styled.div`
     }
   }
 `
-
 const SearchField = styled.input`
   width: calc(100% - 20px);
   border: none;
@@ -49,6 +48,7 @@ const TrailsTable = styled.table`
 const TableContent = styled.tr`
   text-align: center;
   font-size: ${FONT.s};
+  border-bottom: 1px solid #f0eeeb;
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
   }
@@ -58,30 +58,29 @@ const TableContent = styled.tr`
 `
 
 const CoverTd = styled.td`
-  display: none;
-  ${MEDIA_QUERY.md} {
-    display: inline;
-    text-align: start;
-  }
+  display: inline;
+  text-align: start;
 `
 
 const TrailImg = styled.img`
-  display: none;
+  margin: 20px 5px;
+  width: 80px;
+  height: 80px;
+  border-radius: ${RADIUS.lg};
+  background-color: #eee;
   ${MEDIA_QUERY.md} {
-    margin: 20px 5px;
-    display: inline;
-    width: 80px;
-    height: 80px;
-    border-radius: ${RADIUS.lg};
+    width: 120px;
+    height: 120px;
   }
 `
 
 const TrailsTd = styled.td`
-  width: 90%;
-  min-width: 180px;
+  width: 70%;
   text-align: start;
   padding: 10px;
   vertical-align: middle;
+  font-size: ${FONT.md};
+  font-weight: 700;
   ${MEDIA_QUERY.md} {
     width: 80%;
   }
@@ -103,7 +102,7 @@ const BtnTd = styled.td`
   }
 `
 
-export default function UserArticlesManage({ setTab, recycle, setRecycle }) {
+export default function UserArticlesManage() {
   return (
     <Block>
       <SearchBar>
@@ -116,7 +115,7 @@ export default function UserArticlesManage({ setTab, recycle, setRecycle }) {
             <TrailImg src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYWSx3Oc7QWYbB59GeeEE6JgBPIznP7_G9hQ&usqp=CAU' />
           </CoverTd>
           <TrailsTd>
-            <a>大雪山國家森林遊樂區一日遊</a>
+            <a>礁溪林美石磐涼爽一日遊</a>
           </TrailsTd>
           <BtnTd>
             <a>
