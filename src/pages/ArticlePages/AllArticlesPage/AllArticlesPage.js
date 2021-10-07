@@ -4,13 +4,8 @@ import ArticleList from '../../../components/forumSystem/Article'
 import Carousel from '../../../components/forumSystem/Carousel'
 import ForumFilter from '../../../components/forumSystem/Filter'
 import { ReactComponent as Hot } from '../../../icons/hot.svg'
-import {
-  FONT,
-  COLOR,
-  EFFECT,
-  RADIUS,
-  MEDIA_QUERY,
-} from '../../../constants/style'
+import { FONT, MEDIA_QUERY } from '../../../constants/style'
+import { NavBarButton } from '../../../components/common/Button'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -55,26 +50,14 @@ const TitleGroup = styled.div`
 `
 
 const BottomButton = styled.button`
-  border-radius: ${RADIUS.lg};
-  font-size: ${FONT.s};
-  border: 1px ${COLOR.green} solid;
-  border-width: medium;
-  box-shadow: ${EFFECT.shadow_dark};
-  margin: 30px auto;
-  padding: 6px 44px;
-  cursor: pointer;
-  transition: ${EFFECT.transition};
-
-  &:hover {
-    background: ${COLOR.green};
-    color: #ffffff;
-  }
-
-  ${MEDIA_QUERY.lg} {
-    margin: 100px auto;
-    font-size: ${FONT.lg};
-    padding: 12px 100px;
-  }
+  ${NavBarButton}
+  font-size: ${FONT.md};
+  margin: 50px 0px 100px 50%;
+  transform: translate(-50%);
+`
+const ArticleListWrapper = styled.div`
+  width: 90%;
+  margin: 0 auto;
 `
 
 function AllArticlesPage() {
@@ -155,40 +138,42 @@ function AllArticlesPage() {
       </TitleGroup>
       <Carousel slides={slides} />
       <ForumFilter tags={tags} setTags={setTags} />
-      <ArticleList
-        articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-        title={'礁溪林美石磐涼爽一日遊'}
-        user={'水怪貓貓'}
-        tags={['有水源', '賞花', '危險地形']}
-        date={'2021.9.7 / 20:20:22'}
-        content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+      <ArticleListWrapper>
+        <ArticleList
+          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
+          title={'礁溪林美石磐涼爽一日遊'}
+          user={'水怪貓貓'}
+          tags={['有水源', '賞花', '危險地形']}
+          date={'2021.9.7 / 20:20:22'}
+          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-        avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
-      />
-      <ArticleList
-        articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-        title={'礁溪林美石磐涼爽一日遊'}
-        user={'水怪貓貓'}
-        tags={['有水源', '賞花', '危險地形']}
-        date={'2021.9.7 / 20:20:22'}
-        content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
+        />
+        <ArticleList
+          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
+          title={'礁溪林美石磐涼爽一日遊'}
+          user={'水怪貓貓'}
+          tags={['有水源', '賞花', '危險地形']}
+          date={'2021.9.7 / 20:20:22'}
+          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-        avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
-      />
-      <ArticleList
-        articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-        title={'礁溪林美石磐涼爽一日遊'}
-        user={'水怪貓貓'}
-        tags={['有水源', '賞花', '危險地形']}
-        date={'2021.9.7 / 20:20:22'}
-        content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
+          avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
+        />
+        <ArticleList
+          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
+          title={'礁溪林美石磐涼爽一日遊'}
+          user={'水怪貓貓'}
+          tags={['有水源', '賞花', '危險地形']}
+          date={'2021.9.7 / 20:20:22'}
+          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-        avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
-      />
-      <BottomButton>看更多</BottomButton>
+          avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
+        />
+        <BottomButton>看更多</BottomButton>
+      </ArticleListWrapper>
     </Wrapper>
   )
 }

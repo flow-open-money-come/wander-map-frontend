@@ -3,24 +3,16 @@ import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import SearchBar from '../common/SearchBar'
 
 const FilterContainer = styled.div`
-  padding-top: 30px;
-  border-top: 1px solid ${COLOR.beige};
-  margin-bottom: 10px;
-
-  ${MEDIA_QUERY.md} {
-    margin-bottom: 60px;
-    padding-top: 23px;
-    margin-top: 9px;
-  }
+  width: 90%;
+  margin: 0 auto;
 
   ${MEDIA_QUERY.lg} {
-    margin-bottom: 82px;
+    width: 60%;
   }
 `
 
 const Filter = styled.div`
   padding: 10px;
-  padding-bottom: 0;
   width: 100%;
   background-color: ${COLOR.white};
   border-radius: ${RADIUS.lg};
@@ -41,24 +33,21 @@ const FilterTags = styled.div`
 
 const FilterTag = styled.button`
   cursor: pointer;
-  padding: 12px;
+  padding: 10px;
   border: 1px transparent solid;
   border-bottom: 1px solid ${COLOR.beige};
-
+  color: ${COLOR.gray};
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
-  }
-
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.lg};
   }
 
   ${(props) =>
     props.isChecked === true &&
     `
-    border: 1px ${COLOR.gray} solid;
     background: ${COLOR.beige};
-    box-shadow: ${EFFECT.shadow_dark};
+    border: 1px solid ${COLOR.white};
+    color:${COLOR.black};
+    /* box-shadow: ${EFFECT.shadow_dark}; */
     `}
 `
 

@@ -14,6 +14,8 @@ const SearchBarWrapper = styled.div`
   box-shadow: ${EFFECT.shadow_light};
   ${(props) => props.$horizontalAlign && `margin: 0 auto;`}
   ${(props) => props.$noBorderRadius && `border-radius:0;`}
+  ${(props) => props.$widthFilter && `width: 100%`}
+  ${(props) => props.$fontAndWidthFilter && `width: 100%`}
 `
 
 const SearchIcon = styled(SearchSvg)`
@@ -63,6 +65,8 @@ export default function SearchBar({
   horizontalAlign,
   noBorderRadius,
   width,
+  fontAndWidthFilter,
+  widthFilter,
 }) {
   return (
     <>
@@ -70,6 +74,8 @@ export default function SearchBar({
         $horizontalAlign={horizontalAlign}
         $noBorderRadius={noBorderRadius}
         $width={width}
+        $fontAndWidthFilter={fontAndWidthFilter}
+        $widthFilter={widthFilter}
       >
         <SearchBarInput
           placeholder={placeholder}
