@@ -25,15 +25,10 @@ const ArticleDesc = styled.div`
   width: 100%;
   max-height: 40rem;
   font-size: ${FONT.s};
-  line-height: 2rem;
+  line-height: 40px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: wrap;
-  transition: ${EFFECT.transition};
-  ${MEDIA_QUERY.md} {
-    line-height: 3rem;
-    font-size: ${FONT.md};
-  }
 
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
@@ -55,10 +50,6 @@ const UnfoldButton = styled.button`
   font-size: ${FONT.s};
   font-weight: bold;
   margin: 0 5px 13px 0;
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.s};
-  }
 
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};

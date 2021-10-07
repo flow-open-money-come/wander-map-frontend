@@ -10,6 +10,8 @@ const Block = styled.div`
   border-radius: 0 ${RADIUS.s} ${RADIUS.s} ${RADIUS.s};
   width: 100%;
   min-height: 70vh;
+  height: 400px;
+  overflow: scroll;
 `
 const SearchBar = styled.div`
   border: 1px solid #c4c4c4;
@@ -43,6 +45,10 @@ const TrailsTable = styled.table`
   margin: 10px auto;
   width: 90%;
   display: block;
+  ${MEDIA_QUERY.lg} {
+    height: 400px;
+    overflow: scroll;
+  }
 `
 
 const TableContent = styled.tr`

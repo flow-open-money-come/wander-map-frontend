@@ -47,7 +47,6 @@ const FilterTag = styled.button`
     background: ${COLOR.beige};
     border: 1px solid ${COLOR.white};
     color:${COLOR.black};
-    /* box-shadow: ${EFFECT.shadow_dark}; */
     `}
 `
 
@@ -71,8 +70,9 @@ export default function ForumFilter({ tags, setTags }) {
           placeholder='關鍵字...'
           horizontalAlign
           noBorderRadius
-          fontAndWidthFilter
-          widthFilter
+          width='100%'
+          fontSize={FONT.md}
+          noShadow
         />
         <FilterTags>
           {tags.map((tag) => {

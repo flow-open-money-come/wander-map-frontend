@@ -7,7 +7,7 @@ import { ReactComponent as DelIcon } from '../../icons/user/user_todos_del.svg'
 const TodosWrapper = styled.div`
   display: flex;
   align-items: center;
-  margin: 1.2em;
+  margin: 20px auto;
   border-bottom: 1.5px solid ${COLOR.green};
   width: 90%;
   ${MEDIA_QUERY.lg} {
@@ -25,6 +25,7 @@ const TodoContent = styled.div`
     props.isDone &&
     `
     text-decoration: line-through;
+    color:${COLOR.gray}
   `}
 `
 

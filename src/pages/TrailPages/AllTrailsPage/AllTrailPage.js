@@ -14,7 +14,6 @@ const AllTrailsPageWrapper = styled.div`
 `
 const AllTrailsPageTitleWrapper = styled.div`
   font-size: ${FONT.lg};
-  font-weight: bold;
   margin: 20px 0px;
   display: flex;
   justify-content: center;
@@ -87,9 +86,6 @@ const FilteredTrailsWrapper = styled.div`
 const LoadMoreBtn = styled.div`
   ${NavBarButton}
   margin: 50px auto 100px auto;
-  &:hover {
-    cursor: pointer;
-  }
 `
 
 function AllTrailPage() {
@@ -162,7 +158,7 @@ function AllTrailPage() {
             <SearchBar
               placeholder='關鍵字...'
               noBorderRadius={true}
-              widthFilter
+              width='100%'
             />
           </SearchBarWrapper>
         </DropDownContainer>

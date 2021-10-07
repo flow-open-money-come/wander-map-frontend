@@ -27,7 +27,7 @@ const Title = styled.span`
   }
 `
 
-const HotICon = styled(Hot)`
+const HotIcon = styled(Hot)`
   width: 29px;
   height: 29px;
   padding-top: 10px;
@@ -49,7 +49,7 @@ const TitleGroup = styled.div`
   margin: 0 auto;
 `
 
-const BottomButton = styled.button`
+const LoadMoreBtn = styled.button`
   ${NavBarButton}
   font-size: ${FONT.md};
   margin: 50px 0px 100px 50%;
@@ -84,7 +84,7 @@ function AllArticlesPage() {
       ],
       username: '水怪貓貓',
       date: '2021.9.7 / 20:20:22',
-      userAvatar: 'https://i.imgur.com/eGREu6v.png',
+      userAvatar: 'https://i.imgur.com/r50z0vv.png',
       likes: 100,
     },
     {
@@ -96,7 +96,7 @@ function AllArticlesPage() {
       tags: ['一日', '有水源', '危險地形'],
       username: '水怪貓貓',
       date: '2021.9.7 / 20:20:22',
-      userAvatar: 'https://i.imgur.com/eGREu6v.png',
+      userAvatar: 'https://i.imgur.com/r50z0vv.png',
       likes: 120,
     },
     {
@@ -108,7 +108,7 @@ function AllArticlesPage() {
       tags: ['一日', '有水源', '專業裝備'],
       username: '水怪貓貓',
       date: '2021.9.7 / 20:20:22',
-      userAvatar: 'https://i.imgur.com/eGREu6v.png',
+      userAvatar: 'https://i.imgur.com/r50z0vv.png',
       likes: 300,
     },
   ]
@@ -133,7 +133,7 @@ function AllArticlesPage() {
   return (
     <Wrapper>
       <TitleGroup>
-        <HotICon />
+        <HotIcon />
         <Title>熱門文章</Title>
       </TitleGroup>
       <Carousel slides={slides} />
@@ -172,7 +172,7 @@ function AllArticlesPage() {
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
           avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
         />
-        <BottomButton>看更多</BottomButton>
+        <LoadMoreBtn>看更多</LoadMoreBtn>
       </ArticleListWrapper>
     </Wrapper>
   )

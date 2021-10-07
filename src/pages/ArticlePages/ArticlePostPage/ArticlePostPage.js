@@ -5,6 +5,7 @@ import UploadImg from '../../../components/formSystem/UploadImg'
 import SelectLocation from '../../../components/formSystem/SelectLocation'
 import UploadGpx from '../../../components/formSystem/UploadGpx'
 import ContentCKEditor from '../../../components/formSystem/ContentCKEditor'
+import { NavBarButton } from '../../../components/common/Button'
 
 const ArticlePostWrapper = styled.div`
   margin: 0 auto;
@@ -18,14 +19,13 @@ const ArticlePostWrapper = styled.div`
   }
 `
 const PageName = styled.div`
-  font-size: ${FONT.logo};
+  font-size: ${FONT.lg};
   text-align: center;
   margin: 20px;
   ${MEDIA_QUERY.md} {
-    font-size: ${FONT.xl};
+    font-size: ${FONT.logo};
   }
   ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.xll};
     padding: 15px;
     border-bottom: solid 8px ${COLOR.green};
   }
@@ -45,7 +45,6 @@ const FormWrapper = styled.div`
   font-size: ${FONT.s};
   ${MEDIA_QUERY.md} {
     display: flex;
-    justify-content: center;
     align-items: center;
     margin: 30px 20px;
     font-size: ${FONT.md};
@@ -58,7 +57,6 @@ const FormWrapper = styled.div`
 const FormTitle = styled.div`
   font-weight: 600;
   margin-bottom: 8px;
-  font-family: Arial, Helvetica, sans-serif;
   ${MEDIA_QUERY.md} {
     margin: 10px 20px;
     width: 100px;
@@ -83,6 +81,11 @@ const Input = styled.input.attrs((props) => ({
 }))`
   height: 25px;
   width: 320px;
+  padding: 10px;
+  &:focus {
+    outline: none;
+    border: 2px solid ${COLOR.green};
+  }
   ${MEDIA_QUERY.lg} {
     height: 30px;
     width: 500px;
@@ -132,27 +135,14 @@ const SubmitBtn = styled.div`
     width: 500px;
   }
 `
-const Submit = styled.input.attrs(() => ({
+const Submit = styled.input.attrs((props) => ({
   type: 'submit',
   value: '確認送出',
 }))`
-  padding: 4px 10px;
-  background: white;
-  border-radius: 3px;
-  border: solid 1px ${COLOR.green};
+  ${NavBarButton}
+  background:none;
   color: ${COLOR.green};
-  font-size: ${FONT.s};
-  font-weight: 500;
-  &:hover {
-    cursor: pointer;
-    background: ${COLOR.green};
-    color: ${COLOR.white};
-  }
-  ${MEDIA_QUERY.lg} {
-    padding: 12px 20px;
-    font-size: ${FONT.lg};
-    border-radius: ${RADIUS.md};
-  }
+  font-size: ${FONT.md};
 `
 
 export default function ArticlePostPage() {

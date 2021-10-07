@@ -37,7 +37,6 @@ const ArticleListWrapper = styled.div`
   border: none;
   padding: 20px 20px 40px 20px;
   overflow: scroll;
-  transition: ${EFFECT.transition};
   ${MEDIA_QUERY.lg} {
     width: 49%;
     border: 1px solid ${COLOR.beige};
@@ -73,11 +72,11 @@ const TrialArticleNumber = styled.div`
 `
 const SubTitleWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-top: 20px;
   ${MEDIA_QUERY.lg} {
-    justify-content: start;
+    justify-content: space-between;
     padding-left: 10px;
   }
 `

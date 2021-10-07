@@ -26,7 +26,7 @@ const GPXInfo = styled.div`
   border-right: 1px solid ${COLOR.gray};
   ${MEDIA_QUERY.lg} {
     height: 28px;
-    font-size: ${FONT.md};
+    font-size: ${FONT.s};
   }
 `
 
