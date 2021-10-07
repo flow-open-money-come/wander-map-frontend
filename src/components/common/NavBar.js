@@ -35,7 +35,7 @@ const Logo = styled(Link)`
 
 const NavBarLink = styled(Link)`
   color: ${COLOR.white};
-  font-size: ${FONT.s};
+  font-size: ${FONT.md};
   width: 120px;
   height: 48px;
   border-radius: 0 0 ${RADIUS.s} ${RADIUS.s};
@@ -91,7 +91,7 @@ const DefaultAvatar = styled(Link)`
 
 const NavBarText = styled.div`
   min-width: 60px;
-  font-size: ${FONT.s};
+  font-size: ${FONT.md};
   color: ${COLOR.green};
   margin-left: 15px;
   text-align: right;

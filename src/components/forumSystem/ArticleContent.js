@@ -8,7 +8,7 @@ const ArticleContentContainer = styled.div`
   flex-direction: column;
   border: ${COLOR.beige} 1px solid;
   box-shadow: ${EFFECT.shadow_light};
-  width: 100$;
+  width: 100%;
   margin: 21px 0 50px 0;
   padding: 10px 15px 15px 15px;
 
@@ -29,7 +29,7 @@ const ArticleDesc = styled.div`
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: wrap;
-
+  transition: ${EFFECT.transition};
   ${MEDIA_QUERY.md} {
     line-height: 3rem;
     font-size: ${FONT.md};

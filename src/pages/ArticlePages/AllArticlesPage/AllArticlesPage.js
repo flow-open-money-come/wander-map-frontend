@@ -25,14 +25,10 @@ const Wrapper = styled.div`
 `
 
 const Title = styled.span`
-  font-size: ${FONT.md};
-
-  ${MEDIA_QUERY.md} {
-    font-size: ${FONT.lg};
-  }
+  font-size: ${FONT.lg};
 
   ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.xll};
+    font-size: ${FONT.logo};
   }
 `
 
@@ -56,14 +52,6 @@ const HotICon = styled(Hot)`
 
 const TitleGroup = styled.div`
   margin: 0 auto;
-
-  ${MEDIA_QUERY.md} {
-    margin: 30px 0 20px 0;
-  }
-
-  ${MEDIA_QUERY.lg} {
-    margin: 72px 0 41px 0;
-  }
 `
 
 const BottomButton = styled.button`
