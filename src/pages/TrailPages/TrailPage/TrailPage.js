@@ -152,6 +152,7 @@ const InfoAndWeather = styled.div`
 `
 
 function TrailPage() {
+  const location = '宜蘭縣礁溪鄉'
   return (
     <TrailPageContainer>
       <HeadFlex>
@@ -170,7 +171,7 @@ function TrailPage() {
       </HeadFlex>
       <InfoAndWeather>
         <TrailInfo />
-        <Weather />
+        <Weather location={location} />
       </InfoAndWeather>
 
       <TrailMap />

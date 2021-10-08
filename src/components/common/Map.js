@@ -75,14 +75,14 @@ const Map = (props) => {
       style={{
         height: '100%',
         width: '100%',
-        position: 'relative',
+        position: 'relative'
       }}
     >
       <MapSearchBarWrapper>
         <SearchBar placeholder='請輸入步道關鍵字...' />
       </MapSearchBarWrapper>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: KEY }}
+        bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
         defaultCenter={props.center}
         defaultZoom={props.zoom}
         yesIWantToUseGoogleMapApiInternals
