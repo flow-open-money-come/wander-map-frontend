@@ -3,6 +3,8 @@ import { COLOR, FONT, EFFECT, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as ArrowUpSvg } from '../../icons/arrow_up_s.svg'
 import { ReactComponent as ArrowDownSvg } from '../../icons/arrow_down_s.svg'
 import useToggle from '../../hooks/useToggle'
+import { getTrails } from '../../WebAPI'
+import { useState, useEffect } from 'react'
 
 const TitleText = styled.div`
   margin-right: 5px;
@@ -80,7 +82,7 @@ function DropDownCheckBox({ option }) {
   return (
     <>
       <DropDownCheckBoxWrapper>
-        <DropDownCheckBoxInput type='checkbox' />
+        <DropDownCheckBoxInput type='checkbox' name={option} />
         {option}
       </DropDownCheckBoxWrapper>
     </>
@@ -88,11 +90,43 @@ function DropDownCheckBox({ option }) {
 }
 export default function DropDownCheckBoxList({ title, options }) {
   const [arrowToggleClick, setArrowToggleClick] = useToggle(false)
+  const [checkedOptions, setCheckedOptions] = useState([])
+  const [params, setParams] = useState('')
+  let paramArray = []
+
+  const handleLocationFilter = (e) => {
+    let targetOption = e.target.name
+    if (checkedOptions.indexOf(targetOption) >= 0) {
+      return setCheckedOptions(
+        checkedOptions.filter((option) => option !== targetOption)
+      )
+    }
+
+    setCheckedOptions([...checkedOptions, targetOption])
+    //不會馬上改到 checkedOptions
+
+    checkedOptions.forEach((option) => {
+      paramArray.push(`location=${option}`)
+    })
+    if (paramArray.length !== 0) {
+      setParams('?' + paramArray.join('&'))
+    }
+  }
+
+  useEffect(() => {
+    getTrails(params).then((res) => {
+      console.log(res.data)
+    })
+  }, [params])
 
   return (
     <>
       <div>
-        <DropDownCheckBoxTitle>
+        <DropDownCheckBoxTitle
+          onClick={() => {
+            console.log(params)
+          }}
+        >
           <TitleText>{title}</TitleText>
           <ArrowDown
             $isActive={arrowToggleClick}
@@ -100,7 +134,12 @@ export default function DropDownCheckBoxList({ title, options }) {
           />
           <ArrowUp $isActive={arrowToggleClick} onClick={setArrowToggleClick} />
         </DropDownCheckBoxTitle>
-        <DropDownCheckBoxes $isActive={arrowToggleClick}>
+        <DropDownCheckBoxes
+          $isActive={arrowToggleClick}
+          onChange={(e) => {
+            handleLocationFilter(e)
+          }}
+        >
           {options.map((option) => {
             return <DropDownCheckBox option={option}></DropDownCheckBox>
           })}

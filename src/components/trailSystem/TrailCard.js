@@ -21,6 +21,7 @@ const FilteredTrailImgWrapper = styled.div`
   overflow: hidden;
 `
 const FilteredTrailImg = styled.img`
+  width: 100%;
   height: 200px;
   object-fit: cover;
   transition: ${EFFECT.transition};
@@ -72,15 +73,13 @@ export default function TrailCard({ trailInfo }) {
         <FilteredTrailImgWrapper>
           <FilteredTrailImg src={trailInfo.cover_picture_url} />
         </FilteredTrailImgWrapper>
-        <FilteredTrailTitle>
-          {trailInfo.title.split('；')[0]}
-        </FilteredTrailTitle>
+        <FilteredTrailTitle>{trailInfo.title}</FilteredTrailTitle>
         <FilteredTrailLocation>
           <Location />
-          {trailInfo.location}
+          {trailInfo.location.split('；')[0]}
         </FilteredTrailLocation>
         <FilteredTrailTags>
-          {trailInfo.required_time}{' '}
+          {trailInfo.required_time}
           {trailInfo.season ? `| ${trailInfo.season}` : null}
         </FilteredTrailTags>
       </FilteredTrailCard>
