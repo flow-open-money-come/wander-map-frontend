@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 import GoogleMapReact from 'google-map-react'
 import KEY from '../../key'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SearchBar from './SearchBar'
 import LocationMarker from './LocationMarker'
+import { getTrails } from '../../WebAPI'
 
 const MapSearchBarWrapper = styled.div`
   width: 100%;
@@ -14,44 +15,14 @@ const MapSearchBarWrapper = styled.div`
 `
 
 const Map = (props) => {
-  // const [myPosition, setMyPosition] = useState({
-  //   lat: 24.8218635,
-  //   lng: 121.7352169,
-  // })
+  const [current, setCurrentPosition] = useState({
+    lat: 24.8218635,
+    lng: 121.7352169,
+  })
   const [mapApiLoaded, setMapApiLoaded] = useState(false)
   const [mapInstance, setMapInstance] = useState(null)
   const [mapApi, setMapApi] = useState(null)
-
-  // GET 回來的步道資訊
-  const trailInfos = [
-    {
-      trailId: 1,
-      center: {
-        lat: 24.8218635,
-        lng: 121.7352169,
-      },
-      trailTitle: '測試步道 A',
-      trailImageUrl: 'https://i.imgur.com/w2Y6y4z.jpg',
-    },
-    {
-      trailId: 2,
-      center: {
-        lat: 24.3224766,
-        lng: 120.9628113,
-      },
-      trailTitle: '測試步道 B',
-      trailImageUrl: 'https://i.imgur.com/w2Y6y4z.jpg',
-    },
-    {
-      trailId: 3,
-      center: {
-        lat: 23.5096881,
-        lng: 120.7957005,
-      },
-      trailTitle: '測試步道 C',
-      trailImageUrl: 'https://i.imgur.com/w2Y6y4z.jpg',
-    },
-  ]
+  const [trailInfos, setTrailInfos] = useState([])
 
   const apiHasLoaded = (map, maps) => {
     console.log('載入完成!')
@@ -60,6 +31,19 @@ const Map = (props) => {
     setMapApiLoaded(true)
   }
 
+  useEffect(() => {
+    getTrails('?limit=126')
+      .then((res) => {
+        if (res.data.success) setTrailInfos(res.data.data)
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
+  const handleLocationClick = (e) => {
+    console.log('click')
+    console.log(e.target.getAttribute('lat'))
+    console.log(e.target.getAttribute('lng'))
+  }
   // 進階： 移動位置自動搜尋附近的步道
   // const handleCenterChange = () => {
   //   if (mapApiLoaded) {
@@ -78,6 +62,13 @@ const Map = (props) => {
         position: 'relative'
       }}
     >
+      {/* <button
+        onClick={() => {
+          console.log(trailInfos)
+        }}
+      >
+        看結果
+      </button> */}
       <MapSearchBarWrapper>
         <SearchBar placeholder='請輸入步道關鍵字...' />
       </MapSearchBarWrapper>
@@ -92,9 +83,13 @@ const Map = (props) => {
         {trailInfos.map((trailInfo) => {
           return (
             <LocationMarker
-              lat={trailInfo.center.lat}
-              lng={trailInfo.center.lng}
+              key={trailInfo.trail_id}
+              lat={trailInfo.coordinate.y}
+              lng={trailInfo.coordinate.x}
               trailInfo={trailInfo}
+              onClick={(e) => {
+                handleLocationClick(e)
+              }}
             />
           )
         })}

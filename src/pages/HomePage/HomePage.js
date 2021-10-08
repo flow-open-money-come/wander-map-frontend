@@ -72,7 +72,7 @@ const TrialArticleNumber = styled.div`
 `
 const SubTitleWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   margin-top: 20px;
   ${MEDIA_QUERY.lg} {
