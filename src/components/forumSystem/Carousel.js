@@ -9,18 +9,13 @@ import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 // Carousel
 
 const SlideImage = styled.img`
-  width: 400px;
-  height: 250px;
+  width: 100%;
+  height: 100%;
   border-radius: ${RADIUS.lg};
-
-  ${MEDIA_QUERY.md} {
-    width: 100%;
-    height: 100%;
-  }
 
   ${MEDIA_QUERY.lg} {
     width: 300px;
-    height: auto;
+    height: 300px;
     margin-right: 21px;
     object-fit: cover;
   }
@@ -36,14 +31,14 @@ const Slider = styled.div`
 const ImageContainer = styled.div`
   width: 100%;
   height: 100%;
-  margin: 20px;
+  margin: 10px;
 
   ${MEDIA_QUERY.lg} {
     display: flex;
     border-radius: ${RADIUS.lg};
     background: ${COLOR.white};
-    width: 1173px;
-    height: auto;
+    width: 90%;
+    height: 300px;
     margin: 20px;
     box-shadow: ${EFFECT.shadow_light};
   }
@@ -72,7 +67,6 @@ const ArticleInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-
   ${MEDIA_QUERY.lg} {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -80,28 +74,27 @@ const ArticleInfoContainer = styled.div`
 `
 
 const ArticleTitle = styled.h1`
+  font-size: ${FONT.lg};
   display: flex;
   position: absolute;
   width: 60%;
-  padding: 5px;
+  padding: 10px;
   border-radius: ${RADIUS.md};
   justify-content: center;
   transform: translate(5%, -300%);
-  background: ${COLOR.beige};
-  opacity: 0.6;
-
+  background-color: rgba(0, 0, 0, 0.4);
+  color: ${COLOR.white};
   ${MEDIA_QUERY.md} {
-    font-size: ${FONT.lg};
+    font-size: ${FONT.logo};
   }
 
   ${MEDIA_QUERY.lg} {
+    color: ${COLOR.black};
     position: static;
     justify-content: flex-start;
     transform: translate(0, 0);
-    background: 0;
-    opacity: 1;
+    background-color: transparent;
     padding: 10px 10px 8px 0;
-    font-size: ${FONT.xl};
   }
 `
 
@@ -118,19 +111,17 @@ const ArticleLikes = styled.span`
 `
 
 const ThumbUp = styled(Thumb)`
-  width: 30px;
-  height: 30px;
-
-  ${MEDIA_QUERY.lg} {
-    width: 45px;
-    height: 45px;
-  }
+  width: 40px;
+  height: 40px;
+  padding-left: 10px;
 `
 
 const ArticleTitleAndLikes = styled.div`
+  padding: 10px 10px 10px 0;
   ${MEDIA_QUERY.md} {
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 `
 
@@ -149,10 +140,10 @@ const ArticleContent = styled.div`
 `
 
 const ArticleTags = styled.div`
+  width: 80%;
   position: absolute;
   display: flex;
   border-radius: ${RADIUS.md};
-  justify-content: center;
   transform: translate(3%, -150%);
   flex-wrap: wrap;
   max-height: 2rem;

@@ -6,7 +6,6 @@ import { ReactComponent as TemperatureIcon } from '../../icons/weather/weather-T
 import { ReactComponent as PopIcon } from '../../icons/weather/weather-RainProbability.svg'
 import { ReactComponent as CloudyIcon } from '../../icons/weather/weather-Cloudy.svg'
 
-
 const WeatherWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -41,7 +40,10 @@ const Title = styled.div`
 
 const CardContainer = styled.div`
   display: flex;
-  overflow: auto; 
+  overflow: auto;
+  ${MEDIA_QUERY.lg} {
+    margin-top: 40px;
+  }
 `
 
 const Card = styled.div`
@@ -227,8 +229,6 @@ function Weather() {
             </RainProbability>
           </WeatherInfo>
         </Card>
-
-        
       </CardContainer>
     </WeatherWrapper>
   )

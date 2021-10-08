@@ -14,44 +14,46 @@ const Wrapper = styled.div`
   margin: 0 auto;
   width: 90%;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  ${MEDIA_QUERY.lg} {
+    flex-direction: row;
+    align-items: center;
+  }
 `
 
 const MemberProfileWrapper = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   align-items: center;
-  margin: 20px auto;
-  width: 90%;
+  margin-top: 20px;
   ${MEDIA_QUERY.lg} {
+    width: 30%;
     flex-direction: column;
     border: solid 1.5px ${COLOR.green};
     border-radius: ${RADIUS.lg};
-    padding: 10px 0;
-    margin-top: 50px;
-    height: 50%;
-    width: 25%;
-    min-width: 30vmin;
+    padding: 20px;
+    margin: 0;
   }
 `
 const Avatar = styled.div`
-  display: inline-block;
   position: relative;
   overflow: hidden;
   border-radius: 50%;
-  background-color: #eee;
-  margin: 20px auto;
-  min-width: 30vmin;
+  background-color: ${COLOR.gray};
 `
 const AvatarPic = styled.img`
-  width: 30vmin;
-  height: 30vmin;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
   object-position: center;
+  ${MEDIA_QUERY.lg} {
+    width: 150px;
+    height: 150px;
+  }
 `
 const Profile = styled.div`
   padding: 10px;
-  margin: 20px auto;
+  margin: 20px;
   border-radius: 3px;
   border: solid 1.5px ${COLOR.green};
   position: relative;
@@ -98,11 +100,13 @@ const Info = styled.div`
   }
 `
 const UsersManagementContainer = styled.div`
-  width: 100%;
   margin: 20px auto;
+  width: 100%;
+  padding-bottom: 100px;
   ${MEDIA_QUERY.lg} {
-    width: 70%;
+    width: 65%;
     margin: 50px auto;
+    padding-bottom: 0px;
   }
 `
 

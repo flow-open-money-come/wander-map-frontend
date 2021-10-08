@@ -92,6 +92,7 @@ const LikeTab = styled(ArticlesTab)`
 `
 const TabTitle = styled.div`
   display: none;
+  margin-left: 10px;
   ${MEDIA_QUERY.md} {
     display: block;
   }

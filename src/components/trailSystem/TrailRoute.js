@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { FONT, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailRoute.svg'
 
-
 const RouteWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -44,7 +43,6 @@ const RouteImg = styled.img`
   max-width: 800px;
 `
 
-
 function TrailRoute() {
   return (
     <RouteWrapper>
@@ -52,9 +50,8 @@ function TrailRoute() {
         <TitleIcon />
         路線資訊
       </Title>
-      
-        <RouteImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/01/001_MAP201902152.jpg' />
-      
+
+      <RouteImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/01/001_MAP201902152.jpg' />
     </RouteWrapper>
   )
 }

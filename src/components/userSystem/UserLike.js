@@ -9,6 +9,8 @@ const Block = styled.div`
   border-radius: 0 ${RADIUS.s} ${RADIUS.s} ${RADIUS.s};
   width: 100%;
   min-height: 70vh;
+  height: 400px;
+  overflow: scroll;
 `
 const SearchBar = styled.div`
   border: 1px solid #c4c4c4;
@@ -86,6 +88,7 @@ export default function UserLike() {
           content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+          lessRwd
         />
         <ArticleList
           articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
@@ -97,6 +100,7 @@ export default function UserLike() {
           content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+          lessRwd
         />
         <ArticleList
           articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
@@ -108,7 +112,9 @@ export default function UserLike() {
           content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
           現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
           潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
+          lessRwd
         />
+
         <More>看更多</More>
       </ArticlesWrapper>
     </Block>

@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-import { FONT, MEDIA_QUERY } from '../../constants/style.js'
+import { COLOR, FONT, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailInfo.svg'
-
 
 const InfoWrapper = styled.div`
   width: 100%;
@@ -36,14 +35,19 @@ const Title = styled.div`
   }
 `
 
-const InfoContainer = styled.div``
+const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`
 
-const InfoLocation = styled.div`
+const InfoRow = styled.div`
   width: 320px;
   display: flex;
   font-size: ${FONT.s};
   margin-bottom: 10px;
-
+  padding-bottom: 10px;
+  border-bottom: 1px solid ${COLOR.beige};
   div:nth-child(1) {
     width: 40%;
   }
@@ -56,11 +60,11 @@ const InfoLocation = styled.div`
     font-size: ${FONT.md};
   }
 `
-const InfoDifficulty = styled(InfoLocation)``
-const InfoAltitude = styled(InfoLocation)``
-const InfoLength = styled(InfoLocation)``
-const InfoSeason = styled(InfoLocation)``
-const InfoFeature = styled(InfoLocation)``
+// const InfoDifficulty = styled(InfoLocation)``
+// const InfoAltitude = styled(InfoLocation)``
+// const InfoLength = styled(InfoLocation)``
+// const InfoSeason = styled(InfoLocation)``
+// const InfoFeature = styled(InfoLocation)``
 
 function TrailInfo() {
   return (
@@ -70,30 +74,30 @@ function TrailInfo() {
         步道資訊
       </Title>
       <InfoContainer>
-        <InfoLocation>
+        <InfoRow>
           <div>地點</div>
           <div>宜蘭縣南澳鄉</div>
-        </InfoLocation>
-        <InfoDifficulty>
+        </InfoRow>
+        <InfoRow>
           <div>難度</div>
           <div>入門</div>
-        </InfoDifficulty>
-        <InfoAltitude>
+        </InfoRow>
+        <InfoRow>
           <div>海拔</div>
           <div>650 公尺</div>
-        </InfoAltitude>
-        <InfoLength>
+        </InfoRow>
+        <InfoRow>
           <div>步道長度</div>
           <div>4.1 公里</div>
-        </InfoLength>
-        <InfoSeason>
+        </InfoRow>
+        <InfoRow>
           <div>最佳造訪季</div>
           <div>四季皆宜</div>
-        </InfoSeason>
-        <InfoFeature>
+        </InfoRow>
+        <InfoRow>
           <div>步道概況</div>
           <div>土徑步道、土木階梯</div>
-        </InfoFeature>
+        </InfoRow>
       </InfoContainer>
     </InfoWrapper>
   )

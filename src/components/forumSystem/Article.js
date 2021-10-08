@@ -43,7 +43,7 @@ const ArticlesTag = styled.span`
   font-size: ${FONT.xs};
   margin: 5px 3px;
   padding: 4px;
-  color: #ffffff;
+  color: ${COLOR.white};
   ${(props) =>
     !props.$lessRwd &&
     `
@@ -55,7 +55,6 @@ const ArticlesTag = styled.span`
     &:first-child {
       margin-left: 30px;
     }
-    /* padding: 6px 15px; */
     margin-right: 17px;
   }
   `}

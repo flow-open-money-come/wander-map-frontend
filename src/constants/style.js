@@ -16,9 +16,9 @@ export const COLOR = {
 export const FONT = {
   xll: '48px',
   xl: '36px',
-  logo: '30px',
-  lg: '24px',
-  md: '18px',
+  logo: '28px',
+  lg: '20px',
+  md: '16px',
   s: '14px',
   xs: '12px',
 }

@@ -4,7 +4,7 @@ import { FONT, COLOR } from '../../constants/style'
 import { ReactComponent as ImageSvg } from '../../icons/image.svg'
 
 const PicHolder = styled.label`
-  width: 320px;
+  width: 500px;
   height: 180px;
   background-color: #eee;
   border-radius: 3px;

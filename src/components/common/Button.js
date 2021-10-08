@@ -10,6 +10,7 @@ export const NavBarButton = `
   border: 1px solid ${COLOR.green};
   transition: ${EFFECT.transition};
   &:hover {
+    cursor: pointer;
     color: ${COLOR.white};
     background-color: ${COLOR.green};
   }

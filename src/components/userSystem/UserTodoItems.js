@@ -1,7 +1,7 @@
 import TodoItem from '../todoSystem/TodoList'
 import { useState, useRef } from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { COLOR, FONT, RADIUS, EFFECT, MEDIA_QUERY } from '../../constants/style'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -9,6 +9,8 @@ const Block = styled.div`
   width: 100%;
   min-height: 70vh;
   margin: 0 auto;
+  height: 400px;
+  overflow: scroll;
 `
 
 const TodoInput = styled.input.attrs((props) => ({
@@ -17,11 +19,16 @@ const TodoInput = styled.input.attrs((props) => ({
   height: 45px;
   border: none;
   outline: none;
+  display: block;
   text-align: center;
-  width: calc(100% - 100px);
-  border-bottom: 1px solid #f0eeeb;
+  width: calc(100% - 40px);
+  border-bottom: 1px solid ${COLOR.beige};
   margin: 0 auto;
-  font-size: ${FONT.s};
+  font-size: ${FONT.md};
+  transition: ${EFFECT.transition};
+  &:focus {
+    border-bottom: 1px solid ${COLOR.green};
+  }
   ${MEDIA_QUERY.lg} {
     height: 60px;
 
@@ -73,7 +80,6 @@ export default function UserTodoItems() {
   //刪除
   const handleDeleteTodo = (id) => {
     setTodos(todos.filter((todo) => todo.id !== id))
-    console.log('todos ' + todos)
   }
   return (
     <Block className='App'>

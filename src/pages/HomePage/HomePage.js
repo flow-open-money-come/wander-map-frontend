@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { COLOR, RADIUS, FONT, MEDIA_QUERY, EFFECT } from '../../constants/style'
-import { ReactComponent as ArrowRightSvg } from '../../icons/arrow_right_slim.svg'
 import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
 
@@ -38,7 +37,6 @@ const ArticleListWrapper = styled.div`
   border: none;
   padding: 20px 20px 40px 20px;
   overflow: scroll;
-  transition: ${EFFECT.transition};
   ${MEDIA_QUERY.lg} {
     width: 49%;
     border: 1px solid ${COLOR.beige};
@@ -67,7 +65,7 @@ const TrialTitleName = styled(Link)`
 const TrialTitleLocation = styled.div`
   font-size: ${FONT.md};
 `
-const TrialAriticalNumber = styled.div`
+const TrialArticleNumber = styled.div`
   font-size: ${FONT.s};
   color: ${COLOR.gray};
   margin-left: 20px;
@@ -78,7 +76,7 @@ const SubTitleWrapper = styled.div`
   align-items: center;
   margin-top: 20px;
   ${MEDIA_QUERY.lg} {
-    justify-content: start;
+    justify-content: space-between;
     padding-left: 10px;
   }
 `
@@ -106,12 +104,11 @@ function HomePage() {
           </MapWrapper>
           <ArticleListWrapper>
             <TrialTitleWrapper>
-              <TrialTitleName>林美石磐步道</TrialTitleName>
+              <TrialTitleName to='trails/1'>林美石磐步道</TrialTitleName>
               <SubTitleWrapper>
                 <TrialTitleLocation>宜蘭縣礁溪鄉</TrialTitleLocation>
                 <LinkWrapper>
-                  <TrialAriticalNumber>222 篇心得</TrialAriticalNumber>
-                  <ArrowRightSvg />
+                  <TrialArticleNumber>222 篇心得</TrialArticleNumber>
                 </LinkWrapper>
               </SubTitleWrapper>
             </TrialTitleWrapper>
