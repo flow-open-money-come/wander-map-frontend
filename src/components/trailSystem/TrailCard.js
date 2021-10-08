@@ -31,7 +31,7 @@ const FilteredTrailImg = styled.img`
 
 const FilteredTrailTitle = styled.div`
   margin-top: 5px;
-  font-size: ${FONT.md};
+  font-size: ${FONT.lg};
   ${MEDIA_QUERY.md} {
     margin-top: 10px;
   }

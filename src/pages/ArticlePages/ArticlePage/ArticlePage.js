@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import Comment from '../../../components/forumSystem/Comment'
+import Comment from '../../../components/forumSystem/Comments'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import { ReactComponent as Review } from '../../../icons/articles/review.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
@@ -14,6 +14,7 @@ const Wrapper = styled.div`
 
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
+    width: 80%;
   }
 `
 
@@ -26,11 +27,7 @@ const ArticleTitle = styled.div`
   ${MEDIA_QUERY.md} {
     flex: 0 1 auto;
     padding: 10px 10px 8px 0;
-    font-size: ${FONT.xl};
-  }
-
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.xll};
+    font-size: ${FONT.logo};
   }
 `
 
@@ -44,10 +41,6 @@ const ArticleLikes = styled.span`
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.logo};
   }
-
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.xl};
-  }
 `
 
 const ThumbUp = styled.span`
@@ -57,11 +50,6 @@ const ThumbUp = styled.span`
   height: 30px;
   cursor: pointer;
   margin-right: 5px;
-
-  ${MEDIA_QUERY.lg} {
-    width: 45px;
-    height: 45px;
-  }
 
   ${(props) =>
     props.thumb &&
@@ -73,6 +61,7 @@ const ThumbUp = styled.span`
 const ArticleTitleAndLikes = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `
 
 const CoverImg = styled.img`
@@ -114,11 +103,7 @@ const CommentTitle = styled.h1`
   margin-left: 5px;
 
   ${MEDIA_QUERY.md} {
-    font-size: ${FONT.lg};
-  }
-
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.xl};
+    font-size: ${FONT.logo};
   }
 `
 

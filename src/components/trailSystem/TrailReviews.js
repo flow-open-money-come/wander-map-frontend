@@ -4,7 +4,6 @@ import { FONT, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/review.svg'
 import Comments from '../forumSystem/Comments.js'
 
-
 const ReviewWrapper = styled.div`
   width: 90%;
   display: flex;
@@ -36,7 +35,6 @@ const Title = styled.div`
     }
   }
 `
-
 
 function TrailReviews() {
   return (

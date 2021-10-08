@@ -6,6 +6,7 @@ import { ReactComponent as TemperatureIcon } from '../../icons/weather/weather-T
 import { ReactComponent as PopIcon } from '../../icons/weather/weather-RainProbability.svg'
 import WeatherIcon from './WeatherIcon.js'
 import { locationNameToCode } from './weatherUtils.js'
+import axios from 'axios'
 
 const WeatherWrapper = styled.div`
   width: 100%;
@@ -42,6 +43,9 @@ const Title = styled.div`
 const CardContainer = styled.div`
   display: flex;
   overflow: auto;
+  ${MEDIA_QUERY.lg} {
+    margin-top: 40px;
+  }
 `
 
 const Card = styled.div`
@@ -137,12 +141,10 @@ const Weather = ({ location }) => {
   }
 
   useEffect(() => {
-    fetch(
+    axios(
       `https://opendata.cwb.gov.tw/api/v1/rest/datastore/${locationNameToCode(country)}?Authorization=${process.env.REACT_APP_WEATHER_TOKEN}&locationName=${town}&elementName=T,Wx,PoP12h`
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        const locationData = data.records.locations[0].location[0]
+    ).then((res) => {
+        const locationData = res.data.records.locations[0].location[0]
         const weatherInfo = []
         for (let i = 0; i < 14; i += 2) {
           const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {

@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { COLOR, EFFECT, RADIUS, FONT, MEDIA_QUERY } from '../../constants/style'
+import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import { ReactComponent as CloseSvg } from '../../icons/close.svg'
 
@@ -10,16 +10,14 @@ const SearchBarWrapper = styled.div`
   z-index: 1;
   display: flex;
   align-items: center;
-  border-radius: ${RADIUS.md};
-  box-shadow: ${EFFECT.shadow_light};
+  justify-content: space-between;
   ${(props) => props.$horizontalAlign && `margin: 0 auto;`}
-  ${(props) => props.$noBorderRadius && `border-radius:0;`}
-  ${(props) =>
-    props.$widthFilter &&
-    `
-    min-width: 100%;
-    box-shadow: none;
-  `}
+  border-radius: ${(props) => {
+    return props.$noBorderRadius ? '0;' : `${RADIUS.md};`
+  }};
+  box-shadow: ${(props) => {
+    return props.$noShadow ? 'none;' : `${EFFECT.shadow_light};`
+  }};
 `
 
 const SearchIcon = styled(SearchSvg)`
@@ -31,6 +29,7 @@ const SearchIcon = styled(SearchSvg)`
 const SearchIconWrapper = styled.div`
   min-width: 42px;
   min-height: 42px;
+  width: 10%;
   background-color: ${COLOR.white};
   border: 1px solid ${COLOR.white};
   position: relative;
@@ -47,6 +46,7 @@ const CloseIcon = styled(CloseSvg)`
 const CloseIconWrapper = styled.div`
   min-width: 42px;
   min-height: 42px;
+  width: 10%;
   background-color: ${COLOR.white};
   border: 1px solid ${COLOR.white};
   position: relative;
@@ -62,35 +62,33 @@ const SearchBarInput = styled.input`
   transition: ${EFFECT.transition};
   ${(props) =>
     !props.$noBorderRadius && `border-radius: ${RADIUS.md} 0 0 ${RADIUS.md};`}
-
-  ${(props) =>
-    props.$fontAndWidthFilter &&
-    `
-    ${MEDIA_QUERY.md} {
-      font-size: ${FONT.md};
-      width: 100%;
-    }
-  `}
+  &::placeholder {
+    font-size: ${(props) => {
+      return props.$fontSize ? props.$fontSize : `${FONT.s}`
+    }};
+  }
 `
 
 export default function SearchBar({
   placeholder,
   horizontalAlign,
   noBorderRadius,
-  fontAndWidthFilter,
-  widthFilter,
+  width,
+  fontSize,
+  noShadow,
 }) {
   return (
     <>
       <SearchBarWrapper
         $horizontalAlign={horizontalAlign}
         $noBorderRadius={noBorderRadius}
-        $widthFilter={widthFilter}
+        $noShadow={noShadow}
+        $width={width}
       >
         <SearchBarInput
           placeholder={placeholder}
           $noBorderRadius={noBorderRadius}
-          $fontAndWidthFilter={fontAndWidthFilter}
+          $fontSize={fontSize}
         />
         <CloseIconWrapper>
           <CloseIcon />

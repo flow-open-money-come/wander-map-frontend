@@ -32,7 +32,7 @@ const PageTitle = styled.div`
 
 const PageDesc = styled.div`
   width: 100%;
-  font-size: ${FONT.xs};
+  font-size: ${FONT.s};
   margin: 10px 0;
   text-align: center;
   ${MEDIA_QUERY.lg} {
@@ -181,10 +181,18 @@ function AdminPage() {
 
         {tab === 'Users' && <UsersManagement setTab={setTab} />}
         {tab === 'Trails' && (
-          <TrailsManagement setTab={setTab} recycle={recycle} setRecycle={setRecycle} />
+          <TrailsManagement
+            setTab={setTab}
+            recycle={recycle}
+            setRecycle={setRecycle}
+          />
         )}
         {tab === 'Articles' && (
-          <ArticlesManagement setTab={setTab} recycle={recycle} setRecycle={setRecycle} />
+          <ArticlesManagement
+            setTab={setTab}
+            recycle={recycle}
+            setRecycle={setRecycle}
+          />
         )}
       </ManagementContainer>
     </AdminPageContainer>

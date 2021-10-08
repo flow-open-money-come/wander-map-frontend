@@ -25,7 +25,6 @@ const ArticleTag = styled.div`
   padding: 6px 10px;
 
   ${MEDIA_QUERY.md} {
-    font-size: ${FONT.md};
     padding: 6px 14px;
     flex: 0 1 auto;
   }

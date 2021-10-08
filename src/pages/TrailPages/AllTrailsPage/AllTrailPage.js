@@ -6,7 +6,6 @@ import SearchBar from '../../../components/common/SearchBar'
 import DropDownCheckBoxList from '../../../components/common/DropDownCheckBoxList'
 import { NavBarButton } from '../../../components/common/Button'
 import TrailCard from '../../../components/trailSystem/TrailCard'
-import BackToTopBtn from '../../../components/common/BackToTopBtn'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
@@ -15,7 +14,6 @@ const AllTrailsPageWrapper = styled.div`
 `
 const AllTrailsPageTitleWrapper = styled.div`
   font-size: ${FONT.lg};
-  font-weight: bold;
   margin: 20px 0px;
   display: flex;
   justify-content: center;
@@ -88,9 +86,6 @@ const FilteredTrailsWrapper = styled.div`
 const LoadMoreBtn = styled.div`
   ${NavBarButton}
   margin: 50px auto 100px auto;
-  &:hover {
-    cursor: pointer;
-  }
 `
 
 function AllTrailPage() {

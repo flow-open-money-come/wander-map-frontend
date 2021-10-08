@@ -1,13 +1,10 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
-import {
-  FONT,
-  COLOR,
-  EFFECT,
-  RADIUS,
-  MEDIA_QUERY,
-} from '../../../constants/style'
-import { ReactComponent as ImageSvg } from '../../../icons/image.svg'
+import styled from 'styled-components'
+import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
+import UploadImg from '../../../components/formSystem/UploadImg'
+import SelectLocation from '../../../components/formSystem/SelectLocation'
+import UploadGpx from '../../../components/formSystem/UploadGpx'
+import { NavBarButton } from '../../../components/common/Button'
 
 const TrailsPostWrapper = styled.div`
   margin: 0 auto;
@@ -20,14 +17,14 @@ const TrailsPostWrapper = styled.div`
   }
 `
 const PageName = styled.div`
-  font-size: ${FONT.logo};
+  font-size: ${FONT.lg};
+  font-weight: bold;
   text-align: center;
   margin: 20px;
   ${MEDIA_QUERY.md} {
-    font-size: ${FONT.xl};
+    font-size: ${FONT.logo};
   }
   ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.xll};
     padding: 15px;
     border-bottom: solid 8px ${COLOR.green};
   }
@@ -50,9 +47,6 @@ const FormWrapper = styled.div`
     align-items: center;
     margin: 30px 20px;
     font-size: ${FONT.md};
-  }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.lg};
   }
 `
 const HalfWrapper = styled.div`
@@ -79,9 +73,9 @@ const InputWrapper = styled.div`
   align-items: center;
 `
 const FormTitle = styled.div`
-  font-weight: 600;
   margin-bottom: 8px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-size: ${FONT.md};
+  font-weight: bold;
   ${MEDIA_QUERY.md} {
     margin: 10px 20px;
     width: 100px;
@@ -89,6 +83,7 @@ const FormTitle = styled.div`
   }
   ${MEDIA_QUERY.lg} {
     margin: 10px 40px;
+    font-size: ${FONT.lg};
   }
 `
 const FormSubTitleWrapper = styled.div`
@@ -106,22 +101,26 @@ const FormSubTitle = styled.div`
 const FormUnit = styled.div`
   margin: 0 15px;
 `
-const Input = styled.input.attrs((props) => ({
-  type: 'text',
-}))`
+const Input = styled.input`
   height: 25px;
   width: ${(props) => (props.size === 'short' ? '100px' : '320px')};
+  padding: 10px;
+  &:focus {
+    outline: none;
+    border: 2px solid ${COLOR.green};
+  }
   ${MEDIA_QUERY.lg} {
     height: 30px;
     width: ${(props) => (props.size === 'short' ? '170px' : '500px')};
     font-size: ${FONT.md};
   }
 `
-const Textarea = styled.textarea.attrs((props) => ({
+const Textarea = styled.textarea.attrs(() => ({
   rows: '6',
 }))`
   width: 320px;
   height: 300px;
+  padding: 10px;
   ${MEDIA_QUERY.lg} {
     width: 500px;
     font-size: ${FONT.md};
@@ -130,6 +129,7 @@ const Textarea = styled.textarea.attrs((props) => ({
 const Radio = styled.input.attrs((props) => ({
   type: 'radio',
 }))`
+  margin-right: 10px;
   ${MEDIA_QUERY.md} {
     height: 20px;
     width: 20px;
@@ -145,44 +145,10 @@ const Select = styled.select`
     font-size: ${FONT.md};
   }
 `
-const PicHolder = styled.label`
-  width: 320px;
-  height: 180px;
-  background-color: #eee;
-  border-radius: 3px;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  align-items: center;
-  text-align: center;
-`
-
-const UploadInput = styled.input.attrs({
-  type: 'file',
-  accept: 'image/png, image/jpeg',
-})`
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-`
-const Image = styled(ImageSvg)`
-  width: 30px;
-  height: 30px;
-  color: ${COLOR.green};
-`
-const UploadNotice = styled.div`
-  font-size: ${FONT.xs};
-  margin-top: 30px;
-`
 
 const SubmitBtn = styled.div`
   text-align: right;
+  margin-bottom: 50px;
   ${MEDIA_QUERY.md} {
     width: 320px;
   }
@@ -194,41 +160,10 @@ const Submit = styled.input.attrs((props) => ({
   type: 'submit',
   value: '確認送出',
 }))`
-  padding: 4px 10px;
-  background: ${COLOR.white};
-  border-radius: 3px;
-  border: solid 1.5px ${COLOR.green};
+  ${NavBarButton}
+  background:none;
   color: ${COLOR.green};
-  font-size: ${FONT.s};
-  font-weight: 500;
-  &:hover {
-    cursor: pointer;
-    background: ${COLOR.green};
-    color: ${COLOR.white};
-  }
-  ${MEDIA_QUERY.lg} {
-    padding: 12px 25px;
-    font-size: ${FONT.lg};
-    border-radius: ${RADIUS.md};
-  }
-`
-const GPXBtn = styled.label`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 25px;
-  width: 320px;
-  background-color: #eee;
-  border-radius: 3px;
-  ${MEDIA_QUERY.lg} {
-    width: 500px;
-    font-size: ${FONT.md};
-  }
-`
-const GPXInput = styled.input.attrs((props) => ({
-  type: 'file',
-}))`
-  cursor: pointer;
+  font-size: ${FONT.md};
 `
 
 export default function TrailPostPage() {
@@ -243,15 +178,7 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>封面圖片</FormTitle>
         <FormSubTitleWrapper>
-          <PicHolder>
-            <Image />
-            <br />
-            點擊上傳
-            <UploadInput />
-            <UploadNotice>
-              建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
-            </UploadNotice>
-          </PicHolder>
+          <UploadImg />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -261,16 +188,7 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>步道地點</FormTitle>
         <FormSubTitleWrapper>
-          <Select>
-            <option>臺北市</option>
-            <option>新北市</option>
-            <option>桃園市</option>
-          </Select>
-          <Select>
-            <option>北投區</option>
-            <option>信義區</option>
-            <option>大安區</option>
-          </Select>
+          <SelectLocation />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -278,14 +196,14 @@ export default function TrailPostPage() {
           <Half>
             <FormTitle>步道長度</FormTitle>
             <InputWrapper>
-              <Input size='short' />
+              <Input size='short' type='number' />
               <FormUnit>公里</FormUnit>
             </InputWrapper>
           </Half>
           <Half>
             <FormTitle>海拔高度</FormTitle>
             <InputWrapper>
-              <Input size='short' />
+              <Input size='short' type='number' />
               <FormUnit>公尺</FormUnit>
             </InputWrapper>
           </Half>
@@ -295,23 +213,23 @@ export default function TrailPostPage() {
         <FormTitle>步道難度</FormTitle>
         <FormSubTitleWrapper>
           <label>
-            <Radio value='1' />
+            <Radio value='1' name='difficulty' />
             新手
           </label>
           <label>
-            <Radio value='2' />
+            <Radio value='2' name='difficulty' />
             入門
           </label>
           <label>
-            <Radio value='3' />
+            <Radio value='3' name='difficulty' />
             進階
           </label>
           <label>
-            <Radio value='4' />
+            <Radio value='4' name='difficulty' />
             挑戰
           </label>
           <label>
-            <Radio value='5' />
+            <Radio value='5' name='difficulty' />
             困難
           </label>
         </FormSubTitleWrapper>
@@ -321,11 +239,11 @@ export default function TrailPostPage() {
         <FormSubTitleWrapper>
           <InputWrapper>
             <FormSubTitle>北緯</FormSubTitle>
-            <Input size='short' />
+            <Input size='short' type='number' />
           </InputWrapper>
           <InputWrapper>
             <FormSubTitle>東經</FormSubTitle>
-            <Input size='short' />
+            <Input size='short' type='number' />
           </InputWrapper>
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -349,22 +267,12 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>路線圖片</FormTitle>
         <FormSubTitleWrapper>
-          <PicHolder>
-            <Image />
-            <br />
-            點擊上傳
-            <UploadInput />
-            <UploadNotice>
-              建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
-            </UploadNotice>
-          </PicHolder>
+          <UploadImg />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>GPX</FormTitle>
-        <GPXBtn>
-          <GPXInput />
-        </GPXBtn>
+        <UploadGpx />
       </FormWrapper>
       <FormWrapper>
         <FormTitle />

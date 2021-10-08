@@ -1,12 +1,8 @@
 import styled from 'styled-components'
-// import { ReactComponent as DefaultAvatarSvg } from '../../icons/default_avatar.svg'
 import { Link } from 'react-router-dom'
-import { ReactComponent as ArrowUpSvg } from '../../icons/arrow_up.svg'
-import { ReactComponent as ArrowDownSvg } from '../../icons/arrow_down.svg'
 import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
 import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
-import { ReactComponent as UserSvg } from '../../icons/user.svg'
-import { COLOR, FONT, EFFECT } from '../../constants/style'
+import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { NavBarButton } from './Button'
 import useToggle from '../../hooks/useToggle'
 
@@ -38,37 +34,28 @@ const Logo = styled(Link)`
 `
 
 const NavBarLink = styled(Link)`
+  color: ${COLOR.white};
+  font-size: ${FONT.md};
   width: 120px;
   height: 48px;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 ${RADIUS.s} ${RADIUS.s};
   background-color: ${COLOR.green};
-  text-align: center;
-  line-height: 48px;
-  color: ${COLOR.white};
-  font-size: ${FONT.s};
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-left: 10px;
   box-shadow: ${EFFECT.shadow_light};
   ${(props) =>
-    props.$button &&
+    (props.$button || props.$noBackground) &&
     `
-      min-width: 60px;
-      font-size: ${FONT.s};
       color: ${COLOR.green};
-      margin-left: 15px;
-      text-align: right;
-      transition: ${EFFECT.transition};
       background-color: transparent;
       box-shadow: none;
-      &:hover {
-        color: ${COLOR.green_light};
-        cursor: pointer;
-      }
     `}
   @media screen and (max-width: 768px) {
     background-color: transparent;
-    color: black;
-    display: flex;
-    align-items: center;
+    color: ${COLOR.black};
+    justify-content: space-between;
     box-shadow: none;
     ${(props) =>
       props.$button &&
@@ -77,28 +64,6 @@ const NavBarLink = styled(Link)`
         color: ${COLOR.green};
         ${NavBarButton}
     `}
-  }
-`
-const UserInfoWeb = styled.div`
-  display: flex;
-  align-items: center;
-  @media screen and (max-width: 768px) {
-    display: none;
-  }
-`
-const UserInfoMobile = styled.div`
-  display: none;
-  @media screen and (max-width: 768px) {
-    display: flex;
-    align-items: center;
-  }
-`
-const UserInfoMobileWrapper = styled.div`
-  display: none;
-  @media screen and (max-width: 768px) {
-    display: flex;
-    flex-direction: column;
-    align-items: right;
   }
 `
 const NavBarLinkWrapper = styled.div`
@@ -112,25 +77,24 @@ const NavBarLinkWrapper = styled.div`
     align-items: baseline;
   }
 `
-
 const DefaultAvatar = styled(Link)`
-  min-width: 45px;
-  min-height: 45px;
-  margin-left: 35px;
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
   background: url(https://i.imgur.com/r50z0vv.png) center/cover;
+  @media screen and (max-width: 768px) {
+    width: 25px;
+    height: 25px;
+  }
 `
 
 const NavBarText = styled.div`
   min-width: 60px;
-  font-size: ${FONT.s};
+  font-size: ${FONT.md};
   color: ${COLOR.green};
   margin-left: 15px;
   text-align: right;
-  transition: ${EFFECT.transition};
-  &:hover {
-    color: ${COLOR.green_light};
-    cursor: pointer;
-  }
   @media screen and (max-width: 768px) {
     ${NavBarButton}
   }
@@ -207,20 +171,12 @@ const Divider = styled.div`
   height: 2px;
   background-color: ${COLOR.beige};
   display: none;
-  margin: 20px 0 20px 0;
+  margin: 20px 0;
   @media screen and (max-width: 768px) {
     display: block;
   }
 `
-const UserInfoListMobile = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding-left: 70px;
-  height: 0;
-  overflow: hidden;
-  transition: ${EFFECT.transition};
-  ${(props) => props.$isActive && `height: 150px`}
-`
+
 const Forum = styled(ForumSvg)`
   display: none;
   @media screen and (max-width: 768px) {
@@ -235,25 +191,9 @@ const Trail = styled(TrailSvg)`
     margin-right: 20px;
   }
 `
-const User = styled(UserSvg)`
-  display: none;
-  @media screen and (max-width: 768px) {
-    display: block;
-    margin-right: 20px;
-  }
-`
-
-const ArrowDown = styled(ArrowDownSvg)`
-  ${(props) => props.$isActive && `display:none`}
-`
-const ArrowUp = styled(ArrowUpSvg)`
-  display: none;
-  ${(props) => props.$isActive && `display:block`}
-`
 
 function NavBar() {
   const [HamburgerToggleClick, setHamburgerToggleClick] = useToggle(false)
-  const [arrowToggleClick, setArrowToggleClick] = useToggle(false)
 
   return (
     <>
@@ -266,36 +206,14 @@ function NavBar() {
                 <Forum />
                 進入論壇
               </NavBarLink>
-
               <NavBarLink to='/trails'>
                 <Trail />
                 全部步道
               </NavBarLink>
-              <UserInfoWeb>
-                <DefaultAvatar to='/backstage/1' />
-                <NavBarText>水怪貓貓</NavBarText>
-              </UserInfoWeb>
-              <UserInfoMobileWrapper>
-                <UserInfoMobile>
-                  <NavBarLink to='/backstage/userId'>
-                    <User />
-                    我的主頁
-                  </NavBarLink>
-                  <ArrowDown
-                    $isActive={arrowToggleClick}
-                    onClick={setArrowToggleClick}
-                  />
-                  <ArrowUp
-                    $isActive={arrowToggleClick}
-                    onClick={setArrowToggleClick}
-                  />
-                </UserInfoMobile>
-                <UserInfoListMobile $isActive={arrowToggleClick}>
-                  <NavBarLink>新增文章</NavBarLink>
-                  <NavBarLink>管理文章</NavBarLink>
-                  <NavBarLink>待辦事項</NavBarLink>
-                </UserInfoListMobile>
-              </UserInfoMobileWrapper>
+              <NavBarLink to='/backstage/userId' $noBackground>
+                <DefaultAvatar to='/backstage/userId' />
+                水怪貓貓
+              </NavBarLink>
               <Divider />
               <NavBarText>登出</NavBarText>
               <NavBarLink $button to='/register'>
