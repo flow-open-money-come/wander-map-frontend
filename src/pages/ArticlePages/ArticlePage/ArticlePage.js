@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comments'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import { ReactComponent as Review } from '../../../icons/articles/review.svg'
+import { ReactComponent as thumb } from '../../../icons/thumb_up.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
+import { apiArticle } from '../../../WebAPI'
+import { useParams } from 'react-router-dom'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -43,18 +46,25 @@ const ArticleLikes = styled.span`
   }
 `
 
-const ThumbUp = styled.span`
-  background-image: url('https://i.imgur.com/gE3TYlC.png');
-  background-size: contain;
+const ThumbUp = styled(thumb)`
   width: 30px;
   height: 30px;
   cursor: pointer;
   margin-right: 5px;
 
+  &:hover {
+    path {
+      fill: ${COLOR.green};
+      stroke: ${COLOR.green};
+    }
+  }
   ${(props) =>
     props.thumb &&
     `
-    background-image: url('https://i.imgur.com/aJBAUDX.png');
+     path {
+      fill: ${COLOR.green};
+      stroke: ${COLOR.green};
+    }
     `}
 `
 
@@ -76,12 +86,14 @@ const CoverImg = styled.img`
   }
 `
 
-const ArticleDepartureTime = styled.div`
+const ArticleStandardInformation = styled.div`
   margin: 7px 0;
-`
 
-const ArticleLocation = styled.div`
-  margin: 21px 0 7px 0;
+  ${(props) =>
+    props.topElement &&
+    `
+     margin: 21px 0 7px 0; 
+  `}
 `
 
 const ReviewIcon = styled(Review)`
@@ -114,13 +126,26 @@ const FlexGroup = styled.div`
 `
 
 function ArticlePage() {
+  const { id } = useParams()
   const [thumb, setThumb] = useState(false)
+  const [post, setPost] = useState([])
 
+  useEffect(() => {
+    apiArticle(id)
+      .then((res) => {
+        setPost(res.data.data[0])
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+  }, [])
+
+  console.log(post)
   return (
     <Wrapper>
-      <CoverImg src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Dawu_Mt%2BHunag_Chung_Yu%E9%BB%83%E4%B8%AD%E4%BD%91%2B17755.jpg/2560px-Dawu_Mt%2BHunag_Chung_Yu%E9%BB%83%E4%B8%AD%E4%BD%91%2B17755.jpg' />
+      <CoverImg src={post.cover_picture_url} />
       <ArticleTitleAndLikes>
-        <ArticleTitle>林美石磐步道</ArticleTitle>
+        <ArticleTitle>{post.title}</ArticleTitle>
         <ArticleLikes>
           <ThumbUp
             thumb={thumb}
@@ -128,15 +153,39 @@ function ArticlePage() {
               setThumb(!thumb)
             }}
           />
+          {/* {post.likes} */}
           300
         </ArticleLikes>
       </ArticleTitleAndLikes>
-      <Tags />
-      <ArticleLocation>地點：宜蘭縣礁溪鄉 林美石磐步道</ArticleLocation>
-      <ArticleDepartureTime>
-        出發時間：2000.01.02 ~ 2000.01.03
-      </ArticleDepartureTime>
-      <ArticleContent />
+      {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
+      <ArticleStandardInformation topElement>
+        地點：{post.location}
+      </ArticleStandardInformation>
+      <ArticleStandardInformation>
+        出發時間：{new Date(post.departure_time).toLocaleString()}
+      </ArticleStandardInformation>
+      {post.time_spent ? (
+        <ArticleStandardInformation>
+          行進時間：{post.time_spent} 小時
+        </ArticleStandardInformation>
+      ) : (
+        ''
+      )}
+      {post.length ? (
+        <ArticleStandardInformation>
+          長度：{post.length} 公里
+        </ArticleStandardInformation>
+      ) : (
+        ''
+      )}
+      {post.gpx_url ? (
+        <ArticleStandardInformation>
+          GPX：{post.gpx_url}
+        </ArticleStandardInformation>
+      ) : (
+        ''
+      )}
+      <ArticleContent content={post.content} />
       <FlexGroup>
         <ReviewIcon />
         <CommentTitle>討論區</CommentTitle>

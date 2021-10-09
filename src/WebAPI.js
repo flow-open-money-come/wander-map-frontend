@@ -7,7 +7,7 @@ const userRequest = axios.create({
 })
 // 文章相關的 api
 const articleRequest = axios.create({
-  baseURL: `${config.apiHost}/article`,
+  baseURL: `${config.apiHost}/articles`,
 })
 
 // User 相關的 api
@@ -20,3 +20,5 @@ export const apiArticleItem = () => articleRequest.get('/ArticleItem')
 export const apiArticleMsg = (data) => articleRequest.post('/ArticleMsg', data)
 export const apiArticleLink = (data) =>
   articleRequest.post('/ArticleLink', data)
+
+export const apiArticle = (articleId) => articleRequest.get(`/${articleId}`)
