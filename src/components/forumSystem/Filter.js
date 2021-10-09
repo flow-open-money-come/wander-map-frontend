@@ -80,7 +80,9 @@ export default function ForumFilter({ tags, setTags }) {
               <FilterTag
                 key={tag.tag_id}
                 isChecked={tag.isChecked}
-                onClick={() => handleIsChecked(tag.tag_id)}
+                onClick={() => {
+                  handleIsChecked(tag.tag_id)
+                }}
               >
                 {tag.tag_name}
               </FilterTag>

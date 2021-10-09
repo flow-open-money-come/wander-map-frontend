@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { Link } from 'react-router-dom'
 
 const ArticlesContainer = styled.div`
   width: 100%;
@@ -122,7 +123,8 @@ const UserInfo = styled.div`
   }
 `
 
-const ReadMore = styled.button`
+const ReadMore = styled(Link)`
+  font-size: ${FONT.xs};
   display: none;
   ${MEDIA_QUERY.md} {
     display: inline;
@@ -158,6 +160,7 @@ export default function ArticleList({
   articleImgSrc,
   avatarImgSrc,
   lessRwd,
+  articlePage,
 }) {
   return (
     <ArticlesContainer>
@@ -180,7 +183,7 @@ export default function ArticleList({
               <ArticlesDate>{date}</ArticlesDate>
             </UserInfo>
           </ArticlesUser>
-          <ReadMore>閱讀全文</ReadMore>
+          <ReadMore to={articlePage}>閱讀全文</ReadMore>
         </ArticlesInfo>
       </ArticlesInfoContainer>
     </ArticlesContainer>

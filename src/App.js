@@ -55,7 +55,7 @@ function App() {
           <Route path='/backstage/userId'>
             <UserBackstage />
           </Route>
-          <Route path='/articles/id'>
+          <Route path='/articles/:id'>
             <ArticlePage />
           </Route>
           <Route path='/trails/1'>
