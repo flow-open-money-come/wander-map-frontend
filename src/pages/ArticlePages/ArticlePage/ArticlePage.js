@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comments'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import { ReactComponent as Review } from '../../../icons/articles/review.svg'
-import { ReactComponent as thumb } from '../../../icons/thumb_up.svg'
+import thumbSVG from '../../../icons/thumb_up.svg'
+import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
 import { apiArticle } from '../../../WebAPI'
@@ -46,25 +47,21 @@ const ArticleLikes = styled.span`
   }
 `
 
-const ThumbUp = styled(thumb)`
+const ThumbUp = styled.span`
+  background-image: url('${thumbSVG}');
+  background-size: contain;
   width: 30px;
   height: 30px;
   cursor: pointer;
   margin-right: 5px;
+  justify-content: center;
 
-  &:hover {
-    path {
-      fill: ${COLOR.green};
-      stroke: ${COLOR.green};
-    }
-  }
   ${(props) =>
     props.thumb &&
     `
-     path {
-      fill: ${COLOR.green};
-      stroke: ${COLOR.green};
-    }
+      background-image: url('${thumbGreenSVG}');
+      width: 25px;
+      height: 25px;
     `}
 `
 
@@ -154,7 +151,6 @@ function ArticlePage() {
             }}
           />
           {/* {post.likes} */}
-          300
         </ArticleLikes>
       </ArticleTitleAndLikes>
       {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
@@ -164,7 +160,7 @@ function ArticlePage() {
       <ArticleStandardInformation>
         出發時間：{new Date(post.departure_time).toLocaleString()}
       </ArticleStandardInformation>
-      {post.time_spent ? (
+      {/* {post.time_spent ? (
         <ArticleStandardInformation>
           行進時間：{post.time_spent} 小時
         </ArticleStandardInformation>
@@ -173,7 +169,7 @@ function ArticlePage() {
       )}
       {post.length ? (
         <ArticleStandardInformation>
-          長度：{post.length} 公里
+          距離：{post.length} 公里
         </ArticleStandardInformation>
       ) : (
         ''
@@ -184,7 +180,7 @@ function ArticlePage() {
         </ArticleStandardInformation>
       ) : (
         ''
-      )}
+      )} */}
       <ArticleContent content={post.content} />
       <FlexGroup>
         <ReviewIcon />
