@@ -6,13 +6,8 @@ import ForumFilter from '../../../components/forumSystem/Filter'
 import { ReactComponent as Hot } from '../../../icons/hot.svg'
 import { FONT, MEDIA_QUERY } from '../../../constants/style'
 import { NavBarButton } from '../../../components/common/Button'
-import {
-  apiArticlesHot,
-  apiArticles,
-  apiArticle,
-  apiArticlesOptions,
-} from '../../../WebAPI'
-import { Link } from 'react-router-dom'
+import { apiArticlesHot, apiArticlesOptions } from '../../../WebAPI'
+import { COLOR } from '../../../constants/style'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -67,10 +62,18 @@ const ArticleListWrapper = styled.div`
   margin: 0 auto;
 `
 
+const NoRelatedArticleNotice = styled.div`
+  display: flex;
+  justify-content: center;
+  margin: 50px 0 100px 0;
+  color: ${COLOR.gray};
+`
+
 function AllArticlesPage() {
   const [slides, setSlides] = useState([])
   const [posts, setPosts] = useState([])
   const [params, setParams] = useState(0)
+  const [tagValue, setTagValue] = useState([])
 
   useEffect(() => {
     apiArticlesHot()
@@ -85,7 +88,7 @@ function AllArticlesPage() {
   }, [])
 
   useEffect(() => {
-    apiArticlesOptions(5)
+    apiArticlesOptions(5, tagValue)
       .then((res) => {
         if (res.data.message === 'OK') {
           setPosts(res.data.data)
@@ -94,11 +97,11 @@ function AllArticlesPage() {
       .catch((error) => {
         console.log(error)
       })
-  }, [])
+  }, [tagValue])
 
   const handleClickLoadMore = () => {
     let limit = 10
-    apiArticlesOptions(limit)
+    apiArticlesOptions(limit, tagValue)
       .then((res) => {
         if (res.data.message === 'OK') {
           setPosts(res.data.data)
@@ -109,58 +112,6 @@ function AllArticlesPage() {
       })
     limit += 5
   }
-
-  // const slides = [
-  //   {
-  //     image:
-  //       'https://pgw.udn.com.tw/gw/photo.php?u=https://uc.udn.com.tw/photo/2020/05/21/draft/7910911.jpg&s=Y&x=0&y=0&sw=1200&sh=801&exp=3600',
-  //     title: '林美石磐涼爽一日遊',
-  //     content: `林美石磐步道有著低海拔亞熱帶溪谷的景色，
-  //       步道沿舊水圳整建，現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，散發陣陣芬多精，
-  //       ，而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、...`,
-  //     tags: [
-  //       '一日',
-  //       '有水源',
-  //       '登山小白體驗',
-  //       '登山小白體驗',
-  //       '登山小白體驗',
-  //       '登山小白體驗',
-  //       '登山小白體驗',
-  //       '登山小白體驗',
-  //       '登山小白體驗',
-  //       '登山小白體驗',
-  //       '登山小白體驗',
-  //     ],
-  //     username: '水怪貓貓',
-  //     date: '2021.9.7 / 20:20:22',
-  //     userAvatar: 'https://i.imgur.com/r50z0vv.png',
-  //     likes: 100,
-  //   },
-  //   {
-  //     image: 'https://i.imgur.com/w2Y6y4z.jpg',
-  //     title: '中級山魔幻森林一日遊',
-  //     content: `帶你一窺中級山的神秘森林，步道沿舊水圳整建，林美石磐步道有著低海拔亞熱帶溪谷的景色，
-  //       步道沿舊水圳整建，現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，潺潺流水，散發陣陣芬多精，
-  //       走在其中清爽無比，非常適合闔家一起健行。...`,
-  //     tags: ['一日', '有水源', '危險地形'],
-  //     username: '水怪貓貓',
-  //     date: '2021.9.7 / 20:20:22',
-  //     userAvatar: 'https://i.imgur.com/r50z0vv.png',
-  //     likes: 120,
-  //   },
-  //   {
-  //     image: 'https://i.imgur.com/iG8fKuf.jpg',
-  //     title: '塚呂馬布池一日遊',
-  //     content: `漫步在塚呂馬布池畔，步道沿舊水圳整建，林美石磐步道有著低海拔亞熱帶溪谷的景色，
-  //       步道名稱是由「林美」與「石磐」兩個名字組成，「林美」是指礁溪鄉林美村
-  //       ，而「石磐」指的是石磐瀑布，因此在這條步道中沿途常見溪流瀑布、...`,
-  //     tags: ['一日', '有水源', '專業裝備'],
-  //     username: '水怪貓貓',
-  //     date: '2021.9.7 / 20:20:22',
-  //     userAvatar: 'https://i.imgur.com/r50z0vv.png',
-  //     likes: 300,
-  //   },
-  // ]
 
   const [tags, setTags] = useState([
     { tag_id: 1, tag_name: '一日', isChecked: false },
@@ -179,9 +130,6 @@ function AllArticlesPage() {
     { tag_id: 14, tag_name: 'GPX', isChecked: false },
   ])
 
-  if (tags.isChecked === true) {
-  }
-
   return (
     <Wrapper>
       <TitleGroup>
@@ -189,7 +137,12 @@ function AllArticlesPage() {
         <Title>熱門文章</Title>
       </TitleGroup>
       <Carousel slides={slides} />
-      <ForumFilter tags={tags} setTags={setTags} />
+      <ForumFilter
+        tags={tags}
+        setTags={setTags}
+        tagValue={tagValue}
+        setTagValue={setTagValue}
+      />
       <ArticleListWrapper>
         {posts.slice(params).map((post) => {
           return (
@@ -205,7 +158,11 @@ function AllArticlesPage() {
             />
           )
         })}
-        <LoadMoreBtn onClick={handleClickLoadMore}>看更多</LoadMoreBtn>
+        {tagValue && posts.length === 0 ? (
+          <NoRelatedArticleNotice>暫無相關文章</NoRelatedArticleNotice>
+        ) : (
+          <LoadMoreBtn onClick={handleClickLoadMore}>看更多</LoadMoreBtn>
+        )}
       </ArticleListWrapper>
     </Wrapper>
   )

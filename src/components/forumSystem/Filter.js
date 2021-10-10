@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import SearchBar from '../common/SearchBar'
+import { useState, useEffect } from 'react'
+import { apiArticlesOptions } from '../../WebAPI'
 
 const FilterContainer = styled.div`
   width: 90%;
@@ -50,7 +52,7 @@ const FilterTag = styled.button`
     `}
 `
 
-export default function ForumFilter({ tags, setTags }) {
+export default function ForumFilter({ tags, setTags, tagValue, setTagValue }) {
   const handleIsChecked = (id) => {
     setTags(
       tags.map((tag) => {
@@ -80,7 +82,13 @@ export default function ForumFilter({ tags, setTags }) {
               <FilterTag
                 key={tag.tag_id}
                 isChecked={tag.isChecked}
-                onClick={() => {
+                name={tag.tag_name}
+                onClick={(e) => {
+                  setTagValue(
+                    tagValue.find((item) => item === e.target.name)
+                      ? tagValue.filter((data) => data !== e.target.name)
+                      : [...tagValue, e.target.name]
+                  )
                   handleIsChecked(tag.tag_id)
                 }}
               >

@@ -29,8 +29,8 @@ export const apiArticlesOptions = (limit, tags) => {
   if (limit) {
     url += `limit=${limit}&`
   }
-  if (Array.isArray(tags) && tags.length > 0) {
-    tags.map((tag) => `tag=${tag}`)
+  if (tags && Array.isArray(tags) && tags.length > 0) {
+    tags.map((tag) => (url += `tag=${tag}&`))
   }
   return articleRequest.get(url)
 }
