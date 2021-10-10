@@ -3,8 +3,6 @@ import { COLOR, FONT, EFFECT, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as ArrowUpSvg } from '../../icons/arrow_up_s.svg'
 import { ReactComponent as ArrowDownSvg } from '../../icons/arrow_down_s.svg'
 import useToggle from '../../hooks/useToggle'
-import { getTrails } from '../../WebAPI'
-import { useState, useEffect } from 'react'
 
 const TitleText = styled.div`
   margin-right: 5px;

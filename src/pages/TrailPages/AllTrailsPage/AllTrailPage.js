@@ -86,7 +86,6 @@ const LoadMoreBtn = styled.div`
   ${NavBarButton}
   margin: 50px auto 100px auto;
 `
-// let numberOfClick = 0
 
 function AllTrailPage() {
   // featured trails
@@ -179,7 +178,9 @@ function AllTrailPage() {
   }
 
   useEffect(() => {
-    getTrails(`?limit=126&${checkedOptions.join('&')}`)
+    let params = ''
+    if (checkedOptions.length !== 0) params = `&${checkedOptions.join('&')}`
+    getTrails(`?limit=126${params}`)
       .then((res) => {
         if (res.data.success) setFilteredTrailInfos(res.data.data)
       })
@@ -205,15 +206,11 @@ function AllTrailPage() {
         console.log(err)
       })
   }
+  const handleKeyWordDelete = () => {
+    setKeyWord('')
+  }
   return (
     <>
-      {/* <button
-        onClick={() => {
-          console.log(filteredTrailInfos)
-        }}
-      >
-        檢查
-      </button> */}
       <AllTrailsPageWrapper>
         <AllTrailsPageTitleWrapper>
           <StarSvg />
@@ -223,8 +220,10 @@ function AllTrailPage() {
           <SearchBar
             horizontalAlign={true}
             placeholder='關鍵字...'
-            onChange={(e) => handleKeyWordChange(e)}
-            onClick={handleSearchTrails}
+            handleKeyWordChange={(e) => handleKeyWordChange(e)}
+            handleSearchTrails={handleSearchTrails}
+            handleKeyWordDelete={handleKeyWordDelete}
+            inputValue={keyWord}
           />
         </SearchBarWrapper>
         <FeaturedTrailsCarouselWrapper>
@@ -265,8 +264,10 @@ function AllTrailPage() {
               placeholder='關鍵字...'
               noBorderRadius={true}
               width='100%'
-              onChange={(e) => handleKeyWordChange(e)}
-              onClick={handleSearchTrails}
+              handleKeyWordChange={(e) => handleKeyWordChange(e)}
+              handleSearchTrails={handleSearchTrails}
+              handleKeyWordDelete={handleKeyWordDelete}
+              inputValue={keyWord}
             />
           </SearchBarWrapper>
         </DropDownContainer>
