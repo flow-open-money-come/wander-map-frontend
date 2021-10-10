@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import GoogleMapReact from 'google-map-react'
-import KEY from '../../key'
 import React, { useState, useEffect } from 'react'
 import SearchBar from './SearchBar'
 import LocationMarker from './LocationMarker'
@@ -15,20 +14,20 @@ const MapSearchBarWrapper = styled.div`
 `
 
 const Map = (props) => {
-  const [current, setCurrentPosition] = useState({
-    lat: 24.8218635,
-    lng: 121.7352169,
-  })
-  const [mapApiLoaded, setMapApiLoaded] = useState(false)
-  const [mapInstance, setMapInstance] = useState(null)
-  const [mapApi, setMapApi] = useState(null)
+  // const [current, setCurrentPosition] = useState({
+  //   lat: 24.8218635,
+  //   lng: 121.7352169,
+  // })
+  // const [mapApiLoaded, setMapApiLoaded] = useState(false)
+  // const [mapInstance, setMapInstance] = useState(null)
+  // const [mapApi, setMapApi] = useState(null)
   const [trailInfos, setTrailInfos] = useState([])
 
   const apiHasLoaded = (map, maps) => {
     console.log('載入完成!')
-    setMapInstance(map)
-    setMapApi(maps)
-    setMapApiLoaded(true)
+    // setMapInstance(map)
+    // setMapApi(maps)
+    // setMapApiLoaded(true)
   }
 
   useEffect(() => {
@@ -59,7 +58,7 @@ const Map = (props) => {
       style={{
         height: '100%',
         width: '100%',
-        position: 'relative'
+        position: 'relative',
       }}
     >
       {/* <button

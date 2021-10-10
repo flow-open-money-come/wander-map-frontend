@@ -76,6 +76,8 @@ export default function SearchBar({
   width,
   fontSize,
   noShadow,
+  onChange,
+  onClick,
 }) {
   return (
     <>
@@ -89,11 +91,12 @@ export default function SearchBar({
           placeholder={placeholder}
           $noBorderRadius={noBorderRadius}
           $fontSize={fontSize}
+          onChange={onChange}
         />
         <CloseIconWrapper>
           <CloseIcon />
         </CloseIconWrapper>
-        <SearchIconWrapper $noBorderRadius={noBorderRadius}>
+        <SearchIconWrapper $noBorderRadius={noBorderRadius} onClick={onClick}>
           <SearchIcon />
         </SearchIconWrapper>
       </SearchBarWrapper>

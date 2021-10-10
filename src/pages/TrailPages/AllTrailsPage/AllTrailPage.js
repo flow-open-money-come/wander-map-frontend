@@ -75,24 +75,33 @@ const DropDownContainer = styled.div`
   top: -20px;
 `
 const FilteredTrailsWrapper = styled.div`
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
-  ${MEDIA_QUERY.lg} {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 `
 
 const LoadMoreBtn = styled.div`
   ${NavBarButton}
   margin: 50px auto 100px auto;
 `
+// let numberOfClick = 0
 
 function AllTrailPage() {
+  // featured trails
   const [featuredTrialInfos, setFeaturedTrailInfos] = useState([{}])
-  const [trailInfos, setTrailInfos] = useState([])
+  // checked options of trail filters
+  const [checkedOptions, setCheckedOptions] = useState([])
+  // filtered trails infos
+  const [filteredTrailInfos, setFilteredTrailInfos] = useState([])
+  // Carousel: current image index
   const [currentImgIndex, setCurrentImgIndex] = useState(0)
+  // handle load more trials
+  const [numberOfDisplay, setNumberOfDisplay] = useState(20)
+  let numberOfClick = useRef(0)
+  // Search by keyword
+  const [keyWord, setKeyWord] = useState('')
 
   const handelCarousel = () => {
     if (currentImgIndex < featuredTrialInfos.length - 1) {
@@ -101,8 +110,9 @@ function AllTrailPage() {
     setCurrentImgIndex(0)
   }
 
+  // get featured trails infos
+  /*
   useEffect(() => {
-    // get featured trails infos
     getHotTrails()
       .then((res) => {
         if (res.data.success) {
@@ -116,23 +126,90 @@ function AllTrailPage() {
         }
       })
       .catch((err) => console.log(err))
-    // get all trails
-    getTrails('?limit=126')
-      .then((res) => {
-        if (res.data.success) setTrailInfos(res.data.data)
-      })
-      .catch((err) => console.log(err))
   }, [])
+  */
 
+  // Carousel
   useEffect(() => {
     if (featuredTrialInfos.length !== 0) setTimeout(handelCarousel, 3000)
   })
 
+  const parameterMap = {
+    location: {
+      北區: 'location=north',
+      中區: 'location=middle',
+      南區: 'location=south',
+      東區: 'location=east',
+    },
+    altitude: {
+      '1k 以下': 'altitude[lt]=1000',
+      '1k-2k': 'altitude[gt]=1000&altitude[lt]=2000',
+      '2k-3k': 'altitude[gt]=2000&altitude[lt]=3000',
+      '3k 以上': 'altitude[gt]=3000',
+    },
+    length: {
+      '2 以下': 'length[lt]=2',
+      '2-5': 'length[gt]=2&length[lt]=5',
+      '5-12': 'length[gt]=5&length[lt]=12',
+      '12 以上': 'length[gt]=12',
+    },
+    difficult: {
+      新手: 'difficult=1',
+      一般: 'difficult=2',
+      困難: 'difficult=3',
+      進階: 'difficult=4',
+      挑戰: 'difficult=5',
+    },
+  }
+
+  // handle trails filtration of four filters
+  const handleFilterTrails = (e) => {
+    if (!e.target.getAttribute('filter')) return
+    let targetOptionType = e.target.getAttribute('filter')
+    if (Object.keys(parameterMap[targetOptionType]).indexOf(e.target.name) < 0)
+      return
+    let targetOption = parameterMap[targetOptionType][e.target.name]
+    if (checkedOptions.indexOf(targetOption) >= 0) {
+      return setCheckedOptions(
+        checkedOptions.filter((option) => option !== targetOption)
+      )
+    }
+
+    setCheckedOptions([...checkedOptions, targetOption])
+  }
+
+  useEffect(() => {
+    getTrails(`?limit=126&${checkedOptions.join('&')}`)
+      .then((res) => {
+        if (res.data.success) setFilteredTrailInfos(res.data.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [checkedOptions])
+
+  const handleLoadMore = () => {
+    numberOfClick.current++
+    setNumberOfDisplay(numberOfDisplay + numberOfClick.current * 10)
+  }
+
+  const handleKeyWordChange = (e) => {
+    setKeyWord(e.target.value)
+  }
+  const handleSearchTrails = () => {
+    getTrails(`?search=${keyWord}`)
+      .then((res) => {
+        if (res.data.success) setFilteredTrailInfos(res.data.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }
   return (
     <>
       {/* <button
         onClick={() => {
-          console.log(trailInfos)
+          console.log(filteredTrailInfos)
         }}
       >
         檢查
@@ -143,47 +220,62 @@ function AllTrailPage() {
           精選步道
         </AllTrailsPageTitleWrapper>
         <SearchBarWrapper>
-          <SearchBar horizontalAlign={true} placeholder='關鍵字...' />
+          <SearchBar
+            horizontalAlign={true}
+            placeholder='關鍵字...'
+            onChange={(e) => handleKeyWordChange(e)}
+            onClick={handleSearchTrails}
+          />
         </SearchBarWrapper>
         <FeaturedTrailsCarouselWrapper>
-          <FeaturedTrailsCarousel
+          {/* <FeaturedTrailsCarousel
             src={Object.values(featuredTrialInfos[currentImgIndex])}
           />
           <FeaturedTrailName>
             {Object.keys(featuredTrialInfos[currentImgIndex])}
-          </FeaturedTrailName>
+          </FeaturedTrailName> */}
         </FeaturedTrailsCarouselWrapper>
         <DropDownContainer>
           <DropDownCheckBoxList
             title='區域'
+            filter='location'
             options={['北區', '中區', '南區', '東區']}
+            onClick={handleFilterTrails}
           />
           <DropDownCheckBoxList
             title='高度 (m)'
+            filter='altitude'
             options={['1k 以下', '1k-2k', '2k-3k', '3k 以上']}
+            onClick={handleFilterTrails}
           />
           <DropDownCheckBoxList
             title='長度 (km)'
+            filter='length'
             options={['2 以下', '2-5', '5-12', '12 以上']}
+            onClick={handleFilterTrails}
           />
           <DropDownCheckBoxList
             title='難度'
+            filter='difficult'
             options={['新手', '一般', '困難', '進階', '挑戰']}
+            onClick={handleFilterTrails}
           />
           <SearchBarWrapper $combined>
             <SearchBar
               placeholder='關鍵字...'
               noBorderRadius={true}
               width='100%'
+              onChange={(e) => handleKeyWordChange(e)}
+              onClick={handleSearchTrails}
             />
           </SearchBarWrapper>
         </DropDownContainer>
         <FilteredTrailsWrapper>
-          {trailInfos.slice(0, 20).map((trailInfo) => (
+          {filteredTrailInfos.slice(0, numberOfDisplay).map((trailInfo) => (
             <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
           ))}
         </FilteredTrailsWrapper>
-        <LoadMoreBtn>看更多</LoadMoreBtn>
+        <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
       </AllTrailsPageWrapper>
     </>
   )

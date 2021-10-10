@@ -78,55 +78,28 @@ const ArrowUp = styled(ArrowUpSvg)`
   ${(props) => props.$isActive && `display:block`}
 `
 
-function DropDownCheckBox({ option }) {
+function DropDownCheckBox({ option, filter }) {
   return (
     <>
-      <DropDownCheckBoxWrapper>
-        <DropDownCheckBoxInput type='checkbox' name={option} />
+      <DropDownCheckBoxWrapper filter={filter}>
+        <DropDownCheckBoxInput type='checkbox' name={option} filter={filter} />
         {option}
       </DropDownCheckBoxWrapper>
     </>
   )
 }
-export default function DropDownCheckBoxList({ title, options }) {
+export default function DropDownCheckBoxList({
+  title,
+  options,
+  onClick,
+  filter,
+}) {
   const [arrowToggleClick, setArrowToggleClick] = useToggle(false)
-  const [checkedOptions, setCheckedOptions] = useState([])
-  const [params, setParams] = useState('')
-  let paramArray = []
-
-  const handleLocationFilter = (e) => {
-    let targetOption = e.target.name
-    if (checkedOptions.indexOf(targetOption) >= 0) {
-      return setCheckedOptions(
-        checkedOptions.filter((option) => option !== targetOption)
-      )
-    }
-
-    setCheckedOptions([...checkedOptions, targetOption])
-    //不會馬上改到 checkedOptions
-
-    checkedOptions.forEach((option) => {
-      paramArray.push(`location=${option}`)
-    })
-    if (paramArray.length !== 0) {
-      setParams('?' + paramArray.join('&'))
-    }
-  }
-
-  useEffect(() => {
-    getTrails(params).then((res) => {
-      console.log(res.data)
-    })
-  }, [params])
 
   return (
     <>
-      <div>
-        <DropDownCheckBoxTitle
-          onClick={() => {
-            console.log(params)
-          }}
-        >
+      <div onClick={onClick}>
+        <DropDownCheckBoxTitle>
           <TitleText>{title}</TitleText>
           <ArrowDown
             $isActive={arrowToggleClick}
@@ -134,14 +107,14 @@ export default function DropDownCheckBoxList({ title, options }) {
           />
           <ArrowUp $isActive={arrowToggleClick} onClick={setArrowToggleClick} />
         </DropDownCheckBoxTitle>
-        <DropDownCheckBoxes
-          $isActive={arrowToggleClick}
-          onChange={(e) => {
-            handleLocationFilter(e)
-          }}
-        >
+        <DropDownCheckBoxes $isActive={arrowToggleClick}>
           {options.map((option) => {
-            return <DropDownCheckBox option={option}></DropDownCheckBox>
+            return (
+              <DropDownCheckBox
+                option={option}
+                filter={filter}
+              ></DropDownCheckBox>
+            )
           })}
         </DropDownCheckBoxes>
       </div>

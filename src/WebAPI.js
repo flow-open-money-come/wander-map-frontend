@@ -11,7 +11,7 @@ export const userRegister = (data) => instance.post('/register', data)
 
 // trails
 export const getTrails = (params) => instance.get('/trails' + params)
-export const getHotTrails = () => instance.get('/trails/hot/6')
+export const getHotTrails = () => instance.get('/trails/featured')
 
 // articles
 export const getArticles = () => instance.get('/articles')
