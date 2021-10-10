@@ -1,22 +1,18 @@
 import axios from 'axios'
 import config from './config'
 
-// User相關的 api
-const userRequest = axios.create({
-  baseURL: `${config.apiHost}/user`,
+const instance = axios.create({
+  baseURL: `${config.apiHost}`,
 })
-// 文章相關的 api
-const articleRequest = axios.create({
-  baseURL: `${config.apiHost}/article`,
-})
+// axios.defaults.headers.post['Content-Type'] =
+//   'application/x-www-form-urlencoded'
+// user
+export const userLogin = (data) => instance.post('/users/login', data)
+export const userRegister = (data) => instance.post('/users/register', data)
 
-// User 相關的 api
-export const apiUserLogin = (data) => userRequest.post('/signIn', data)
-export const apiUserLogout = (data) => userRequest.post('/signOut', data)
-export const apiUserSignUp = (data) => userRequest.post('/signUp', data)
+// trails
+export const getTrails = (params) => instance.get('/trails' + params)
+export const getHotTrails = () => instance.get('/trails/featured')
 
-// 文章相關的 api
-export const apiArticleItem = () => articleRequest.get('/ArticleItem')
-export const apiArticleMsg = (data) => articleRequest.post('/ArticleMsg', data)
-export const apiArticleLink = (data) =>
-  articleRequest.post('/ArticleLink', data)
+// articles
+export const getArticles = () => instance.get('/articles')
