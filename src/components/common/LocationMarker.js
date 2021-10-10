@@ -35,11 +35,22 @@ const TrailName = styled.div`
   padding: 10px;
 `
 
-export default function LocationMarker({ trailInfo }) {
+export default function LocationMarker({ trailInfo, handleLocationClick }) {
   const [isInfoWindowOpen, setInfoWindowToggleClick] = useToggle(false)
+  // const handleMarkerOnClick = (e) => {
+  //   setInfoWindowToggleClick()
+  //   console.log(e.target)
+  // }
   return (
     <>
-      <Marker onClick={setInfoWindowToggleClick}></Marker>
+      <Marker
+        onClick={handleLocationClick}
+        // lat={trailInfo.coordinate.y}
+        // lng={trailInfo.coordinate.x}
+        // onClick={(e) => {
+        //   handleMarkerOnClick(e)
+        // }}
+      ></Marker>
       <InfoWindow $isOpen={isInfoWindowOpen}>
         <TrailImg src={trailInfo.cover_picture_url} />
         <TrailName>{trailInfo.title}</TrailName>

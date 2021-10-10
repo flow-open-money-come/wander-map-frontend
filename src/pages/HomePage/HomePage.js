@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { COLOR, RADIUS, FONT, MEDIA_QUERY, EFFECT } from '../../constants/style'
+import { COLOR, RADIUS, FONT, MEDIA_QUERY } from '../../constants/style'
 import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
 

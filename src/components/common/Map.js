@@ -14,20 +14,20 @@ const MapSearchBarWrapper = styled.div`
 `
 
 const Map = (props) => {
-  // const [current, setCurrentPosition] = useState({
-  //   lat: 24.8218635,
-  //   lng: 121.7352169,
-  // })
-  // const [mapApiLoaded, setMapApiLoaded] = useState(false)
-  // const [mapInstance, setMapInstance] = useState(null)
-  // const [mapApi, setMapApi] = useState(null)
+  const [currentPosition, setCurrentPosition] = useState({
+    center: { lat: 24.8218635, lng: 121.7352169 },
+    zoom: 17,
+  })
+  const [mapApiLoaded, setMapApiLoaded] = useState(false)
+  const [mapInstance, setMapInstance] = useState(null)
+  const [mapApi, setMapApi] = useState(null)
   const [trailInfos, setTrailInfos] = useState([])
 
   const apiHasLoaded = (map, maps) => {
     console.log('載入完成!')
-    // setMapInstance(map)
-    // setMapApi(maps)
-    // setMapApiLoaded(true)
+    setMapInstance(map)
+    setMapApi(maps)
+    setMapApiLoaded(true)
   }
 
   useEffect(() => {
@@ -39,9 +39,17 @@ const Map = (props) => {
   }, [])
 
   const handleLocationClick = (e) => {
-    console.log('click')
-    console.log(e.target.getAttribute('lat'))
-    console.log(e.target.getAttribute('lng'))
+    console.log(e.target)
+    // setCurrentPosition({
+    //   center: {
+    //     lat: e.target.getAttribute('lat'),
+    //     lng: e.target.getAttribute('lng'),
+    //   },
+    //   zoom: 25,
+    // })
+    // console.log(e.target.)
+    // console.log(e.target.getAttribute('lat'))
+    // console.log(e.target.getAttribute('lng'))
   }
   // 進階： 移動位置自動搜尋附近的步道
   // const handleCenterChange = () => {
@@ -73,8 +81,8 @@ const Map = (props) => {
       </MapSearchBarWrapper>
       <GoogleMapReact
         bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
-        defaultCenter={props.center}
-        defaultZoom={props.zoom}
+        defaultCenter={currentPosition.center}
+        defaultZoom={currentPosition.zoom}
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
         // onBoundsChange={handleCenterChange}
