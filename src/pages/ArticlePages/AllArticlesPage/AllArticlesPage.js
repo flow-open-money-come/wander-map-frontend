@@ -85,39 +85,39 @@ function AllArticlesPage() {
   let overLoad = false
 
   useEffect(() => {
-    apiArticlesHot()
-      .then((res) => {
-        if (res.data.message === 'OK') {
-          setSlides(res.data.data)
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const getHot = async () => {
+      try {
+        let res = await apiArticlesHot()
+        setSlides(res.data.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getHot()
   }, [])
 
   useEffect(() => {
-    apiArticlesOptions(5, tagValue)
-      .then((res) => {
-        if (res.data.message === 'OK') {
-          setPosts(res.data.data)
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const getPosts = async () => {
+      try {
+        let res = await apiArticlesOptions(5, tagValue)
+        setPosts(res.data.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getPosts()
   }, [tagValue])
 
   const handleClickLoadMore = () => {
-    apiArticlesOptions(0, tagValue)
-      .then((res) => {
-        if (res.data.message === 'OK') {
-          setPosts(res.data.data)
-        }
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const getMorePosts = async () => {
+      try {
+        let res = await apiArticlesOptions(0, tagValue)
+        setPosts(res.data.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getMorePosts()
     while (params.current < posts.length) {
       params.current += 5
     }
@@ -143,7 +143,7 @@ function AllArticlesPage() {
     { tagId: 13, tagName: '專業老手分享', isChecked: false },
     { tagId: 14, tagName: 'GPX', isChecked: false },
   ])
-  console.log(tags)
+
   return (
     <Wrapper>
       <TitleGroup>
