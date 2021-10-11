@@ -38,19 +38,6 @@ const Map = (props) => {
       .catch((err) => console.log(err))
   }, [])
 
-  const handleLocationClick = (e) => {
-    console.log(e.target)
-    // setCurrentPosition({
-    //   center: {
-    //     lat: e.target.getAttribute('lat'),
-    //     lng: e.target.getAttribute('lng'),
-    //   },
-    //   zoom: 25,
-    // })
-    // console.log(e.target.)
-    // console.log(e.target.getAttribute('lat'))
-    // console.log(e.target.getAttribute('lng'))
-  }
   // 進階： 移動位置自動搜尋附近的步道
   // const handleCenterChange = () => {
   //   if (mapApiLoaded) {
@@ -69,13 +56,6 @@ const Map = (props) => {
         position: 'relative',
       }}
     >
-      {/* <button
-        onClick={() => {
-          console.log(trailInfos)
-        }}
-      >
-        看結果
-      </button> */}
       <MapSearchBarWrapper>
         <SearchBar placeholder='請輸入步道關鍵字...' />
       </MapSearchBarWrapper>
@@ -94,9 +74,6 @@ const Map = (props) => {
               lat={trailInfo.coordinate.y}
               lng={trailInfo.coordinate.x}
               trailInfo={trailInfo}
-              onClick={(e) => {
-                handleLocationClick(e)
-              }}
             />
           )
         })}

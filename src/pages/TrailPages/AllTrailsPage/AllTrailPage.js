@@ -110,7 +110,6 @@ function AllTrailPage() {
   }
 
   // get featured trails infos
-  /*
   useEffect(() => {
     getHotTrails()
       .then((res) => {
@@ -126,7 +125,6 @@ function AllTrailPage() {
       })
       .catch((err) => console.log(err))
   }, [])
-  */
 
   // Carousel
   useEffect(() => {
@@ -227,12 +225,12 @@ function AllTrailPage() {
           />
         </SearchBarWrapper>
         <FeaturedTrailsCarouselWrapper>
-          {/* <FeaturedTrailsCarousel
+          <FeaturedTrailsCarousel
             src={Object.values(featuredTrialInfos[currentImgIndex])}
           />
           <FeaturedTrailName>
             {Object.keys(featuredTrialInfos[currentImgIndex])}
-          </FeaturedTrailName> */}
+          </FeaturedTrailName>
         </FeaturedTrailsCarouselWrapper>
         <DropDownContainer>
           <DropDownCheckBoxList
