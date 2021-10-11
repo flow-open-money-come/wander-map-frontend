@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { Link, useHistory } from 'react-router-dom'
 import jwt_decode from 'jwt-decode'
-import { useState, useContext } from 'react'
+import { useState, useContext, useRef } from 'react'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { userRegister } from '../../WebAPI'
 import { setAuthToken } from '../../utils'
@@ -118,7 +118,11 @@ export default function RegisterPage() {
     password: '',
     confirmPassword: '',
   })
-  const { userInfo, setUserInfo } = useContext(AuthContext)
+  // const isRegisterInfoValid = useRef(false)
+  const emailValidRegex =
+    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  const passwordValidRegex = /(?=.*\d)(?=.*[a-zA-Z])^[a-zA-Z0-9!@#$%^&*]{8,}$/
+  const { setUserInfo } = useContext(AuthContext)
   const [errMsg, setErrMsg] = useState('')
   const history = useHistory()
 
@@ -128,8 +132,55 @@ export default function RegisterPage() {
       [e.target.name]: e.target.value,
     })
   }
+  const validateInfos = (option) => {
+    if (option === 'nickname') {
+      if (!registerInfo[option]) {
+        setErrMsg(`使用者名稱不得為空`)
+        return false
+      }
+      if (registerInfo[option].length > 20) {
+        setErrMsg('使用者名稱過長')
+        return false
+      }
+    }
+    if (option === 'email') {
+      if (!registerInfo[option]) {
+        setErrMsg(`電子郵件不得為空`)
+        return false
+      }
+      if (!emailValidRegex.test(registerInfo[option])) {
+        setErrMsg('電子郵件格式不符')
+        return false
+      }
+    }
+    if (option === 'password') {
+      if (!registerInfo[option]) {
+        setErrMsg(`密碼不得為空`)
+        return false
+      }
+      if (!passwordValidRegex.test(registerInfo[option])) {
+        setErrMsg('密碼格式不符')
+        return false
+      }
+    }
+    if (option === 'confirmPassword') {
+      if (!registerInfo[option]) {
+        setErrMsg(`確認密碼不得為空`)
+        return false
+      }
+      if (registerInfo[option] !== registerInfo.password) {
+        setErrMsg('確認密碼與密碼不符')
+        return false
+      }
+    }
+    return true
+  }
   const handleRegister = (e) => {
+    setErrMsg('')
     e.preventDefault()
+    for (let i = 0; i < Object.keys(registerInfo).length; i++) {
+      if (!validateInfos(Object.keys(registerInfo)[i])) return
+    }
     userRegister(registerInfo)
       .then((res) => {
         if (res.data.success) {

@@ -212,7 +212,6 @@ function NavBar() {
 
   return (
     <>
-      {console.log(userInfo)}
       <NavBarContainer>
         <NavBarWrapper>
           <Logo to='/' />

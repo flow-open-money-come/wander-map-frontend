@@ -117,6 +117,8 @@ export default function LoginPage() {
     email: '',
     password: '',
   })
+  const [isLoginInfoValid, setIsLoginInfoValid] = useState(false)
+
   const handleUserInfoChange = (e) => {
     setLoginInfo({
       ...loginInfo,
@@ -149,14 +151,7 @@ export default function LoginPage() {
         <Title> 會員登入 </Title>
         <LoginFormsWrapper>
           <FormWrapper>
-            <AlertMsg
-              $error
-              onClick={() => {
-                console.log(userInfo)
-              }}
-            >
-              {errMsg}
-            </AlertMsg>
+            <AlertMsg $error>{errMsg}</AlertMsg>
             <Input
               name='email'
               type='email'
