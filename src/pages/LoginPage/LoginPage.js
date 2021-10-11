@@ -6,6 +6,7 @@ import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { userLogin } from '../../WebAPI'
 import { setAuthToken } from '../../utils'
 import { AuthContext } from '../../context'
+import useUserInfoValidation from '../../hooks/useUserInfoValidation'
 
 const LoginPageWrapper = styled.div`
   width: 100%;
@@ -117,7 +118,6 @@ export default function LoginPage() {
     email: '',
     password: '',
   })
-  const [isLoginInfoValid, setIsLoginInfoValid] = useState(false)
 
   const handleUserInfoChange = (e) => {
     setLoginInfo({
@@ -127,11 +127,15 @@ export default function LoginPage() {
   }
 
   const { userInfo, setUserInfo } = useContext(AuthContext)
-  const [errMsg, setErrMsg] = useState('')
   const history = useHistory()
+  const { errMsg, setErrMsg, validateUserInfos } = useUserInfoValidation()
 
   const handleLogin = (e) => {
+    setErrMsg('')
     e.preventDefault()
+    for (let i = 0; i < Object.keys(loginInfo).length; i++) {
+      if (!validateUserInfos(loginInfo, Object.keys(loginInfo)[i])) return
+    }
     userLogin(loginInfo)
       .then((res) => {
         if (res.data.success) {
