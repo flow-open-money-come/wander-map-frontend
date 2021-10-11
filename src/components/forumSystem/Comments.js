@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
 import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import {
+  apiMessagesPost,
+  apiMessagesDelete,
+  apiMessagesPatch,
+} from '../../WebAPI'
 
 const CommentsContainer = styled.div`
-
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -14,7 +19,7 @@ const CommentsContainer = styled.div`
   padding-bottom: 20px;
 `
 
-const CommentsHeader = styled.div`
+const CommentsHeader = styled.form`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -60,7 +65,7 @@ const InputField = styled.input`
   }
 `
 
-const SentBtn = styled.div`
+const SentBtn = styled.button`
   svg {
     width: 16px;
     height: 16px;
@@ -146,7 +151,7 @@ const CommentTime = styled.div`
 
 const CommentBtn = styled.div`
   display: flex;
- 
+
   svg {
     margin: 0 3px;
     width: 15px;
@@ -187,49 +192,60 @@ const Content = styled.div`
   }
 `
 
+export default function Comments({ messages, setMessages, value, setValue }) {
+  const { id } = useParams()
+  const handleOnChange = (e) => {
+    setValue(e.target.value)
+  }
 
-export default function Comments() {
+  const handleSubmit = async () => {
+    {
+      try {
+        const apiMessagesPostRes = await apiMessagesPost(id, value)
+        console.log(apiMessagesPostRes)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+  }
+  console.log(value)
+
   return (
     <CommentsContainer>
-      <CommentsHeader>
+      <CommentsHeader onSubmit={handleSubmit}>
         <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
-        <InputField placeholder='請輸入留言...' />
+        <InputField
+          value={value}
+          onChange={(e) => {
+            handleOnChange(e)
+          }}
+          placeholder='請輸入留言...'
+        />
         <SentBtn>
           <SendIcon />
         </SentBtn>
       </CommentsHeader>
-      <Card>
-        <CommentInfo>
-          <CommentViewInfo>
-            <UserAvatar src='https://i.ppfocus.com/2020/8/285a2ad.jpg' />
-            <CommentNickname>甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環</CommentNickname>
-          </CommentViewInfo>
-          <CommentBtn>
-            <CommentTime>2020.09.08 / 20:20:22</CommentTime>
-            <EditIcon />
-            <BinIcon />
-          </CommentBtn>
-        </CommentInfo>
-        <Content>
-          前陣子天氣炎熱，本宮得空和眉姐姐一同前往避暑，無意間在山腳下覓得一小溪，趁便四下無人，脫了鞋襪踏踏水。
-        </Content>
-      </Card>
-      <Card>
-        <CommentInfo>
-          <CommentViewInfo>
-            <UserAvatar src='https://datansuo.net/img/201505/14323334952.jpg' />
-            <CommentNickname>甄環</CommentNickname>
-          </CommentViewInfo>
-          <CommentBtn>
-            <CommentTime>2020.09.08 / 20:20:22</CommentTime>
-            <EditIcon />
-            <BinIcon />
-          </CommentBtn>
-        </CommentInfo>
-        <Content>
-          鳥語花香，甚是詩情畫意。可惜階梯太多階，爬得本宮腿都痠了，下回必要找機會回了皇上，將修繕步道的奴才們通通拉去慎行司領罰，那才解氣！鳥語花香，甚是詩情畫意。可惜階梯太多階，爬得本宮腿都痠了，下回必要找機會回了皇上，將修繕步道的奴才們通通拉去慎行司領罰，那才解氣！鳥語花香，甚是詩情畫意。可惜階梯太多階，爬得本宮腿都痠了，下回必要找機會回了皇上，將修繕步道的奴才們通通拉去慎行司領罰，那才解氣！鳥語花香，甚是詩情畫意。可惜階梯太多階，爬得本宮腿都痠了，下回必要找機會回了皇上，將修繕步道的奴才們通通拉去慎行司領罰，那才解氣！
-        </Content>
-      </Card>
+      {messages.map((message) => (
+        <Card>
+          <CommentInfo>
+            <CommentViewInfo>
+              <UserAvatar src='https://i.ppfocus.com/2020/8/285a2ad.jpg' />
+              <CommentNickname>
+                甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環
+                {/* {message.nickname} */}
+              </CommentNickname>
+            </CommentViewInfo>
+            <CommentBtn>
+              <CommentTime>
+                {new Date(message.created_at).toLocaleString()}
+              </CommentTime>
+              <EditIcon />
+              <BinIcon />
+            </CommentBtn>
+          </CommentInfo>
+          <Content>{message.content}</Content>
+        </Card>
+      ))}
     </CommentsContainer>
   )
 }

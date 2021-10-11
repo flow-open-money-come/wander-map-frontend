@@ -7,7 +7,7 @@ import thumbSVG from '../../../icons/thumb_up.svg'
 import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
-import { apiArticle } from '../../../WebAPI'
+import { apiArticle, apiMessages } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 
 const Wrapper = styled.div`
@@ -126,6 +126,8 @@ function ArticlePage() {
   const { id } = useParams()
   const [thumb, setThumb] = useState(false)
   const [post, setPost] = useState([])
+  const [value, setValue] = useState('')
+  const [messages, setMessages] = useState([])
 
   useEffect(() => {
     apiArticle(id)
@@ -137,7 +139,12 @@ function ArticlePage() {
       })
   }, [])
 
-  console.log(post)
+  useEffect(() => {
+    apiMessages(id).then((res) => {
+      setMessages(res.data.data)
+    })
+  }, [value])
+
   return (
     <Wrapper>
       <CoverImg src={post.cover_picture_url} />
@@ -186,7 +193,12 @@ function ArticlePage() {
         <ReviewIcon />
         <CommentTitle>討論區</CommentTitle>
       </FlexGroup>
-      <Comment />
+      <Comment
+        value={value}
+        setValue={setValue}
+        setMessages={setMessages}
+        messages={messages}
+      />
     </Wrapper>
   )
 }
