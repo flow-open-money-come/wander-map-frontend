@@ -126,7 +126,7 @@ export default function LoginPage() {
     })
   }
 
-  const { userInfo, setUserInfo } = useContext(AuthContext)
+  const { setUserInfo } = useContext(AuthContext)
   const history = useHistory()
   const { errMsg, setErrMsg, validateUserInfos } = useUserInfoValidation()
 

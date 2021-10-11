@@ -1,6 +1,6 @@
 import { ResetStyle, GlobalStyle } from './constants/globalStyle'
 import { HashRouter as Router, Switch, Route } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 
 import NavBar from './components/common/NavBar'
 import Footer from './components/common/Footer'

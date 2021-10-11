@@ -4,8 +4,7 @@ import config from './config'
 const instance = axios.create({
   baseURL: `${config.apiHost}`,
 })
-// axios.defaults.headers.post['Content-Type'] =
-//   'application/x-www-form-urlencoded'
+
 // user
 export const userLogin = (data) => instance.post('/users/login', data)
 export const userRegister = (data) => instance.post('/users/register', data)
