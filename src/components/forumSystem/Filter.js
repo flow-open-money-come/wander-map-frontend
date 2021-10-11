@@ -1,8 +1,7 @@
 import styled from 'styled-components'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import SearchBar from '../common/SearchBar'
-import { useState, useEffect } from 'react'
-import { apiArticlesOptions } from '../../WebAPI'
+import { ReactComponent as SearchSvg } from '../../icons/search.svg'
+// import SearchBar from '../common/SearchBar'
 
 const FilterContainer = styled.div`
   width: 90%;
@@ -52,11 +51,44 @@ const FilterTag = styled.button`
     `}
 `
 
-export default function ForumFilter({ tags, setTags, tagValue, setTagValue }) {
-  const handleIsChecked = (id) => {
+const SearchBar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`
+
+const SearchBarInput = styled.input`
+  width: 80%;
+  height: 30px;
+  background-color: ${COLOR.white};
+  padding: 20px;
+  outline: none;
+  border: 1px solid ${COLOR.white};
+  transition: ${EFFECT.transition};
+`
+
+const SearchIcon = styled(SearchSvg)`
+  margin-right: 10px;
+  cursor: pointer;
+`
+
+export default function ForumFilter({
+  tags,
+  setTags,
+  tagValue,
+  setTagValue,
+  search,
+  setSearch,
+}) {
+  const handleTagValue = (e) => {
+    setTagValue(
+      tagValue.find((item) => item === e.target.name)
+        ? tagValue.filter((data) => data !== e.target.name)
+        : [...tagValue, e.target.name]
+    )
     setTags(
       tags.map((tag) => {
-        if (tag.tag_id !== id) return tag
+        if (tag.tagName !== e.target.name) return tag
         return {
           ...tag,
           isChecked: !tag.isChecked,
@@ -68,31 +100,38 @@ export default function ForumFilter({ tags, setTags, tagValue, setTagValue }) {
   return (
     <FilterContainer>
       <Filter>
-        <SearchBar
+        <SearchBar>
+          <SearchBarInput
+            placeholder='關鍵字...'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          ></SearchBarInput>
+          <SearchIcon />
+        </SearchBar>
+        {/* // <SearchBar
           placeholder='關鍵字...'
           horizontalAlign
           noBorderRadius
           width='100%'
           fontSize={FONT.md}
           noShadow
-        />
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value)
+          }}
+        /> */}
         <FilterTags>
           {tags.map((tag) => {
             return (
               <FilterTag
-                key={tag.tag_id}
+                key={tag.tagId}
                 isChecked={tag.isChecked}
-                name={tag.tag_name}
+                name={tag.tagName}
                 onClick={(e) => {
-                  setTagValue(
-                    tagValue.find((item) => item === e.target.name)
-                      ? tagValue.filter((data) => data !== e.target.name)
-                      : [...tagValue, e.target.name]
-                  )
-                  handleIsChecked(tag.tag_id)
+                  handleTagValue(e)
                 }}
               >
-                {tag.tag_name}
+                {tag.tagName}
               </FilterTag>
             )
           })}

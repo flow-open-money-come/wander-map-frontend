@@ -96,6 +96,11 @@ const ArticlesInfoContainer = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 10px;
+  min-width: calc(100% - 130px);
+
+  ${MEDIA_QUERY.md} {
+    min-width: calc(100% - 173px);
+  }
 `
 const ArticlesUser = styled.div`
   margin-top: 5px;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import ArticleList from '../../../components/forumSystem/Article'
 import Carousel from '../../../components/forumSystem/Carousel'
@@ -56,6 +56,13 @@ const LoadMoreBtn = styled.button`
   font-size: ${FONT.md};
   margin: 50px 0px 100px 50%;
   transform: translate(-50%);
+
+  ${(props) =>
+    props.overLoad &&
+    `
+    visibility: hidden;
+    margin-bottom: 20px;
+  `}
 `
 const ArticleListWrapper = styled.div`
   width: 90%;
@@ -72,8 +79,10 @@ const NoRelatedArticleNotice = styled.div`
 function AllArticlesPage() {
   const [slides, setSlides] = useState([])
   const [posts, setPosts] = useState([])
-  const [params, setParams] = useState(0)
   const [tagValue, setTagValue] = useState([])
+  const [search, setSearch] = useState('')
+  const params = useRef(10)
+  let overLoad = false
 
   useEffect(() => {
     apiArticlesHot()
@@ -100,8 +109,7 @@ function AllArticlesPage() {
   }, [tagValue])
 
   const handleClickLoadMore = () => {
-    let limit = 10
-    apiArticlesOptions(limit, tagValue)
+    apiArticlesOptions(0, tagValue)
       .then((res) => {
         if (res.data.message === 'OK') {
           setPosts(res.data.data)
@@ -110,26 +118,32 @@ function AllArticlesPage() {
       .catch((error) => {
         console.log(error)
       })
-    limit += 5
+    while (params.current < posts.length) {
+      params.current += 5
+    }
+  }
+
+  if (params.current >= posts.length && posts.length !== 5) {
+    overLoad = true
   }
 
   const [tags, setTags] = useState([
-    { tag_id: 1, tag_name: '一日', isChecked: false },
-    { tag_id: 2, tag_name: '多日', isChecked: false },
-    { tag_id: 3, tag_name: '海景', isChecked: false },
-    { tag_id: 4, tag_name: '夜景', isChecked: false },
-    { tag_id: 5, tag_name: '山景', isChecked: false },
-    { tag_id: 6, tag_name: '城市景色', isChecked: false },
-    { tag_id: 7, tag_name: '賞花', isChecked: false },
-    { tag_id: 8, tag_name: '稀有動植物', isChecked: false },
-    { tag_id: 9, tag_name: '有水源', isChecked: false },
-    { tag_id: 10, tag_name: '危險地形', isChecked: false },
-    { tag_id: 11, tag_name: '需專業裝備', isChecked: false },
-    { tag_id: 12, tag_name: '登山小白體驗', isChecked: false },
-    { tag_id: 13, tag_name: '專業老手分享', isChecked: false },
-    { tag_id: 14, tag_name: 'GPX', isChecked: false },
+    { tagId: 1, tagName: '一日', isChecked: false },
+    { tagId: 2, tagName: '多日', isChecked: false },
+    { tagId: 3, tagName: '海景', isChecked: false },
+    { tagId: 4, tagName: '夜景', isChecked: false },
+    { tagId: 5, tagName: '山景', isChecked: false },
+    { tagId: 6, tagName: '城市景色', isChecked: false },
+    { tagId: 7, tagName: '賞花', isChecked: false },
+    { tagId: 8, tagName: '稀有動植物', isChecked: false },
+    { tagId: 9, tagName: '有水源', isChecked: false },
+    { tagId: 10, tagName: '危險地形', isChecked: false },
+    { tagId: 11, tagName: '需專業裝備', isChecked: false },
+    { tagId: 12, tagName: '登山小白體驗', isChecked: false },
+    { tagId: 13, tagName: '專業老手分享', isChecked: false },
+    { tagId: 14, tagName: 'GPX', isChecked: false },
   ])
-
+  console.log(tags)
   return (
     <Wrapper>
       <TitleGroup>
@@ -142,18 +156,20 @@ function AllArticlesPage() {
         setTags={setTags}
         tagValue={tagValue}
         setTagValue={setTagValue}
+        search={search}
+        setSearch={setSearch}
       />
       <ArticleListWrapper>
-        {posts.slice(params).map((post) => {
+        {posts.slice(0, params.current).map((post) => {
           return (
             <ArticleList
               articleImgSrc={post.cover_picture_url}
               title={post.title}
-              // user={'水怪貓貓'}
+              user={'水怪貓貓'} // 待修正
               tags={!post.tag_names ? [] : post.tag_names.split(',')}
               date={new Date(post.created_at).toLocaleString()}
               content={post.content}
-              // avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'}
+              avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'} // 待修正
               articlePage={`/articles/${post.article_id}`}
             />
           )
@@ -161,7 +177,9 @@ function AllArticlesPage() {
         {tagValue && posts.length === 0 ? (
           <NoRelatedArticleNotice>暫無相關文章</NoRelatedArticleNotice>
         ) : (
-          <LoadMoreBtn onClick={handleClickLoadMore}>看更多</LoadMoreBtn>
+          <LoadMoreBtn overLoad={overLoad} onClick={handleClickLoadMore}>
+            看更多
+          </LoadMoreBtn>
         )}
       </ArticleListWrapper>
     </Wrapper>
