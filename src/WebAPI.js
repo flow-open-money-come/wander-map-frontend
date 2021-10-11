@@ -6,8 +6,9 @@ const instance = axios.create({
 })
 
 // user
-export const userLogin = (data) => instance.post('/users/login', data)
-export const userRegister = (data) => instance.post('/users/register', data)
+export const userLogin = (payload) => instance.post('/users/login', payload)
+export const userRegister = (payload) =>
+  instance.post('/users/register', payload)
 
 // trails
 export const getTrails = (params) => instance.get('/trails' + params)
