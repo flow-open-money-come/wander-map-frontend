@@ -86,41 +86,26 @@ function AllArticlesPage() {
   let overLoad = false
 
   useEffect(() => {
-    const getHot = async () => {
-      try {
-        let res = await apiArticlesHot()
-        setSlides(res.data.data)
-      } catch (err) {
+    apiArticlesHot()
+      .then((res) => setSlides(res.data.data))
+      .catch((err) => {
         console.log(err)
-      }
-    }
-    getHot()
+      })
   }, [])
 
   useEffect(() => {
     params.current = 5
     setSearch('')
-    const getPosts = async () => {
-      try {
-        let res = await apiArticlesOptions(5, tagValue)
-        setPosts(res.data.data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    getPosts()
+    apiArticlesOptions(5, tagValue).then(res => setPosts(res.data.data)).catch(err => {
+      console.log(err)
+    })
   }, [tagValue, filterData])
 
   const handleClickLoadMore = () => {
-    const getMorePosts = async () => {
-      try {
-        let res = await apiArticlesOptions(5, tagValue, params.current)
-        setPosts(posts.concat(res.data.data))
-      } catch (err) {
-        console.log(err)
-      }
+    apiArticlesOptions(5, tagValue, params.current).then(res => setPosts(posts.concat(res.data.data))).catch(err => {
+      console.log(err)
+    })
     }
-    getMorePosts()
     params.current += 5
   }
 
