@@ -19,13 +19,16 @@ export const apiUserSignUp = (data) => userRequest.post('/signUp', data)
 export const apiArticlesHot = () => articleRequest.get('/hot')
 export const apiArticles = () => articleRequest.get('/')
 export const apiArticle = () => articleRequest.get('/:id')
-export const apiArticlesOptions = (limit, tags) => {
+export const apiArticlesOptions = (limit, tags, offset) => {
   let url = `?`
   if (limit) {
     url += `limit=${limit}&`
   }
   if (tags && Array.isArray(tags) && tags.length > 0) {
     tags.map((tag) => (url += `tag=${tag}&`))
+  }
+  if (offset) {
+    url += `offset=${offset}&`
   }
   return articleRequest.get(url)
 }

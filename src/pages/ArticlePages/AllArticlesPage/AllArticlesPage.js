@@ -6,11 +6,7 @@ import ForumFilter from '../../../components/forumSystem/Filter'
 import { ReactComponent as Hot } from '../../../icons/hot.svg'
 import { FONT, MEDIA_QUERY } from '../../../constants/style'
 import { NavBarButton } from '../../../components/common/Button'
-import {
-  apiArticlesHot,
-  apiArticlesOptions,
-  apiArticles,
-} from '../../../WebAPI'
+import { apiArticlesHot, apiArticlesOptions } from '../../../WebAPI'
 import { COLOR } from '../../../constants/style'
 
 const Wrapper = styled.div`
@@ -102,6 +98,8 @@ function AllArticlesPage() {
   }, [])
 
   useEffect(() => {
+    params.current = 5
+    setSearch('')
     const getPosts = async () => {
       try {
         let res = await apiArticlesOptions(5, tagValue)
@@ -116,23 +114,22 @@ function AllArticlesPage() {
   const handleClickLoadMore = () => {
     const getMorePosts = async () => {
       try {
-        let res = await apiArticlesOptions(0, tagValue)
-        setPosts(res.data.data)
+        let res = await apiArticlesOptions(5, tagValue, params.current)
+        setPosts(posts.concat(res.data.data))
       } catch (err) {
         console.log(err)
       }
     }
     getMorePosts()
-    while (params.current < posts.length) {
-      params.current += 5
-    }
+    params.current += 5
   }
 
   const handleClickSearch = (e) => {
+    params.current = 10
     if (e.key === 'Enter' || e.code === 'Backspace') {
       const getAllPosts = async () => {
         try {
-          const res = await apiArticles()
+          const res = await apiArticlesOptions(1000)
           setPosts(res.data.data.filter((post) => post.title.includes(search)))
           setFilterData(true)
         } catch (err) {
@@ -143,7 +140,7 @@ function AllArticlesPage() {
     }
   }
 
-  if (params.current >= posts.length && posts.length !== 5) {
+  if (params.current > posts.length) {
     overLoad = true
   }
 
