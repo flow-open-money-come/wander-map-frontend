@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { FONT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailMap.svg'
+import GoogleMapReact from 'google-map-react'
 
 
 
@@ -47,7 +48,7 @@ const MapContainer = styled.div`
   }
 `
 
-function TrailMap() {
+function TrailMap(props) {
   return (
     <MapWrapper>
       <Title>
@@ -55,9 +56,25 @@ function TrailMap() {
         步道位置
       </Title>
       <MapContainer>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
+          defaultCenter={props.center}
+          defaultZoom={props.zoom}
+          yesIWantToUseGoogleMapApiInternals
+          // onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
+          // onBoundsChange={handleCenterChange}
+        ></GoogleMapReact>
       </MapContainer>
     </MapWrapper>
   )
+}
+
+Map.defaultProps = {
+  center: {
+    lat: 24.8218635,
+    lng: 121.7352169
+  },
+  zoom: 17
 }
 
 export default TrailMap
