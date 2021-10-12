@@ -206,34 +206,44 @@ const EditInput = styled.input`
 export default function Comments({ messages, setMessages, value, setValue }) {
   const { id } = useParams()
   const [show, setShow] = useState(false)
+  const editItem = useRef('')
 
   const handleOnChange = (e) => {
     setValue(e.target.value)
   }
   const [editValue, setEditValue] = useState('')
 
-  const handleSubmit = () => {
-    const postMessage = async () => {
-      try {
-        const apiMessagesPostRes = await apiMessagesPost(id, 1, value)
-        setValue('')
-      } catch (err) {
-        console.log(err)
-      }
+  // 待修正 authorId
+  const handleSubmit = async () => {
+    try {
+      await apiMessagesPost(id, 1, value)
+      setEditValue('')
+    } catch (err) {
+      console.log(err)
     }
-    postMessage()
   }
 
-  // const handleEditMessage = () => {
-  //   show.current = true
-  //   // const editMessage = async () => {
-  //   //   try {
-  //   //     const apiMessagesPatchRes = await apiMessagesPatch(id, ,)
-  //   //   }
-  //   // }
-  // }
+  const handleEditMessage = async (e) => {
+    const messageId = e.target.id
+    try {
+      await apiMessagesPatch(id, messageId, editValue)
+      setEditValue(e.target.value)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-  const handleDeleteMessage = () => {}
+  console.log(editItem)
+
+  // 待修正 messageId
+  const handleDeleteMessage = async (e) => {
+    const messageId = e.target.id
+    try {
+      await apiMessagesDelete(id, messageId)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   return (
     <CommentsContainer>
@@ -262,26 +272,29 @@ export default function Comments({ messages, setMessages, value, setValue }) {
                 {new Date(message.created_at).toLocaleString()}
               </CommentTime>
               <EditIcon
-                id={message.comment_id}
-                onClick={() => setShow(!show)}
+                id={message.comment_id} // 待修正成 message_id
+                onClick={(e) => {
+                  handleEditMessage(e)
+                }}
               />
               <BinIcon
-                $messageId={message.comment_id}
-                onClick={handleDeleteMessage}
+                id={message.comment_id} // 待修正成 message_id
+                onClick={(e) => {
+                  handleDeleteMessage(e)
+                }}
               />
             </CommentBtn>
           </CommentInfo>
-          {!show ? (
-            <Content>{message.content}</Content>
-          ) : (
-            <EditInput
-              index={message.trail_id}
-              onChange={(e) => setEditValue(e.target.value)}
-              value={editValue}
-              type='text'
-              placeholder={message.content}
-            />
-          )}
+          <EditInput
+            ref={editItem}
+            show={show}
+            id={message.comment_id} // 待修正成 message_id
+            onChange={(e) => setEditValue(e.target.value)}
+            value={editValue}
+            type='text'
+            placeholder={message.content}
+          />
+          <Content>{message.content}</Content>
         </Card>
       ))}
     </CommentsContainer>

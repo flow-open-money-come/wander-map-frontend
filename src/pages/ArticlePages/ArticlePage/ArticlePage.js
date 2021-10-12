@@ -151,7 +151,7 @@ function ArticlePage() {
       }
     }
     getMessage()
-  }, [value])
+  }, [value, messages])
 
   return (
     <Wrapper>
