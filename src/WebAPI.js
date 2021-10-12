@@ -7,7 +7,7 @@ const userRequest = axios.create({
 })
 // 文章相關的 api
 const articleRequest = axios.create({
-  baseURL: `${config.apiHost}/articles`,
+  baseURL: `${config.apiHost}/trails`,
   headers: {
     'Content-Type': 'application/json',
     Accept: 'application/json',
@@ -15,20 +15,18 @@ const articleRequest = axios.create({
   },
 })
 
-// User 相關的 api
-export const apiUserLogin = (data) => userRequest.post('/signIn', data)
-export const apiUserLogout = (data) => userRequest.post('/signOut', data)
-export const apiUserSignUp = (data) => userRequest.post('/signUp', data)
-
 // 文章相關的 api
 export const apiArticle = (articleId) => articleRequest.get(`/${articleId}`)
 export const apiMessages = (articleId) =>
-  articleRequest.get(`/${articleId}/messages`)
-export const apiMessagesPost = (articleId, content) =>
-  articleRequest.post(`/${articleId}/messages`, {
+  articleRequest.get(`/${articleId}/comments`)
+export const apiMessagesPost = (articleId, authorId, content) =>
+  articleRequest.post(`/${articleId}/comments`, {
+    author_id: authorId,
     content,
   })
-export const apiMessagesPatch = (articleId, messageId) =>
-  articleRequest.patch(`/${articleId}/messages/${messageId}`)
+export const apiMessagesPatch = (articleId, messageId, content) =>
+  articleRequest.patch(`/${articleId}/comments/${messageId}`, {
+    content,
+  })
 export const apiMessagesDelete = (articleId, messageId) =>
-  articleRequest.delete(`/${articleId}/messages/${messageId}`)
+  articleRequest.delete(`/${articleId}/comments/${messageId}`)

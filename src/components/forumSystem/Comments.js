@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
@@ -192,23 +192,48 @@ const Content = styled.div`
   }
 `
 
+const EditInput = styled.input`
+  &:focus {
+    outline: none;
+  }
+  border: ${COLOR.gray_light} solid 2px;
+  border-radius: ${RADIUS.s};
+  margin-top: 10px;
+  line-height: 2em;
+  background: ${COLOR.white};
+`
+
 export default function Comments({ messages, setMessages, value, setValue }) {
   const { id } = useParams()
+  const [show, setShow] = useState(false)
+
   const handleOnChange = (e) => {
     setValue(e.target.value)
   }
+  const [editValue, setEditValue] = useState('')
 
-  const handleSubmit = async () => {
-    {
+  const handleSubmit = () => {
+    const postMessage = async () => {
       try {
-        const apiMessagesPostRes = await apiMessagesPost(id, value)
-        console.log(apiMessagesPostRes)
+        const apiMessagesPostRes = await apiMessagesPost(id, 1, value)
+        setValue('')
       } catch (err) {
         console.log(err)
       }
     }
+    postMessage()
   }
-  console.log(value)
+
+  // const handleEditMessage = () => {
+  //   show.current = true
+  //   // const editMessage = async () => {
+  //   //   try {
+  //   //     const apiMessagesPatchRes = await apiMessagesPatch(id, ,)
+  //   //   }
+  //   // }
+  // }
+
+  const handleDeleteMessage = () => {}
 
   return (
     <CommentsContainer>
@@ -230,20 +255,33 @@ export default function Comments({ messages, setMessages, value, setValue }) {
           <CommentInfo>
             <CommentViewInfo>
               <UserAvatar src='https://i.ppfocus.com/2020/8/285a2ad.jpg' />
-              <CommentNickname>
-                甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環
-                {/* {message.nickname} */}
-              </CommentNickname>
+              <CommentNickname>{message.nickname}</CommentNickname>
             </CommentViewInfo>
             <CommentBtn>
               <CommentTime>
                 {new Date(message.created_at).toLocaleString()}
               </CommentTime>
-              <EditIcon />
-              <BinIcon />
+              <EditIcon
+                id={message.comment_id}
+                onClick={() => setShow(!show)}
+              />
+              <BinIcon
+                $messageId={message.comment_id}
+                onClick={handleDeleteMessage}
+              />
             </CommentBtn>
           </CommentInfo>
-          <Content>{message.content}</Content>
+          {!show ? (
+            <Content>{message.content}</Content>
+          ) : (
+            <EditInput
+              index={message.trail_id}
+              onChange={(e) => setEditValue(e.target.value)}
+              value={editValue}
+              type='text'
+              placeholder={message.content}
+            />
+          )}
         </Card>
       ))}
     </CommentsContainer>

@@ -130,19 +130,27 @@ function ArticlePage() {
   const [messages, setMessages] = useState([])
 
   useEffect(() => {
-    apiArticle(id)
-      .then((res) => {
+    const getPost = async () => {
+      try {
+        let res = await apiArticle(id)
         setPost(res.data.data[0])
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getPost()
   }, [])
 
   useEffect(() => {
-    apiMessages(id).then((res) => {
-      setMessages(res.data.data)
-    })
+    const getMessage = async () => {
+      try {
+        let res = await apiMessages(id)
+        setMessages(res.data.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getMessage()
   }, [value])
 
   return (
