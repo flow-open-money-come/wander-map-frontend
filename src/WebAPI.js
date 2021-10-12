@@ -11,7 +11,7 @@ export const userRegister = (data) => instance.post('/register', data)
 
 // trails
 export const getTrails = (params) => instance.get('/trails' + params)
-export const getHotTrails = () => instance.get('/trails/featured')
+export const getHotTrails = () => instance.get('/trails/hot/5')
 export const getTrailsCondition = () =>
   axios.get('https://recreation.forest.gov.tw/mis/api/OpenStatus/Trail')
 

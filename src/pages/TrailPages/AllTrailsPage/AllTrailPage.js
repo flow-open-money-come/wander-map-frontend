@@ -89,7 +89,7 @@ const LoadMoreBtn = styled.div`
 
 function AllTrailPage() {
   // featured trails
-  const [featuredTrialInfos, setFeaturedTrailInfos] = useState([{}])
+  const [hotTrialInfos, setHotTrailInfos] = useState([{}])
   // checked options of trail filters
   const [checkedOptions, setCheckedOptions] = useState([])
   // filtered trails infos
@@ -103,7 +103,7 @@ function AllTrailPage() {
   const [keyWord, setKeyWord] = useState('')
 
   const handelCarousel = () => {
-    if (currentImgIndex < featuredTrialInfos.length - 1) {
+    if (currentImgIndex < hotTrialInfos.length - 1) {
       return setCurrentImgIndex(currentImgIndex + 1)
     }
     setCurrentImgIndex(0)
@@ -114,7 +114,7 @@ function AllTrailPage() {
     getHotTrails()
       .then((res) => {
         if (res.data.success) {
-          setFeaturedTrailInfos(
+          setHotTrailInfos(
             res.data.data.map((trailData) => {
               return {
                 [trailData.title]: trailData.cover_picture_url,
@@ -128,7 +128,7 @@ function AllTrailPage() {
 
   // Carousel
   useEffect(() => {
-    if (featuredTrialInfos.length !== 0) setTimeout(handelCarousel, 3000)
+    if (hotTrialInfos.length !== 0) setTimeout(handelCarousel, 3000)
   })
 
   const parameterMap = {
@@ -226,10 +226,10 @@ function AllTrailPage() {
         </SearchBarWrapper>
         <FeaturedTrailsCarouselWrapper>
           <FeaturedTrailsCarousel
-            src={Object.values(featuredTrialInfos[currentImgIndex])}
+            src={Object.values(hotTrialInfos[currentImgIndex])}
           />
           <FeaturedTrailName>
-            {Object.keys(featuredTrialInfos[currentImgIndex])}
+            {Object.keys(hotTrialInfos[currentImgIndex])}
           </FeaturedTrailName>
         </FeaturedTrailsCarouselWrapper>
         <DropDownContainer>

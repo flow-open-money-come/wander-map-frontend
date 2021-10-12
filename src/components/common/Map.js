@@ -28,7 +28,7 @@ const Map = (props) => {
       .catch((err) => console.log(err))
   }, [])
 
-  const [trailConditions, setTrailConditions] = useState({})
+  const [trailConditions, setTrailConditions] = useState([{}])
   useEffect(() => {
     getTrailsCondition()
       .then((res) => {
@@ -100,3 +100,5 @@ Map.defaultProps = {
 }
 
 export default Map
+
+// active key, true 才會 render info window
