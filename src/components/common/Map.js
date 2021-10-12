@@ -3,7 +3,7 @@ import GoogleMapReact from 'google-map-react'
 import React, { useState, useEffect } from 'react'
 import SearchBar from './SearchBar'
 import LocationMarker from './LocationMarker'
-import { getTrails } from '../../WebAPI'
+import { getTrails, getTrailsCondition } from '../../WebAPI'
 
 const MapSearchBarWrapper = styled.div`
   width: 100%;
@@ -14,20 +14,10 @@ const MapSearchBarWrapper = styled.div`
 `
 
 const Map = (props) => {
-  const [currentPosition, setCurrentPosition] = useState({
-    center: { lat: 24.8218635, lng: 121.7352169 },
-    zoom: 17,
-  })
-  const [mapApiLoaded, setMapApiLoaded] = useState(false)
-  const [mapInstance, setMapInstance] = useState(null)
-  const [mapApi, setMapApi] = useState(null)
   const [trailInfos, setTrailInfos] = useState([])
 
   const apiHasLoaded = (map, maps) => {
     console.log('載入完成!')
-    setMapInstance(map)
-    setMapApi(maps)
-    setMapApiLoaded(true)
   }
 
   useEffect(() => {
@@ -38,15 +28,22 @@ const Map = (props) => {
       .catch((err) => console.log(err))
   }, [])
 
-  // 進階： 移動位置自動搜尋附近的步道
-  // const handleCenterChange = () => {
-  //   if (mapApiLoaded) {
-  //     setMyPosition({
-  //       lat: mapInstance.center.lat(),
-  //       lng: mapInstance.center.lng(),
-  //     })
-  //   }
-  // }
+  const [trailConditions, setTrailConditions] = useState({})
+  useEffect(() => {
+    getTrailsCondition()
+      .then((res) => {
+        setTrailConditions(
+          res.data.map((data) => {
+            return {
+              [parseInt(data.TRAILID)]: data.TR_TYP,
+            }
+          })
+        )
+      })
+      .catch((err) => {
+        console.log(err.response)
+      })
+  }, [])
 
   return (
     <div
@@ -61,19 +58,30 @@ const Map = (props) => {
       </MapSearchBarWrapper>
       <GoogleMapReact
         bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
-        defaultCenter={currentPosition.center}
-        defaultZoom={currentPosition.zoom}
+        defaultCenter={props.center}
+        defaultZoom={props.zoom}
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
-        // onBoundsChange={handleCenterChange}
       >
         {trailInfos.map((trailInfo) => {
+          // obj arr to single obj
+          let trailConditionsObj = Object.assign({}, ...trailConditions)
+          // Obj.keys() force id to be string, need to convert again
+          let trailConditionId = Object.keys(trailConditionsObj).map((id) =>
+            parseInt(id)
+          )
+          let currentId = trailInfo.trail_id
+          let trailConditionTag =
+            trailConditionId.indexOf(currentId) < 0
+              ? '全線開放'
+              : trailConditionsObj[currentId]
           return (
             <LocationMarker
               key={trailInfo.trail_id}
               lat={trailInfo.coordinate.y}
               lng={trailInfo.coordinate.x}
               trailInfo={trailInfo}
+              trailConditionTag={trailConditionTag}
             />
           )
         })}
@@ -92,23 +100,3 @@ Map.defaultProps = {
 }
 
 export default Map
-/*
-1. default: 顯示 demo 用「有較多文章」的步道，以他當作初始點，旁邊的文章列表也顯示
-2. 當使用者搜尋：
-  2.1 依據使用者輸入的關鍵字去後端拿資料
-  2.2 將顯示地點改成拿到的資料當中的所有經緯度，並顯示出步道資料
-
-states:
-  - filteredTrails: [{
-    'trail 1': {
-      trail_id: 1,
-      coordinate: {
-        x: 24, y: 121.7
-      }
-      ...
-    }
-  }]
-map trails marker and info window:
-  - after getting response...
-    - filteredTrails.map(trail => return <Map key={trail.trail_id} ><InfoWindow /></Map>)
-*/

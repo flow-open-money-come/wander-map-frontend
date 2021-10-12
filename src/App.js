@@ -1,6 +1,11 @@
 import { ResetStyle, GlobalStyle } from './constants/globalStyle'
-import { HashRouter as Router, Switch, Route } from 'react-router-dom'
-
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  useLocation,
+} from 'react-router-dom'
+import { useEffect } from 'react'
 import NavBar from './components/common/NavBar'
 import Footer from './components/common/Footer'
 import HomePage from './pages/HomePage'
@@ -17,6 +22,16 @@ import TrailPage from './pages/TrailPages/TrailPage'
 import BackToTopBtn from './components/common/BackToTopBtn'
 import ArticlePage from './pages/ArticlePages/ArticlePage'
 
+function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
+}
+
 function App() {
   return (
     <>
@@ -24,6 +39,7 @@ function App() {
       <GlobalStyle />
       <Router>
         <NavBar />
+        <ScrollToTop />
         <Switch>
           <Route exact path='/'>
             <HomePage />
