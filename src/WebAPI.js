@@ -16,11 +16,6 @@ export const apiUserLogout = (data) => userRequest.post('/signOut', data)
 export const apiUserSignUp = (data) => userRequest.post('/signUp', data)
 
 // 文章相關的 api
-export const apiArticleItem = () => articleRequest.get('/ArticleItem')
-export const apiArticleMsg = (data) => articleRequest.post('/ArticleMsg', data)
-export const apiArticleLink = (data) =>
-  articleRequest.post('/ArticleLink', data)
-
 export const apiArticlesHot = () => articleRequest.get('/hot')
 export const apiArticles = () => articleRequest.get('/')
 export const apiArticle = () => articleRequest.get('/:id')

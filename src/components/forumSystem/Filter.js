@@ -69,7 +69,6 @@ const SearchBarInput = styled.input`
 
 const SearchIcon = styled(SearchSvg)`
   margin-right: 10px;
-  cursor: pointer;
 `
 
 export default function ForumFilter({
@@ -79,6 +78,7 @@ export default function ForumFilter({
   setTagValue,
   search,
   setSearch,
+  handleClickSearch,
 }) {
   const handleTagValue = (e) => {
     setTagValue(
@@ -105,8 +105,11 @@ export default function ForumFilter({
             placeholder='關鍵字...'
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-          ></SearchBarInput>
-          <SearchIcon />
+            onKeyDown={(e) => {
+              handleClickSearch(e)
+            }}
+          />
+          <SearchIcon onClick={handleClickSearch} />
         </SearchBar>
         {/* // <SearchBar
           placeholder='關鍵字...'

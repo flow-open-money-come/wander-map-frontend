@@ -6,7 +6,11 @@ import ForumFilter from '../../../components/forumSystem/Filter'
 import { ReactComponent as Hot } from '../../../icons/hot.svg'
 import { FONT, MEDIA_QUERY } from '../../../constants/style'
 import { NavBarButton } from '../../../components/common/Button'
-import { apiArticlesHot, apiArticlesOptions } from '../../../WebAPI'
+import {
+  apiArticlesHot,
+  apiArticlesOptions,
+  apiArticles,
+} from '../../../WebAPI'
 import { COLOR } from '../../../constants/style'
 
 const Wrapper = styled.div`
@@ -81,6 +85,7 @@ function AllArticlesPage() {
   const [posts, setPosts] = useState([])
   const [tagValue, setTagValue] = useState([])
   const [search, setSearch] = useState('')
+  const [filterData, setFilterData] = useState()
   const params = useRef(10)
   let overLoad = false
 
@@ -106,7 +111,7 @@ function AllArticlesPage() {
       }
     }
     getPosts()
-  }, [tagValue])
+  }, [tagValue, filterData])
 
   const handleClickLoadMore = () => {
     const getMorePosts = async () => {
@@ -120,6 +125,21 @@ function AllArticlesPage() {
     getMorePosts()
     while (params.current < posts.length) {
       params.current += 5
+    }
+  }
+
+  const handleClickSearch = (e) => {
+    if (e.key === 'Enter' || e.code === 'Backspace') {
+      const getAllPosts = async () => {
+        try {
+          const res = await apiArticles()
+          setPosts(res.data.data.filter((post) => post.title.includes(search)))
+          setFilterData(true)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+      getAllPosts()
     }
   }
 
@@ -158,6 +178,7 @@ function AllArticlesPage() {
         setTagValue={setTagValue}
         search={search}
         setSearch={setSearch}
+        handleClickSearch={handleClickSearch}
       />
       <ArticleListWrapper>
         {posts.slice(0, params.current).map((post) => {
