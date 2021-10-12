@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { FONT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailMap.svg'
+import { ReactComponent as PinSvg } from '../../icons/pin.svg'
 import GoogleMapReact from 'google-map-react'
 
 
@@ -48,6 +49,14 @@ const MapContainer = styled.div`
   }
 `
 
+const Marker = styled(PinSvg)`
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+`
+
+
+
 function TrailMap(props) {
   return (
     <MapWrapper>
@@ -68,16 +77,16 @@ function TrailMap(props) {
             defaultCenter={props.center}
             defaultZoom={props.zoom}
             yesIWantToUseGoogleMapApiInternals
-            // onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
-            // onBoundsChange={handleCenterChange}
-          ></GoogleMapReact>
+          >
+            <Marker lat={props.center.lat} lng={props.center.lng} />
+          </GoogleMapReact>
         </div>
       </MapContainer>
     </MapWrapper>
   )
 }
 
-Map.defaultProps = {
+TrailMap.defaultProps = {
   center: {
     lat: 24.8218635,
     lng: 121.7352169
