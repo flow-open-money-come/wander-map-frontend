@@ -66,7 +66,7 @@ const InfoRow = styled.div`
 // const InfoSeason = styled(InfoLocation)``
 // const InfoFeature = styled(InfoLocation)``
 
-function TrailInfo() {
+function TrailInfo({ trailInfo }) {
   return (
     <InfoWrapper>
       <Title>
@@ -76,27 +76,27 @@ function TrailInfo() {
       <InfoContainer>
         <InfoRow>
           <div>地點</div>
-          <div>宜蘭縣南澳鄉</div>
+          <div>{trailInfo && trailInfo.location}</div>
         </InfoRow>
         <InfoRow>
           <div>難度</div>
-          <div>入門</div>
+          <div>{trailInfo && trailInfo.difficulty}</div>
         </InfoRow>
         <InfoRow>
           <div>海拔</div>
-          <div>650 公尺</div>
+          <div>{trailInfo && trailInfo.altitude} 公尺</div>
         </InfoRow>
         <InfoRow>
           <div>步道長度</div>
-          <div>4.1 公里</div>
+          <div>{trailInfo && trailInfo.length} 公里</div>
         </InfoRow>
         <InfoRow>
           <div>最佳造訪季</div>
-          <div>四季皆宜</div>
+          <div>{trailInfo && trailInfo.season}</div>
         </InfoRow>
         <InfoRow>
           <div>步道概況</div>
-          <div>土徑步道、土木階梯</div>
+          <div>{trailInfo && trailInfo.situation}</div>
         </InfoRow>
       </InfoContainer>
     </InfoWrapper>

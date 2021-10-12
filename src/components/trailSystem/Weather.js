@@ -120,9 +120,9 @@ const Temperature = styled.div`
 const RainProbability = styled(Temperature)``
 
 const Weather = ({ location }) => {
-  // const location = '宜蘭縣礁溪鄉'
-  const country = location.slice(0, 3)
-  const town = location.slice(3, 6)
+  const position = location || '宜蘭縣礁溪鄉'
+  const country = position.slice(0, 3)
+  const town = position.slice(3, 6)
 
   const [weatherElement, setWeatherElement] = useState({
     temperature: 0,
@@ -155,7 +155,6 @@ const Weather = ({ location }) => {
           }, {})
           weatherInfo.push(weatherElements)
         }
-        console.log('weatherInfo', weatherInfo)
 
         let [weekTemperature, weekWeatherCode, weekRainPossibility] = [[], [], []]
 
@@ -171,8 +170,6 @@ const Weather = ({ location }) => {
         })
       })
   }, [country, town])
-
-  console.log(weatherElement)
 
   const dayLoop = [0, 1, 2, 3, 4, 5, 6]
 

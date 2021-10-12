@@ -3,6 +3,8 @@ import styled from 'styled-components'
 import { FONT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailMap.svg'
 
+
+
 const MapWrapper = styled.div`
   width: 100%;
   display: flex;
@@ -52,7 +54,8 @@ function TrailMap() {
         <TitleIcon />
         步道位置
       </Title>
-      <MapContainer></MapContainer>
+      <MapContainer>
+      </MapContainer>
     </MapWrapper>
   )
 }

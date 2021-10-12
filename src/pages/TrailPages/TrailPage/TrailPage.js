@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import {
   COLOR,
@@ -7,6 +7,7 @@ import {
   RADIUS,
   MEDIA_QUERY,
 } from '../../../constants/style'
+import { useParams } from 'react-router-dom'
 import { ReactComponent as CollectIcon } from '../../../icons/trails/collect.svg'
 import TrailInfo from '../../../components/trailSystem/TrailInfo'
 import Weather from '../../../components/trailSystem/Weather'
@@ -14,6 +15,7 @@ import TrailMap from '../../../components/trailSystem/TrailMap'
 import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
+import axios from 'axios'
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -152,31 +154,46 @@ const InfoAndWeather = styled.div`
 `
 
 function TrailPage() {
-  const location = '宜蘭縣礁溪鄉'
+
+  const { trailID } = useParams()
+  const [trailInfo, setTrailInfo] = useState(null)
+  const [articles, setArticles] = useState(null)
+
+  useEffect(() => {
+    axios
+      .get(`http://18.163.118.205/api/v1/trails/${trailID}`)
+      .then((res) => {
+        setTrailInfo(res.data.data[0])
+      }).catch((error) => console.error(error))
+    axios
+      .get(`http://18.163.118.205/api/v1/trails/${trailID}/articles?limit=3`)
+      .then((res) => {
+        setArticles(res.data.data)
+      })
+      .catch((error) => console.error(error))
+  }, [trailID])
+
   return (
     <TrailPageContainer>
       <HeadFlex>
-        <Cover src='https://tluxe-aws.hmgcdn.com/public/article/2017/atl_20180628130517_581.jpg' />
+        <Cover src={trailInfo && trailInfo.cover_picture_url} />
         <TitleAndDesc>
-          <Title>蘇花古道：大南澳越嶺段</Title>
-          <Desc>
-            蘇花古道建造於清朝同治13
-            年(1874年)，是聯絡蘇澳與花蓮之間最早的一條官道；日人19世紀於蘇花海岸之間先後開鑿了北段的大南澳路、南段的沿岸理番道路及東海徒步道，即今日蘇花公路的前身，但早已荒廢舊跡難尋。經過調查後整建「蘇花古道--大南澳越嶺段」。
-          </Desc>
+          <Title>{trailInfo && trailInfo.title}</Title>
+          <Desc>{trailInfo && trailInfo.description}</Desc>
         </TitleAndDesc>
         <CollectBlock>
           <CollectIcon />
-          77
         </CollectBlock>
       </HeadFlex>
       <InfoAndWeather>
-        <TrailInfo />
-        <Weather location={location} />
+        <TrailInfo trailInfo={trailInfo} />
+        <Weather location={trailInfo && trailInfo.location} />
       </InfoAndWeather>
-
-      <TrailMap />
-      <TrailRoute />
-      <TrailArticles />
+      <TrailMap coordinate={trailInfo && trailInfo.coordinate} />
+      {trailInfo && trailInfo.map_picture_url && (
+        <TrailRoute routePic={trailInfo && trailInfo.map_picture_url} />
+      )}
+      {articles && articles.length !== 0 && <TrailArticles articles={articles} />}
       <TrailReviews />
     </TrailPageContainer>
   )
