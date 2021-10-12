@@ -56,14 +56,22 @@ function TrailMap(props) {
         步道位置
       </Title>
       <MapContainer>
-        <GoogleMapReact
-          bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
-          defaultCenter={props.center}
-          defaultZoom={props.zoom}
-          yesIWantToUseGoogleMapApiInternals
-          // onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
-          // onBoundsChange={handleCenterChange}
-        ></GoogleMapReact>
+        <div
+          style={{
+            height: '100%',
+            width: '100%',
+            position: 'relative'
+          }}
+        >
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
+            defaultCenter={props.center}
+            defaultZoom={props.zoom}
+            yesIWantToUseGoogleMapApiInternals
+            // onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
+            // onBoundsChange={handleCenterChange}
+          ></GoogleMapReact>
+        </div>
       </MapContainer>
     </MapWrapper>
   )
