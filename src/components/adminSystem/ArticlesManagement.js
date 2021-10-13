@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
-
+import { getArticles, deleteArticle } from '../../WebAPI'
+import { Link } from 'react-router-dom'
+import { AuthContext } from '../../context'
+import Pagination from './Pagination'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -23,7 +26,7 @@ const SearchBar = styled.div`
   ${MEDIA_QUERY.lg} {
     margin: 30px auto;
     height: 45px;
-    svg{
+    svg {
       width: 30px;
       height: 30px;
       margin: 0 5px;
@@ -114,7 +117,6 @@ const TrailsTable = styled.table`
   white-space: nowrap;
 `
 
-
 const TableContent = styled.tr`
   text-align: center;
   font-size: ${FONT.s};
@@ -171,6 +173,9 @@ const BtnTd = styled.td`
   vertical-align: middle;
   svg {
     margin: 0 2px;
+    &:hover {
+      cursor: pointer;
+    }
   }
   ${MEDIA_QUERY.lg} {
     width: 5%;
@@ -181,14 +186,58 @@ const BtnTd = styled.td`
     }
   }
 `
-
+const LinkDefault = styled(Link)`
+  color: black;
+`
 
 function ArticlesManagement({ recycle, setRecycle }) {
+  const [articles, setArticles] = useState(null)
+  const [searchValue, setSearchValue] = useState('')
+  const [searchResults, setSearchResults] = useState(null)
+  const { userInfo } = useContext(AuthContext)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+
+  useEffect(() => {
+    //console.log('get all')
+    getArticles('?limit=200')
+      .then((res) => setTotalPages(Math.ceil(res.data.data.length / 20)))
+      .catch((err) => console.error(err))
+    getArticles(`?offset=${(page - 1) * 20}`)
+      .then((res) => setArticles(res.data.data))
+      .catch((err) => console.error(err))
+  }, [page])
+
+  const handleSearchSubmit = (searchValue) => {
+    getArticles(`?search=${searchValue}`)
+      .then((res) => setSearchResults(res.data.data))
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    if (!searchValue) {
+      setSearchResults(null)
+    }
+  }, [searchValue])
+
+  const handleDelete = (articleID, articleTitle) => {
+    if (!userInfo || userInfo.role !== 'admin') return
+    deleteArticle(articleID).then()
+    alert(`刪除 ${articleTitle}`)
+    setArticles(articles.filter((article) => article.article_id !== articleID))
+  }
+
   return (
     <Block>
       <SearchBar>
         <SearchIcon />
-        <SearchField></SearchField>
+        <SearchField
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSearchSubmit(searchValue)
+          }}
+        />
       </SearchBar>
       <RecycleBlock>
         {recycle && (
@@ -214,36 +263,52 @@ function ArticlesManagement({ recycle, setRecycle }) {
         )}
       </RecycleBlock>
       <TrailsTable>
-        <TableContent>
-          <CoverTd>
-            <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
-          </CoverTd>
-          <TrailsTd>
-            大雪山國家森林遊樂區一日遊
-          </TrailsTd>
-          <CreatorTd>
-            admin
-          </CreatorTd>
-          <DateTd>2000-01-01</DateTd>
-          <BtnTd>
-            <BinIcon />
-          </BtnTd>
-        </TableContent>
-        <TableContent>
-          <CoverTd>
-            <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
-          </CoverTd>
-          <TrailsTd>
-            大雪山國家森林遊樂區一日遊
-          </TrailsTd>
-          <CreatorTd>
-            admin
-          </CreatorTd>
-          <DateTd>2000-01-01</DateTd>
-          <BtnTd>
-            <BinIcon />
-          </BtnTd>
-        </TableContent>
+        {!searchResults &&
+          articles &&
+          articles.map((article) => (
+            <TableContent>
+              <LinkDefault to={`/articles/${article.article_id}`}>
+                <CoverTd>
+                  <TrailImg src={article.cover_picture_url} />
+                </CoverTd>
+                <TrailsTd>{article.title}</TrailsTd>
+              </LinkDefault>
+              <CreatorTd>
+                <LinkDefault to={`/users/${article.author_id}`}>{article.author_id}</LinkDefault>
+              </CreatorTd>
+              <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
+              <BtnTd>
+                <BinIcon
+                  onClick={() => {
+                    handleDelete(article.article_id, article.title)
+                  }}
+                />
+              </BtnTd>
+            </TableContent>
+          ))}
+        {!searchResults && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
+        {searchResults &&
+          searchResults.map((article) => (
+            <TableContent>
+              <LinkDefault to={`/articles/${article.article_id}`}>
+                <CoverTd>
+                  <TrailImg src={article.cover_picture_url} />
+                </CoverTd>
+                <TrailsTd>{article.title}</TrailsTd>
+              </LinkDefault>
+              <CreatorTd>
+                <LinkDefault to={`/users/${article.author_id}`}>{article.author_id}</LinkDefault>
+              </CreatorTd>
+              <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
+              <BtnTd>
+                <BinIcon
+                  onClick={() => {
+                    handleDelete(article.article_id, article.title)
+                  }}
+                />
+              </BtnTd>
+            </TableContent>
+          ))}
       </TrailsTable>
     </Block>
   )

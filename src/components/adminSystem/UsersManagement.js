@@ -112,7 +112,9 @@ const StatusBtn = styled.button`
 `
 
 
-function UsersManagement() {
+function UsersManagement({ users, setUsers }) {
+
+  console.log('users',users)
   return (
     <Block>
       <SearchBar>
@@ -142,6 +144,16 @@ function UsersManagement() {
             <StatusBtn>停權</StatusBtn>
           </ContentTd>
         </TableContent>
+        {/* {users.map((user) => (
+          <TableContent>
+            <NicknameTd>user</NicknameTd>
+            <EmailTd>woo.123.com</EmailTd>
+            <ContentTd>2000.01.01</ContentTd>
+            <ContentTd>
+              <StatusBtn>停權</StatusBtn>
+            </ContentTd>
+          </TableContent>
+        ))} */}
       </UsersTable>
     </Block>
   )

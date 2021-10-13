@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
-
-
+import { getTrails, deleteTrail } from '../../WebAPI'
+import { Link } from 'react-router-dom'
+import { AuthContext } from '../../context'
+import Pagination from './Pagination'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -56,7 +58,6 @@ const RecycleBlock = styled.div`
   }
 `
 
-
 const RecycleTitle = styled.div`
   font-size: ${FONT.s};
   ${MEDIA_QUERY.md} {
@@ -104,7 +105,6 @@ const RecycleBin = styled.div`
   }
 `
 
-
 const TrailsTable = styled.table`
   width: 95%;
   margin: 10px auto;
@@ -113,7 +113,6 @@ const TrailsTable = styled.table`
   overflow-x: auto;
   white-space: nowrap;
 `
-
 
 const TableContent = styled.tr`
   text-align: center;
@@ -143,19 +142,22 @@ const TrailImg = styled.img`
 `
 
 const TrailsTd = styled.td`
-  width: 60%;
+  width: 200px;
   overflow: auto;
   text-align: start;
   padding: 0 3px;
   vertical-align: middle;
+  ${MEDIA_QUERY.md} {
+    width: 700px;
+  }
   ${MEDIA_QUERY.lg} {
-    width: 600px;
+    width: 900px;
     padding-left: 20px;
   }
 `
 
 const CreatorTd = styled.td`
-  width: 20%;
+  width: 80px;
   vertical-align: middle;
   padding: 0 3px;
   ${MEDIA_QUERY.lg} {
@@ -164,10 +166,13 @@ const CreatorTd = styled.td`
 `
 
 const BtnTd = styled.td`
-  width: 100px;
+  width: 80px;
   vertical-align: middle;
   svg {
     margin: 0 2px;
+    &:hover {
+      cursor: pointer;
+    }
   }
   ${MEDIA_QUERY.lg} {
     width: 80px;
@@ -179,55 +184,130 @@ const BtnTd = styled.td`
   }
 `
 
+const LinkWrapper = styled(Link)`
+  color: black;
+`
 
 function TrailsManagement({ recycle, setRecycle }) {
+  const [trails, setTrails] = useState(null)
+  const [searchValue, setSearchValue] = useState('')
+  const [searchResults, setSearchResults] = useState(null)
+  const { userInfo } = useContext(AuthContext)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+
+
+  useEffect(() => {
+    //console.log('get all')
+    getTrails('?limit=200')
+      .then((res) => setTotalPages(Math.ceil(res.data.data.length / 20)))
+      .catch((err) => console.error(err))
+    getTrails(`?offset=${(page-1)*20}`)
+      .then((res) => setTrails(res.data.data))
+      .catch((err) => console.error(err))
+  }, [page])
+
+
+  const handleSearchSubmit = (searchValue) => {
+    getTrails(`?search=${searchValue}`)
+      .then((res) => setSearchResults(res.data.data))
+      .catch((err) => console.log(err))
+  }
+
+  useEffect(() => {
+    if (!searchValue) {
+      setSearchResults(null)
+    }
+  }, [searchValue])
+
+  // console.log('Value', searchValue)
+  // console.log('Results', searchResults)
+
+  const handleDelete = (trailID, trailTitle) => {
+    if (!userInfo || userInfo.role !== 'admin') return
+    deleteTrail(trailID).then()
+    alert(`刪除 ${trailTitle}`)
+    setTrails(trails.filter((trail) => trail.trail_id !== trailID))
+  }
+
   return (
     <Block>
       <SearchBar>
         <SearchIcon />
-        <SearchField></SearchField>
+        <SearchField
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSearchSubmit(searchValue)
+          }}
+        />
       </SearchBar>
       <RecycleBlock>
-        {recycle &&  <>
-        <RecycleTitle>刪除列表</RecycleTitle>
-        <BackBtn onClick={() => {setRecycle(false)}}>返回</BackBtn>
-        </>
-        }
-        {!recycle && <RecycleBin onClick={() => {setRecycle(true)}}>
-          <BinIcon />
-        </RecycleBin>}
+        {recycle && (
+          <>
+            <RecycleTitle>刪除列表</RecycleTitle>
+            <BackBtn onClick={() => setRecycle(false)}>返回</BackBtn>
+          </>
+        )}
+        {!recycle && (
+          <RecycleBin
+            onClick={() => {
+              setRecycle(true)
+            }}
+          >
+            <BinIcon />
+          </RecycleBin>
+        )}
       </RecycleBlock>
       <TrailsTable>
-        <TableContent>
-          <CoverTd>
-            <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
-          </CoverTd>
-          <TrailsTd>
-            大雪山國家森林遊樂區步道群
-          </TrailsTd>
-          <CreatorTd>admin</CreatorTd>
-          <BtnTd>
-            <EditIcon />
-            <BinIcon />
-          </BtnTd>
-        </TableContent>
-
-        <TableContent>
-          <CoverTd>
-            <TrailImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg' />
-          </CoverTd>
-          <TrailsTd>
-            大雪山國家森林遊樂區步道群
-          </TrailsTd>
-          <CreatorTd>admin</CreatorTd>
-          <BtnTd>
-            <EditIcon />
-            <BinIcon />
-          </BtnTd>
-        </TableContent>
+        {!searchResults &&
+          trails &&
+          trails.map((trail) => (
+            <TableContent>
+              <LinkWrapper to={`/trails/${trail.trail_id}`}>
+                <CoverTd>
+                  <TrailImg src={trail.cover_picture_url} />
+                </CoverTd>
+                <TrailsTd>{trail.title}</TrailsTd>
+              </LinkWrapper>
+              <CreatorTd>admin</CreatorTd>
+              <BtnTd>
+                <Link to={`/trails/${trail.trail_id}`}>
+                  <EditIcon />
+                </Link>
+                <BinIcon
+                  onClick={() => {
+                    handleDelete(trail.trail_id, trail.title)
+                  }}
+                />
+              </BtnTd>
+            </TableContent>
+          ))}
+        {!searchResults && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
+        {searchResults &&
+          searchResults.map((trail) => (
+            <TableContent>
+              <LinkWrapper to={`/trails/${trail.trail_id}`}>
+                <CoverTd>
+                  <TrailImg src={trail.cover_picture_url} />
+                </CoverTd>
+                <TrailsTd>{trail.title}</TrailsTd>
+              </LinkWrapper>
+              <CreatorTd>admin</CreatorTd>
+              <BtnTd>
+                <Link to={`/trails/${trail.trail_id}`}>
+                  <EditIcon />
+                </Link>
+                <BinIcon
+                  onClick={() => {
+                    handleDelete(trail.trail_id, trail.title)
+                  }}
+                />
+              </BtnTd>
+            </TableContent>
+          ))}
       </TrailsTable>
     </Block>
-
   )
 }
 

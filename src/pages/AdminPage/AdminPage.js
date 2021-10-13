@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import UsersManagement from '../../components/adminSystem/UsersManagement'
 import TrailsManagement from '../../components/adminSystem/TrailsManagement'
@@ -7,6 +8,9 @@ import ArticlesManagement from '../../components/adminSystem/ArticlesManagement'
 import { ReactComponent as UserIcon } from '../../icons/backstage/adminUser.svg'
 import { ReactComponent as TrailIcon } from '../../icons/backstage/adminTrail.svg'
 import { ReactComponent as ArticleIcon } from '../../icons/backstage/adminArticle.svg'
+import { AuthContext } from '../../context'
+import { getAuthToken } from '../../utils'
+import { getAllUsers } from '../../WebAPI'
 
 const AdminPageContainer = styled.div`
   width: 80%;
@@ -141,7 +145,24 @@ const TabTitle = styled.div`
 
 function AdminPage() {
   const [tab, setTab] = useState('Users')
+  const [users, setUsers] = useState(null)
   const [recycle, setRecycle] = useState(false)
+  const { userInfo } = useContext(AuthContext)
+  const history = useHistory()
+  const adminToken = getAuthToken()
+  // console.log(userInfo)
+  // console.log(adminToken)
+
+  if (!userInfo || userInfo.role !== 'admin') history.push('/')
+
+  useEffect(()=>{
+    getAllUsers(adminToken)
+      .then((res) => {
+        setUsers(res.data.data.user)
+      })
+      .catch((err) => console.log(err))
+  })
+
 
   return (
     <AdminPageContainer>
@@ -179,21 +200,9 @@ function AdminPage() {
           </ArticlesTab>
         </Tabs>
 
-        {tab === 'Users' && <UsersManagement setTab={setTab} />}
-        {tab === 'Trails' && (
-          <TrailsManagement
-            setTab={setTab}
-            recycle={recycle}
-            setRecycle={setRecycle}
-          />
-        )}
-        {tab === 'Articles' && (
-          <ArticlesManagement
-            setTab={setTab}
-            recycle={recycle}
-            setRecycle={setRecycle}
-          />
-        )}
+        {tab === 'Users' && <UsersManagement users={users} setUsers={setUsers} />}
+        {tab === 'Trails' && <TrailsManagement recycle={recycle} setRecycle={setRecycle} />}
+        {tab === 'Articles' && <ArticlesManagement recycle={recycle} setRecycle={setRecycle} />}
       </ManagementContainer>
     </AdminPageContainer>
   )
