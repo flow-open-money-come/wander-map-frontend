@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comments'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
@@ -9,6 +9,7 @@ import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
 import { apiArticle, apiMessages } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
+import Loading from '../../../components/common/Loading'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -126,8 +127,7 @@ function ArticlePage() {
   const { id } = useParams()
   const [thumb, setThumb] = useState(false)
   const [post, setPost] = useState([])
-  const [value, setValue] = useState('')
-  const [messages, setMessages] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const getPost = async () => {
@@ -140,18 +140,6 @@ function ArticlePage() {
     }
     getPost()
   }, [])
-
-  useEffect(() => {
-    const getMessage = async () => {
-      try {
-        let res = await apiMessages(id)
-        setMessages(res.data.data)
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    getMessage()
-  }, [value, messages])
 
   return (
     <Wrapper>
@@ -201,12 +189,7 @@ function ArticlePage() {
         <ReviewIcon />
         <CommentTitle>討論區</CommentTitle>
       </FlexGroup>
-      <Comment
-        value={value}
-        setValue={setValue}
-        setMessages={setMessages}
-        messages={messages}
-      />
+      {isLoading ? <Loading /> : <Comment setIsLoading={setIsLoading} />}
     </Wrapper>
   )
 }

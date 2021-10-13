@@ -9,6 +9,7 @@ import {
   apiMessagesPost,
   apiMessagesDelete,
   apiMessagesPatch,
+  apiMessages,
 } from '../../WebAPI'
 
 const CommentsContainer = styled.div`
@@ -19,7 +20,7 @@ const CommentsContainer = styled.div`
   padding-bottom: 20px;
 `
 
-const CommentsHeader = styled.form`
+const CommentsHeader = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -159,6 +160,7 @@ const CommentBtn = styled.div`
 
     &:hover {
       cursor: pointer;
+      transform: scale(1.5, 1.5);
     }
   }
   ${MEDIA_QUERY.md} {
@@ -199,64 +201,130 @@ const EditInput = styled.input`
   border: ${COLOR.gray_light} solid 2px;
   border-radius: ${RADIUS.s};
   margin-top: 10px;
-  line-height: 2em;
-  background: ${COLOR.white};
+  line-height: 3em;
+  opacity: 0.7;
+  padding-left: 5px;
+  min-width: 80%;
 `
 
-export default function Comments({ messages, setMessages, value, setValue }) {
-  const { id } = useParams()
-  const [show, setShow] = useState(false)
-  const editItem = useRef('')
-
-  const handleOnChange = (e) => {
-    setValue(e.target.value)
+const SendBtn = styled.button`
+  border: 1px ${COLOR.gray_light} solid;
+  padding: 5px;
+  border-radius: ${RADIUS.s};
+  margin: 5px 5px 0 0;
+  cursor: pointer;
+  &:focus {
+    outline: none;
   }
+
+  ${(props) =>
+    props.editValue &&
+    `
+    background-color: ${COLOR.green};
+    color: ${COLOR.white};
+  `}
+`
+
+const EditWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+`
+
+const Reminder = styled.span`
+  color: ${COLOR.pink};
+  font-size: ${FONT.s};
+`
+export default function Comments({ setIsLoading }) {
+  const { id } = useParams()
+  const [reminder, setReminder] = useState('')
+  const [value, setValue] = useState('')
+  const [messages, setMessages] = useState([])
   const [editValue, setEditValue] = useState('')
+  const [editing, setEditing] = useState(false)
+  const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    const getMessage = async () => {
+      try {
+        let res = await apiMessages(id)
+        setMessages(res.data.data)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getMessage()
+  }, [value, editValue, editing, deleting, setIsLoading])
 
   // 待修正 authorId
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    setReminder('')
+    if (value === '') {
+      setReminder('請輸入內容')
+      return e.preventDefault()
+    }
+    setIsLoading(true)
     try {
       await apiMessagesPost(id, 1, value)
-      setEditValue('')
+      setIsLoading(false)
+      setValue('')
     } catch (err) {
       console.log(err)
     }
   }
 
   const handleEditMessage = async (e) => {
+    setReminder('')
     const messageId = e.target.id
+    if (editValue === '') {
+      setReminder('請輸入修改內容')
+      return e.preventDefault()
+    }
+    setIsLoading(true)
     try {
       await apiMessagesPatch(id, messageId, editValue)
-      setEditValue(e.target.value)
+      setEditing(false)
+      setIsLoading(false)
     } catch (err) {
       console.log(err)
     }
+    setEditValue('')
   }
 
-  console.log(editItem)
+  const handlePopUpInput = (e) => {
+    setEditing(e.target.id)
+    setEditValue('')
+    setReminder('')
+  }
 
-  // 待修正 messageId
   const handleDeleteMessage = async (e) => {
     const messageId = e.target.id
+    setIsLoading(true)
     try {
       await apiMessagesDelete(id, messageId)
+      setIsLoading(false)
+      setDeleting(true)
     } catch (err) {
       console.log(err)
     }
+    setDeleting(false)
   }
 
   return (
     <CommentsContainer>
-      <CommentsHeader onSubmit={handleSubmit}>
+      {reminder && !editing && <Reminder>{reminder}</Reminder>}
+      <CommentsHeader>
         <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
         <InputField
           value={value}
           onChange={(e) => {
-            handleOnChange(e)
+            setValue(e.target.value)
+            setReminder('')
           }}
           placeholder='請輸入留言...'
         />
-        <SentBtn>
+        <SentBtn onClick={(e) => handleSubmit(e)}>
           <SendIcon />
         </SentBtn>
       </CommentsHeader>
@@ -271,30 +339,52 @@ export default function Comments({ messages, setMessages, value, setValue }) {
               <CommentTime>
                 {new Date(message.created_at).toLocaleString()}
               </CommentTime>
-              <EditIcon
-                id={message.comment_id} // 待修正成 message_id
-                onClick={(e) => {
-                  handleEditMessage(e)
-                }}
-              />
+              <EditIcon id={message.message_id} onClick={handlePopUpInput} />
               <BinIcon
-                id={message.comment_id} // 待修正成 message_id
+                id={message.message_id}
                 onClick={(e) => {
                   handleDeleteMessage(e)
                 }}
               />
             </CommentBtn>
           </CommentInfo>
-          <EditInput
-            ref={editItem}
-            show={show}
-            id={message.comment_id} // 待修正成 message_id
-            onChange={(e) => setEditValue(e.target.value)}
-            value={editValue}
-            type='text'
-            placeholder={message.content}
-          />
-          <Content>{message.content}</Content>
+          {Number(editing) === message.message_id ? (
+            <EditWrapper>
+              <EditInput
+                id={message.message_id}
+                onChange={(e) => {
+                  setEditValue(e.target.value)
+                  setReminder('')
+                }}
+                defaultValue={editValue ? editValue : message.content}
+                type='text'
+              />
+              <div>
+                <SendBtn
+                  editValue={editValue}
+                  id={message.message_id}
+                  onClick={(e) => {
+                    handleEditMessage(e)
+                  }}
+                >
+                  送出
+                </SendBtn>
+                <SendBtn
+                  editValue={!editValue}
+                  onClick={() => {
+                    setEditing(false)
+                    setEditValue('')
+                    setReminder('')
+                  }}
+                >
+                  取消編輯
+                </SendBtn>
+                {reminder && <Reminder>{reminder}</Reminder>}
+              </div>
+            </EditWrapper>
+          ) : (
+            <Content id={message.message_id}>{message.content}</Content>
+          )}
         </Card>
       ))}
     </CommentsContainer>
