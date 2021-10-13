@@ -1,6 +1,12 @@
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import jwt_decode from 'jwt-decode'
+import { useState, useContext } from 'react'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { userRegister } from '../../WebAPI'
+import { setAuthToken } from '../../utils'
+import { AuthContext } from '../../context'
+import useUserInfoValidation from '../../hooks/useUserInfoValidation'
 
 const RegisterPageWrapper = styled.div`
   width: 100%;
@@ -107,31 +113,99 @@ const OuterLink = styled(Link)`
   color: ${COLOR.white};
 `
 export default function RegisterPage() {
+  const [registerInfo, setRegisterInfo] = useState({
+    nickname: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  })
+
+  const { setUserInfo } = useContext(AuthContext)
+  const history = useHistory()
+  const { errMsg, setErrMsg, validateUserInfos } = useUserInfoValidation()
+
+  const handleUserInfoChange = (e) => {
+    setRegisterInfo({
+      ...registerInfo,
+      [e.target.name]: e.target.value,
+    })
+  }
+  const handleRegister = (e) => {
+    setErrMsg('')
+    e.preventDefault()
+    for (let i = 0; i < Object.keys(registerInfo).length; i++) {
+      if (!validateUserInfos(registerInfo, Object.keys(registerInfo)[i])) return
+    }
+    userRegister(registerInfo)
+      .then((res) => {
+        if (res.data.success) {
+          setAuthToken(res.data.data.token)
+          setUserInfo(jwt_decode(res.data.data.token))
+          alert('註冊成功！')
+          history.push('/')
+        }
+      })
+      .catch((err) => {
+        if (err) {
+          setErrMsg(err.response.data.message)
+        }
+      })
+  }
+
   return (
     <>
       <RegisterPageWrapper>
         <Title> 註冊成為會員，和大家分享心得吧！ </Title>
         <RegisterFormsWrapper>
           <FormWrapper>
-            <AlertMsg $error>資料不齊全，請再次檢查。</AlertMsg>
-            <Input placeholder='使用者名稱' required />
-            <AlertMsg>至多 20 個字元</AlertMsg>
-            <Input type='email' placeholder='電子郵件' required />
+            <AlertMsg $error>{errMsg}</AlertMsg>
             <Input
+              name='nickname'
+              placeholder='使用者名稱'
+              required
+              onChange={(e) => {
+                handleUserInfoChange(e)
+              }}
+            />
+            <AlertMsg>至多 20 個字元</AlertMsg>
+            <Input
+              name='email'
+              type='email'
+              placeholder='電子郵件'
+              required
+              onChange={(e) => {
+                handleUserInfoChange(e)
+              }}
+            />
+            <Input
+              name='password'
               type='password'
               placeholder='密碼'
               pattern='(?=.*\d)(?=.*[a-zA-Z])^[a-zA-Z0-9!@#$%^&*]{8,}$'
               required
+              onChange={(e) => {
+                handleUserInfoChange(e)
+              }}
             />
             <AlertMsg>8 位以上的英數組合</AlertMsg>
             <Input
+              name='confirmPassword'
               type='password'
               placeholder='確認密碼'
               pattern='(?=.*\d)(?=.*[a-zA-Z])^[a-zA-Z0-9!@#$%^&*]{8,}$'
               required
+              onChange={(e) => {
+                handleUserInfoChange(e)
+              }}
             />
             <AlertMsg>請再次輸入密碼</AlertMsg>
-            <SubmitBtn type='submit' value='註冊'></SubmitBtn>
+            <SubmitBtn
+              type='submit'
+              value='註冊'
+              onClick={(e) => {
+                handleRegister(e)
+              }}
+            ></SubmitBtn>
             <AlertMsg>
               已是會員？<OuterLink to='/login'>登入</OuterLink>
             </AlertMsg>
