@@ -15,7 +15,7 @@ import TrailMap from '../../../components/trailSystem/TrailMap'
 import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
-import axios from 'axios'
+import { getTrails, getTrailArticles } from '../../../WebAPI'
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -153,23 +153,37 @@ const InfoAndWeather = styled.div`
   }
 `
 
+const trailDefault = {
+    trail_id: 2,
+    title: '南澳古道',
+    description:
+      '南澳古道位在南澳鄉金洋村，是通往泰雅族舊部落的路徑之一，為「舊武塔古道」的一部分，也是泰雅族的傳統獵場。自旋檀駐在所遺址起，循南澳南溪上溯至古道終點，至合流溪與南澳南溪匯流口，共 3.8 公里。沿途平緩好走，野生動植物生態豐富，沿途有吊橋遺址、警備道路基等遺跡。',
+    location: '宜蘭縣南澳鄉',
+    coordinate: {
+      x: 121.70835976400171,
+      y: 24.42360428661788
+    },
+    altitude: 350,
+    length: 3.8,
+    season: '四季皆宜',
+    difficulty: 'difficulty',
+    cover_picture_url:
+      'https://tluxe-aws.hmgcdn.com/public/article/2017/atl_20180628130517_581.jpg',
+    map_picture_url: 'https://recreation.forest.gov.tw/Files/RT/Photo/002/01/002_MAP.jpg',
+    situation: '木棧道、碎石山徑'
+}
+
+
 function TrailPage() {
 
   const { trailID } = useParams()
-  const [trailInfo, setTrailInfo] = useState(null)
+  const [trailInfo, setTrailInfo] = useState(trailDefault)
   const [articles, setArticles] = useState(null)
 
   useEffect(() => {
-    axios
-      .get(`http://18.163.118.205/api/v1/trails/${trailID}`)
-      .then((res) => {
-        setTrailInfo(res.data.data[0])
-      }).catch((error) => console.error(error))
-    axios
-      .get(`http://18.163.118.205/api/v1/trails/${trailID}/articles?limit=3`)
-      .then((res) => {
-        setArticles(res.data.data)
-      })
+    getTrails(trailID).then((res) =>  setTrailInfo(res.data.data[0]))
+      .catch((error) => console.error(error))
+    getTrailArticles(trailID).then((res) => setArticles(res.data.data))
       .catch((error) => console.error(error))
   }, [trailID])
 

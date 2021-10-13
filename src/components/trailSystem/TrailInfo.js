@@ -67,6 +67,35 @@ const InfoRow = styled.div`
 // const InfoFeature = styled(InfoLocation)``
 
 function TrailInfo({ trailInfo }) {
+
+ const difficultyTable = [
+   {
+     inputLevel: 'lowest',
+     outputLevel: '新手'
+   },
+   {
+     inputLevel: 'low',
+     outputLevel: '新手'
+   },
+   {
+     inputLevel: 'medium',
+     outputLevel: '入門'
+   },
+   {
+     inputLevel: 'height',
+     outputLevel: '進階'
+   },
+   {
+     inputLevel: 'heightest',
+     outputLevel: '困難'
+   }
+ ]
+
+ const difficultyTransfer = (difficulty) => {
+   return difficultyTable.find((level) => level.inputLevel === trailInfo.difficulty).outputLevel
+ }
+
+
   return (
     <InfoWrapper>
       <Title>
@@ -80,7 +109,7 @@ function TrailInfo({ trailInfo }) {
         </InfoRow>
         <InfoRow>
           <div>難度</div>
-          <div>{trailInfo && trailInfo.difficulty}</div>
+          <div>{trailInfo && difficultyTransfer(trailInfo.difficulty)}</div>
         </InfoRow>
         <InfoRow>
           <div>海拔</div>

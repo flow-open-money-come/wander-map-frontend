@@ -2,7 +2,7 @@ import axios from 'axios'
 import config from './config'
 
 const instance = axios.create({
-  baseURL: `${config.apiHost}`,
+  baseURL: `${config.apiHost1}`,
 })
 
 // user
@@ -11,8 +11,10 @@ export const userRegister = (payload) =>
   instance.post('/users/register', payload)
 
 // trails
-export const getTrails = (params) => instance.get('/trails' + params)
+export const getTrails = (params) => instance.get('/trails/' + params)
 export const getHotTrails = () => instance.get('/trails/featured')
+export const getTrailArticles = (trailID) => instance.get('/trails/' + trailID + '/articles')
+
 
 // articles
 export const getArticles = () => instance.get('/articles')
