@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom'
 import { COLOR, RADIUS, FONT, MEDIA_QUERY } from '../../constants/style'
 import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
-import { getTrailsCondition } from '../../WebAPI'
-import { useState } from 'react/cjs/react.development'
 import { useEffect } from 'react'
+import { getArticlesUnderTrail } from '../../WebAPI'
 
 const HomepageContainer = styled.div`
   width: 90%;

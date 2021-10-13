@@ -16,3 +16,5 @@ export const getTrailsCondition = () => axios.get(config.tfrHost)
 
 // articles
 export const getArticles = () => instance.get('/articles')
+export const getArticlesUnderTrail = (id) =>
+  instance.get('/trails/' + id + '/articles')

@@ -2,6 +2,9 @@ import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { ReactComponent as PinSvg } from '../../icons/pin.svg'
 import useToggle from '../../hooks/useToggle'
+import { useState, useEffect, useRef } from 'react'
+import { getArticlesUnderTrail } from '../../WebAPI'
+import useDidMountEffect from '../../hooks/useDidMountEffect'
 
 const Marker = styled(PinSvg)`
   width: 30px;
@@ -56,10 +59,24 @@ const TrailInfoWrapper = styled.div`
 `
 export default function LocationMarker({ trailInfo, trailConditionTag }) {
   const [isInfoWindowOpen, setInfoWindowToggleClick] = useToggle(false)
+  const currentOnClickTrail = useRef(1)
+
+  const handleMarkerOnclick = () => {
+    console.log('re-load onclick', trailInfo.trail_id)
+    setInfoWindowToggleClick()
+    currentOnClickTrail.current = trailInfo.trail_id
+  }
+
+  useDidMountEffect(() => {
+    getArticlesUnderTrail(currentOnClickTrail.current).then((res) => {
+      console.log(res.data.data)
+    })
+    console.log('發api', currentOnClickTrail.current)
+  }, [currentOnClickTrail.current])
 
   return (
     <>
-      <Marker onClick={setInfoWindowToggleClick}></Marker>
+      <Marker onClick={handleMarkerOnclick}></Marker>
       <InfoWindow $isOpen={isInfoWindowOpen}>
         <TrailImg src={trailInfo.cover_picture_url} />
         <TrailInfoWrapper>
