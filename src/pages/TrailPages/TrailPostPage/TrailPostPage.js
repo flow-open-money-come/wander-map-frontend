@@ -194,7 +194,6 @@ export default function TrailPostPage() {
     coordinateX: '',
     coordinateY: '',
     cover_picture_url: '',
-    required_time: '',
   })
 
   const handleInputChange = (e) => {
@@ -292,23 +291,23 @@ export default function TrailPostPage() {
         <FormTitle>步道難度</FormTitle>
         <FormSubTitleWrapper onChange={handleInputChange}>
           <label>
-            <Radio value='新手' />
+            <Radio value='1' />
             新手
           </label>
           <label>
-            <Radio value='入門' />
+            <Radio value='2' />
             入門
           </label>
           <label>
-            <Radio value='進階' />
+            <Radio value='3' />
             進階
           </label>
           <label>
-            <Radio value='挑戰' />
+            <Radio value='4' />
             挑戰
           </label>
           <label>
-            <Radio value='困難' />
+            <Radio value='5' />
             困難
           </label>
         </FormSubTitleWrapper>
