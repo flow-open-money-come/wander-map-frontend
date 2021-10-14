@@ -198,6 +198,7 @@ export default function UserOverviewPage() {
       );
 
       setData(result.data);
+      console.log(data)
     };
 
     fetchData();

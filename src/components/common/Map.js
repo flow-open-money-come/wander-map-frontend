@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import GoogleMapReact from 'google-map-react'
-import KEY from '../../key'
 import React, { useState } from 'react'
 import SearchBar from './SearchBar'
 import LocationMarker from './LocationMarker'
@@ -75,7 +74,7 @@ const Map = (props) => {
       style={{
         height: '100%',
         width: '100%',
-        position: 'relative'
+        position: 'relative',
       }}
     >
       <MapSearchBarWrapper>
