@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comments'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
@@ -10,6 +10,7 @@ import ArticleContent from '../../../components/forumSystem/ArticleContent'
 import { apiArticle } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 import Loading from '../../../components/common/Loading'
+import { AuthContext } from '../../../context'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -128,19 +129,21 @@ function ArticlePage() {
   const [thumb, setThumb] = useState(false)
   const [post, setPost] = useState([])
   const [isLoading, setIsLoading] = useState(false)
+  // const { userInfo, setUserInfo } = useContext(AuthContext)
 
   useEffect(() => {
     const getPost = async () => {
       try {
         let res = await apiArticle(id)
-        setPost(res.data.data[0])
+        if (res.status === 200) {
+          setPost(res.data.data[0])
+        }
       } catch (err) {
         console.log(err)
       }
     }
     getPost()
   }, [])
-
   return (
     <Wrapper>
       <CoverImg src={post.cover_picture_url} />

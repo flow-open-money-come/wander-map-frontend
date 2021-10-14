@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
@@ -11,6 +11,7 @@ import {
   apiMessagesPatch,
   apiMessages,
 } from '../../WebAPI'
+import { AuthContext } from '../../../src/context'
 
 const CommentsContainer = styled.div`
   width: 100%;
@@ -266,12 +267,17 @@ export default function Comments({ setIsLoading }) {
   const [editValue, setEditValue] = useState('')
   const [editing, setEditing] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const { userInfo, setUserInfo } = useContext(AuthContext)
+
+  console.log(userInfo)
 
   useEffect(() => {
     const getMessage = async () => {
       try {
         let res = await apiMessages(id)
-        setMessages(res.data.data)
+        if (res.status === 200) {
+          setMessages(res.data.data)
+        }
       } catch (err) {
         console.log(err)
       }
@@ -279,7 +285,6 @@ export default function Comments({ setIsLoading }) {
     getMessage()
   }, [value, editValue, editing, deleting, setIsLoading])
 
-  // 待修正 authorId
   const handleSubmit = async (e) => {
     setReminder('')
     if (value === '') {
@@ -288,7 +293,7 @@ export default function Comments({ setIsLoading }) {
     }
     setIsLoading(true)
     try {
-      await apiMessagesPost(id, 1, value)
+      await apiMessagesPost(id, userInfo.user_id, value)
       setIsLoading(false)
       setValue('')
     } catch (err) {
@@ -355,28 +360,34 @@ export default function Comments({ setIsLoading }) {
           <CommentInfo>
             <CommentViewInfo>
               <UserAvatar src={message.icon_url} />
-              <CommentNickname>
-                小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍
-              </CommentNickname>
+              <CommentNickname>{message.nickname}</CommentNickname>
             </CommentViewInfo>
             <CommentBtn>
               <CommentTime>
-                {new Date(message.created_at).toLocaleString()}
+                {new Date(message.created_at).toLocaleString('ja')}
               </CommentTime>
-              <EditButton id={message.comment_id} onClick={handlePopUpInput} />
-              <BinButton
-                id={message.comment_id}
-                onClick={(e) => {
-                  handleDeleteMessage(e)
-                }}
-              />
+              {(userInfo.user_id === message.author_id ||
+                userInfo.role === 'admin') && (
+                <>
+                  <EditButton
+                    id={message.message_id}
+                    onClick={handlePopUpInput}
+                  />
+                  <BinButton
+                    id={message.message_id}
+                    onClick={(e) => {
+                      handleDeleteMessage(e)
+                    }}
+                  />
+                </>
+              )}
             </CommentBtn>
           </CommentInfo>
-          {Number(editing) === message.comment_id ? (
+          {Number(editing) === message.message_id ? (
             <EditWrapper>
               <EditInput
                 rows='3'
-                id={message.comment_id}
+                id={message.message_id}
                 onChange={(e) => {
                   setEditValue(e.target.value)
                   setReminder('')
@@ -387,7 +398,7 @@ export default function Comments({ setIsLoading }) {
               <div>
                 <SendBtn
                   editValue={editValue}
-                  id={message.comment_id}
+                  id={message.message_id}
                   onClick={(e) => {
                     handleEditMessage(e)
                   }}
@@ -410,7 +421,7 @@ export default function Comments({ setIsLoading }) {
               </div>
             </EditWrapper>
           ) : (
-            <Content id={message.comment_id}>{message.content}</Content>
+            <Content id={message.message_id}>{message.content}</Content>
           )}
         </Card>
       ))}
