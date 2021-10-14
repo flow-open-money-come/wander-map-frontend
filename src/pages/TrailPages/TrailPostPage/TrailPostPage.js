@@ -166,21 +166,17 @@ const Submit = styled.input.attrs((props) => ({
   color: ${COLOR.green};
   font-size: ${FONT.md};
 `
-const ErrorMessage = styled(FormWrapper)`
-  display: none;
-  margin: 0 20px;
+
+const ErrorMessage = styled.div`
+  text-align: center;
+  margin: 20px auto;
   color: #ff0000;
   font-weight: 600;
-  font-size: ${FONT.s};
-  ${MEDIA_QUERY.md} {
-    margin: 0 160px;
-  }
-  ${MEDIA_QUERY.lg} {
-    margin: 0 200px;
-  }
+  font-size: ${FONT.s};  
 `
 
 export default function TrailPostPage() {
+  const [errorMessage, setErrorMessage] = useState()
   const [newDatas, setNewDatas] = useState({
     author_id: 1,
     title: '',
@@ -213,12 +209,15 @@ export default function TrailPostPage() {
       })
       .catch((err) => {
         console.log(err.response.data)
+        setErrorMessage('親愛的管理員您好，所有欄位皆必填喔!')
       })
   }
+
   return (
     <TrailsPostWrapper>
       <PageName>新增步道</PageName>
       <PageDes>Wow！又新發現什麼新步道了呢？快來昭告天下吧~</PageDes>
+      <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>步道名稱</FormTitle>
         <Input

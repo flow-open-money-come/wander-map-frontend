@@ -48,6 +48,7 @@ const FormWrapper = styled.div`
   font-size: ${FONT.s};
   ${MEDIA_QUERY.md} {
     display: flex;
+    justify-content: center;
     align-items: center;
     margin: 10px 20px;
     font-size: ${FONT.md};
@@ -125,18 +126,12 @@ const Submit = styled.input.attrs((props) => ({
   color: ${COLOR.green};
   font-size: ${FONT.md};
 `
-const ErrorMessage = styled(FormWrapper)`
-  display: none;
-  margin: 0 20px;
+const ErrorMessage = styled.div`
+  text-align: center;
+  margin: 20px auto;
   color: #ff0000;
   font-weight: 600;
-  font-size: ${FONT.s};
-  ${MEDIA_QUERY.md} {
-    margin: 0 160px;
-  }
-  ${MEDIA_QUERY.lg} {
-    margin: 0 200px;
-  }
+  font-size: ${FONT.s};  
 `
 
 export default function ArticlePostPage() {
@@ -169,7 +164,8 @@ export default function ArticlePostPage() {
         console.log(res.data)
       })
       .catch((err) => {
-        console.log(err.response)
+        console.log(err.response.data)
+        setErrorMessage('您好，標題、內文為必填喔!')
       })
   }
 
@@ -177,6 +173,7 @@ export default function ArticlePostPage() {
     <ArticlePostWrapper>
       <PageName>新增心得</PageName>
       <PageDes>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDes>
+      <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>文章標題</FormTitle>
         <Input
@@ -186,7 +183,6 @@ export default function ArticlePostPage() {
           required
         />
       </FormWrapper>
-      <ErrorMessage>請輸入標題</ErrorMessage>
       <FormWrapper>
         <FormTitle>封面圖片</FormTitle>
         <FormSubTitleWrapper>
@@ -231,6 +227,7 @@ export default function ArticlePostPage() {
           name='related'
           handleInputChange={handleInputChange}
           newDatas={newDatas}
+          setNewDatas={setNewDatas}
         />
       </FormWrapper>
       <FormWrapper>
@@ -245,11 +242,10 @@ export default function ArticlePostPage() {
         <FormTitle />
         <ContentCKEditor
           name='content'
-          handleInputChange={handleInputChange}
           newDatas={newDatas}
+          setNewDatas={setNewDatas}
         />
       </FormWrapper>
-      <ErrorMessage>請輸入內文</ErrorMessage>
       <FormWrapper>
         <FormTitle>GPX</FormTitle>
         <UploadGpx />

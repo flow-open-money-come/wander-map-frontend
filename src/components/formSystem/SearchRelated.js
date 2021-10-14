@@ -65,7 +65,6 @@ export default function SearchRelated({ name, newDatas, setNewDatas }) {
       ...newDatas,
       [name]: e.target.value,
     })
-    console.log(e.target)
   }
 
   return (
