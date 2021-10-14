@@ -89,6 +89,12 @@ const LoadMoreBtn = styled.div`
   ${NavBarButton}
   margin: 50px auto 100px auto;
 `
+const NoMatchMsg = styled.div`
+  font-size: ${FONT.md};
+  font-weight: bold;
+  margin: 0 auto;
+  color: ${COLOR.gray};
+`
 
 function AllTrailPage() {
   // featured trails
@@ -106,6 +112,7 @@ function AllTrailPage() {
     handleSearchTrails,
     handleKeyWordChange,
     handleKeyWordDelete,
+    onSearch,
   } = useSearch()
 
   const { numberOfDisplay, handleLoadMore } = useLoadMore()
@@ -169,6 +176,11 @@ function AllTrailPage() {
 
   return (
     <>
+      <button
+        onClick={() => {
+          console.log(onSearch.current)
+        }}
+      ></button>
       <AllTrailsPageWrapper>
         <AllTrailsPageTitleWrapper>
           <StarSvg />
@@ -230,18 +242,24 @@ function AllTrailPage() {
           </SearchBarWrapper>
         </DropDownContainer>
         <FilteredTrailsWrapper>
-          {matchTrailInfos.length > 0
-            ? matchTrailInfos
-                .slice(0, numberOfDisplay)
-                .map((trailInfo) => (
-                  <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
-                ))
-            : filteredTrailInfos
-                .slice(0, numberOfDisplay)
-                .map((trailInfo) => (
-                  <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
-                ))}
+          {!onSearch.current &&
+            filteredTrailInfos
+              .slice(0, numberOfDisplay)
+              .map((trailInfo) => (
+                <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
+              ))}
+          {onSearch.current &&
+            matchTrailInfos.length > 0 &&
+            matchTrailInfos
+              .slice(0, numberOfDisplay)
+              .map((trailInfo) => (
+                <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
+              ))}
+          {onSearch.current && matchTrailInfos.length === 0 && (
+            <NoMatchMsg>查無步道。</NoMatchMsg>
+          )}
         </FilteredTrailsWrapper>
+
         <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
       </AllTrailsPageWrapper>
     </>
