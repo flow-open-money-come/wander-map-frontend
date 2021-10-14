@@ -7,7 +7,7 @@ import thumbSVG from '../../../icons/thumb_up.svg'
 import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
-import { apiArticle, apiMessages } from '../../../WebAPI'
+import { apiArticle } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 import Loading from '../../../components/common/Loading'
 

@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
-import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
-import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
+import EditIcon from '../../icons/backstage/edit.svg'
+import BinIcon from '../../icons/backstage/bin.svg'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import {
   apiMessagesPost,
@@ -16,7 +16,7 @@ const CommentsContainer = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 10px auto;
+  margin: 10px auto 50px auto;
   padding-bottom: 20px;
 `
 
@@ -72,6 +72,7 @@ const SentBtn = styled.button`
     height: 16px;
     &:hover {
       cursor: pointer;
+      opacity: 0.8;
     }
   }
   ${MEDIA_QUERY.md} {
@@ -146,32 +147,32 @@ const CommentTime = styled.div`
     max-width: 80px;
   }
   ${MEDIA_QUERY.lg} {
-    max-width: 150px;
+    max-width: 160px;
   }
 `
 
 const CommentBtn = styled.div`
   display: flex;
-
-  svg {
+  max-width: 80%;
+  button {
     margin: 0 3px;
     width: 15px;
     height: 15px;
 
     &:hover {
       cursor: pointer;
-      transform: scale(1.5, 1.5);
+      opacity: 0.7;
     }
   }
   ${MEDIA_QUERY.md} {
-    svg {
+    button {
       width: 20px;
       height: 20px;
       margin: 0 4px;
     }
   }
   ${MEDIA_QUERY.lg} {
-    svg {
+    button {
       width: 25px;
       height: 25px;
       margin: 0 6px;
@@ -184,6 +185,7 @@ const Content = styled.div`
   font-size: ${FONT.s};
   line-height: ${FONT.md};
   text-align: justify;
+  white-space: pre-line;
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
     line-height: ${FONT.lg};
@@ -194,17 +196,18 @@ const Content = styled.div`
   }
 `
 
-const EditInput = styled.input`
+const EditInput = styled.textarea`
   &:focus {
     outline: none;
   }
   border: ${COLOR.gray_light} solid 2px;
   border-radius: ${RADIUS.s};
   margin-top: 10px;
-  line-height: 3em;
+  line-height: 1.5em;
   opacity: 0.7;
   padding-left: 5px;
   min-width: 80%;
+  padding: 5px;
 `
 
 const SendBtn = styled.button`
@@ -235,7 +238,26 @@ const EditWrapper = styled.div`
 const Reminder = styled.span`
   color: ${COLOR.pink};
   font-size: ${FONT.s};
+
+  ${(props) =>
+    props.reminder === 1 &&
+    `
+    margin: 0 auto;
+  `}
 `
+
+const EditButton = styled.button`
+  background-image: url('${EditIcon}');
+  background-size: contain;
+  background-repeat: no-repeat;
+`
+
+const BinButton = styled.button`
+  background-image: url('${BinIcon}');
+  background-size: contain;
+  background-repeat: no-repeat;
+`
+
 export default function Comments({ setIsLoading }) {
   const { id } = useParams()
   const [reminder, setReminder] = useState('')
@@ -261,7 +283,7 @@ export default function Comments({ setIsLoading }) {
   const handleSubmit = async (e) => {
     setReminder('')
     if (value === '') {
-      setReminder('請輸入內容')
+      setReminder(1)
       return e.preventDefault()
     }
     setIsLoading(true)
@@ -278,7 +300,7 @@ export default function Comments({ setIsLoading }) {
     setReminder('')
     const messageId = e.target.id
     if (editValue === '') {
-      setReminder('請輸入修改內容')
+      setReminder(2)
       return e.preventDefault()
     }
     setIsLoading(true)
@@ -313,7 +335,7 @@ export default function Comments({ setIsLoading }) {
 
   return (
     <CommentsContainer>
-      {reminder && !editing && <Reminder>{reminder}</Reminder>}
+      {reminder === 1 && <Reminder reminder={reminder}>請輸入內容</Reminder>}
       <CommentsHeader>
         <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
         <InputField
@@ -332,26 +354,29 @@ export default function Comments({ setIsLoading }) {
         <Card>
           <CommentInfo>
             <CommentViewInfo>
-              <UserAvatar src='https://i.ppfocus.com/2020/8/285a2ad.jpg' />
-              <CommentNickname>{message.nickname}</CommentNickname>
+              <UserAvatar src={message.icon_url} />
+              <CommentNickname>
+                小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍小火龍
+              </CommentNickname>
             </CommentViewInfo>
             <CommentBtn>
               <CommentTime>
                 {new Date(message.created_at).toLocaleString()}
               </CommentTime>
-              <EditIcon id={message.message_id} onClick={handlePopUpInput} />
-              <BinIcon
-                id={message.message_id}
+              <EditButton id={message.comment_id} onClick={handlePopUpInput} />
+              <BinButton
+                id={message.comment_id}
                 onClick={(e) => {
                   handleDeleteMessage(e)
                 }}
               />
             </CommentBtn>
           </CommentInfo>
-          {Number(editing) === message.message_id ? (
+          {Number(editing) === message.comment_id ? (
             <EditWrapper>
               <EditInput
-                id={message.message_id}
+                rows='3'
+                id={message.comment_id}
                 onChange={(e) => {
                   setEditValue(e.target.value)
                   setReminder('')
@@ -362,7 +387,7 @@ export default function Comments({ setIsLoading }) {
               <div>
                 <SendBtn
                   editValue={editValue}
-                  id={message.message_id}
+                  id={message.comment_id}
                   onClick={(e) => {
                     handleEditMessage(e)
                   }}
@@ -379,11 +404,13 @@ export default function Comments({ setIsLoading }) {
                 >
                   取消編輯
                 </SendBtn>
-                {reminder && <Reminder>{reminder}</Reminder>}
+                {reminder === 2 && (
+                  <Reminder reminder={reminder}>請輸入修改內容</Reminder>
+                )}
               </div>
             </EditWrapper>
           ) : (
-            <Content id={message.message_id}>{message.content}</Content>
+            <Content id={message.comment_id}>{message.content}</Content>
           )}
         </Card>
       ))}
