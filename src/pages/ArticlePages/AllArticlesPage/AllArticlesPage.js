@@ -61,13 +61,7 @@ const LoadMoreBtn = styled.button`
     props.overLoad &&
     `
     color: ${COLOR.gray_light};
-    background: ${COLOR.white};
-
-    &:hover {
-      color: ${COLOR.gray_light};
-      background: ${COLOR.white};
-      cursor: unset;
-    }
+    pointer-events:none;
   `}
 `
 const ArticleListWrapper = styled.div`
@@ -93,7 +87,11 @@ function AllArticlesPage() {
 
   useEffect(() => {
     apiArticlesHot()
-      .then((res) => setSlides(res.data.data))
+      .then((res) => {
+        if (res.data.success) {
+          setSlides(res.data.data)
+        }
+      })
       .catch((err) => {
         console.log(err)
       })
@@ -102,7 +100,11 @@ function AllArticlesPage() {
   useEffect(() => {
     params.current = 5
     apiArticlesOptions(5, tagValue, 0, filterData)
-      .then((res) => setPosts(res.data.data))
+      .then((res) => {
+        if (res.data.success) {
+          setPosts(res.data.data)
+        }
+      })
       .catch((err) => {
         console.log(err)
       })
@@ -113,7 +115,11 @@ function AllArticlesPage() {
       return
     }
     apiArticlesOptions(5, tagValue, params.current, filterData)
-      .then((res) => setPosts(posts.concat(res.data.data)))
+      .then((res) => {
+        if (res.data.success) {
+          setPosts(posts.concat(res.data.data))
+        }
+      })
       .catch((err) => {
         console.log(err)
       })
@@ -121,7 +127,7 @@ function AllArticlesPage() {
   }
 
   const handleClickSearch = (e) => {
-    if (e.key === 'Enter' || e.code === 'Backspace') {
+    if (e.key === 'Enter' || e.code === 'Backspace' || filterData === '') {
       setFilterData(search)
     }
   }
@@ -171,7 +177,7 @@ function AllArticlesPage() {
               title={post.title}
               user={'水怪貓貓'} // 待修正
               tags={!post.tag_names ? [] : post.tag_names.split(',')}
-              date={new Date(post.created_at).toLocaleString()}
+              date={new Date(post.created_at).toLocaleString('ja')}
               content={post.content}
               avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'} // 待修正
               articlePage={`/articles/${post.article_id}`}
