@@ -19,7 +19,7 @@ export const apiUserSignUp = (data) => userRequest.post('/signUp', data)
 export const apiArticlesHot = () => articleRequest.get('/hot')
 export const apiArticles = () => articleRequest.get('/')
 export const apiArticle = () => articleRequest.get('/:id')
-export const apiArticlesOptions = (limit, tags, offset) => {
+export const apiArticlesOptions = (limit, tags, offset, search) => {
   let url = `?`
   if (limit) {
     url += `limit=${limit}&`
@@ -29,6 +29,9 @@ export const apiArticlesOptions = (limit, tags, offset) => {
   }
   if (offset) {
     url += `offset=${offset}&`
+  }
+  if (search) {
+    url += `search=${search}&`
   }
   return articleRequest.get(url)
 }

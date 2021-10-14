@@ -96,32 +96,25 @@ function AllArticlesPage() {
   useEffect(() => {
     params.current = 5
     setSearch('')
-    apiArticlesOptions(5, tagValue).then(res => setPosts(res.data.data)).catch(err => {
-      console.log(err)
-    })
+    apiArticlesOptions(5, tagValue, 0, filterData)
+      .then((res) => setPosts(res.data.data))
+      .catch((err) => {
+        console.log(err)
+      })
   }, [tagValue, filterData])
 
   const handleClickLoadMore = () => {
-    apiArticlesOptions(5, tagValue, params.current).then(res => setPosts(posts.concat(res.data.data))).catch(err => {
-      console.log(err)
-    })
-    }
+    apiArticlesOptions(5, tagValue, params.current, filterData)
+      .then((res) => setPosts(posts.concat(res.data.data)))
+      .catch((err) => {
+        console.log(err)
+      })
     params.current += 5
   }
 
   const handleClickSearch = (e) => {
-    params.current = 10
     if (e.key === 'Enter' || e.code === 'Backspace') {
-      const getAllPosts = async () => {
-        try {
-          const res = await apiArticlesOptions(1000)
-          setPosts(res.data.data.filter((post) => post.title.includes(search)))
-          setFilterData(true)
-        } catch (err) {
-          console.log(err)
-        }
-      }
-      getAllPosts()
+      setFilterData(search)
     }
   }
 

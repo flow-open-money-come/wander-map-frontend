@@ -16,6 +16,7 @@ const ArticlesImg = styled.img`
   height: 120px;
   border-radius: ${RADIUS.lg};
   align-self: center;
+  object-fit: cover;
   ${MEDIA_QUERY.md} {
     width: 150px;
     height: 150px;
