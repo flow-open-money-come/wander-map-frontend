@@ -6,6 +6,7 @@ import ArticleList from '../../components/forumSystem/Article'
 import { ActiveTrailContext } from '../../context'
 import { useState, useEffect } from 'react'
 import { getArticlesUnderTrail } from '../../WebAPI'
+import { trailIdTitleMap } from '../../constants/paramsMap'
 
 const HomepageContainer = styled.div`
   width: 90%;
