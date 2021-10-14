@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
 import styled from 'styled-components'
 import ArticleList from '../../../components/forumSystem/Article'
 import Carousel from '../../../components/forumSystem/Carousel'
@@ -60,8 +60,14 @@ const LoadMoreBtn = styled.button`
   ${(props) =>
     props.overLoad &&
     `
-    visibility: hidden;
-    margin-bottom: 20px;
+    color: ${COLOR.gray_light};
+    background: ${COLOR.white};
+
+    &:hover {
+      color: ${COLOR.gray_light};
+      background: ${COLOR.white};
+      cursor: unset;
+    }
   `}
 `
 const ArticleListWrapper = styled.div`
@@ -82,7 +88,7 @@ function AllArticlesPage() {
   const [tagValue, setTagValue] = useState([])
   const [search, setSearch] = useState('')
   const [filterData, setFilterData] = useState()
-  const params = useRef(10)
+  const params = useRef(5)
   let overLoad = false
 
   useEffect(() => {
@@ -95,7 +101,6 @@ function AllArticlesPage() {
 
   useEffect(() => {
     params.current = 5
-    setSearch('')
     apiArticlesOptions(5, tagValue, 0, filterData)
       .then((res) => setPosts(res.data.data))
       .catch((err) => {
@@ -104,6 +109,9 @@ function AllArticlesPage() {
   }, [tagValue, filterData])
 
   const handleClickLoadMore = () => {
+    if (overLoad) {
+      return
+    }
     apiArticlesOptions(5, tagValue, params.current, filterData)
       .then((res) => setPosts(posts.concat(res.data.data)))
       .catch((err) => {
@@ -156,7 +164,7 @@ function AllArticlesPage() {
         handleClickSearch={handleClickSearch}
       />
       <ArticleListWrapper>
-        {posts.slice(0, params.current).map((post) => {
+        {posts.map((post) => {
           return (
             <ArticleList
               articleImgSrc={post.cover_picture_url}
