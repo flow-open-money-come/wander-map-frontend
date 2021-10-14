@@ -69,9 +69,9 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
   }
 
   useDidMountEffect(() => {
-    getArticlesUnderTrail(currentOnClickTrail).then((res) => {
-      setActiveTrailArticles(res.data.data)
-    })
+    // getArticlesUnderTrail(currentOnClickTrail).then((res) => {
+    //   setActiveTrailArticles(res.data.data)
+    // })
   }, [currentOnClickTrail])
 
   return (

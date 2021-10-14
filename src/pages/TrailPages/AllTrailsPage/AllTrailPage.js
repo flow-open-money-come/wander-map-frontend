@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, MEDIA_QUERY, RADIUS } from '../../../constants/style'
 import { ReactComponent as StarSvg } from '../../../icons/star.svg'
@@ -7,6 +7,9 @@ import DropDownCheckBoxList from '../../../components/common/DropDownCheckBoxLis
 import { NavBarButton } from '../../../components/common/Button'
 import TrailCard from '../../../components/trailSystem/TrailCard'
 import { getTrails, getHotTrails } from '../../../WebAPI'
+import useSearch from '../../../hooks/useSearch'
+import useLoadMore from '../../../hooks/useLoadMore'
+import { parameterMap } from '../../../constants/paramsMap'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
@@ -96,11 +99,16 @@ function AllTrailPage() {
   const [filteredTrailInfos, setFilteredTrailInfos] = useState([])
   // Carousel: current image index
   const [currentImgIndex, setCurrentImgIndex] = useState(0)
-  // handle load more trials
-  const [numberOfDisplay, setNumberOfDisplay] = useState(20)
-  let numberOfClick = useRef(0)
-  // Search by keyword
-  const [keyWord, setKeyWord] = useState('')
+
+  const {
+    keyWord,
+    matchTrailInfos,
+    handleSearchTrails,
+    handleKeyWordChange,
+    handleKeyWordDelete,
+  } = useSearch()
+
+  const { numberOfDisplay, handleLoadMore } = useLoadMore()
 
   const handelCarousel = () => {
     if (currentImgIndex < hotTrialInfos.length - 1) {
@@ -131,34 +139,6 @@ function AllTrailPage() {
     if (hotTrialInfos.length !== 0) setTimeout(handelCarousel, 3000)
   })
 
-  const parameterMap = {
-    location: {
-      北區: 'location=north',
-      中區: 'location=middle',
-      南區: 'location=south',
-      東區: 'location=east',
-    },
-    altitude: {
-      '1k 以下': 'altitude[lt]=1000',
-      '1k-2k': 'altitude[gt]=1000&altitude[lt]=2000',
-      '2k-3k': 'altitude[gt]=2000&altitude[lt]=3000',
-      '3k 以上': 'altitude[gt]=3000',
-    },
-    length: {
-      '2 以下': 'length[lt]=2',
-      '2-5': 'length[gt]=2&length[lt]=5',
-      '5-12': 'length[gt]=5&length[lt]=12',
-      '12 以上': 'length[gt]=12',
-    },
-    difficult: {
-      新手: 'difficult=1',
-      一般: 'difficult=2',
-      困難: 'difficult=3',
-      進階: 'difficult=4',
-      挑戰: 'difficult=5',
-    },
-  }
-
   // handle trails filtration of four filters
   const handleFilterTrails = (e) => {
     if (!e.target.getAttribute('filter')) return
@@ -187,26 +167,6 @@ function AllTrailPage() {
       })
   }, [checkedOptions])
 
-  const handleLoadMore = () => {
-    numberOfClick.current++
-    setNumberOfDisplay(numberOfDisplay + numberOfClick.current * 10)
-  }
-
-  const handleKeyWordChange = (e) => {
-    setKeyWord(e.target.value)
-  }
-  const handleSearchTrails = () => {
-    getTrails(`?search=${keyWord}`)
-      .then((res) => {
-        if (res.data.success) setFilteredTrailInfos(res.data.data)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
-  const handleKeyWordDelete = () => {
-    setKeyWord('')
-  }
   return (
     <>
       <AllTrailsPageWrapper>
@@ -270,9 +230,17 @@ function AllTrailPage() {
           </SearchBarWrapper>
         </DropDownContainer>
         <FilteredTrailsWrapper>
-          {filteredTrailInfos.slice(0, numberOfDisplay).map((trailInfo) => (
-            <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
-          ))}
+          {matchTrailInfos.length > 0
+            ? matchTrailInfos
+                .slice(0, numberOfDisplay)
+                .map((trailInfo) => (
+                  <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
+                ))
+            : filteredTrailInfos
+                .slice(0, numberOfDisplay)
+                .map((trailInfo) => (
+                  <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
+                ))}
         </FilteredTrailsWrapper>
         <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
       </AllTrailsPageWrapper>
