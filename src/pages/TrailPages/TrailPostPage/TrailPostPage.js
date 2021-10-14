@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { postTrails } from '../../../WebAPI'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
 import UploadImg from '../../../components/formSystem/UploadImg'
@@ -128,6 +129,7 @@ const Textarea = styled.textarea.attrs(() => ({
 `
 const Radio = styled.input.attrs((props) => ({
   type: 'radio',
+  name: 'difficulty',
 }))`
   margin-right: 10px;
   ${MEDIA_QUERY.md} {
@@ -145,7 +147,6 @@ const Select = styled.select`
     font-size: ${FONT.md};
   }
 `
-
 const SubmitBtn = styled.div`
   text-align: right;
   margin-bottom: 50px;
@@ -165,30 +166,96 @@ const Submit = styled.input.attrs((props) => ({
   color: ${COLOR.green};
   font-size: ${FONT.md};
 `
+const ErrorMessage = styled(FormWrapper)`
+  display: none;
+  margin: 0 20px;
+  color: #ff0000;
+  font-weight: 600;
+  font-size: ${FONT.s};
+  ${MEDIA_QUERY.md} {
+    margin: 0 160px;
+  }
+  ${MEDIA_QUERY.lg} {
+    margin: 0 200px;
+  }
+`
 
 export default function TrailPostPage() {
+  const [newDatas, setNewDatas] = useState({
+    author_id: 1,
+    title: '',
+    description: '',
+    location: '',
+    altitude: '',
+    length: '',
+    situation: '',
+    season: '',
+    difficulty: '',
+    coordinateX: '',
+    coordinateY: '',
+    cover_picture_url: '',
+    required_time: '',
+  })
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setNewDatas({
+      ...newDatas,
+      [name]: value,
+    })
+  }
+
+  const handleSubmit = (e) => {
+    console.log(newDatas)
+    e.preventDefault()
+    postTrails(newDatas)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }
   return (
     <TrailsPostWrapper>
       <PageName>新增步道</PageName>
       <PageDes>Wow！又新發現什麼新步道了呢？快來昭告天下吧~</PageDes>
       <FormWrapper>
         <FormTitle>步道名稱</FormTitle>
-        <Input />
+        <Input
+          name='title'
+          onChange={handleInputChange}
+          value={newDatas.title}
+          required
+        />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>封面圖片</FormTitle>
         <FormSubTitleWrapper>
-          <UploadImg />
+          <UploadImg
+            name='cover_picture_url'
+            newDatas={newDatas}
+            setNewDatas={setNewDatas}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道簡介</FormTitle>
-        <Textarea />
+        <Textarea
+          name='description'
+          onChange={handleInputChange}
+          value={newDatas.description}
+          required
+        />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道地點</FormTitle>
         <FormSubTitleWrapper>
-          <SelectLocation />
+          <SelectLocation
+            name='location'
+            newDatas={newDatas}
+            setNewDatas={setNewDatas}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -196,14 +263,26 @@ export default function TrailPostPage() {
           <Half>
             <FormTitle>步道長度</FormTitle>
             <InputWrapper>
-              <Input size='short' type='number' />
+              <Input
+                size='short'
+                type='number'
+                name='length'
+                onChange={handleInputChange}
+                value={newDatas.length}
+              />
               <FormUnit>公里</FormUnit>
             </InputWrapper>
           </Half>
           <Half>
             <FormTitle>海拔高度</FormTitle>
             <InputWrapper>
-              <Input size='short' type='number' />
+              <Input
+                size='short'
+                type='number'
+                name='altitude'
+                onChange={handleInputChange}
+                value={newDatas.altitude}
+              />
               <FormUnit>公尺</FormUnit>
             </InputWrapper>
           </Half>
@@ -211,25 +290,25 @@ export default function TrailPostPage() {
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道難度</FormTitle>
-        <FormSubTitleWrapper>
+        <FormSubTitleWrapper onChange={handleInputChange}>
           <label>
-            <Radio value='1' name='difficulty' />
+            <Radio value='新手' />
             新手
           </label>
           <label>
-            <Radio value='2' name='difficulty' />
+            <Radio value='入門' />
             入門
           </label>
           <label>
-            <Radio value='3' name='difficulty' />
+            <Radio value='進階' />
             進階
           </label>
           <label>
-            <Radio value='4' name='difficulty' />
+            <Radio value='挑戰' />
             挑戰
           </label>
           <label>
-            <Radio value='5' name='difficulty' />
+            <Radio value='困難' />
             困難
           </label>
         </FormSubTitleWrapper>
@@ -239,35 +318,61 @@ export default function TrailPostPage() {
         <FormSubTitleWrapper>
           <InputWrapper>
             <FormSubTitle>北緯</FormSubTitle>
-            <Input size='short' type='number' />
+            <Input
+              size='short'
+              type='number'
+              name='coordinateY'
+              onChange={handleInputChange}
+              value={newDatas.coordinateY}
+            />
           </InputWrapper>
           <InputWrapper>
             <FormSubTitle>東經</FormSubTitle>
-            <Input size='short' type='number' />
+            <Input
+              size='short'
+              type='number'
+              name='coordinateX'
+              onChange={handleInputChange}
+              value={newDatas.coordinateX}
+            />
           </InputWrapper>
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道特色</FormTitle>
-        <Input />
+        <Input
+          name='situation'
+          onChange={handleInputChange}
+          value={newDatas.situation}
+        />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>建議季節</FormTitle>
         <FormSubTitleWrapper>
-          <Select>
-            <option>請選擇</option>
-            <option>四季皆宜</option>
-            <option>春季</option>
-            <option>夏季</option>
-            <option>秋季</option>
-            <option>冬季</option>
+          <Select
+            name='season'
+            onChange={handleInputChange}
+            value={newDatas.season}
+          >
+            <option value='' disabled selected>
+              請選擇
+            </option>
+            <option value='四季皆宜'>四季皆宜</option>
+            <option value='春季'>春季</option>
+            <option value='夏季'>夏季</option>
+            <option value='秋季'>秋季</option>
+            <option value='冬季'>冬季</option>
           </Select>
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>路線圖片</FormTitle>
         <FormSubTitleWrapper>
-          <UploadImg />
+          <UploadImg
+            name='map_picture_url'
+            newDatas={newDatas}
+            setNewDatas={setNewDatas}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -277,7 +382,7 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle />
         <SubmitBtn>
-          <Submit />
+          <Submit onClick={handleSubmit} />
         </SubmitBtn>
       </FormWrapper>
     </TrailsPostWrapper>

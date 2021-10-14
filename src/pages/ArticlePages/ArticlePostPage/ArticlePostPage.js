@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { postArticles } from '../../../WebAPI'
 import styled from 'styled-components'
-import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
+import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
 import UploadImg from '../../../components/formSystem/UploadImg'
 import SelectLocation from '../../../components/formSystem/SelectLocation'
+import SearchRelated from '../../../components/formSystem/SearchRelated'
 import UploadGpx from '../../../components/formSystem/UploadGpx'
+import CategoryTags from '../../../components/formSystem/CategoryTags'
 import ContentCKEditor from '../../../components/formSystem/ContentCKEditor'
 import { NavBarButton } from '../../../components/common/Button'
 
@@ -46,14 +49,13 @@ const FormWrapper = styled.div`
   ${MEDIA_QUERY.md} {
     display: flex;
     align-items: center;
-    margin: 30px 20px;
+    margin: 10px 20px;
     font-size: ${FONT.md};
   }
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.lg};
   }
 `
-
 const FormTitle = styled.div`
   font-weight: 600;
   margin-bottom: 8px;
@@ -104,27 +106,6 @@ const Date = styled.input.attrs((props) => ({
   }
 `
 
-const CategoryWrapper = styled.div`
-  width: 320px;
-  display: flex;
-  flex-wrap: wrap;
-  ${MEDIA_QUERY.lg} {
-    width: 500px;
-  }
-`
-
-const CategoryBtn = styled.button`
-  border-radius: ${RADIUS.lg};
-  border: solid 1.5px ${COLOR.green};
-  font-size: ${FONT.xs};
-  margin: 6px 3px;
-  padding: 3px 6px;
-  ${MEDIA_QUERY.lg} {
-    margin: 6px;
-    font-size: ${FONT.s};
-  }
-`
-
 const SubmitBtn = styled.div`
   text-align: right;
   margin-bottom: 50px;
@@ -144,65 +125,131 @@ const Submit = styled.input.attrs((props) => ({
   color: ${COLOR.green};
   font-size: ${FONT.md};
 `
+const ErrorMessage = styled(FormWrapper)`
+  display: none;
+  margin: 0 20px;
+  color: #ff0000;
+  font-weight: 600;
+  font-size: ${FONT.s};
+  ${MEDIA_QUERY.md} {
+    margin: 0 160px;
+  }
+  ${MEDIA_QUERY.lg} {
+    margin: 0 200px;
+  }
+`
 
 export default function ArticlePostPage() {
+  const [errorMessage, setErrorMessage] = useState()
+  const [newDatas, setNewDatas] = useState({
+    author_id: 1,
+    title: '',
+    cover_picture_url: '',
+    location: '',
+    departure_time: '',
+    end_time: '',
+    related: '',
+    tags: '',
+    content: '',
+  })
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setNewDatas({
+      ...newDatas,
+      [name]: value,
+    })
+  }
+
+  const handleSubmit = (e) => {
+    console.log(newDatas)
+    e.preventDefault()
+    postArticles(newDatas)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err.response)
+      })
+  }
+
   return (
     <ArticlePostWrapper>
       <PageName>新增心得</PageName>
       <PageDes>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDes>
       <FormWrapper>
         <FormTitle>文章標題</FormTitle>
-        <Input />
+        <Input
+          name='title'
+          onChange={handleInputChange}
+          value={newDatas.title}
+          required
+        />
       </FormWrapper>
+      <ErrorMessage>請輸入標題</ErrorMessage>
       <FormWrapper>
         <FormTitle>封面圖片</FormTitle>
         <FormSubTitleWrapper>
-          <UploadImg />
+          <UploadImg
+            name='cover_picture_url'
+            newDatas={newDatas}
+            setNewDatas={setNewDatas}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>行程地點</FormTitle>
         <FormSubTitleWrapper>
-          <SelectLocation />
+          <SelectLocation
+            name='location'
+            newDatas={newDatas}
+            setNewDatas={setNewDatas}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>出發時間</FormTitle>
         <FormSubTitleWrapper>
-          <Date placeholder='開始日期' />
+          <Date
+            name='departure_time'
+            placeholder='開始日期'
+            onChange={handleInputChange}
+            value={newDatas.departure_time}
+          />
           　—　
-          <Date placeholder='結束日期' />
+          <Date
+            name='end_time'
+            placeholder='結束日期'
+            onChange={handleInputChange}
+            value={newDatas.end_time}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>相關步道</FormTitle>
-        <Input />
+        <SearchRelated
+          name='related'
+          handleInputChange={handleInputChange}
+          newDatas={newDatas}
+        />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>分類</FormTitle>
-        <CategoryWrapper>
-          <CategoryBtn>一日</CategoryBtn>
-          <CategoryBtn>多日</CategoryBtn>
-          <CategoryBtn>海景</CategoryBtn>
-          <CategoryBtn>山景</CategoryBtn>
-          <CategoryBtn>夜景</CategoryBtn>
-          <CategoryBtn>城市景色</CategoryBtn>
-          <br />
-          <CategoryBtn>賞花</CategoryBtn>
-          <CategoryBtn>稀有動植物</CategoryBtn>
-          <CategoryBtn>有水源</CategoryBtn>
-          <CategoryBtn>危險地形</CategoryBtn>
-          <br />
-          <CategoryBtn>登山小白體驗</CategoryBtn>
-          <CategoryBtn>需專業設備</CategoryBtn>
-          <CategoryBtn>專業分享</CategoryBtn>
-          <CategoryBtn>GPX</CategoryBtn>
-        </CategoryWrapper>
+        <CategoryTags
+          name='tags'
+          newDatas={newDatas}
+          setNewDatas={setNewDatas}
+        />
       </FormWrapper>
       <FormWrapper>
         <FormTitle />
-        <ContentCKEditor />
+        <ContentCKEditor
+          name='content'
+          handleInputChange={handleInputChange}
+          newDatas={newDatas}
+        />
       </FormWrapper>
+      <ErrorMessage>請輸入內文</ErrorMessage>
       <FormWrapper>
         <FormTitle>GPX</FormTitle>
         <UploadGpx />
@@ -210,7 +257,7 @@ export default function ArticlePostPage() {
       <FormWrapper>
         <FormTitle />
         <SubmitBtn>
-          <Submit />
+          <Submit onClick={handleSubmit} />
         </SubmitBtn>
       </FormWrapper>
     </ArticlePostWrapper>
