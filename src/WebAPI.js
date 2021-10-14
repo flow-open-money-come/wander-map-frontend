@@ -12,6 +12,12 @@ export const userRegister = (payload) =>
 export const getAllUsers = (adminToken) =>
   instance.get('/users', { headers: { Authorization: `Bearer ${adminToken}` } })
 
+  // instance.interceptors.request.use((config) => {
+  //   // allow cookie on cross origin request
+  //   config.withCredentials = true
+  //   config.headers.Authorization = `Bearer ${adminToken}`
+  //   return config
+  // })
 
 // trails
 export const getTrails = (params) => instance.get('/trails/' + params)

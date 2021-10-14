@@ -34,7 +34,6 @@ const SearchBar = styled.div`
     }
   }
 `
-
 const SearchField = styled.input`
   width: calc(100% - 20px);
   border: none;
@@ -44,7 +43,6 @@ const SearchField = styled.input`
     font-size: ${FONT.lg};
   }
 `
-
 const RecycleBlock = styled.div`
   display: flex;
   justify-content: center;
@@ -57,14 +55,12 @@ const RecycleBlock = styled.div`
     height: 40px;
   }
 `
-
 const RecycleTitle = styled.div`
   font-size: ${FONT.s};
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.lg};
   }
 `
-
 const BackBtn = styled.button`
   position: absolute;
   right: 0;
@@ -82,7 +78,6 @@ const BackBtn = styled.button`
     margin: 0 50px;
   }
 `
-
 const RecycleBin = styled.div`
   position: absolute;
   right: 0;
@@ -104,7 +99,6 @@ const RecycleBin = styled.div`
     margin: 0 50px;
   }
 `
-
 const TrailsTable = styled.table`
   width: 95%;
   margin: 10px auto;
@@ -113,7 +107,6 @@ const TrailsTable = styled.table`
   overflow-x: auto;
   white-space: nowrap;
 `
-
 const TableContent = styled.tr`
   text-align: center;
   font-size: ${FONT.s};
@@ -121,7 +114,6 @@ const TableContent = styled.tr`
     font-size: ${FONT.md};
   }
 `
-
 const CoverTd = styled.td`
   text-align: start;
   padding: 5px 0 3px 0;
@@ -130,7 +122,6 @@ const CoverTd = styled.td`
     width: 5%;
   }
 `
-
 const TrailImg = styled.img`
   width: 40px;
   height: 40px;
@@ -140,7 +131,6 @@ const TrailImg = styled.img`
     height: 60px;
   }
 `
-
 const TrailsTd = styled.td`
   width: 200px;
   overflow: auto;
@@ -155,7 +145,6 @@ const TrailsTd = styled.td`
     padding-left: 20px;
   }
 `
-
 const CreatorTd = styled.td`
   width: 80px;
   vertical-align: middle;
@@ -164,7 +153,6 @@ const CreatorTd = styled.td`
     width: 140px;
   }
 `
-
 const BtnTd = styled.td`
   width: 80px;
   vertical-align: middle;
@@ -183,7 +171,6 @@ const BtnTd = styled.td`
     }
   }
 `
-
 const LinkWrapper = styled(Link)`
   color: black;
 `
@@ -194,14 +181,20 @@ function TrailsManagement({ recycle, setRecycle }) {
   const [searchResults, setSearchResults] = useState(null)
   const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(0)
+  const [totalPages, setTotalPages] = useState(Math.ceil(126/20))
 
+  //  useEffect(() => {
+  //    console.log('get all')
+  //      getTrails(` `)
+  //        .then((res) => setTrails(res.data.data))
+  //        .catch((err) => console.error(err))
+  //  }, [trails])
 
   useEffect(() => {
-    //console.log('get all')
-    getTrails('?limit=200')
-      .then((res) => setTotalPages(Math.ceil(res.data.data.length / 20)))
-      .catch((err) => console.error(err))
+    console.log('get all')
+    // getTrails('?limit=200')
+    //   .then((res) => setTotalPages(Math.ceil(res.data.data.length / 20)))
+    //   .catch((err) => console.error(err))
     getTrails(`?offset=${(page-1)*20}`)
       .then((res) => setTrails(res.data.data))
       .catch((err) => console.error(err))

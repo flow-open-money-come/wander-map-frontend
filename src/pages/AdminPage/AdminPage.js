@@ -150,19 +150,20 @@ function AdminPage() {
   const { userInfo } = useContext(AuthContext)
   const history = useHistory()
   const adminToken = getAuthToken()
-  // console.log(userInfo)
-  // console.log(adminToken)
+  console.log('userInfo', userInfo)
+  console.log('adminToken', adminToken)
 
   if (!userInfo || userInfo.role !== 'admin') history.push('/')
 
   useEffect(()=>{
     getAllUsers(adminToken)
       .then((res) => {
+        console.log('data', res.data.data.user)
         setUsers(res.data.data.user)
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.error(err))
   })
-
+  console.log('users',users)
 
   return (
     <AdminPageContainer>

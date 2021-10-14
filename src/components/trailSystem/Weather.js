@@ -122,7 +122,7 @@ const RainProbability = styled(Temperature)``
 const Weather = ({ location }) => {
   // const location = '宜蘭縣礁溪鄉'
   const country = location.slice(0, 3)
-  const town = location.slice(3, 6)
+  const town = location.slice(3, location.length)
 
   const [weatherElement, setWeatherElement] = useState({
     temperature: 0,
