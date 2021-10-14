@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import GoogleMapReact from 'google-map-react'
-import KEY from '../../key'
 import React, { useState } from 'react'
 import SearchBar from './SearchBar'
 import LocationMarker from './LocationMarker'
@@ -82,7 +81,7 @@ const Map = (props) => {
         <SearchBar placeholder='請輸入步道關鍵字...' />
       </MapSearchBarWrapper>
       <GoogleMapReact
-        bootstrapURLKeys={{ key: KEY }}
+        bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
         defaultCenter={props.center}
         defaultZoom={props.zoom}
         yesIWantToUseGoogleMapApiInternals

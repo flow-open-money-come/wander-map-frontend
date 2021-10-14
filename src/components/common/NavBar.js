@@ -1,10 +1,13 @@
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useHistory, useLocation } from 'react-router-dom'
+import { useContext } from 'react'
 import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
 import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { NavBarButton } from './Button'
 import useToggle from '../../hooks/useToggle'
+import { AuthContext } from '../../context'
+import { setAuthToken } from '../../utils'
 
 const NavBarContainer = styled.div`
   width: 100%;
@@ -95,6 +98,9 @@ const NavBarText = styled.div`
   color: ${COLOR.green};
   margin-left: 15px;
   text-align: right;
+  &:hover {
+    cursor: pointer;
+  }
   @media screen and (max-width: 768px) {
     ${NavBarButton}
   }
@@ -194,6 +200,15 @@ const Trail = styled(TrailSvg)`
 
 function NavBar() {
   const [HamburgerToggleClick, setHamburgerToggleClick] = useToggle(false)
+  const { userInfo, setUserInfo } = useContext(AuthContext)
+  const history = useHistory()
+  const location = useLocation()
+
+  const handleLogOut = () => {
+    if (location.pathname !== '/') history.push('/')
+    setAuthToken('')
+    setUserInfo(null)
+  }
 
   return (
     <>
@@ -210,15 +225,19 @@ function NavBar() {
                 <Trail />
                 全部步道
               </NavBarLink>
-              <NavBarLink to='/backstage/userId' $noBackground>
-                <DefaultAvatar to='/backstage/userId' />
-                水怪貓貓
-              </NavBarLink>
+              {userInfo && (
+                <NavBarLink to={`/backstage/${userInfo.user_id}`} $noBackground>
+                  <DefaultAvatar to={`/backstage/${userInfo.user_id}`} />
+                  {userInfo.nickname}
+                </NavBarLink>
+              )}
               <Divider />
-              <NavBarText>登出</NavBarText>
-              <NavBarLink $button to='/register'>
-                會員註冊 / 登入
-              </NavBarLink>
+              {userInfo && <NavBarText onClick={handleLogOut}>登出</NavBarText>}
+              {!userInfo && (
+                <NavBarLink $button to='/register'>
+                  會員註冊 / 登入
+                </NavBarLink>
+              )}
             </NavBarLinkWrapper>
           </NavBarMobile>
           <NavBarHamburger

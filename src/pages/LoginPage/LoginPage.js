@@ -1,6 +1,12 @@
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import jwt_decode from 'jwt-decode'
+import { Link, useHistory } from 'react-router-dom'
+import { useState, useContext } from 'react'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { userLogin } from '../../WebAPI'
+import { setAuthToken } from '../../utils'
+import { AuthContext } from '../../context'
+import useUserInfoValidation from '../../hooks/useUserInfoValidation'
 
 const LoginPageWrapper = styled.div`
   width: 100%;
@@ -108,21 +114,74 @@ const OuterLink = styled(Link)`
   color: ${COLOR.white};
 `
 export default function LoginPage() {
+  const [loginInfo, setLoginInfo] = useState({
+    email: '',
+    password: '',
+  })
+
+  const handleUserInfoChange = (e) => {
+    setLoginInfo({
+      ...loginInfo,
+      [e.target.name]: e.target.value,
+    })
+  }
+
+  const { setUserInfo } = useContext(AuthContext)
+  const history = useHistory()
+  const { errMsg, setErrMsg, validateUserInfos } = useUserInfoValidation()
+
+  const handleLogin = (e) => {
+    setErrMsg('')
+    e.preventDefault()
+    for (let i = 0; i < Object.keys(loginInfo).length; i++) {
+      if (!validateUserInfos(loginInfo, Object.keys(loginInfo)[i])) return
+    }
+    userLogin(loginInfo)
+      .then((res) => {
+        if (res.data.success) {
+          setAuthToken(res.data.data.token)
+          setUserInfo(jwt_decode(res.data.data.token))
+          alert('登入成功！')
+          history.push('/')
+        }
+      })
+      .catch((err) => {
+        setErrMsg(err.response.data.message)
+      })
+  }
   return (
     <>
       <LoginPageWrapper>
         <Title> 會員登入 </Title>
         <LoginFormsWrapper>
           <FormWrapper>
-            <AlertMsg $error>資料不齊全，請再次檢查。</AlertMsg>
-            <Input type='email' placeholder='電子郵件' required />
+            <AlertMsg $error>{errMsg}</AlertMsg>
             <Input
+              name='email'
+              type='email'
+              placeholder='電子郵件'
+              required
+              onChange={(e) => {
+                handleUserInfoChange(e)
+              }}
+            />
+            <Input
+              name='password'
               type='password'
               placeholder='密碼'
               pattern='(?=.*\d)(?=.*[a-zA-Z])^[a-zA-Z0-9!@#$%^&*]{8,}$'
               required
+              onChange={(e) => {
+                handleUserInfoChange(e)
+              }}
             />
-            <SubmitBtn type='submit' value='登入'></SubmitBtn>
+            <SubmitBtn
+              type='submit'
+              value='登入'
+              onClick={(e) => {
+                handleLogin(e)
+              }}
+            ></SubmitBtn>
             <AlertMsg>
               還不是會員？<OuterLink to='/register'>註冊</OuterLink>
             </AlertMsg>
