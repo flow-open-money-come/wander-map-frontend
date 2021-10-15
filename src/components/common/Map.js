@@ -116,6 +116,7 @@ Map.defaultProps = {
     lng: 121.83785521632522,
   },
   info: {
+    trail_id: 1,
     title: '蘇花古道：大南澳越嶺段',
     cover_picture_url:
       'https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg',

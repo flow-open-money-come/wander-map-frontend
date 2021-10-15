@@ -15,6 +15,7 @@ const AllTrailsPageWrapper = styled.div`
   width: 90%;
   margin: 0 auto;
   position: relative;
+  padding-bottom: 50px;
 `
 const AllTrailsPageTitleWrapper = styled.div`
   font-size: ${FONT.lg};
@@ -176,11 +177,6 @@ function AllTrailPage() {
 
   return (
     <>
-      <button
-        onClick={() => {
-          console.log(onSearch.current)
-        }}
-      ></button>
       <AllTrailsPageWrapper>
         <AllTrailsPageTitleWrapper>
           <StarSvg />
@@ -226,7 +222,7 @@ function AllTrailPage() {
           <DropDownCheckBoxList
             title='難度'
             filter='difficult'
-            options={['新手', '一般', '困難', '進階', '挑戰']}
+            options={['新手', '入門', '進階', '挑戰', '困難']}
             onClick={handleFilterTrails}
           />
           <SearchBarWrapper $combined>
@@ -255,12 +251,14 @@ function AllTrailPage() {
               .map((trailInfo) => (
                 <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
               ))}
-          {onSearch.current && matchTrailInfos.length === 0 && (
-            <NoMatchMsg>查無步道。</NoMatchMsg>
-          )}
+          {(onSearch.current && matchTrailInfos.length === 0) ||
+            (filteredTrailInfos.length === 0 && (
+              <NoMatchMsg>查無步道。</NoMatchMsg>
+            ))}
         </FilteredTrailsWrapper>
-
-        <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
+        {(matchTrailInfos.length > 21 || filteredTrailInfos.length > 21) && (
+          <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
+        )}
       </AllTrailsPageWrapper>
     </>
   )

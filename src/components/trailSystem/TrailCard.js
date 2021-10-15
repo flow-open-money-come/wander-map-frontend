@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, MEDIA_QUERY, RADIUS } from '../../constants/style'
 import { ReactComponent as LocationSvg } from '../../icons/location_s.svg'
+import { useHistory } from 'react-router'
 
 const FilteredTrailCard = styled.div`
   width: 250px;
@@ -71,9 +72,15 @@ const Location = styled(LocationSvg)`
 `
 
 export default function TrailCard({ trailInfo }) {
+  const history = useHistory()
   return (
     <>
-      <FilteredTrailCard key={trailInfo.trail_id}>
+      <FilteredTrailCard
+        key={trailInfo.trail_id}
+        onClick={() => {
+          history.push(`/articles/${trailInfo.trail_id}`)
+        }}
+      >
         <FilteredTrailImgWrapper>
           <FilteredTrailImg src={trailInfo.cover_picture_url} />
         </FilteredTrailImgWrapper>

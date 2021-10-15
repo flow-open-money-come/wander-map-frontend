@@ -65,13 +65,23 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
 
   const handleMarkerOnclick = () => {
     setInfoWindowToggleClick()
-    setCurrentOnClickTrail(trailInfo.trail_id)
+    if (!isInfoWindowOpen) setCurrentOnClickTrail(trailInfo.trail_id)
   }
 
   useDidMountEffect(() => {
+    if (currentOnClickTrail === null) return
     getArticlesUnderTrail(currentOnClickTrail).then((res) => {
-      setActiveTrailArticles(res.data.data)
+      setActiveTrailArticles({
+        activeTrailInfo: {
+          trailId: trailInfo.trail_id,
+          trailTitle: trailInfo.title,
+          trailLocation: trailInfo.location,
+        },
+        articles: res.data.data,
+      })
     })
+
+    setCurrentOnClickTrail(null)
   }, [currentOnClickTrail])
 
   return (

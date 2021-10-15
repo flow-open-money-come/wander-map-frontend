@@ -6,7 +6,6 @@ import ArticleList from '../../components/forumSystem/Article'
 import { ActiveTrailContext } from '../../context'
 import { useState, useEffect } from 'react'
 import { getArticlesUnderTrail } from '../../WebAPI'
-import { trailIdTitleMap } from '../../constants/paramsMap'
 
 const HomepageContainer = styled.div`
   width: 90%;
@@ -76,7 +75,7 @@ const TrialArticleNumber = styled.div`
 `
 const SubTitleWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   margin-top: 20px;
   ${MEDIA_QUERY.lg} {
@@ -97,13 +96,33 @@ const Divider = styled.div`
   background-color: ${COLOR.white};
   margin: 20px auto;
 `
+const NoMatchMsg = styled.div`
+  font-size: ${FONT.md};
+  font-weight: bold;
+  margin: 0 auto;
+  color: ${COLOR.gray};
+`
 
 function HomePage() {
-  const [activeTrailArticles, setActiveTrailArticles] = useState([{}])
+  const [activeTrailArticles, setActiveTrailArticles] = useState({
+    activeTrailInfo: {
+      trailId: '',
+      trailTitle: '',
+      trailLocation: '',
+    },
+    articles: [],
+  })
 
   useEffect(() => {
     getArticlesUnderTrail(1).then((res) => {
-      setActiveTrailArticles(res.data.data)
+      setActiveTrailArticles({
+        activeTrailInfo: {
+          trailId: 1,
+          trailTitle: '蘇花古道：大南澳越嶺段',
+          trailLocation: '宜蘭縣南澳鄉',
+        },
+        articles: res.data.data,
+      })
     })
   }, [])
   return (
@@ -111,6 +130,7 @@ function HomePage() {
       <ActiveTrailContext.Provider
         value={{ activeTrailArticles, setActiveTrailArticles }}
       >
+        {/* {activeTrailArticles.isLoading ? <div>資料正在來的路上</div> : null} */}
         <HomepageContainer>
           <HomePageWrapper>
             <MapWrapper>
@@ -118,33 +138,41 @@ function HomePage() {
             </MapWrapper>
             <ArticleListWrapper>
               <TrialTitleWrapper>
-                <TrialTitleName to='trails/1'>
-                  蘇花古道：大南澳越嶺段
+                <TrialTitleName
+                  to={`trails/${activeTrailArticles.activeTrailInfo.trailId}`}
+                >
+                  {activeTrailArticles.activeTrailInfo.trailTitle}
                 </TrialTitleName>
                 <SubTitleWrapper>
-                  <TrialTitleLocation>宜蘭縣南澳鄉</TrialTitleLocation>
+                  <TrialTitleLocation>
+                    {activeTrailArticles.activeTrailInfo.trailLocation}
+                  </TrialTitleLocation>
                   <LinkWrapper>
                     <TrialArticleNumber>
-                      {activeTrailArticles.length} 篇心得
+                      {activeTrailArticles.articles.length} 篇心得
                     </TrialArticleNumber>
                   </LinkWrapper>
                 </SubTitleWrapper>
               </TrialTitleWrapper>
               <Divider />
               <TrialArticleWrapper>
-                {activeTrailArticles.map((articleInfos) => (
-                  <ArticleList
-                    key={articleInfos.article_id}
-                    articleImgSrc={articleInfos.cover_picture_url}
-                    avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-                    title={articleInfos.title}
-                    user={'水怪貓貓'}
-                    tags={['有水源', '賞花', '危險地形']}
-                    date={articleInfos.departure_time}
-                    content={articleInfos.content}
-                    lessRwd={true}
-                  />
-                ))}
+                {activeTrailArticles.articles.length !== 0 ? (
+                  activeTrailArticles.articles.map((articleInfos) => (
+                    <ArticleList
+                      key={articleInfos.article_id}
+                      articleImgSrc={articleInfos.cover_picture_url}
+                      avatarImgSrc={articleInfos.icon_url}
+                      title={articleInfos.title}
+                      user={articleInfos.author_name}
+                      tags={articleInfos.tag_names.split(',')}
+                      date={new Date(articleInfos.created_at).toLocaleString()}
+                      content={articleInfos.content}
+                      lessRwd={true}
+                    />
+                  ))
+                ) : (
+                  <NoMatchMsg>目前還沒有心得唷，快來分享吧！</NoMatchMsg>
+                )}
               </TrialArticleWrapper>
             </ArticleListWrapper>
           </HomePageWrapper>
