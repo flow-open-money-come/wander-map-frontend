@@ -8,11 +8,11 @@ import useSearch from '../../hooks/useSearch'
 import { ActiveTrailContext } from '../../context'
 
 const MapSearchBarWrapper = styled.div`
-  width: 100%;
+  width: 80%;
   position: absolute;
   top: 10px;
   left: 10px;
-  z-index: 2;
+  z-index: 1;
 `
 
 const Map = (props) => {
@@ -22,6 +22,7 @@ const Map = (props) => {
     handleSearchTrails,
     handleKeyWordChange,
     handleKeyWordDelete,
+    onSearch,
   } = useSearch()
   const { activeTrailArticles } = useContext(ActiveTrailContext)
   const apiHasLoaded = (map, maps) => {
@@ -59,6 +60,7 @@ const Map = (props) => {
           handleSearchTrails={handleSearchTrails}
           handleKeyWordDelete={handleKeyWordDelete}
           inputValue={keyWord}
+          width='100%'
         />
       </MapSearchBarWrapper>
       <GoogleMapReact
@@ -69,7 +71,8 @@ const Map = (props) => {
         onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
         center={activeTrailArticles.activeTrailInfo.center}
       >
-        {matchTrailInfos.length > 0 ? (
+        {onSearch.current &&
+          matchTrailInfos.length > 0 &&
           matchTrailInfos.map((trailInfo) => {
             // obj arr to single obj
             let trailConditionsObj = Object.assign({}, ...trailConditions)
@@ -91,8 +94,8 @@ const Map = (props) => {
                 trailConditionTag={trailConditionTag}
               />
             )
-          })
-        ) : (
+          })}
+        {!onSearch.current && (
           <LocationMarker
             key={1}
             lat={props.info.coordinate.y}

@@ -12,6 +12,22 @@ const Marker = styled(PinSvg)`
   width: 30px;
   height: 30px;
   transform: translate(-50%, -50%);
+  transition: ${EFFECT.transition};
+  &:hover {
+    width: 35px;
+    height: 35px;
+    path {
+      fill: red;
+    }
+  }
+  ${(props) =>
+    props.$isFocus &&
+    `
+    width: 35px;
+    height: 35px;    
+    path {
+      fill: red;
+    }`}
 `
 const InfoWindow = styled.div`
   width: 230px;
@@ -92,7 +108,10 @@ export default function LocationMarker({ trailInfo, trailConditionTag, zoom }) {
 
   return (
     <>
-      <Marker onClick={handleMarkerOnclick}></Marker>
+      <Marker
+        onClick={handleMarkerOnclick}
+        $isFocus={isInfoWindowOpen}
+      ></Marker>
       <InfoWindow
         $isOpen={isInfoWindowOpen}
         onClick={() => {
