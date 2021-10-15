@@ -78,7 +78,7 @@ export default function TrailCard({ trailInfo }) {
       <FilteredTrailCard
         key={trailInfo.trail_id}
         onClick={() => {
-          history.push(`/articles/${trailInfo.trail_id}`)
+          history.push(`/trails/${trailInfo.trail_id}`)
         }}
       >
         <FilteredTrailImgWrapper>

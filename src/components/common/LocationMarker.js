@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { useHistory } from 'react-router'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { ReactComponent as PinSvg } from '../../icons/pin.svg'
 import useToggle from '../../hooks/useToggle'
@@ -62,6 +63,7 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
   const [isInfoWindowOpen, setInfoWindowToggleClick] = useToggle(false)
   const [currentOnClickTrail, setCurrentOnClickTrail] = useState(null)
   const { setActiveTrailArticles } = useContext(ActiveTrailContext)
+  const history = useHistory()
 
   const handleMarkerOnclick = () => {
     setInfoWindowToggleClick()
@@ -87,7 +89,12 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
   return (
     <>
       <Marker onClick={handleMarkerOnclick}></Marker>
-      <InfoWindow $isOpen={isInfoWindowOpen}>
+      <InfoWindow
+        $isOpen={isInfoWindowOpen}
+        onClick={() => {
+          history.push(`/trails/${trailInfo.trail_id}`)
+        }}
+      >
         <TrailImg src={trailInfo.cover_picture_url} />
         <TrailInfoWrapper>
           <TrailName>{trailInfo.title}</TrailName>
