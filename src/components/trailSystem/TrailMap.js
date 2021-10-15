@@ -56,19 +56,21 @@ const Marker = styled(PinSvg)`
 `
 
 
-
 function TrailMap({ coordinate }) {
 
   const [mapCenter, setMapCenter] = useState({})
+  const Center = {
+    lat: 24.42360428661788,
+    lng: 121.70835976400171
+  }
 
   useEffect(() => {
     setMapCenter({
       lat: coordinate.y,
       lng: coordinate.x
     })
+    
   }, [coordinate])
-
-  console.log('mapCenter', mapCenter)
 
   return (
     <MapWrapper>
@@ -79,8 +81,9 @@ function TrailMap({ coordinate }) {
       <MapContainer>
         <GoogleMapReact
           bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
-          defaultCenter={mapCenter}
-          defaultZoom={17}
+          defaultCenter={Center}
+          center={mapCenter}
+          defaultZoom={15}
           yesIWantToUseGoogleMapApiInternals
         >
           <Marker lat={mapCenter.lat} lng={mapCenter.lng} />

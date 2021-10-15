@@ -16,6 +16,7 @@ import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
 import { getTrails, getTrailArticles } from '../../../WebAPI'
+import { useHistory } from 'react-router-dom'
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -166,7 +167,7 @@ const trailDefault = {
     altitude: 350,
     length: 3.8,
     season: '四季皆宜',
-    difficulty: 'difficulty',
+    difficulty: '入門',
     cover_picture_url:
       'https://tluxe-aws.hmgcdn.com/public/article/2017/atl_20180628130517_581.jpg',
     map_picture_url: 'https://recreation.forest.gov.tw/Files/RT/Photo/002/01/002_MAP.jpg',
@@ -179,9 +180,14 @@ function TrailPage() {
   const { trailID } = useParams()
   const [trailInfo, setTrailInfo] = useState(trailDefault)
   const [articles, setArticles] = useState(null)
+  const history = useHistory()
 
   useEffect(() => {
-    getTrails(trailID).then((res) =>  setTrailInfo(res.data.data[0]))
+    getTrails(trailID)
+      .then((res) => {
+        // 若此步道已被刪除則API回傳空值，此時導到所有步道頁面
+        res.data.data[0] ? setTrailInfo(res.data.data[0]) : history.push(`/trails`)
+      })
       .catch((error) => console.error(error))
     getTrailArticles(trailID).then((res) => setArticles(res.data.data))
       .catch((error) => console.error(error))
