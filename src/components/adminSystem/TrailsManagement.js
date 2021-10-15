@@ -4,10 +4,12 @@ import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
-import { getTrails, deleteTrail } from '../../WebAPI'
+import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
+import { getTrails, deleteTrail, getDeletedTrail, recoverTrail } from '../../WebAPI'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 import Pagination from './Pagination'
+
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -177,50 +179,39 @@ const LinkWrapper = styled(Link)`
 
 function TrailsManagement({ recycle, setRecycle }) {
   const [trails, setTrails] = useState(null)
+  const [deletedTrails, setDeletedTrails] = useState(null)
   const [searchValue, setSearchValue] = useState('')
-  const [searchResults, setSearchResults] = useState(null)
+  const [searchResults, setSearchResults] = useState('')
   const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(Math.ceil(126/20))
 
-  //  useEffect(() => {
-  //    console.log('get all')
-  //      getTrails(` `)
-  //        .then((res) => setTrails(res.data.data))
-  //        .catch((err) => console.error(err))
-  //  }, [trails])
-
   useEffect(() => {
-    console.log('get all')
-    // getTrails('?limit=200')
-    //   .then((res) => setTotalPages(Math.ceil(res.data.data.length / 20)))
-    //   .catch((err) => console.error(err))
-    getTrails(`?offset=${(page-1)*20}`)
+    getTrails(`?offset=${(page - 1) * 20}&search=${searchResults}`)
       .then((res) => setTrails(res.data.data))
       .catch((err) => console.error(err))
-  }, [page])
+    getDeletedTrail(`?offset=${(page - 1) * 20}`)
+      .then((res) => setDeletedTrails(res.data.data))
+      .catch((err) => console.error(err))
+  }, [page, searchResults, recycle])
 
-
-  const handleSearchSubmit = (searchValue) => {
-    getTrails(`?search=${searchValue}`)
-      .then((res) => setSearchResults(res.data.data))
-      .catch((err) => console.log(err))
-  }
 
   useEffect(() => {
-    if (!searchValue) {
-      setSearchResults(null)
-    }
+    if (!searchValue) setSearchResults('')
   }, [searchValue])
-
-  // console.log('Value', searchValue)
-  // console.log('Results', searchResults)
 
   const handleDelete = (trailID, trailTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
     deleteTrail(trailID).then()
     alert(`刪除 ${trailTitle}`)
     setTrails(trails.filter((trail) => trail.trail_id !== trailID))
+  }
+
+  const handleRecover = (trailID, trailTitle) => {
+    if (!userInfo || userInfo.role !== 'admin') return
+    recoverTrail(trailID).then()
+    alert(`恢復 ${trailTitle}`)
+    setDeletedTrails(deletedTrails.filter((trail) => trail.trail_id !== trailID))
   }
 
   return (
@@ -231,7 +222,7 @@ function TrailsManagement({ recycle, setRecycle }) {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSearchSubmit(searchValue)
+            if (e.key === 'Enter') setSearchResults(searchValue)
           }}
         />
       </SearchBar>
@@ -253,7 +244,7 @@ function TrailsManagement({ recycle, setRecycle }) {
         )}
       </RecycleBlock>
       <TrailsTable>
-        {!searchResults &&
+        {!recycle &&
           trails &&
           trails.map((trail) => (
             <TableContent>
@@ -276,24 +267,20 @@ function TrailsManagement({ recycle, setRecycle }) {
               </BtnTd>
             </TableContent>
           ))}
-        {!searchResults && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
-        {searchResults &&
-          searchResults.map((trail) => (
+        {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
+        {recycle &&
+          deletedTrails &&
+          deletedTrails.map((trail) => (
             <TableContent>
-              <LinkWrapper to={`/trails/${trail.trail_id}`}>
-                <CoverTd>
-                  <TrailImg src={trail.cover_picture_url} />
-                </CoverTd>
-                <TrailsTd>{trail.title}</TrailsTd>
-              </LinkWrapper>
+              <CoverTd>
+                <TrailImg src={trail.cover_picture_url} />
+              </CoverTd>
+              <TrailsTd>{trail.title}</TrailsTd>
               <CreatorTd>admin</CreatorTd>
               <BtnTd>
-                <Link to={`/trails/${trail.trail_id}`}>
-                  <EditIcon />
-                </Link>
-                <BinIcon
+                <RecoverIcon
                   onClick={() => {
-                    handleDelete(trail.trail_id, trail.title)
+                    handleRecover(trail.trail_id, trail.title)
                   }}
                 />
               </BtnTd>

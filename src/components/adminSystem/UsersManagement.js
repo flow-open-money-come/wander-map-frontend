@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useState, useEffect, useContext} from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
-
+import { getAuthToken } from '../../utils'
+import { getAllUsers } from '../../WebAPI'
+import { Link } from 'react-router-dom'
+import { AuthContext } from '../../context'
+import Pagination from './Pagination'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -110,11 +114,33 @@ const StatusBtn = styled.button`
     padding: 2px 12px;
   }
 `
+const LinkDefault = styled(Link)`
+  color: black;
+`
+
+function UsersManagement() {
+  const [users, setUsers] = useState(null)
+  const [userStatus, setUserStatus] = useState()
+  const adminToken = getAuthToken()
+  const { userInfo } = useContext(AuthContext)
+  const [page, setPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(Math.ceil(19 / 20))
 
 
-function UsersManagement({ users, setUsers }) {
+  useEffect(() => {
+    getAllUsers(adminToken, `?offset=${(page - 1) * 20}`)
+      .then((res) => {
+        setUsers(res.data.data.users)
+      })
+      .catch((err) => console.error(err))
+  }, [adminToken, page])
 
-  console.log('users',users)
+
+  const handleToggleState = (userID) => {
+    if (!userInfo || userInfo.role !== 'admin') return
+    alert('toggle')
+  }
+
   return (
     <Block>
       <SearchBar>
@@ -128,33 +154,27 @@ function UsersManagement({ users, setUsers }) {
           <HeaderTd>入會日期</HeaderTd>
           <HeaderTd>狀態</HeaderTd>
         </TableHeader>
-        <TableContent>
-          <NicknameTd>胖虎</NicknameTd>
-          <EmailTd>woo.123.com</EmailTd>
-          <ContentTd>2000.01.01</ContentTd>
-          <ContentTd>
-            <StatusBtn>一般</StatusBtn>
-          </ContentTd>
-        </TableContent>
-        <TableContent>
-          <NicknameTd>胖虎</NicknameTd>
-          <EmailTd>woo.123.com</EmailTd>
-          <ContentTd>2000.01.01</ContentTd>
-          <ContentTd>
-            <StatusBtn>停權</StatusBtn>
-          </ContentTd>
-        </TableContent>
-        {/* {users.map((user) => (
-          <TableContent>
-            <NicknameTd>user</NicknameTd>
-            <EmailTd>woo.123.com</EmailTd>
-            <ContentTd>2000.01.01</ContentTd>
-            <ContentTd>
-              <StatusBtn>停權</StatusBtn>
-            </ContentTd>
-          </TableContent>
-        ))} */}
+        {users &&
+          users.map((user) => (
+            <TableContent>
+              <NicknameTd>
+                <LinkDefault to={`/user/${user.user_id}`}>{user.nickname}</LinkDefault>
+              </NicknameTd>
+              <EmailTd>{user.email}</EmailTd>
+              <ContentTd>{new Date(user.created_at).toLocaleDateString('ja')}</ContentTd>
+              <ContentTd>
+                <StatusBtn
+                  onClick={() => {
+                    handleToggleState(user.user_id)
+                  }}
+                >
+                  停權
+                </StatusBtn>
+              </ContentTd>
+            </TableContent>
+          ))}
       </UsersTable>
+      <Pagination page={page} setPage={setPage} totalPages={totalPages} />
     </Block>
   )
 }

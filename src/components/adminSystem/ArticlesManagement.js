@@ -3,10 +3,12 @@ import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
-import { getArticles, deleteArticle } from '../../WebAPI'
+import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
+import { getArticles, deleteArticle, getDeletedArticle, recoverArticle } from '../../WebAPI'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 import Pagination from './Pagination'
+import { getAuthToken } from '../../utils'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -192,39 +194,43 @@ const LinkDefault = styled(Link)`
 
 function ArticlesManagement({ recycle, setRecycle }) {
   const [articles, setArticles] = useState(null)
+  const [deletedArticles, setDeletedArticles] = useState(null)
   const [searchValue, setSearchValue] = useState('')
-  const [searchResults, setSearchResults] = useState(null)
+  const [searchResults, setSearchResults] = useState('')
   const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
+  const adminToken = getAuthToken()
 
   useEffect(() => {
-    //console.log('get all')
     getArticles('?limit=200')
       .then((res) => setTotalPages(Math.ceil(res.data.data.length / 20)))
       .catch((err) => console.error(err))
-    getArticles(`?offset=${(page - 1) * 20}`)
+    getArticles(`?offset=${(page - 1) * 20}&search=${searchResults}`)
       .then((res) => setArticles(res.data.data))
       .catch((err) => console.error(err))
-  }, [page])
-
-  const handleSearchSubmit = (searchValue) => {
-    getArticles(`?search=${searchValue}`)
-      .then((res) => setSearchResults(res.data.data))
-      .catch((err) => console.log(err))
-  }
+    getDeletedArticle(`?offset=${(page - 1) * 20}`)
+      .then((res) => setDeletedArticles(res.data.data))
+      .catch((err) => console.error(err))
+  }, [page, searchResults, recycle])
 
   useEffect(() => {
-    if (!searchValue) {
-      setSearchResults(null)
-    }
+    if (!searchValue) setSearchResults('')
   }, [searchValue])
+
 
   const handleDelete = (articleID, articleTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
-    deleteArticle(articleID).then()
+    deleteArticle(adminToken, articleID).then()
     alert(`刪除 ${articleTitle}`)
     setArticles(articles.filter((article) => article.article_id !== articleID))
+  }
+
+  const handleRecover = (articleID, articleTitle) => {
+    if (!userInfo || userInfo.role !== 'admin') return
+    recoverArticle(articleID).then()
+    alert(`恢復 ${articleTitle}`)
+    setDeletedArticles(deletedArticles.filter((article) => article.article_id !== articleID))
   }
 
   return (
@@ -235,7 +241,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSearchSubmit(searchValue)
+            if (e.key === 'Enter') setSearchResults(searchValue)
           }}
         />
       </SearchBar>
@@ -263,7 +269,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
         )}
       </RecycleBlock>
       <TrailsTable>
-        {!searchResults &&
+        {!recycle &&
           articles &&
           articles.map((article) => (
             <TableContent>
@@ -274,7 +280,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
                 <TrailsTd>{article.title}</TrailsTd>
               </LinkDefault>
               <CreatorTd>
-                <LinkDefault to={`/users/${article.author_id}`}>{article.author_id}</LinkDefault>
+                <LinkDefault to={`/users/${article.author_id}`}>{article.nickname}</LinkDefault>
               </CreatorTd>
               <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
               <BtnTd>
@@ -286,9 +292,10 @@ function ArticlesManagement({ recycle, setRecycle }) {
               </BtnTd>
             </TableContent>
           ))}
-        {!searchResults && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
-        {searchResults &&
-          searchResults.map((article) => (
+        {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
+        {recycle &&
+          deletedArticles &&
+          deletedArticles.map((article) => (
             <TableContent>
               <LinkDefault to={`/articles/${article.article_id}`}>
                 <CoverTd>
@@ -297,13 +304,13 @@ function ArticlesManagement({ recycle, setRecycle }) {
                 <TrailsTd>{article.title}</TrailsTd>
               </LinkDefault>
               <CreatorTd>
-                <LinkDefault to={`/users/${article.author_id}`}>{article.author_id}</LinkDefault>
+                <LinkDefault to={`/users/${article.author_id}`}>{article.nickname}</LinkDefault>
               </CreatorTd>
               <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
               <BtnTd>
-                <BinIcon
+                <RecoverIcon
                   onClick={() => {
-                    handleDelete(article.article_id, article.title)
+                    handleRecover(article.article_id, article.title)
                   }}
                 />
               </BtnTd>
