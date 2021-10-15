@@ -65,6 +65,12 @@ const InputField = styled.input`
     height: 40px;
     margin: 10px 20px;
   }
+
+  ${(props) =>
+    !props.userInfo &&
+    `
+    pointer-events: none;
+  `}
 `
 
 const SentBtn = styled.button`
@@ -344,12 +350,13 @@ export default function Comments({ setIsLoading }) {
       <CommentsHeader>
         <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
         <InputField
+          userInfo={userInfo}
           value={value}
           onChange={(e) => {
             setValue(e.target.value)
             setReminder('')
           }}
-          placeholder='請輸入留言...'
+          placeholder={!userInfo ? '請登入發表留言' : '請輸入留言...'}
         />
         <SentBtn onClick={(e) => handleSubmit(e)}>
           <SendIcon />
@@ -366,21 +373,22 @@ export default function Comments({ setIsLoading }) {
               <CommentTime>
                 {new Date(message.created_at).toLocaleString('ja')}
               </CommentTime>
-              {(userInfo.user_id === message.author_id ||
-                userInfo.role === 'admin') && (
-                <>
-                  <EditButton
-                    id={message.message_id}
-                    onClick={handlePopUpInput}
-                  />
-                  <BinButton
-                    id={message.message_id}
-                    onClick={(e) => {
-                      handleDeleteMessage(e)
-                    }}
-                  />
-                </>
-              )}
+              {userInfo &&
+                (userInfo.user_id === message.author_id ||
+                  userInfo.role === 'admin') && (
+                  <>
+                    <EditButton
+                      id={message.message_id}
+                      onClick={handlePopUpInput}
+                    />
+                    <BinButton
+                      id={message.message_id}
+                      onClick={(e) => {
+                        handleDeleteMessage(e)
+                      }}
+                    />
+                  </>
+                )}
             </CommentBtn>
           </CommentInfo>
           {Number(editing) === message.message_id ? (
