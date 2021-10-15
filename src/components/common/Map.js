@@ -1,10 +1,11 @@
 import styled from 'styled-components'
 import GoogleMapReact from 'google-map-react'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import SearchBar from './SearchBar'
 import LocationMarker from './LocationMarker'
 import { getTrailsCondition } from '../../WebAPI'
 import useSearch from '../../hooks/useSearch'
+import { ActiveTrailContext } from '../../context'
 
 const MapSearchBarWrapper = styled.div`
   width: 100%;
@@ -22,11 +23,10 @@ const Map = (props) => {
     handleKeyWordChange,
     handleKeyWordDelete,
   } = useSearch()
-
+  const { activeTrailArticles } = useContext(ActiveTrailContext)
   const apiHasLoaded = (map, maps) => {
     console.log('載入完成!')
   }
-
   const [trailConditions, setTrailConditions] = useState([{}])
   useEffect(() => {
     getTrailsCondition()
@@ -63,10 +63,11 @@ const Map = (props) => {
       </MapSearchBarWrapper>
       <GoogleMapReact
         bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
-        defaultCenter={props.center}
+        defaultCenter={props.info.coordinate}
         defaultZoom={props.zoom}
         yesIWantToUseGoogleMapApiInternals
         onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
+        center={activeTrailArticles.activeTrailInfo.center}
       >
         {matchTrailInfos.length > 0 ? (
           matchTrailInfos.map((trailInfo) => {
@@ -94,8 +95,8 @@ const Map = (props) => {
         ) : (
           <LocationMarker
             key={1}
-            lat={props.center.lat}
-            lng={props.center.lng}
+            lat={props.info.coordinate.y}
+            lng={props.info.coordinate.x}
             trailInfo={props.info}
             trailConditionTag={
               Object.keys(trailConditions).indexOf(1) > 0
@@ -111,17 +112,18 @@ const Map = (props) => {
 
 // 演示用的步道，有較多心得、比較豐富的資訊可以呈現
 Map.defaultProps = {
-  center: {
-    lat: 24.482340609862774,
-    lng: 121.83785521632522,
-  },
   info: {
     trail_id: 1,
     title: '蘇花古道：大南澳越嶺段',
+    location: '宜蘭縣南澳鄉',
     cover_picture_url:
       'https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg',
+    coordinate: {
+      y: 24.482340609862774,
+      x: 121.83785521632522,
+    },
   },
-  zoom: 17,
+  zoom: 15,
 }
 
 export default Map

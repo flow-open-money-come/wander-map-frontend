@@ -59,7 +59,7 @@ const TrailInfoWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `
-export default function LocationMarker({ trailInfo, trailConditionTag }) {
+export default function LocationMarker({ trailInfo, trailConditionTag, zoom }) {
   const [isInfoWindowOpen, setInfoWindowToggleClick] = useToggle(false)
   const [currentOnClickTrail, setCurrentOnClickTrail] = useState(null)
   const { setActiveTrailArticles } = useContext(ActiveTrailContext)
@@ -78,6 +78,10 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
           trailId: trailInfo.trail_id,
           trailTitle: trailInfo.title,
           trailLocation: trailInfo.location,
+          center: {
+            lat: trailInfo.coordinate.y,
+            lng: trailInfo.coordinate.x,
+          },
         },
         articles: res.data.data,
       })

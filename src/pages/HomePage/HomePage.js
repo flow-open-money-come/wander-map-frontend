@@ -109,6 +109,7 @@ function HomePage() {
       trailId: '',
       trailTitle: '',
       trailLocation: '',
+      center: { lat: '', lng: '' },
     },
     articles: [],
   })
@@ -120,6 +121,10 @@ function HomePage() {
           trailId: 1,
           trailTitle: '蘇花古道：大南澳越嶺段',
           trailLocation: '宜蘭縣南澳鄉',
+          center: {
+            lat: 24.482340609862774,
+            lng: 121.83785521632522,
+          },
         },
         articles: res.data.data,
       })
@@ -130,7 +135,6 @@ function HomePage() {
       <ActiveTrailContext.Provider
         value={{ activeTrailArticles, setActiveTrailArticles }}
       >
-        {/* {activeTrailArticles.isLoading ? <div>資料正在來的路上</div> : null} */}
         <HomepageContainer>
           <HomePageWrapper>
             <MapWrapper>
