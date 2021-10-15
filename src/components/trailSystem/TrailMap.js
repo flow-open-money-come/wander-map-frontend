@@ -68,7 +68,7 @@ function TrailMap({ coordinate }) {
     })
   }, [coordinate])
 
-  console.log(mapCenter)
+  console.log('mapCenter', mapCenter)
 
   return (
     <MapWrapper>

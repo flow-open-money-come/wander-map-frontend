@@ -92,7 +92,7 @@ function TrailInfo({ trailInfo }) {
  ]
 
  const difficultyTransfer = (difficulty) => {
-   return difficultyTable.find((level) => level.inputLevel === trailInfo.difficulty).outputLevel
+   return difficultyTable.find((level) => level.inputLevel === difficulty).outputLevel
  }
 
 
@@ -109,7 +109,7 @@ function TrailInfo({ trailInfo }) {
         </InfoRow>
         <InfoRow>
           <div>難度</div>
-          <div>{trailInfo && difficultyTransfer(trailInfo.difficulty)}</div>
+          <div>{trailInfo && trailInfo.difficulty}</div>
         </InfoRow>
         <InfoRow>
           <div>海拔</div>
