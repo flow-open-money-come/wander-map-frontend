@@ -189,9 +189,10 @@ function TrailPage() {
         res.data.data[0] ? setTrailInfo(res.data.data[0]) : history.push(`/trails`)
       })
       .catch((error) => console.error(error))
-    getTrailArticles(trailID).then((res) => setArticles(res.data.data))
+    getTrailArticles(trailID, '?limit=3')
+      .then((res) => setArticles(res.data.data))
       .catch((error) => console.error(error))
-  }, [trailID])
+  }, [trailID, history])
 
   return (
     <TrailPageContainer>

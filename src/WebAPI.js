@@ -13,7 +13,8 @@ export const userRegister = (payload) =>
 // trails
 export const getTrails = (params) => instance.get('/trails/' + params)
 export const getHotTrails = () => instance.get('/trails/featured')
-export const getTrailArticles = (trailID) => instance.get('/trails/' + trailID + '/articles')
+export const getTrailArticles = (trailID, params) =>
+  instance.get('/trails/' + trailID + '/articles' + params)
 
 
 // articles
