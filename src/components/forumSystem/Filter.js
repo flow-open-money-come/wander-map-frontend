@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchSvg } from '../../icons/search.svg'
-// import SearchBar from '../common/SearchBar'
+import SearchBar from '../common/SearchBar'
 
 const FilterContainer = styled.div`
   width: 90%;
@@ -51,12 +51,6 @@ const FilterTag = styled.button`
     `}
 `
 
-const SearchBar = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`
-
 const SearchBarInput = styled.input`
   width: 80%;
   height: 30px;
@@ -76,9 +70,10 @@ export default function ForumFilter({
   setTags,
   tagValue,
   setTagValue,
-  search,
-  setSearch,
+  inputValue,
+  handleInputChange,
   handleClickSearch,
+  handleClickCross,
 }) {
   const handleTagValue = (e) => {
     setTagValue(
@@ -97,32 +92,26 @@ export default function ForumFilter({
     )
   }
 
+  console.log(inputValue)
   return (
     <FilterContainer>
       <Filter>
-        <SearchBar>
-          <SearchBarInput
-            placeholder='關鍵字...'
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            onKeyDown={(e) => {
-              handleClickSearch(e)
-            }}
-          />
-          <SearchIcon onClick={handleClickSearch} />
-        </SearchBar>
-        {/* // <SearchBar
+        <SearchBar
           placeholder='關鍵字...'
           horizontalAlign
           noBorderRadius
           width='100%'
           fontSize={FONT.md}
           noShadow
-          value={search}
+          value={inputValue}
           onChange={(e) => {
-            setSearch(e.target.value)
+            handleInputChange(e)
           }}
-        /> */}
+          onClickSearch={(e) => {
+            handleClickSearch(e)
+          }}
+          onClickCross={handleClickCross}
+        />
         <FilterTags>
           {tags.map((tag) => {
             return (

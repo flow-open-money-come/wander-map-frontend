@@ -8,6 +8,7 @@ import { FONT, MEDIA_QUERY } from '../../../constants/style'
 import { NavBarButton } from '../../../components/common/Button'
 import { apiArticlesHot, apiArticlesOptions } from '../../../WebAPI'
 import { COLOR } from '../../../constants/style'
+import { useInput } from '../../../hooks/useInput'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -80,7 +81,7 @@ function AllArticlesPage() {
   const [slides, setSlides] = useState([])
   const [posts, setPosts] = useState([])
   const [tagValue, setTagValue] = useState([])
-  const [search, setSearch] = useState('')
+  const { inputValue, setInputValue, handleInputChange } = useInput()
   const [filterData, setFilterData] = useState()
   const params = useRef(5)
   let overLoad = false
@@ -127,9 +128,12 @@ function AllArticlesPage() {
   }
 
   const handleClickSearch = (e) => {
-    if (e.key === 'Enter' || e.code === 'Backspace' || filterData === '') {
-      setFilterData(search)
-    }
+    setFilterData(inputValue)
+  }
+
+  const handleClickCross = (e) => {
+    setInputValue('')
+    setFilterData('')
   }
 
   if (params.current > posts.length) {
@@ -165,9 +169,10 @@ function AllArticlesPage() {
         setTags={setTags}
         tagValue={tagValue}
         setTagValue={setTagValue}
-        search={search}
-        setSearch={setSearch}
+        inputValue={inputValue}
+        handleInputChange={handleInputChange}
         handleClickSearch={handleClickSearch}
+        handleClickCross={handleClickCross}
       />
       <ArticleListWrapper>
         {posts.map((post) => {
@@ -175,11 +180,11 @@ function AllArticlesPage() {
             <ArticleList
               articleImgSrc={post.cover_picture_url}
               title={post.title}
-              user={'水怪貓貓'} // 待修正
+              user={post.nickname}
               tags={!post.tag_names ? [] : post.tag_names.split(',')}
               date={new Date(post.created_at).toLocaleString('ja')}
               content={post.content}
-              avatarImgSrc={'https://i.imgur.com/YGh2ZNl.png'} // 待修正
+              avatarImgSrc={post.user_icon}
               articlePage={`/articles/${post.article_id}`}
             />
           )

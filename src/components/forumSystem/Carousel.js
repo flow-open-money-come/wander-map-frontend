@@ -283,9 +283,9 @@ export default function Carousel({ slides }) {
                     <ArticleContent>{slide.content}</ArticleContent>
                     <ArticleInfo>
                       <ArticleUser>
-                        {/* <UserAvatar src={slide.userAvatar} /> */}
+                        {/* <UserAvatar src={slide.user_icon} /> */}
                         <UserInfo>
-                          {/* <UserName>{slide.username}</UserName> */}
+                          {/* <UserName>{slide.nickname}</UserName> */}
                           <ArticleDate>
                             {new Date(slide.created_at).toLocaleString('ja')}
                           </ArticleDate>
