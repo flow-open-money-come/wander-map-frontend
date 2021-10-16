@@ -9,8 +9,9 @@ import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
 import { apiArticle, apiArticleGetLike } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
-import { AuthContext } from '../../../context'
+import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
+import Loading from '../../../components/common/Loading'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -128,15 +129,18 @@ function ArticlePage() {
   const { id } = useParams()
   const [post, setPost] = useState([])
   const { userInfo } = useContext(AuthContext)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const { thumb, setThumb, handleClickLike } = useLike()
 
   useEffect(() => {
     const getPost = async () => {
+      setIsLoading(true)
       try {
         let res = await apiArticle(id)
         if (res.status === 200) {
           setPost(res.data.data[0])
         }
+        setIsLoading(false)
       } catch (err) {
         console.log(err)
       }
@@ -146,6 +150,7 @@ function ArticlePage() {
 
   useEffect(() => {
     const getLike = async () => {
+      setIsLoading(true)
       try {
         let res = await apiArticleGetLike(userInfo.user_id)
         console.log(res)
@@ -158,6 +163,7 @@ function ArticlePage() {
         ) {
           setThumb(true)
         }
+        setIsLoading(false)
       } catch (err) {
         console.log(err)
       }
@@ -166,23 +172,27 @@ function ArticlePage() {
   }, [])
 
   return (
-    <Wrapper>
-      <CoverImg src={post.cover_picture_url} />
-      <ArticleTitleAndLikes>
-        <ArticleTitle>{post.title}</ArticleTitle>
-        <ArticleLikes>
-          {userInfo && <ThumbUp thumb={thumb} onClick={handleClickLike} />}
-          {/* {post.likes} */}
-        </ArticleLikes>
-      </ArticleTitleAndLikes>
-      {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
-      <ArticleStandardInformation topElement>
-        地點：{post.location}
-      </ArticleStandardInformation>
-      <ArticleStandardInformation>
-        出發時間：{new Date(post.departure_time).toLocaleString()}
-      </ArticleStandardInformation>
-      {/* {post.time_spent ? (
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Wrapper>
+          <CoverImg src={post.cover_picture_url} />
+          <ArticleTitleAndLikes>
+            <ArticleTitle>{post.title}</ArticleTitle>
+            <ArticleLikes>
+              {userInfo && <ThumbUp thumb={thumb} onClick={handleClickLike} />}
+              {/* {post.likes} */}
+            </ArticleLikes>
+          </ArticleTitleAndLikes>
+          {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
+          <ArticleStandardInformation topElement>
+            地點：{post.location}
+          </ArticleStandardInformation>
+          <ArticleStandardInformation>
+            出發時間：{new Date(post.departure_time).toLocaleString()}
+          </ArticleStandardInformation>
+          {/* {post.time_spent ? (
         <ArticleStandardInformation>
           行進時間：{post.time_spent} 小時
         </ArticleStandardInformation>
@@ -203,13 +213,15 @@ function ArticlePage() {
       ) : (
         ''
       )} */}
-      <ArticleContent content={post.content} />
-      <FlexGroup>
-        <ReviewIcon />
-        <CommentTitle>討論區</CommentTitle>
-      </FlexGroup>
-      <Comment isMessage={true} />
-    </Wrapper>
+          <ArticleContent content={post.content} />
+          <FlexGroup>
+            <ReviewIcon />
+            <CommentTitle>討論區</CommentTitle>
+          </FlexGroup>
+          <Comment isMessage={true} />
+        </Wrapper>
+      )}
+    </>
   )
 }
 
