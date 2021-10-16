@@ -11,7 +11,9 @@ import {
   apiMessagesPatch,
   apiMessages,
 } from '../../WebAPI'
-import { AuthContext } from '../../../src/context'
+import { LoadingContext, AuthContext } from '../../../src/context'
+import Loading from '../../components/common/Loading'
+import useMessage from '../../hooks/useMessage'
 
 const CommentsContainer = styled.div`
   width: 100%;
@@ -265,174 +267,124 @@ const BinButton = styled.button`
   background-repeat: no-repeat;
 `
 
-export default function Comments({ setIsLoading }) {
-  const { id } = useParams()
-  const [reminder, setReminder] = useState('')
-  const [value, setValue] = useState('')
-  const [messages, setMessages] = useState([])
-  const [editValue, setEditValue] = useState('')
-  const [editing, setEditing] = useState(false)
-  const [deleting, setDeleting] = useState(false)
-  const { userInfo, setUserInfo } = useContext(AuthContext)
-
-  console.log(userInfo)
-
-  useEffect(() => {
-    const getMessage = async () => {
-      try {
-        let res = await apiMessages(id)
-        if (res.status === 200) {
-          setMessages(res.data.data)
-        }
-      } catch (err) {
-        console.log(err)
-      }
-    }
-    getMessage()
-  }, [value, editValue, editing, deleting, setIsLoading])
-
-  const handleSubmit = async (e) => {
-    setReminder('')
-    if (value === '') {
-      setReminder(1)
-      return e.preventDefault()
-    }
-    setIsLoading(true)
-    try {
-      await apiMessagesPost(id, userInfo.user_id, value)
-      setIsLoading(false)
-      setValue('')
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const handleEditMessage = async (e) => {
-    setReminder('')
-    const messageId = e.target.id
-    if (editValue === '') {
-      setReminder(2)
-      return e.preventDefault()
-    }
-    setIsLoading(true)
-    try {
-      await apiMessagesPatch(id, messageId, editValue)
-      setEditing(false)
-      setIsLoading(false)
-    } catch (err) {
-      console.log(err)
-    }
-    setEditValue('')
-  }
-
-  const handlePopUpInput = (e) => {
-    setEditing(e.target.id)
-    setEditValue('')
-    setReminder('')
-  }
-
-  const handleDeleteMessage = async (e) => {
-    const messageId = e.target.id
-    setIsLoading(true)
-    try {
-      await apiMessagesDelete(id, messageId)
-      setIsLoading(false)
-      setDeleting(true)
-    } catch (err) {
-      console.log(err)
-    }
-    setDeleting(false)
-  }
+export default function Comments({ message }) {
+  const {
+    reminder,
+    setReminder,
+    messages,
+    setMessages,
+    value,
+    setValue,
+    editValue,
+    setEditValue,
+    isLoading,
+    setIsLoading,
+    editing,
+    setEditing,
+    userInfo,
+    handlePopUpInput,
+    handleEditMessage,
+    handleSubmit,
+    handleDeleteMessage,
+  } = useMessage({ message })
 
   return (
-    <CommentsContainer>
-      {reminder === 1 && <Reminder reminder={reminder}>請輸入內容</Reminder>}
-      <CommentsHeader>
-        <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
-        <InputField
-          userInfo={userInfo}
-          value={value}
-          onChange={(e) => {
-            setValue(e.target.value)
-            setReminder('')
-          }}
-          placeholder={!userInfo ? '請登入發表留言' : '請輸入留言...'}
-        />
-        <SentBtn onClick={(e) => handleSubmit(e)}>
-          <SendIcon />
-        </SentBtn>
-      </CommentsHeader>
-      {messages.map((message) => (
-        <Card>
-          <CommentInfo>
-            <CommentViewInfo>
-              <UserAvatar src={message.icon_url} />
-              <CommentNickname>{message.nickname}</CommentNickname>
-            </CommentViewInfo>
-            <CommentBtn>
-              <CommentTime>
-                {new Date(message.created_at).toLocaleString('ja')}
-              </CommentTime>
-              {userInfo &&
-                (userInfo.user_id === message.author_id ||
-                  userInfo.role === 'admin') && (
-                  <>
-                    <EditButton
-                      id={message.message_id}
-                      onClick={handlePopUpInput}
-                    />
-                    <BinButton
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <CommentsContainer>
+          {reminder === 1 && userInfo && (
+            <Reminder reminder={reminder}>請輸入內容</Reminder>
+          )}
+          <CommentsHeader>
+            <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
+            <InputField
+              userInfo={userInfo}
+              value={value}
+              onChange={(e) => {
+                setValue(e.target.value)
+                setReminder('')
+              }}
+              placeholder={!userInfo ? '請登入發表留言' : '請輸入留言...'}
+            />
+            <SentBtn onClick={(e) => handleSubmit(e)}>
+              <SendIcon />
+            </SentBtn>
+          </CommentsHeader>
+          {messages.map((message) => (
+            <Card>
+              <CommentInfo>
+                <CommentViewInfo>
+                  <UserAvatar src={message.icon_url} />
+                  <CommentNickname>{message.nickname}</CommentNickname>
+                </CommentViewInfo>
+                <CommentBtn>
+                  <CommentTime>
+                    {new Date(message.created_at).toLocaleString('ja')}
+                  </CommentTime>
+                  {userInfo &&
+                    (userInfo.user_id === message.author_id ||
+                      userInfo.role === 'admin') && (
+                      <>
+                        <EditButton
+                          id={message.message_id}
+                          onClick={handlePopUpInput}
+                        />
+                        <BinButton
+                          id={message.message_id}
+                          onClick={(e) => {
+                            handleDeleteMessage(e)
+                          }}
+                        />
+                      </>
+                    )}
+                </CommentBtn>
+              </CommentInfo>
+              {Number(editing) === message.message_id ? (
+                <EditWrapper>
+                  <EditInput
+                    rows='3'
+                    id={message.message_id}
+                    onChange={(e) => {
+                      setEditValue(e.target.value)
+                      setReminder('')
+                    }}
+                    defaultValue={editValue ? editValue : message.content}
+                    type='text'
+                  />
+                  <div>
+                    <SendBtn
+                      editValue={editValue}
                       id={message.message_id}
                       onClick={(e) => {
-                        handleDeleteMessage(e)
+                        handleEditMessage(e)
                       }}
-                    />
-                  </>
-                )}
-            </CommentBtn>
-          </CommentInfo>
-          {Number(editing) === message.message_id ? (
-            <EditWrapper>
-              <EditInput
-                rows='3'
-                id={message.message_id}
-                onChange={(e) => {
-                  setEditValue(e.target.value)
-                  setReminder('')
-                }}
-                defaultValue={editValue ? editValue : message.content}
-                type='text'
-              />
-              <div>
-                <SendBtn
-                  editValue={editValue}
-                  id={message.message_id}
-                  onClick={(e) => {
-                    handleEditMessage(e)
-                  }}
-                >
-                  送出
-                </SendBtn>
-                <SendBtn
-                  editValue={!editValue}
-                  onClick={() => {
-                    setEditing(false)
-                    setEditValue('')
-                    setReminder('')
-                  }}
-                >
-                  取消編輯
-                </SendBtn>
-                {reminder === 2 && (
-                  <Reminder reminder={reminder}>請輸入修改內容</Reminder>
-                )}
-              </div>
-            </EditWrapper>
-          ) : (
-            <Content id={message.message_id}>{message.content}</Content>
-          )}
-        </Card>
-      ))}
-    </CommentsContainer>
+                    >
+                      送出
+                    </SendBtn>
+                    <SendBtn
+                      editValue={!editValue}
+                      onClick={() => {
+                        setEditing(false)
+                        setEditValue('')
+                        setReminder('')
+                      }}
+                    >
+                      取消編輯
+                    </SendBtn>
+                    {reminder === 2 && (
+                      <Reminder reminder={reminder}>請輸入修改內容</Reminder>
+                    )}
+                  </div>
+                </EditWrapper>
+              ) : (
+                <Content id={message.message_id}>{message.content}</Content>
+              )}
+            </Card>
+          ))}
+        </CommentsContainer>
+      )}
+    </>
   )
 }

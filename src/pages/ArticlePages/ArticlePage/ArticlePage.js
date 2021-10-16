@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comments'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
@@ -9,8 +9,6 @@ import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
 import { apiArticle } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
-import Loading from '../../../components/common/Loading'
-import { AuthContext } from '../../../context'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -128,8 +126,6 @@ function ArticlePage() {
   const { id } = useParams()
   const [thumb, setThumb] = useState(false)
   const [post, setPost] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  // const { userInfo, setUserInfo } = useContext(AuthContext)
 
   useEffect(() => {
     const getPost = async () => {
@@ -192,7 +188,7 @@ function ArticlePage() {
         <ReviewIcon />
         <CommentTitle>討論區</CommentTitle>
       </FlexGroup>
-      {isLoading ? <Loading /> : <Comment setIsLoading={setIsLoading} />}
+      <Comment message={true} />
     </Wrapper>
   )
 }

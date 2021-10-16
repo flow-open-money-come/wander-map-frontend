@@ -45,18 +45,18 @@ export const apiArticleLike = (userId) =>
 export const apiArticleRemoveLike = (userId, articleId) =>
   instance.delete(`users/${userId}/liked-articles/${articleId}`)
 
-// 步道相關 api
+//步道相關 api
 
-// export const apiComments = (articleId) =>
-//   instance.get(`/trails/${articleId}/comments`)
-// export const apiCommentsPost = (articleId, authorId, content) =>
-//   instance.post(`/trails/${articleId}/comments`, {
-//     author_id: authorId,
-//     content,
-//   })
-// export const apiCommentsPatch = (articleId, messageId, content) =>
-//   instance.patch(`/trails/${articleId}/comments/${messageId}`, {
-//     content,
-//   })
-// export const apiCommentsDelete = (articleId, messageId) =>
-//   instance.delete(`/trails/${articleId}/comments/${messageId}`)
+export const apiComments = (articleId) =>
+  instance.get(`/trails/${articleId}/comments`)
+export const apiCommentsPost = (articleId, authorId, content) =>
+  instance.post(`/trails/${articleId}/comments`, {
+    author_id: authorId,
+    content,
+  })
+export const apiCommentsPatch = (articleId, messageId, content) =>
+  instance.patch(`/trails/${articleId}/comments/${messageId}`, {
+    content,
+  })
+export const apiCommentsDelete = (articleId, messageId) =>
+  instance.delete(`/trails/${articleId}/comments/${messageId}`)
