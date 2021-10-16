@@ -83,10 +83,6 @@ const SubTitleWrapper = styled.div`
     padding-left: 10px;
   }
 `
-const LinkWrapper = styled(Link)`
-  display: flex;
-  align-items: center;
-`
 const TrialArticleWrapper = styled.div`
   width: 100%;
 `
@@ -151,11 +147,10 @@ function HomePage() {
                   <TrialTitleLocation>
                     {activeTrailArticles.activeTrailInfo.trailLocation}
                   </TrialTitleLocation>
-                  <LinkWrapper>
-                    <TrialArticleNumber>
-                      {activeTrailArticles.articles.length} 篇心得
-                    </TrialArticleNumber>
-                  </LinkWrapper>
+
+                  <TrialArticleNumber>
+                    {activeTrailArticles.articles.length} 篇心得
+                  </TrialArticleNumber>
                 </SubTitleWrapper>
               </TrialTitleWrapper>
               <Divider />

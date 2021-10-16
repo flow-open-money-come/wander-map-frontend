@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, MEDIA_QUERY, RADIUS } from '../../../constants/style'
 import { ReactComponent as StarSvg } from '../../../icons/star.svg'
@@ -6,10 +7,12 @@ import SearchBar from '../../../components/common/SearchBar'
 import DropDownCheckBoxList from '../../../components/common/DropDownCheckBoxList'
 import { NavBarButton } from '../../../components/common/Button'
 import TrailCard from '../../../components/trailSystem/TrailCard'
-import { getTrails, getHotTrails } from '../../../WebAPI'
+import { getTrails } from '../../../WebAPI'
 import useSearch from '../../../hooks/useSearch'
 import useLoadMore from '../../../hooks/useLoadMore'
-import { parameterMap } from '../../../constants/paramsMap'
+import useDebounce from '../../../hooks/useDebounce'
+import useHotTrailsCarousel from '../../../hooks/useHotTrailsCarousel'
+import useTrailFilters from '../../../hooks/useTrialFilters'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
@@ -68,7 +71,8 @@ const FeaturedTrailName = styled.div`
     font-size: ${FONT.logo};
   }
 `
-const FeaturedTrailsCarouselWrapper = styled.div`
+const FeaturedTrailsCarouselWrapper = styled(Link)`
+  display: block;
   position: relative;
 `
 
@@ -98,82 +102,25 @@ const NoMatchMsg = styled.div`
 `
 
 function AllTrailPage() {
-  // featured trails
-  const [hotTrialInfos, setHotTrailInfos] = useState([{}])
-  // checked options of trail filters
-  const [checkedOptions, setCheckedOptions] = useState([])
-  // filtered trails infos
+  const { checkedOptions, handleFilterTrails } = useTrailFilters()
   const [filteredTrailInfos, setFilteredTrailInfos] = useState([])
-  // Carousel: current image index
-  const [currentImgIndex, setCurrentImgIndex] = useState(0)
-
-  const {
-    keyWord,
-    matchTrailInfos,
-    handleSearchTrails,
-    handleKeyWordChange,
-    handleKeyWordDelete,
-    onSearch,
-  } = useSearch()
-
+  const { hotTrialInfos, currentImgIndex } = useHotTrailsCarousel()
+  const { keyWord, handleKeyWordChange, handleKeyWordDelete } = useSearch()
+  const debouncedKeyWord = useDebounce(keyWord, 1000)
   const { numberOfDisplay, handleLoadMore } = useLoadMore()
-
-  const handelCarousel = () => {
-    if (currentImgIndex < hotTrialInfos.length - 1) {
-      return setCurrentImgIndex(currentImgIndex + 1)
-    }
-    setCurrentImgIndex(0)
-  }
-
-  // get featured trails infos
-  useEffect(() => {
-    getHotTrails()
-      .then((res) => {
-        if (res.data.success) {
-          setHotTrailInfos(
-            res.data.data.map((trailData) => {
-              return {
-                [trailData.title]: trailData.cover_picture_url,
-              }
-            })
-          )
-        }
-      })
-      .catch((err) => console.log(err))
-  }, [])
-
-  // Carousel
-  useEffect(() => {
-    if (hotTrialInfos.length !== 0) setTimeout(handelCarousel, 3000)
-  })
-
-  // handle trails filtration of four filters
-  const handleFilterTrails = (e) => {
-    if (!e.target.getAttribute('filter')) return
-    let targetOptionType = e.target.getAttribute('filter')
-    if (Object.keys(parameterMap[targetOptionType]).indexOf(e.target.name) < 0)
-      return
-    let targetOption = parameterMap[targetOptionType][e.target.name]
-    if (checkedOptions.indexOf(targetOption) >= 0) {
-      return setCheckedOptions(
-        checkedOptions.filter((option) => option !== targetOption)
-      )
-    }
-
-    setCheckedOptions([...checkedOptions, targetOption])
-  }
 
   useEffect(() => {
     let params = ''
-    if (checkedOptions.length !== 0) params = `&${checkedOptions.join('&')}`
-    getTrails(`?limit=126${params}`)
+    if (checkedOptions.length !== 0 || debouncedKeyWord)
+      params = `&${checkedOptions.join('&')}`
+    getTrails(`?limit=126&search=${debouncedKeyWord}${params}`)
       .then((res) => {
         if (res.data.success) setFilteredTrailInfos(res.data.data)
       })
       .catch((err) => {
         console.log(err)
       })
-  }, [checkedOptions])
+  }, [checkedOptions, debouncedKeyWord])
 
   return (
     <>
@@ -187,17 +134,16 @@ function AllTrailPage() {
             horizontalAlign={true}
             placeholder='關鍵字...'
             handleKeyWordChange={(e) => handleKeyWordChange(e)}
-            handleSearchTrails={handleSearchTrails}
             handleKeyWordDelete={handleKeyWordDelete}
             inputValue={keyWord}
           />
         </SearchBarWrapper>
-        <FeaturedTrailsCarouselWrapper>
-          <FeaturedTrailsCarousel
-            src={Object.values(hotTrialInfos[currentImgIndex])}
-          />
+        <FeaturedTrailsCarouselWrapper
+          to={`./trails/${hotTrialInfos[currentImgIndex][1]}`}
+        >
+          <FeaturedTrailsCarousel src={hotTrialInfos[currentImgIndex][2]} />
           <FeaturedTrailName>
-            {Object.keys(hotTrialInfos[currentImgIndex])}
+            {hotTrialInfos[currentImgIndex][0]}
           </FeaturedTrailName>
         </FeaturedTrailsCarouselWrapper>
         <DropDownContainer>
@@ -231,34 +177,26 @@ function AllTrailPage() {
               noBorderRadius={true}
               width='100%'
               handleKeyWordChange={(e) => handleKeyWordChange(e)}
-              handleSearchTrails={handleSearchTrails}
               handleKeyWordDelete={handleKeyWordDelete}
               inputValue={keyWord}
             />
           </SearchBarWrapper>
         </DropDownContainer>
         <FilteredTrailsWrapper>
-          {!onSearch.current &&
+          {filteredTrailInfos.length > 0 ? (
             filteredTrailInfos
               .slice(0, numberOfDisplay)
               .map((trailInfo) => (
                 <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
-              ))}
-          {onSearch.current &&
-            matchTrailInfos.length > 0 &&
-            matchTrailInfos
-              .slice(0, numberOfDisplay)
-              .map((trailInfo) => (
-                <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
-              ))}
-          {(onSearch.current && matchTrailInfos.length === 0) ||
-            (filteredTrailInfos.length === 0 && (
-              <NoMatchMsg>查無步道。</NoMatchMsg>
-            ))}
+              ))
+          ) : (
+            <NoMatchMsg>查無步道。</NoMatchMsg>
+          )}
         </FilteredTrailsWrapper>
-        {(matchTrailInfos.length > 21 || filteredTrailInfos.length > 21) && (
-          <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
-        )}
+        {filteredTrailInfos.length > 21 &&
+          numberOfDisplay < filteredTrailInfos.length && (
+            <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
+          )}
       </AllTrailsPageWrapper>
     </>
   )

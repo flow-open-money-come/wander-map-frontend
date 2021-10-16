@@ -3,9 +3,11 @@ import GoogleMapReact from 'google-map-react'
 import React, { useState, useEffect, useContext } from 'react'
 import SearchBar from './SearchBar'
 import LocationMarker from './LocationMarker'
-import { getTrailsCondition } from '../../WebAPI'
 import useSearch from '../../hooks/useSearch'
 import { ActiveTrailContext } from '../../context'
+import { getTrails } from '../../WebAPI'
+import useDebounce from '../../hooks/useDebounce'
+import useTrailConditions from '../../hooks/useTrailConditions'
 
 const MapSearchBarWrapper = styled.div`
   width: 80%;
@@ -16,34 +18,27 @@ const MapSearchBarWrapper = styled.div`
 `
 
 const Map = (props) => {
-  const {
-    keyWord,
-    matchTrailInfos,
-    handleSearchTrails,
-    handleKeyWordChange,
-    handleKeyWordDelete,
-    onSearch,
-  } = useSearch()
+  const { keyWord, handleKeyWordChange, handleKeyWordDelete } = useSearch()
+  const debouncedKeyWord = useDebounce(keyWord, 1000)
+  const [matchTrailInfos, setMatchTrailInfos] = useState([])
   const { activeTrailArticles } = useContext(ActiveTrailContext)
-  const apiHasLoaded = (map, maps) => {
-    console.log('載入完成!')
+  const { trailConditions } = useTrailConditions()
+
+  const handleSearchTrails = (debouncedKeyWord) => {
+    if (debouncedKeyWord) {
+      getTrails(`?limit=126&search=${debouncedKeyWord}`)
+        .then((res) => {
+          if (res.data.success) setMatchTrailInfos(res.data.data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   }
-  const [trailConditions, setTrailConditions] = useState([{}])
+
   useEffect(() => {
-    getTrailsCondition()
-      .then((res) => {
-        setTrailConditions(
-          res.data.map((data) => {
-            return {
-              [parseInt(data.TRAILID)]: data.TR_TYP,
-            }
-          })
-        )
-      })
-      .catch((err) => {
-        console.log(err.response)
-      })
-  }, [])
+    handleSearchTrails(debouncedKeyWord)
+  }, [debouncedKeyWord])
 
   return (
     <div
@@ -57,7 +52,6 @@ const Map = (props) => {
         <SearchBar
           placeholder='請輸入步道關鍵字...'
           handleKeyWordChange={(e) => handleKeyWordChange(e)}
-          handleSearchTrails={handleSearchTrails}
           handleKeyWordDelete={handleKeyWordDelete}
           inputValue={keyWord}
           width='100%'
@@ -68,15 +62,11 @@ const Map = (props) => {
         defaultCenter={props.info.coordinate}
         defaultZoom={props.zoom}
         yesIWantToUseGoogleMapApiInternals
-        onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
         center={activeTrailArticles.activeTrailInfo.center}
       >
-        {onSearch.current &&
-          matchTrailInfos.length > 0 &&
+        {matchTrailInfos.length > 0 ? (
           matchTrailInfos.map((trailInfo) => {
-            // obj arr to single obj
             let trailConditionsObj = Object.assign({}, ...trailConditions)
-            // Obj.keys() force id to be string, need to convert again
             let trailConditionId = Object.keys(trailConditionsObj).map((id) =>
               parseInt(id)
             )
@@ -94,8 +84,8 @@ const Map = (props) => {
                 trailConditionTag={trailConditionTag}
               />
             )
-          })}
-        {!onSearch.current && (
+          })
+        ) : (
           <LocationMarker
             key={1}
             lat={props.info.coordinate.y}
@@ -126,7 +116,7 @@ Map.defaultProps = {
       x: 121.83785521632522,
     },
   },
-  zoom: 15,
+  zoom: 12,
 }
 
 export default Map

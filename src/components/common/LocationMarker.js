@@ -75,15 +75,16 @@ const TrailInfoWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 `
-export default function LocationMarker({ trailInfo, trailConditionTag, zoom }) {
-  const [isInfoWindowOpen, setInfoWindowToggleClick] = useToggle(false)
+
+export default function LocationMarker({ trailInfo, trailConditionTag }) {
   const [currentOnClickTrail, setCurrentOnClickTrail] = useState(null)
-  const { setActiveTrailArticles } = useContext(ActiveTrailContext)
+  const { activeTrailArticles, setActiveTrailArticles } =
+    useContext(ActiveTrailContext)
   const history = useHistory()
 
   const handleMarkerOnclick = () => {
-    setInfoWindowToggleClick()
-    if (!isInfoWindowOpen) setCurrentOnClickTrail(trailInfo.trail_id)
+    if (!(activeTrailArticles.activeTrailInfo.trailId === trailInfo.trail_id))
+      setCurrentOnClickTrail(trailInfo.trail_id)
   }
 
   useDidMountEffect(() => {
@@ -110,10 +111,14 @@ export default function LocationMarker({ trailInfo, trailConditionTag, zoom }) {
     <>
       <Marker
         onClick={handleMarkerOnclick}
-        $isFocus={isInfoWindowOpen}
+        $isFocus={
+          activeTrailArticles.activeTrailInfo.trailId === trailInfo.trail_id
+        }
       ></Marker>
       <InfoWindow
-        $isOpen={isInfoWindowOpen}
+        $isOpen={
+          activeTrailArticles.activeTrailInfo.trailId === trailInfo.trail_id
+        }
         onClick={() => {
           history.push(`/trails/${trailInfo.trail_id}`)
         }}
