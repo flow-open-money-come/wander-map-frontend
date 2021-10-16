@@ -188,7 +188,7 @@ function ArticlePage() {
         <ReviewIcon />
         <CommentTitle>討論區</CommentTitle>
       </FlexGroup>
-      <Comment message={true} />
+      <Comment isMessage={false} />
     </Wrapper>
   )
 }

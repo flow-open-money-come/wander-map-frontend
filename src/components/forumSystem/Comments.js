@@ -10,10 +10,13 @@ import {
   apiMessagesDelete,
   apiMessagesPatch,
   apiMessages,
+  apiComments,
+  apiCommentsPost,
+  apiCommentsPatch,
+  apiCommentsDelete,
 } from '../../WebAPI'
 import { LoadingContext, AuthContext } from '../../../src/context'
 import Loading from '../../components/common/Loading'
-import useMessage from '../../hooks/useMessage'
 
 const CommentsContainer = styled.div`
   width: 100%;
@@ -267,27 +270,96 @@ const BinButton = styled.button`
   background-repeat: no-repeat;
 `
 
-export default function Comments({ message }) {
-  const {
-    reminder,
-    setReminder,
-    messages,
-    setMessages,
-    value,
-    setValue,
-    editValue,
-    setEditValue,
-    isLoading,
-    setIsLoading,
-    editing,
-    setEditing,
-    userInfo,
-    handlePopUpInput,
-    handleEditMessage,
-    handleSubmit,
-    handleDeleteMessage,
-  } = useMessage({ message })
+export default function Comments({ isMessage }) {
+  const { id } = useParams()
+  const [reminder, setReminder] = useState('')
+  const [value, setValue] = useState('')
+  const [messages, setMessages] = useState([])
+  const [editValue, setEditValue] = useState('')
+  const [editing, setEditing] = useState(false)
+  const { userInfo } = useContext(AuthContext)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
 
+  function isMessageOrNot(message, comment) {
+    return isMessage ? message : comment
+  }
+
+  useEffect(() => {
+    const getMessage = async () => {
+      try {
+        let res = await isMessageOrNot(apiMessages(id), apiComments(id))
+        if (res.status === 200) {
+          setMessages(res.data.data)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getMessage()
+  }, [setValue, setEditValue, setIsLoading, isLoading])
+
+  const handleSubmit = async (e) => {
+    setReminder('')
+    if (value === '') {
+      setReminder(1)
+      return e.preventDefault()
+    }
+    setIsLoading(true)
+    try {
+      await isMessageOrNot(
+        apiMessagesPost(id, userInfo.user_id, value),
+        apiCommentsPost(id, userInfo.user_id, value)
+      )
+      setIsLoading(false)
+      setValue('')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleEditMessage = async (e) => {
+    setReminder('')
+    const messageId = e.target.id
+    if (editValue === '') {
+      setReminder(2)
+      return e.preventDefault()
+    }
+    setIsLoading(true)
+    try {
+      await isMessageOrNot(
+        apiMessagesPatch(id, messageId, editValue),
+        apiCommentsPatch(id, messageId, editValue)
+      )
+      setEditing(false)
+      setIsLoading(false)
+    } catch (err) {
+      console.log(err)
+    }
+    setEditValue('')
+  }
+
+  const handlePopUpInput = (e) => {
+    setEditing(e.target.id)
+    setEditValue('')
+    setReminder('')
+  }
+
+  const handleDeleteMessage = async (e) => {
+    const messageId = e.target.id
+    if (editing) {
+      return e.preventDefault
+    }
+    setIsLoading(true)
+    try {
+      await isMessageOrNot(
+        apiMessagesDelete(id, messageId),
+        apiCommentsDelete(id, messageId)
+      )
+      setIsLoading(false)
+    } catch (err) {
+      console.log(err)
+    }
+  }
   return (
     <>
       {isLoading ? (
@@ -323,29 +395,36 @@ export default function Comments({ message }) {
                   <CommentTime>
                     {new Date(message.created_at).toLocaleString('ja')}
                   </CommentTime>
-                  {userInfo &&
+                  {/* {userInfo &&
                     (userInfo.user_id === message.author_id ||
-                      userInfo.role === 'admin') && (
-                      <>
-                        <EditButton
-                          id={message.message_id}
-                          onClick={handlePopUpInput}
-                        />
-                        <BinButton
-                          id={message.message_id}
-                          onClick={(e) => {
-                            handleDeleteMessage(e)
-                          }}
-                        />
-                      </>
-                    )}
+                      userInfo.role === 'admin') && ( */}
+                  <>
+                    <EditButton
+                      id={isMessageOrNot(
+                        message.message_id,
+                        message.comment_id
+                      )}
+                      onClick={handlePopUpInput}
+                    />
+                    <BinButton
+                      id={isMessageOrNot(
+                        message.message_id,
+                        message.comment_id
+                      )}
+                      onClick={(e) => {
+                        handleDeleteMessage(e)
+                      }}
+                    />
+                  </>
+                  {/* )} */}
                 </CommentBtn>
               </CommentInfo>
-              {Number(editing) === message.message_id ? (
+              {Number(editing) ===
+              isMessageOrNot(message.message_id, message.comment_id) ? (
                 <EditWrapper>
                   <EditInput
                     rows='3'
-                    id={message.message_id}
+                    id={isMessageOrNot(message.message_id, message.comment_id)}
                     onChange={(e) => {
                       setEditValue(e.target.value)
                       setReminder('')
@@ -356,7 +435,10 @@ export default function Comments({ message }) {
                   <div>
                     <SendBtn
                       editValue={editValue}
-                      id={message.message_id}
+                      id={isMessageOrNot(
+                        message.message_id,
+                        message.comment_id
+                      )}
                       onClick={(e) => {
                         handleEditMessage(e)
                       }}
@@ -379,7 +461,11 @@ export default function Comments({ message }) {
                   </div>
                 </EditWrapper>
               ) : (
-                <Content id={message.message_id}>{message.content}</Content>
+                <Content
+                  id={isMessageOrNot(message.message_id, message.comment_id)}
+                >
+                  {message.content}
+                </Content>
               )}
             </Card>
           ))}
