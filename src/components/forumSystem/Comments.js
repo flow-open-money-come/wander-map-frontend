@@ -17,6 +17,7 @@ import {
 } from '../../WebAPI'
 import { LoadingContext, AuthContext } from '../../../src/context'
 import Loading from '../../components/common/Loading'
+import { useInput } from '../../hooks/useInput'
 
 const CommentsContainer = styled.div`
   width: 100%;
@@ -74,7 +75,7 @@ const InputField = styled.input`
   ${(props) =>
     !props.userInfo &&
     `
-    pointer-events: none;
+    // pointer-events: none;
   `}
 `
 
@@ -273,7 +274,7 @@ const BinButton = styled.button`
 export default function Comments({ isMessage }) {
   const { id } = useParams()
   const [reminder, setReminder] = useState('')
-  const [value, setValue] = useState('')
+  const { inputValue, setInputValue, handleInputChange } = useInput()
   const [messages, setMessages] = useState([])
   const [editValue, setEditValue] = useState('')
   const [editing, setEditing] = useState(false)
@@ -287,7 +288,7 @@ export default function Comments({ isMessage }) {
   useEffect(() => {
     const getMessage = async () => {
       try {
-        let res = await isMessageOrNot(apiMessages(id), apiComments(id))
+        let res = await isMessageOrNot(apiMessages, apiComments)(id)
         if (res.status === 200) {
           setMessages(res.data.data)
         }
@@ -296,22 +297,23 @@ export default function Comments({ isMessage }) {
       }
     }
     getMessage()
-  }, [setValue, setEditValue, setIsLoading, isLoading])
+  }, [setInputValue, setEditValue, setIsLoading, isLoading])
 
   const handleSubmit = async (e) => {
     setReminder('')
-    if (value === '') {
+    if (inputValue === '') {
       setReminder(1)
       return e.preventDefault()
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(
-        apiMessagesPost(id, userInfo.user_id, value),
-        apiCommentsPost(id, userInfo.user_id, value)
+      await isMessageOrNot(apiMessagesPost, apiCommentsPost)(
+        id,
+        userInfo.user_id,
+        inputValue
       )
       setIsLoading(false)
-      setValue('')
+      setInputValue('')
     } catch (err) {
       console.log(err)
     }
@@ -326,9 +328,10 @@ export default function Comments({ isMessage }) {
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(
-        apiMessagesPatch(id, messageId, editValue),
-        apiCommentsPatch(id, messageId, editValue)
+      await isMessageOrNot(apiMessagesPatch, apiCommentsPatch)(
+        id,
+        messageId,
+        editValue
       )
       setEditing(false)
       setIsLoading(false)
@@ -351,10 +354,7 @@ export default function Comments({ isMessage }) {
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(
-        apiMessagesDelete(id, messageId),
-        apiCommentsDelete(id, messageId)
-      )
+      await isMessageOrNot(apiMessagesDelete, apiCommentsDelete)(id, messageId)
       setIsLoading(false)
     } catch (err) {
       console.log(err)
@@ -373,9 +373,9 @@ export default function Comments({ isMessage }) {
             <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
             <InputField
               userInfo={userInfo}
-              value={value}
+              value={inputValue}
               onChange={(e) => {
-                setValue(e.target.value)
+                handleInputChange(e)
                 setReminder('')
               }}
               placeholder={!userInfo ? '請登入發表留言' : '請輸入留言...'}
@@ -395,28 +395,28 @@ export default function Comments({ isMessage }) {
                   <CommentTime>
                     {new Date(message.created_at).toLocaleString('ja')}
                   </CommentTime>
-                  {/* {userInfo &&
+                  {userInfo &&
                     (userInfo.user_id === message.author_id ||
-                      userInfo.role === 'admin') && ( */}
-                  <>
-                    <EditButton
-                      id={isMessageOrNot(
-                        message.message_id,
-                        message.comment_id
-                      )}
-                      onClick={handlePopUpInput}
-                    />
-                    <BinButton
-                      id={isMessageOrNot(
-                        message.message_id,
-                        message.comment_id
-                      )}
-                      onClick={(e) => {
-                        handleDeleteMessage(e)
-                      }}
-                    />
-                  </>
-                  {/* )} */}
+                      userInfo.role === 'admin') && (
+                      <>
+                        <EditButton
+                          id={isMessageOrNot(
+                            message.message_id,
+                            message.comment_id
+                          )}
+                          onClick={handlePopUpInput}
+                        />
+                        <BinButton
+                          id={isMessageOrNot(
+                            message.message_id,
+                            message.comment_id
+                          )}
+                          onClick={(e) => {
+                            handleDeleteMessage(e)
+                          }}
+                        />
+                      </>
+                    )}
                 </CommentBtn>
               </CommentInfo>
               {Number(editing) ===

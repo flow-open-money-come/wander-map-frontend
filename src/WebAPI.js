@@ -40,8 +40,12 @@ export const apiMessagesPatch = (articleId, messageId, content) =>
 export const apiMessagesDelete = (articleId, messageId) =>
   instance.delete(`/articles/${articleId}/messages/${messageId}`)
 
-export const apiArticleLike = (userId) =>
-  instance.post(`users/${userId}/liked-articles`)
+export const apiArticleGetLike = (userId) =>
+  instance.get(`users/${userId}/liked-articles`)
+export const apiArticlePostLike = (userId, articleId) =>
+  instance.post(`users/${userId}/liked-articles`, {
+    article_id: articleId,
+  })
 export const apiArticleRemoveLike = (userId, articleId) =>
   instance.delete(`users/${userId}/liked-articles/${articleId}`)
 

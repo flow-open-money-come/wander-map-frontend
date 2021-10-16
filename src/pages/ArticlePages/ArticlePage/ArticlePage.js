@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comments'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
@@ -7,8 +7,10 @@ import thumbSVG from '../../../icons/thumb_up.svg'
 import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
-import { apiArticle } from '../../../WebAPI'
+import { apiArticle, apiArticleGetLike } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
+import { AuthContext } from '../../../context'
+import useLike from '../../../hooks/useLike'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -124,8 +126,9 @@ const FlexGroup = styled.div`
 
 function ArticlePage() {
   const { id } = useParams()
-  const [thumb, setThumb] = useState(false)
   const [post, setPost] = useState([])
+  const { userInfo } = useContext(AuthContext)
+  const { thumb, setThumb, handleClickLike } = useLike()
 
   useEffect(() => {
     const getPost = async () => {
@@ -140,18 +143,35 @@ function ArticlePage() {
     }
     getPost()
   }, [])
+
+  useEffect(() => {
+    const getLike = async () => {
+      try {
+        let res = await apiArticleGetLike(userInfo.user_id)
+        console.log(res)
+        if (
+          res.data.data.articles.map((article) => {
+            if (article.article_id == id) {
+              return true
+            }
+          })
+        ) {
+          setThumb(true)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getLike()
+  }, [])
+
   return (
     <Wrapper>
       <CoverImg src={post.cover_picture_url} />
       <ArticleTitleAndLikes>
         <ArticleTitle>{post.title}</ArticleTitle>
         <ArticleLikes>
-          <ThumbUp
-            thumb={thumb}
-            onClick={() => {
-              setThumb(!thumb)
-            }}
-          />
+          {userInfo && <ThumbUp thumb={thumb} onClick={handleClickLike} />}
           {/* {post.likes} */}
         </ArticleLikes>
       </ArticleTitleAndLikes>
@@ -188,7 +208,7 @@ function ArticlePage() {
         <ReviewIcon />
         <CommentTitle>討論區</CommentTitle>
       </FlexGroup>
-      <Comment isMessage={false} />
+      <Comment isMessage={true} />
     </Wrapper>
   )
 }
