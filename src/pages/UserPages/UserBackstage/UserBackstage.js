@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'
+import React, { useState, useEffect } from 'react'
+import { getUserInfo } from '../../../WebAPI'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import UserArticlesManage from '../../../components/userSystem/UserArticlesManage'
@@ -40,7 +41,7 @@ const Avatar = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 50%;
-  background-color: ${COLOR.gray};
+  background-color: ${COLOR.white};
 `
 const AvatarPic = styled.img`
   width: 100px;
@@ -113,35 +114,39 @@ const UsersManagementContainer = styled.div`
 
 export default function UserBackstage() {
   const [tab, setTab] = useState('Articles')
-  const [data, setData] = useState({ hits: [] });
-
+  const [userData, setUserData] = useState({
+    user_id: '',
+    nickname: '',
+    email: '',
+    icon_url: '',
+  })
+  const { userID } = useParams()
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios(
-        'http://3.138.41.92:8000/api/v1/users/1',
-      );
-
-      setData(result.data);
-    };
-
-    fetchData();
-  }, []);
+    getUserInfo(userID)
+      .then((res) => {
+        console.log(res.data)
+        setUserData(res.data.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }, [])
 
   return (
     <Wrapper>
       <MemberProfileWrapper>
         <Avatar>
-          <AvatarPic src='https://s.yimg.com/os/creatr-uploaded-images/2021-09/50aee8d0-0cca-11ec-afd6-ddd0414a9b75' />
+          <AvatarPic src={`${userData.icon_url}`} />
         </Avatar>
         <Profile>
           <ModifyBtn />
           <Info>
             <NicknameIcon />
-            野原新之助{data.nickname}
+            {userData.nickname}
           </Info>
           <Info>
             <EmailIcon />
-            hehe@123.com{data.email}
+            {userData.email}
           </Info>
         </Profile>
       </MemberProfileWrapper>

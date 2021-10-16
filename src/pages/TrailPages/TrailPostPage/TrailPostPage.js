@@ -4,6 +4,9 @@ import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
 import UploadImg from '../../../components/formSystem/UploadImg'
 import SelectLocation from '../../../components/formSystem/SelectLocation'
+import DifficultyRadio from '../../../components/formSystem/DifficultyRadio'
+import CoordinateInput from '../../../components/formSystem/CoordinateInput'
+import SelectSeason from '../../../components/formSystem/SelectSeason'
 import UploadGpx from '../../../components/formSystem/UploadGpx'
 import { NavBarButton } from '../../../components/common/Button'
 
@@ -96,9 +99,7 @@ const FormSubTitleWrapper = styled.div`
     width: 500px;
   }
 `
-const FormSubTitle = styled.div`
-  margin-right: 10px;
-`
+
 const FormUnit = styled.div`
   margin: 0 15px;
 `
@@ -127,26 +128,7 @@ const Textarea = styled.textarea.attrs(() => ({
     font-size: ${FONT.md};
   }
 `
-const Radio = styled.input.attrs((props) => ({
-  type: 'radio',
-  name: 'difficulty',
-}))`
-  margin-right: 10px;
-  ${MEDIA_QUERY.md} {
-    height: 20px;
-    width: 20px;
-  }
-`
-const Select = styled.select`
-  height: 25px;
-  width: 150px;
-  text-align: center;
-  ${MEDIA_QUERY.lg} {
-    height: 30px;
-    width: 230px;
-    font-size: ${FONT.md};
-  }
-`
+
 const SubmitBtn = styled.div`
   text-align: right;
   margin-bottom: 50px;
@@ -172,7 +154,7 @@ const ErrorMessage = styled.div`
   margin: 20px auto;
   color: #ff0000;
   font-weight: 600;
-  font-size: ${FONT.s};  
+  font-size: ${FONT.s};
 `
 
 export default function TrailPostPage() {
@@ -288,52 +270,18 @@ export default function TrailPostPage() {
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道難度</FormTitle>
-        <FormSubTitleWrapper onChange={handleInputChange}>
-          <label>
-            <Radio value='1' />
-            新手
-          </label>
-          <label>
-            <Radio value='2' />
-            入門
-          </label>
-          <label>
-            <Radio value='3' />
-            進階
-          </label>
-          <label>
-            <Radio value='4' />
-            挑戰
-          </label>
-          <label>
-            <Radio value='5' />
-            困難
-          </label>
-        </FormSubTitleWrapper>
+        <DifficultyRadio
+          name='difficulty'
+          handleInputChange={handleInputChange}
+        />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道座標</FormTitle>
         <FormSubTitleWrapper>
-          <InputWrapper>
-            <FormSubTitle>北緯</FormSubTitle>
-            <Input
-              size='short'
-              type='number'
-              name='coordinateY'
-              onChange={handleInputChange}
-              value={newDatas.coordinateY}
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <FormSubTitle>東經</FormSubTitle>
-            <Input
-              size='short'
-              type='number'
-              name='coordinateX'
-              onChange={handleInputChange}
-              value={newDatas.coordinateX}
-            />
-          </InputWrapper>
+          <CoordinateInput
+            newDatas={newDatas}
+            handleInputChange={handleInputChange}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -347,20 +295,7 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>建議季節</FormTitle>
         <FormSubTitleWrapper>
-          <Select
-            name='season'
-            onChange={handleInputChange}
-            value={newDatas.season}
-          >
-            <option value='' disabled selected>
-              請選擇
-            </option>
-            <option value='四季皆宜'>四季皆宜</option>
-            <option value='春季'>春季</option>
-            <option value='夏季'>夏季</option>
-            <option value='秋季'>秋季</option>
-            <option value='冬季'>冬季</option>
-          </Select>
+          <SelectSeason name='season' handleInputChange={handleInputChange} />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>

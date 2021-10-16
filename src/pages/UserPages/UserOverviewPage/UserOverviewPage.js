@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'
+import React, { useState, useEffect } from 'react'
+import { getUserInfo, getUserArticles } from '../../../WebAPI'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import {
   COLOR,
@@ -38,7 +39,7 @@ const Avatar = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 50%;
-  background-color: #eee;
+  background-color: ${COLOR.white};
   margin: 20px auto;
 `
 const AvatarPic = styled.img`
@@ -83,7 +84,6 @@ const Info = styled.div`
   ${MEDIA_QUERY.lg} {
     margin-top: 15px;
     font-size: ${FONT.lg};
-   
   }
 `
 const SectionWrapper = styled.div`
@@ -189,35 +189,61 @@ const ArticlesDate = styled.div`
 `
 
 export default function UserOverviewPage() {
-  const [data, setData] = useState({ hits: [] });
+  const [userData, setUserData] = useState({
+    user_id: '',
+    nickname: '',
+    email: '',
+    icon_url: '',
+  })
+  const [userArticlesData, setUserArticlesData] = useState({
+    articles: [
+      {
+        title: '',
+        content: '',
+        cover_picture_url: '',
+        created_at: '',
+      },
+    ],
+  })
+  const { userID } = useParams()
 
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios(
-        'http://3.138.41.92:8000/api/v1/users/1',
-      );
+    getUserInfo(userID)
+      .then((res) => {
+        console.log(res.data)
+        setUserData(res.data.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
 
-      setData(result.data);
-      console.log(data)
-    };
+    getUserArticles(userID)
+      .then((res) => {
+        console.log(res.data)
+        setUserArticlesData(res.data.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }, [])
 
-    fetchData();
-  }, []);
+  console.log(userData)
 
+  console.log(userID)
   return (
     <Wrapper>
       <MemberProfileWrapper>
         <Avatar>
-          <AvatarPic src='https://s.yimg.com/os/creatr-uploaded-images/2021-09/50aee8d0-0cca-11ec-afd6-ddd0414a9b75' />
+          <AvatarPic src={`${userData.icon_url}`} />
         </Avatar>
         <Profile>
           <Info>
             <NicknameIcon />
-            野原新之助{data.nickname}
+            {userData.nickname}
           </Info>
           <Info>
             <EmailIcon />
-            hehe@123.com{data.email}
+            {userData.email}
           </Info>
         </Profile>
       </MemberProfileWrapper>
@@ -226,39 +252,16 @@ export default function UserOverviewPage() {
           <ArticleIcon />
           心得
         </SectionTitle>
-        <ArticlesWrapper>
-          <ArticlesPic src='http://shuj.shu.edu.tw/wp-content/uploads/2020/04/%E5%85%A7%E6%94%BF%E9%83%A8%E7%87%9F%E5%BB%BA%E7%BD%B2%E6%8F%90%E4%BE%9B%EF%BC%BF%E9%82%B1%E5%AE%B6%E7%B5%82_%E6%9D%9C%E9%B5%91%E6%BB%BF%E5%B1%B1%E7%B4%85_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92.jpg' />
-          <Articles>
-            <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
-            <ArticlesContent>
-              林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建...
-            </ArticlesContent>
-            <ArticlesDate>2021.9.7 / 20:20:22</ArticlesDate>
-          </Articles>
-        </ArticlesWrapper>
-        <ArticlesWrapper>
-          <ArticlesPic src='http://shuj.shu.edu.tw/wp-content/uploads/2020/04/%E5%85%A7%E6%94%BF%E9%83%A8%E7%87%9F%E5%BB%BA%E7%BD%B2%E6%8F%90%E4%BE%9B%EF%BC%BF%E9%82%B1%E5%AE%B6%E7%B5%82_%E6%9D%9C%E9%B5%91%E6%BB%BF%E5%B1%B1%E7%B4%85_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92.jpg' />
-          <Articles>
-            <ArticlesTitle>
-              礁溪林美石磐涼爽一日遊礁溪林美石磐涼爽一日遊
-            </ArticlesTitle>
-            <ArticlesContent>
-              林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建
-            </ArticlesContent>
-            <ArticlesDate>2021.9.7 / 20:20:22</ArticlesDate>
-          </Articles>
-        </ArticlesWrapper>
-
-        <ArticlesWrapper>
-          <ArticlesPic src='http://shuj.shu.edu.tw/wp-content/uploads/2020/04/%E5%85%A7%E6%94%BF%E9%83%A8%E7%87%9F%E5%BB%BA%E7%BD%B2%E6%8F%90%E4%BE%9B%EF%BC%BF%E9%82%B1%E5%AE%B6%E7%B5%82_%E6%9D%9C%E9%B5%91%E6%BB%BF%E5%B1%B1%E7%B4%85_%E5%A4%AA%E9%AD%AF%E9%96%A3%E5%9C%8B%E5%AE%B6%E5%85%AC%E5%9C%92.jpg' />
-          <Articles>
-            <ArticlesTitle>礁溪林美石磐涼爽一日遊</ArticlesTitle>
-            <ArticlesContent>
-              林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建...
-            </ArticlesContent>
-            <ArticlesDate>2021.9.7 / 20:20:22</ArticlesDate>
-          </Articles>
-        </ArticlesWrapper>
+        {userArticlesData.articles.map((article) => (
+          <ArticlesWrapper>
+            <ArticlesPic src={article.cover_picture_url} />
+            <Articles>
+              <ArticlesTitle>{article.title}</ArticlesTitle>
+              <ArticlesContent>{article.content}</ArticlesContent>
+              <ArticlesDate>{article.created_at}</ArticlesDate>
+            </Articles>
+          </ArticlesWrapper>
+        ))}
       </SectionWrapper>
     </Wrapper>
   )

@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { getUserInfo, getUserArticles } from '../../WebAPI'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
@@ -109,6 +111,29 @@ const BtnTd = styled.td`
 `
 
 export default function UserArticlesManage() {
+  const [userArticlesData, setUserArticlesData] = useState({
+    articles: [
+      {
+        title: '',
+        content: '',
+        cover_picture_url: '',
+        created_at: '',
+      },
+    ],
+  })
+  const { userID } = useParams()
+
+  useEffect(() => {
+    getUserArticles(userID)
+      .then((res) => {
+        console.log(res.data)
+        setUserArticlesData(res.data.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }, [])
+
   return (
     <Block>
       <SearchBar>
@@ -116,30 +141,20 @@ export default function UserArticlesManage() {
         <SearchField></SearchField>
       </SearchBar>
       <TrailsTable>
-        <TableContent>
-          <CoverTd>
-            <TrailImg src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYWSx3Oc7QWYbB59GeeEE6JgBPIznP7_G9hQ&usqp=CAU' />
-          </CoverTd>
-          <TrailsTd>礁溪林美石磐涼爽一日遊</TrailsTd>
-          <BtnTd>
-            <EditIcon />
-          </BtnTd>
-          <BtnTd>
-            <BinIcon />
-          </BtnTd>
-        </TableContent>
-        <TableContent>
-          <CoverTd>
-            <TrailImg src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYWSx3Oc7QWYbB59GeeEE6JgBPIznP7_G9hQ&usqp=CAU' />
-          </CoverTd>
-          <TrailsTd>大雪山國家森林遊樂區一日遊</TrailsTd>
-          <BtnTd>
-            <EditIcon />
-          </BtnTd>
-          <BtnTd>
-            <BinIcon />
-          </BtnTd>
-        </TableContent>
+        {userArticlesData.articles.map((article) => (
+          <TableContent>
+            <CoverTd>
+              <TrailImg src={article.cover_picture_url} />
+            </CoverTd>
+            <TrailsTd>{article.title}</TrailsTd>
+            <BtnTd>
+              <EditIcon />
+            </BtnTd>
+            <BtnTd>
+              <BinIcon />
+            </BtnTd>
+          </TableContent>
+        ))}
       </TrailsTable>
     </Block>
   )
