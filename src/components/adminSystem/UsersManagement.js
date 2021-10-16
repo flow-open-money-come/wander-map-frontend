@@ -126,7 +126,7 @@ function UsersManagement() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(Math.ceil(19 / 20))
 
-
+  console.log('adminToken', adminToken)
   useEffect(() => {
     getAllUsers(adminToken, `?offset=${(page - 1) * 20}`)
       .then((res) => {
