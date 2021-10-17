@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { getUserInfo, getUserArticles } from '../../WebAPI'
-import { useParams } from 'react-router-dom'
+import { getUserArticles } from '../../WebAPI'
+import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/user/user_article_manage_edit.svg'
+import { ReactComponent as PostIcon } from '../../icons/user/user_post.svg'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -13,7 +14,8 @@ const Block = styled.div`
   width: 100%;
   min-height: 70vh;
   height: 400px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 `
 const SearchBar = styled.div`
   border: 1px solid #c4c4c4;
@@ -43,13 +45,29 @@ const SearchField = styled.input`
     font-size: ${FONT.lg};
   }
 `
+
+const PostLink = styled.div`
+  text-align: right;
+  opacity: 0.8;
+  svg {
+    width: 30px;
+    height: 30px;
+    margin: 20px;
+    &:hover {
+      cursor: pointer;
+      transition: ${EFFECT.transition};
+      transform: scale(1.5);
+      transform-origin: (15px, 0);
+      opacity: 1;
+    }
+  }
+`
 const TrailsTable = styled.table`
   margin: 10px auto;
   width: 90%;
   display: block;
   ${MEDIA_QUERY.lg} {
     height: 400px;
-    overflow: scroll;
   }
 `
 
@@ -140,6 +158,11 @@ export default function UserArticlesManage() {
         <SearchIcon />
         <SearchField></SearchField>
       </SearchBar>
+      <PostLink>
+        <Link to={`../post-article`}>
+          <PostIcon />
+        </Link>
+      </PostLink>
       <TrailsTable>
         {userArticlesData.articles.map((article) => (
           <TableContent>
@@ -148,7 +171,9 @@ export default function UserArticlesManage() {
             </CoverTd>
             <TrailsTd>{article.title}</TrailsTd>
             <BtnTd>
-              <EditIcon />
+              <Link to={`../patch-article/${article.article_id}`}>
+                <EditIcon />
+              </Link>
             </BtnTd>
             <BtnTd>
               <BinIcon />

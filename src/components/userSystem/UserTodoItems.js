@@ -10,7 +10,8 @@ const Block = styled.div`
   min-height: 70vh;
   margin: 0 auto;
   height: 400px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 `
 
 const TodoInput = styled.input.attrs((props) => ({

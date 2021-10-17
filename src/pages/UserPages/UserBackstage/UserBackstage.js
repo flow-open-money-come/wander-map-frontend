@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getUserInfo } from '../../../WebAPI'
+import { getUserInfo, patchUserInfo } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../../constants/style'
@@ -22,7 +22,6 @@ const Wrapper = styled.div`
     align-items: center;
   }
 `
-
 const MemberProfileWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -66,19 +65,6 @@ const Profile = styled.div`
   }
 `
 
-const ModifyBtn = styled(EditIcon)`
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 6px;
-  color: ${COLOR.green};
-  ${MEDIA_QUERY.lg} {
-    width: 20px;
-    height: 20px;
-  }
-`
 const Info = styled.div`
   font-size: ${FONT.s};
   margin: 6px;
@@ -111,6 +97,35 @@ const UsersManagementContainer = styled.div`
     padding-bottom: 0px;
   }
 `
+const ModifyBtn = styled(EditIcon)`
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 6px;
+  color: ${COLOR.green};
+  ${MEDIA_QUERY.lg} {
+    width: 20px;
+    height: 20px;
+  }
+`
+const ModifyField = styled(MemberProfileWrapper)`
+  width: 400px;
+  height: 400px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  ${(props) =>
+    props &&
+    `
+    background: ${COLOR.green};
+    color: ${COLOR.white};
+  `}
+`
+const ModifyTitle = styled(Info)``
 
 export default function UserBackstage() {
   const [tab, setTab] = useState('Articles')
@@ -132,14 +147,40 @@ export default function UserBackstage() {
       })
   }, [])
 
+  const handleOnClick = () => {}
+  const handlePatchSubmit = (e) => {
+    console.log(userData)
+    e.preventDefault()
+    patchUserInfo(userID, userData)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }
+
   return (
     <Wrapper>
       <MemberProfileWrapper>
         <Avatar>
           <AvatarPic src={`${userData.icon_url}`} />
         </Avatar>
+        <ModifyField>
+          <ModifyTitle>修改會員資料</ModifyTitle>
+          暱稱：
+          <input />
+          帳號：
+          <input />
+          密碼：
+          <input />
+          再次輸入：
+          <input />
+          返回 確認送出
+        </ModifyField>
         <Profile>
-          <ModifyBtn />
+          <ModifyBtn onClick={handleOnClick} />
+
           <Info>
             <NicknameIcon />
             {userData.nickname}

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { postTrails } from '../../../WebAPI'
+import React, { useState, useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { postTrails, getTrails, patchTrail } from '../../../WebAPI'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
 import UploadImg from '../../../components/formSystem/UploadImg'
@@ -182,7 +183,7 @@ export default function TrailPostPage() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handlePostSubmit = (e) => {
     console.log(newDatas)
     e.preventDefault()
     postTrails(newDatas)
@@ -195,13 +196,47 @@ export default function TrailPostPage() {
       })
   }
 
+  // 如有帶參數為修改步道
+  const { trailID } = useParams()
+
+  useEffect(() => {
+    getTrails(trailID)
+      .then((res) => {
+        console.log(res.data.data)
+        setNewDatas(res.data.data[0])
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }, [])
+  const handlePatchSubmit = (e) => {
+    console.log(newDatas)
+    e.preventDefault()
+    patchTrail(trailID, newDatas)
+      .then((res) => {
+        console.log(res.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+        setErrorMessage('親愛的管理員您好，所有欄位皆必填喔!')
+      })
+  }
+
   return (
     <TrailsPostWrapper>
-      <PageName>新增步道</PageName>
-      <PageDes>Wow！又新發現什麼新步道了呢？快來昭告天下吧~</PageDes>
+      {trailID ? (
+        <PageName>編輯步道</PageName>
+      ) : (
+        <>
+          <PageName>新增步道</PageName>
+          <PageDes>Wow！又新發現什麼新步道了呢？快來昭告天下吧~</PageDes>
+        </>
+      )}
+
       <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>步道名稱</FormTitle>
+
         <Input
           name='title'
           onChange={handleInputChange}
@@ -315,7 +350,11 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle />
         <SubmitBtn>
-          <Submit onClick={handleSubmit} />
+          {trailID ? (
+            <Submit onClick={handlePatchSubmit} />
+          ) : (
+            <Submit onClick={handlePostSubmit} />
+          )}
         </SubmitBtn>
       </FormWrapper>
     </TrailsPostWrapper>

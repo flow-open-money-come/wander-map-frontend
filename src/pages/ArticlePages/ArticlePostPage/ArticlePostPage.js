@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { postArticles } from '../../../WebAPI'
+import React, { useState, useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { postArticles, patchArticle } from '../../../WebAPI'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
 import UploadImg from '../../../components/formSystem/UploadImg'
@@ -42,7 +43,6 @@ const PageDes = styled.div`
     margin-bottom: 50px;
   }
 `
-
 const FormWrapper = styled.div`
   margin: 20px;
   font-size: ${FONT.s};
@@ -78,7 +78,6 @@ const FormSubTitleWrapper = styled.div`
     width: 500px;
   }
 `
-
 const Input = styled.input.attrs((props) => ({
   type: 'text',
 }))`
@@ -106,7 +105,6 @@ const Date = styled.input.attrs((props) => ({
     font-size: ${FONT.md};
   }
 `
-
 const SubmitBtn = styled.div`
   text-align: right;
   margin-bottom: 50px;
@@ -131,7 +129,7 @@ const ErrorMessage = styled.div`
   margin: 20px auto;
   color: #ff0000;
   font-weight: 600;
-  font-size: ${FONT.s};  
+  font-size: ${FONT.s};
 `
 
 export default function ArticlePostPage() {
@@ -169,10 +167,21 @@ export default function ArticlePostPage() {
       })
   }
 
+  // 如有帶參數為修改心得
+  const { articleID } = useParams()
+  const [articleData, setAricleData] = useState()
+
   return (
     <ArticlePostWrapper>
-      <PageName>新增心得</PageName>
-      <PageDes>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDes>
+      {articleID ? (
+        <PageName>編輯心得</PageName>
+      ) : (
+        <>
+          <PageName>新增心得</PageName>
+          <PageDes>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDes>
+        </>
+      )}
+
       <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>文章標題</FormTitle>
