@@ -76,22 +76,27 @@ const ArrowUp = styled(ArrowUpSvg)`
   ${(props) => props.$isActive && `display:block`}
 `
 
-function DropDownCheckBox({ option }) {
+function DropDownCheckBox({ option, filter }) {
   return (
     <>
-      <DropDownCheckBoxWrapper>
-        <DropDownCheckBoxInput type='checkbox' />
+      <DropDownCheckBoxWrapper filter={filter}>
+        <DropDownCheckBoxInput type='checkbox' name={option} filter={filter} />
         {option}
       </DropDownCheckBoxWrapper>
     </>
   )
 }
-export default function DropDownCheckBoxList({ title, options }) {
+export default function DropDownCheckBoxList({
+  title,
+  options,
+  onClick,
+  filter,
+}) {
   const [arrowToggleClick, setArrowToggleClick] = useToggle(false)
 
   return (
     <>
-      <div>
+      <div onClick={onClick}>
         <DropDownCheckBoxTitle>
           <TitleText>{title}</TitleText>
           <ArrowDown
@@ -102,7 +107,12 @@ export default function DropDownCheckBoxList({ title, options }) {
         </DropDownCheckBoxTitle>
         <DropDownCheckBoxes $isActive={arrowToggleClick}>
           {options.map((option) => {
-            return <DropDownCheckBox option={option}></DropDownCheckBox>
+            return (
+              <DropDownCheckBox
+                option={option}
+                filter={filter}
+              ></DropDownCheckBox>
+            )
           })}
         </DropDownCheckBoxes>
       </div>
