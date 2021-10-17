@@ -76,17 +76,10 @@ export default function SearchBar({
   width,
   fontSize,
   noShadow,
-<<<<<<< HEAD
-  value,
-  onChange,
-  onClickSearch,
-  onClickCross,
-=======
   handleKeyWordChange,
   handleSearchTrails,
   handleKeyWordDelete,
   inputValue,
->>>>>>> a2fc5c4a5a1e0ae829eaa880b3eee484d7a7c1da
 }) {
   return (
     <>
@@ -100,26 +93,15 @@ export default function SearchBar({
           placeholder={placeholder}
           $noBorderRadius={noBorderRadius}
           $fontSize={fontSize}
-<<<<<<< HEAD
-          onChange={onChange}
-          value={value}
-        />
-        <CloseIconWrapper onClick={onClickCross}>
-=======
           onChange={handleKeyWordChange}
           value={inputValue}
         />
         <CloseIconWrapper onClick={handleKeyWordDelete}>
->>>>>>> a2fc5c4a5a1e0ae829eaa880b3eee484d7a7c1da
           <CloseIcon />
         </CloseIconWrapper>
         <SearchIconWrapper
           $noBorderRadius={noBorderRadius}
-<<<<<<< HEAD
-          onClick={onClickSearch}
-=======
           onClick={handleSearchTrails}
->>>>>>> a2fc5c4a5a1e0ae829eaa880b3eee484d7a7c1da
         >
           <SearchIcon />
         </SearchIconWrapper>

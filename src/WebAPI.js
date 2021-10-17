@@ -3,7 +3,7 @@ import config from './config'
 import { getAuthToken } from './utils'
 
 const instance = axios.create({
-  baseURL: config.apiHost2,
+  baseURL: config.apiHost,
 })
 
 instance.interceptors.request.use((config) => {
@@ -17,15 +17,27 @@ instance.interceptors.request.use((config) => {
 export const userLogin = (payload) => instance.post('/users/login', payload)
 export const userRegister = (payload) =>
   instance.post('/users/register', payload)
+export const getAllUsers = (adminToken, params) =>
+  instance.get('/users' + params, { headers: { Authorization: `Bearer ${adminToken}` } })
 
 // trails
-export const getTrails = (params) => instance.get('/trails' + params)
+export const getTrails = (params) => instance.get('/trails/' + params)
 export const getHotTrails = () => instance.get('/trails/hot/5')
+export const deleteTrail = (trailID) => instance.delete('/trails/' + trailID)
+export const getDeletedTrail = (params) => instance.get('/trails/deleted' + params)
+export const recoverTrail = (trailID) => instance.patch('/trails/deleted/' + trailID)
 export const getTrailsCondition = () => axios.get(config.tfrHost)
 export const postTrails = (data) => instance.post('/trails', data)
 
+
 // articles
-export const getArticles = () => instance.get('/articles')
+export const getArticles = (params) => instance.get('/articles/' + params)
+export const deleteArticle = (adminToken, articleID) =>
+  instance.delete('/articles/' + articleID, { headers: { Authorization: `Bearer ${adminToken}` } })
+export const getDeletedArticle = (params) => instance.get('/articles/deleted' + params)
+export const recoverArticle = (articleID) => instance.patch('/articles/deleted/' + articleID)
+
+// export const getArticles = () => instance.get('/articles')
 
 export const apiArticle = (articleId) => instance.get(`/articles/${articleId}`)
 export const apiMessages = (articleId) =>
@@ -71,9 +83,9 @@ export const getArticlesUnderTrail = (TrailId) =>
 export const postArticles = (data) => instance.post('/articles', data)
 
 // 文章相關的 api
-export const apiArticlesHot = () => articleRequest.get('/articles/hot')
-export const apiArticles = () => articleRequest.get('/articles')
-export const apiArticle = () => articleRequest.get('/articles/:articleId')
+export const apiArticlesHot = () => instance.get('/articles/hot')
+export const apiArticles = () => instance.get('/articles')
+
 export const apiArticlesOptions = (limit, tags, offset, search) => {
   let url = `/articles?`
   if (limit) {
@@ -88,6 +100,6 @@ export const apiArticlesOptions = (limit, tags, offset, search) => {
   if (search) {
     url += `search=${search}&`
   }
-  return articleRequest.get(url)
+  return instance.get(url)
 }
 

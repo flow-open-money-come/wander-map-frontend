@@ -175,7 +175,7 @@ export default function ArticleList({
         <TitleAndTags $lessRwd={lessRwd}>
           <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
           <ArticlesTags>
-            {tags.map((tag) => {
+            {tags && tags.map((tag) => {
               return <ArticlesTag $lessRwd={lessRwd}>{tag}</ArticlesTag>
             })}
           </ArticlesTags>
