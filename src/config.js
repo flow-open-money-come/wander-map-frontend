@@ -1,9 +1,8 @@
 const config = {
-<<<<<<< HEAD
-  apiHost: 'http://18.162.56.150/api/v1/',
-=======
-  apiHost: 'http://18.163.118.205/api/v1',
->>>>>>> ecc27929b73a69143fe2d58fc05258bfdfcf41f7
+
+  apiHost: 'http://3.138.41.92:8000/api/v1/',
+  apiHost2: 'http://18.162.56.150/api/v1/',
+  tfrHost: 'https://recreation.forest.gov.tw/mis/api/OpenStatus/Trail',
 }
 
 export default config

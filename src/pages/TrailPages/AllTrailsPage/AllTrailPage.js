@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, MEDIA_QUERY, RADIUS } from '../../../constants/style'
 import { ReactComponent as StarSvg } from '../../../icons/star.svg'
@@ -6,11 +7,18 @@ import SearchBar from '../../../components/common/SearchBar'
 import DropDownCheckBoxList from '../../../components/common/DropDownCheckBoxList'
 import { NavBarButton } from '../../../components/common/Button'
 import TrailCard from '../../../components/trailSystem/TrailCard'
+import { getTrails } from '../../../WebAPI'
+import useSearch from '../../../hooks/useSearch'
+import useLoadMore from '../../../hooks/useLoadMore'
+import useDebounce from '../../../hooks/useDebounce'
+import useHotTrailsCarousel from '../../../hooks/useHotTrailsCarousel'
+import useTrailFilters from '../../../hooks/useTrialFilters'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
   margin: 0 auto;
   position: relative;
+  padding-bottom: 50px;
 `
 const AllTrailsPageTitleWrapper = styled.div`
   font-size: ${FONT.lg};
@@ -63,7 +71,8 @@ const FeaturedTrailName = styled.div`
     font-size: ${FONT.logo};
   }
 `
-const FeaturedTrailsCarouselWrapper = styled.div`
+const FeaturedTrailsCarouselWrapper = styled(Link)`
+  display: block;
   position: relative;
 `
 
@@ -74,50 +83,44 @@ const DropDownContainer = styled.div`
   top: -20px;
 `
 const FilteredTrailsWrapper = styled.div`
-  width: 90%;
+  width: 80%;
   margin: 0 auto;
-  ${MEDIA_QUERY.lg} {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-  }
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 `
 
 const LoadMoreBtn = styled.div`
   ${NavBarButton}
   margin: 50px auto 100px auto;
 `
+const NoMatchMsg = styled.div`
+  font-size: ${FONT.md};
+  font-weight: bold;
+  margin: 0 auto;
+  color: ${COLOR.gray};
+`
 
 function AllTrailPage() {
-  const FeaturedTrailsInfo = {
-    林美石磐步道:
-      'https://images.unsplash.com/photo-1581339538525-978298a19203?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=774&q=80',
-    枕頭山步道:
-      'https://images.unsplash.com/photo-1501554728187-ce583db33af7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=774&q=80',
-    加里山登山步道:
-      'https://images.unsplash.com/photo-1558734918-dfc4fe470147?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1770&q=80',
-  }
-  const FeaturedTrailLength = Object.keys(FeaturedTrailsInfo).length
-  const [currentImgIndex, setCurrentImageIndex] = useState(0)
+  const { checkedOptions, handleFilterTrails } = useTrailFilters()
+  const [filteredTrailInfos, setFilteredTrailInfos] = useState([])
+  const { hotTrialInfos, currentImgIndex } = useHotTrailsCarousel()
+  const { keyWord, handleKeyWordChange, handleKeyWordDelete } = useSearch()
+  const debouncedKeyWord = useDebounce(keyWord, 1000)
+  const { numberOfDisplay, handleLoadMore } = useLoadMore()
 
-  const handelCarousel = () => {
-    if (currentImgIndex < FeaturedTrailLength - 1) {
-      return setCurrentImageIndex(currentImgIndex + 1)
-    }
-    setCurrentImageIndex(0)
-  }
   useEffect(() => {
-    setTimeout(handelCarousel, 5000)
-  })
-
-  const trailInfo = {
-    title: '林美石磐步道',
-    location: '宜蘭縣礁溪鄉',
-    cover_picture_url:
-      'https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1806&q=80',
-    required_time: '一天',
-    season: '四季皆宜',
-  }
+    let params = ''
+    if (checkedOptions.length !== 0 || debouncedKeyWord)
+      params = `&${checkedOptions.join('&')}`
+    getTrails(`?limit=126&search=${debouncedKeyWord}${params}`)
+      .then((res) => {
+        if (res.data.success) setFilteredTrailInfos(res.data.data)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+  }, [checkedOptions, debouncedKeyWord])
 
   return (
     <>
@@ -127,56 +130,73 @@ function AllTrailPage() {
           精選步道
         </AllTrailsPageTitleWrapper>
         <SearchBarWrapper>
-          <SearchBar horizontalAlign={true} placeholder='關鍵字...' />
-        </SearchBarWrapper>
-        <FeaturedTrailsCarouselWrapper>
-          <FeaturedTrailsCarousel
-            src={Object.values(FeaturedTrailsInfo)[currentImgIndex]}
+          <SearchBar
+            horizontalAlign={true}
+            placeholder='關鍵字...'
+            handleKeyWordChange={(e) => handleKeyWordChange(e)}
+            handleKeyWordDelete={handleKeyWordDelete}
+            inputValue={keyWord}
           />
+        </SearchBarWrapper>
+        <FeaturedTrailsCarouselWrapper
+          to={`./trails/${hotTrialInfos[currentImgIndex][1]}`}
+        >
+          <FeaturedTrailsCarousel src={hotTrialInfos[currentImgIndex][2]} />
           <FeaturedTrailName>
-            {Object.keys(FeaturedTrailsInfo)[currentImgIndex]}
+            {hotTrialInfos[currentImgIndex][0]}
           </FeaturedTrailName>
         </FeaturedTrailsCarouselWrapper>
         <DropDownContainer>
           <DropDownCheckBoxList
             title='區域'
+            filter='location'
             options={['北區', '中區', '南區', '東區']}
+            onClick={handleFilterTrails}
           />
           <DropDownCheckBoxList
             title='高度 (m)'
+            filter='altitude'
             options={['1k 以下', '1k-2k', '2k-3k', '3k 以上']}
+            onClick={handleFilterTrails}
           />
           <DropDownCheckBoxList
             title='長度 (km)'
+            filter='length'
             options={['2 以下', '2-5', '5-12', '12 以上']}
+            onClick={handleFilterTrails}
           />
           <DropDownCheckBoxList
             title='難度'
-            options={['新手', '一般', '困難', '進階', '挑戰']}
+            filter='difficult'
+            options={['新手', '入門', '進階', '挑戰', '困難']}
+            onClick={handleFilterTrails}
           />
           <SearchBarWrapper $combined>
             <SearchBar
               placeholder='關鍵字...'
               noBorderRadius={true}
               width='100%'
+              handleKeyWordChange={(e) => handleKeyWordChange(e)}
+              handleKeyWordDelete={handleKeyWordDelete}
+              inputValue={keyWord}
             />
           </SearchBarWrapper>
         </DropDownContainer>
         <FilteredTrailsWrapper>
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
-          <TrailCard trailInfo={trailInfo} />
+          {filteredTrailInfos.length > 0 ? (
+            filteredTrailInfos
+              .slice(0, numberOfDisplay)
+              .map((trailInfo) => (
+                <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
+              ))
+          ) : (
+            <NoMatchMsg>查無步道。</NoMatchMsg>
+          )}
         </FilteredTrailsWrapper>
-        <LoadMoreBtn>看更多</LoadMoreBtn>
+        {filteredTrailInfos.length > 21 &&
+          numberOfDisplay < filteredTrailInfos.length && (
+            <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
+          )}
       </AllTrailsPageWrapper>
     </>
   )
