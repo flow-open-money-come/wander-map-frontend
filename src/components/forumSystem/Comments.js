@@ -1,16 +1,29 @@
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
-import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
-import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
+import EditIcon from '../../icons/backstage/edit.svg'
+import BinIcon from '../../icons/backstage/bin.svg'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import {
+  apiMessagesPost,
+  apiMessagesDelete,
+  apiMessagesPatch,
+  apiMessages,
+  apiComments,
+  apiCommentsPost,
+  apiCommentsPatch,
+  apiCommentsDelete,
+} from '../../WebAPI'
+import { LoadingContext, AuthContext } from '../../../src/context'
+import Loading from '../../components/common/Loading'
+import { useInput } from '../../hooks/useInput'
 
 const CommentsContainer = styled.div`
-
   width: 100%;
   display: flex;
   flex-direction: column;
-  margin: 10px auto;
+  margin: 10px auto 50px auto;
   padding-bottom: 20px;
 `
 
@@ -58,14 +71,21 @@ const InputField = styled.input`
     height: 40px;
     margin: 10px 20px;
   }
+
+  ${(props) =>
+    !props.userInfo &&
+    `
+    // pointer-events: none;
+  `}
 `
 
-const SentBtn = styled.div`
+const SentBtn = styled.button`
   svg {
     width: 16px;
     height: 16px;
     &:hover {
       cursor: pointer;
+      opacity: 0.8;
     }
   }
   ${MEDIA_QUERY.md} {
@@ -140,31 +160,32 @@ const CommentTime = styled.div`
     max-width: 80px;
   }
   ${MEDIA_QUERY.lg} {
-    max-width: 150px;
+    max-width: 160px;
   }
 `
 
 const CommentBtn = styled.div`
   display: flex;
- 
-  svg {
+  max-width: 80%;
+  button {
     margin: 0 3px;
     width: 15px;
     height: 15px;
 
     &:hover {
       cursor: pointer;
+      opacity: 0.7;
     }
   }
   ${MEDIA_QUERY.md} {
-    svg {
+    button {
       width: 20px;
       height: 20px;
       margin: 0 4px;
     }
   }
   ${MEDIA_QUERY.lg} {
-    svg {
+    button {
       width: 25px;
       height: 25px;
       margin: 0 6px;
@@ -177,6 +198,7 @@ const Content = styled.div`
   font-size: ${FONT.s};
   line-height: ${FONT.md};
   text-align: justify;
+  white-space: pre-line;
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
     line-height: ${FONT.lg};
@@ -187,49 +209,268 @@ const Content = styled.div`
   }
 `
 
+const EditInput = styled.textarea`
+  &:focus {
+    outline: none;
+  }
+  border: ${COLOR.gray_light} solid 2px;
+  border-radius: ${RADIUS.s};
+  margin-top: 10px;
+  line-height: 1.5em;
+  opacity: 0.7;
+  padding-left: 5px;
+  min-width: 80%;
+  padding: 5px;
+`
 
-export default function Comments() {
+const SendBtn = styled.button`
+  border: 1px ${COLOR.gray_light} solid;
+  padding: 5px;
+  border-radius: ${RADIUS.s};
+  margin: 5px 5px 0 0;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+  }
+
+  ${(props) =>
+    props.editValue &&
+    `
+    background-color: ${COLOR.green};
+    color: ${COLOR.white};
+  `}
+`
+
+const EditWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+`
+
+const Reminder = styled.span`
+  color: ${COLOR.pink};
+  font-size: ${FONT.s};
+
+  ${(props) =>
+    props.reminder === 1 &&
+    `
+    margin: 0 auto;
+  `}
+`
+
+const EditButton = styled.button`
+  background-image: url('${EditIcon}');
+  background-size: contain;
+  background-repeat: no-repeat;
+`
+
+const BinButton = styled.button`
+  background-image: url('${BinIcon}');
+  background-size: contain;
+  background-repeat: no-repeat;
+`
+
+export default function Comments({ isMessage }) {
+  const { id } = useParams()
+  const [reminder, setReminder] = useState('')
+  const { inputValue, setInputValue, handleInputChange } = useInput()
+  const [messages, setMessages] = useState([])
+  const [editValue, setEditValue] = useState('')
+  const [editing, setEditing] = useState(false)
+  const { userInfo } = useContext(AuthContext)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
+
+  function isMessageOrNot(message, comment) {
+    return isMessage ? message : comment
+  }
+
+  useEffect(() => {
+    const getMessage = async () => {
+      try {
+        let res = await isMessageOrNot(apiMessages, apiComments)(id)
+        if (res.status === 200) {
+          setMessages(res.data.data)
+        }
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getMessage()
+  }, [setInputValue, setEditValue, setIsLoading, isLoading])
+
+  const handleSubmit = async (e) => {
+    setReminder('')
+    if (inputValue === '') {
+      setReminder(1)
+      return e.preventDefault()
+    }
+    setIsLoading(true)
+    try {
+      await isMessageOrNot(apiMessagesPost, apiCommentsPost)(
+        id,
+        userInfo.user_id,
+        inputValue
+      )
+      setIsLoading(false)
+      setInputValue('')
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handleEditMessage = async (e) => {
+    setReminder('')
+    const messageId = e.target.id
+    if (editValue === '') {
+      setReminder(2)
+      return e.preventDefault()
+    }
+    setIsLoading(true)
+    try {
+      await isMessageOrNot(apiMessagesPatch, apiCommentsPatch)(
+        id,
+        messageId,
+        editValue
+      )
+      setEditing(false)
+      setIsLoading(false)
+    } catch (err) {
+      console.log(err)
+    }
+    setEditValue('')
+  }
+
+  const handlePopUpInput = (e) => {
+    setEditing(e.target.id)
+    setEditValue('')
+    setReminder('')
+  }
+
+  const handleDeleteMessage = async (e) => {
+    const messageId = e.target.id
+    if (editing) {
+      return e.preventDefault
+    }
+    setIsLoading(true)
+    try {
+      await isMessageOrNot(apiMessagesDelete, apiCommentsDelete)(id, messageId)
+      setIsLoading(false)
+    } catch (err) {
+      console.log(err)
+    }
+  }
   return (
-    <CommentsContainer>
-      <CommentsHeader>
-        <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
-        <InputField placeholder='請輸入留言...' />
-        <SentBtn>
-          <SendIcon />
-        </SentBtn>
-      </CommentsHeader>
-      <Card>
-        <CommentInfo>
-          <CommentViewInfo>
-            <UserAvatar src='https://i.ppfocus.com/2020/8/285a2ad.jpg' />
-            <CommentNickname>甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環甄環</CommentNickname>
-          </CommentViewInfo>
-          <CommentBtn>
-            <CommentTime>2020.09.08 / 20:20:22</CommentTime>
-            <EditIcon />
-            <BinIcon />
-          </CommentBtn>
-        </CommentInfo>
-        <Content>
-          前陣子天氣炎熱，本宮得空和眉姐姐一同前往避暑，無意間在山腳下覓得一小溪，趁便四下無人，脫了鞋襪踏踏水。
-        </Content>
-      </Card>
-      <Card>
-        <CommentInfo>
-          <CommentViewInfo>
-            <UserAvatar src='https://datansuo.net/img/201505/14323334952.jpg' />
-            <CommentNickname>甄環</CommentNickname>
-          </CommentViewInfo>
-          <CommentBtn>
-            <CommentTime>2020.09.08 / 20:20:22</CommentTime>
-            <EditIcon />
-            <BinIcon />
-          </CommentBtn>
-        </CommentInfo>
-        <Content>
-          鳥語花香，甚是詩情畫意。可惜階梯太多階，爬得本宮腿都痠了，下回必要找機會回了皇上，將修繕步道的奴才們通通拉去慎行司領罰，那才解氣！鳥語花香，甚是詩情畫意。可惜階梯太多階，爬得本宮腿都痠了，下回必要找機會回了皇上，將修繕步道的奴才們通通拉去慎行司領罰，那才解氣！鳥語花香，甚是詩情畫意。可惜階梯太多階，爬得本宮腿都痠了，下回必要找機會回了皇上，將修繕步道的奴才們通通拉去慎行司領罰，那才解氣！鳥語花香，甚是詩情畫意。可惜階梯太多階，爬得本宮腿都痠了，下回必要找機會回了皇上，將修繕步道的奴才們通通拉去慎行司領罰，那才解氣！
-        </Content>
-      </Card>
-    </CommentsContainer>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <CommentsContainer>
+          {reminder === 1 && userInfo && (
+            <Reminder reminder={reminder}>請輸入內容</Reminder>
+          )}
+          <CommentsHeader>
+            <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
+            <InputField
+              userInfo={userInfo}
+              value={inputValue}
+              onChange={(e) => {
+                handleInputChange(e)
+                setReminder('')
+              }}
+              placeholder={!userInfo ? '請登入發表留言' : '請輸入留言...'}
+            />
+            <SentBtn onClick={(e) => handleSubmit(e)}>
+              <SendIcon />
+            </SentBtn>
+          </CommentsHeader>
+          {messages.map((message) => (
+            <Card>
+              <CommentInfo>
+                <CommentViewInfo>
+                  <UserAvatar src={message.icon_url} />
+                  <CommentNickname>{message.nickname}</CommentNickname>
+                </CommentViewInfo>
+                <CommentBtn>
+                  <CommentTime>
+                    {new Date(message.created_at).toLocaleString('ja')}
+                  </CommentTime>
+                  {userInfo &&
+                    (userInfo.user_id === message.author_id ||
+                      userInfo.role === 'admin') && (
+                      <>
+                        <EditButton
+                          id={isMessageOrNot(
+                            message.message_id,
+                            message.comment_id
+                          )}
+                          onClick={handlePopUpInput}
+                        />
+                        <BinButton
+                          id={isMessageOrNot(
+                            message.message_id,
+                            message.comment_id
+                          )}
+                          onClick={(e) => {
+                            handleDeleteMessage(e)
+                          }}
+                        />
+                      </>
+                    )}
+                </CommentBtn>
+              </CommentInfo>
+              {Number(editing) ===
+              isMessageOrNot(message.message_id, message.comment_id) ? (
+                <EditWrapper>
+                  <EditInput
+                    rows='3'
+                    id={isMessageOrNot(message.message_id, message.comment_id)}
+                    onChange={(e) => {
+                      setEditValue(e.target.value)
+                      setReminder('')
+                    }}
+                    defaultValue={editValue ? editValue : message.content}
+                    type='text'
+                  />
+                  <div>
+                    <SendBtn
+                      editValue={editValue}
+                      id={isMessageOrNot(
+                        message.message_id,
+                        message.comment_id
+                      )}
+                      onClick={(e) => {
+                        handleEditMessage(e)
+                      }}
+                    >
+                      送出
+                    </SendBtn>
+                    <SendBtn
+                      editValue={!editValue}
+                      onClick={() => {
+                        setEditing(false)
+                        setEditValue('')
+                        setReminder('')
+                      }}
+                    >
+                      取消編輯
+                    </SendBtn>
+                    {reminder === 2 && (
+                      <Reminder reminder={reminder}>請輸入修改內容</Reminder>
+                    )}
+                  </div>
+                </EditWrapper>
+              ) : (
+                <Content
+                  id={isMessageOrNot(message.message_id, message.comment_id)}
+                >
+                  {message.content}
+                </Content>
+              )}
+            </Card>
+          ))}
+        </CommentsContainer>
+      )}
+    </>
   )
 }

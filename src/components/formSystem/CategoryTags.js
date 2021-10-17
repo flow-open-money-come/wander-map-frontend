@@ -49,7 +49,7 @@ const CategoryBtn = styled.input.attrs(() => ({
   border: 0;
 `
 
-export default function CategoryTags({ name, newDatas, setNewDatas }) {
+export default function CategoryTags({ name, formData, setFormData }) {
   const [tags, setTags] = useState([
     { id: 1, content: '一日', isChecked: false },
     { id: 2, content: '多日', isChecked: false },
@@ -83,8 +83,8 @@ export default function CategoryTags({ name, newDatas, setNewDatas }) {
   const handleTagsChange = (e) => {
     let selectedTags = [e.target.value, ...value]
     setValue(selectedTags)
-    setNewDatas({
-      ...newDatas,
+    setFormData({
+      ...formData,
       [name]: selectedTags,
     })
   }

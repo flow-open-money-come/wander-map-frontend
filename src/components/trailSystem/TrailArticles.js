@@ -56,7 +56,7 @@ const More = styled.div`
   }
 `
 
-function TrailArticles() {
+function TrailArticles({ articles }) {
   return (
     <ArticlesWrapper>
       <Title>
@@ -64,39 +64,17 @@ function TrailArticles() {
         相關心得
       </Title>
       <ArticlesContainer>
-        <ArticleList
-          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-          title={'礁溪林美石磐涼爽一日遊'}
-          user={'水怪貓貓'}
-          tags={['有水源', '賞花', '危險地形']}
-          date={'2021.9.7 / 20:20:22'}
-          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
-          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
-          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-        />
-        <ArticleList
-          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-          title={'礁溪林美石磐涼爽一日遊'}
-          user={'水怪貓貓'}
-          tags={['有水源', '賞花', '危險地形']}
-          date={'2021.9.7 / 20:20:22'}
-          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
-          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
-          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-        />
-        <ArticleList
-          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-          title={'礁溪林美石磐涼爽一日遊'}
-          user={'水怪貓貓'}
-          tags={['有水源', '賞花', '危險地形']}
-          date={'2021.9.7 / 20:20:22'}
-          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
-          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
-          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-        />
+        {articles.map((article) => (
+          <ArticleList
+            articleImgSrc={article.cover_picture_url}
+            avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
+            title={article.title}
+            user={'水怪貓貓'}
+            tags={['有水源', '賞花', '危險地形']}
+            date={new Date(article.departure_time).toLocaleString('ja')}
+            content={article.content}
+          />
+        ))}
         <More>看更多</More>
       </ArticlesContainer>
     </ArticlesWrapper>

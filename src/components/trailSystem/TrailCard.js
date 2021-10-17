@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, MEDIA_QUERY, RADIUS } from '../../constants/style'
 import { ReactComponent as LocationSvg } from '../../icons/location_s.svg'
+import { useHistory } from 'react-router'
 
 const FilteredTrailCard = styled.div`
   width: 250px;
@@ -15,12 +16,16 @@ const FilteredTrailCard = styled.div`
     width: 270px;
     height: 300px;
   }
+  ${MEDIA_QUERY.lg} {
+    margin-left: 20px;
+  }
 `
 const FilteredTrailImgWrapper = styled.div`
   width: 100%;
   overflow: hidden;
 `
 const FilteredTrailImg = styled.img`
+  width: 100%;
   height: 200px;
   object-fit: cover;
   transition: ${EFFECT.transition};
@@ -31,7 +36,8 @@ const FilteredTrailImg = styled.img`
 
 const FilteredTrailTitle = styled.div`
   margin-top: 5px;
-  font-size: ${FONT.lg};
+  font-size: ${FONT.md};
+  font-weight: bold;
   ${MEDIA_QUERY.md} {
     margin-top: 10px;
   }
@@ -66,19 +72,26 @@ const Location = styled(LocationSvg)`
 `
 
 export default function TrailCard({ trailInfo }) {
+  const history = useHistory()
   return (
     <>
-      <FilteredTrailCard>
+      <FilteredTrailCard
+        key={trailInfo.trail_id}
+        onClick={() => {
+          history.push(`/trails/${trailInfo.trail_id}`)
+        }}
+      >
         <FilteredTrailImgWrapper>
           <FilteredTrailImg src={trailInfo.cover_picture_url} />
         </FilteredTrailImgWrapper>
         <FilteredTrailTitle>{trailInfo.title}</FilteredTrailTitle>
         <FilteredTrailLocation>
           <Location />
-          {trailInfo.location}
+          {trailInfo.location.split('；')[0]}
         </FilteredTrailLocation>
         <FilteredTrailTags>
-          {trailInfo.required_time} | {trailInfo.season}
+          {trailInfo.required_time}
+          {trailInfo.season ? `| ${trailInfo.season}` : null}
         </FilteredTrailTags>
       </FilteredTrailCard>
     </>

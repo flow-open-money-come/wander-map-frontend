@@ -34,7 +34,7 @@ const PageName = styled.div`
     border-bottom: solid 8px ${COLOR.green};
   }
 `
-const PageDes = styled.div`
+const PageDesc = styled.div`
   display: none;
   ${MEDIA_QUERY.lg} {
     display: block;
@@ -134,7 +134,7 @@ const ErrorMessage = styled.div`
 
 export default function ArticlePostPage() {
   const [errorMessage, setErrorMessage] = useState()
-  const [newDatas, setNewDatas] = useState({
+  const [formData, setFormData] = useState({
     author_id: 1,
     title: '',
     cover_picture_url: '',
@@ -148,16 +148,16 @@ export default function ArticlePostPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setNewDatas({
-      ...newDatas,
+    setFormData({
+      ...formData,
       [name]: value,
     })
   }
 
   const handleSubmit = (e) => {
-    console.log(newDatas)
+    console.log(formData)
     e.preventDefault()
-    postArticles(newDatas)
+    postArticles(formData)
       .then((res) => {
         console.log(res.data)
       })
@@ -178,7 +178,7 @@ export default function ArticlePostPage() {
       ) : (
         <>
           <PageName>新增心得</PageName>
-          <PageDes>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDes>
+          <PageDesc>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDesc>
         </>
       )}
 
@@ -188,7 +188,7 @@ export default function ArticlePostPage() {
         <Input
           name='title'
           onChange={handleInputChange}
-          value={newDatas.title}
+          value={formData.title}
           required
         />
       </FormWrapper>
@@ -197,8 +197,8 @@ export default function ArticlePostPage() {
         <FormSubTitleWrapper>
           <UploadImg
             name='cover_picture_url'
-            newDatas={newDatas}
-            setNewDatas={setNewDatas}
+            formData={formData}
+            setFormData={setFormData}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -207,8 +207,8 @@ export default function ArticlePostPage() {
         <FormSubTitleWrapper>
           <SelectLocation
             name='location'
-            newDatas={newDatas}
-            setNewDatas={setNewDatas}
+            formData={formData}
+            setFormData={setFormData}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -219,14 +219,14 @@ export default function ArticlePostPage() {
             name='departure_time'
             placeholder='開始日期'
             onChange={handleInputChange}
-            value={newDatas.departure_time}
+            value={formData.departure_time}
           />
           　—　
           <Date
             name='end_time'
             placeholder='結束日期'
             onChange={handleInputChange}
-            value={newDatas.end_time}
+            value={formData.end_time}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -235,24 +235,24 @@ export default function ArticlePostPage() {
         <SearchRelated
           name='related'
           handleInputChange={handleInputChange}
-          newDatas={newDatas}
-          setNewDatas={setNewDatas}
+          formData={formData}
+          setFormData={setFormData}
         />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>分類</FormTitle>
         <CategoryTags
           name='tags'
-          newDatas={newDatas}
-          setNewDatas={setNewDatas}
+          formData={formData}
+          setFormData={setFormData}
         />
       </FormWrapper>
       <FormWrapper>
         <FormTitle />
         <ContentCKEditor
           name='content'
-          newDatas={newDatas}
-          setNewDatas={setNewDatas}
+          formData={formData}
+          setFormData={setFormData}
         />
       </FormWrapper>
       <FormWrapper>

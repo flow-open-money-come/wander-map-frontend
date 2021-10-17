@@ -14,43 +14,42 @@ const EditorWrapper = styled.div`
   }
 `
 
-
-export default function ContentCKEditor({ name, newDatas, setNewDatas }) {
-
+export default function ContentCKEditor({ name, formData, setFormData }) {
   const [data, setData] = useState('')
   const handleDataChange = (event, editor) => {
     let inputData = editor.getData()
     setData(inputData)
-    setNewDatas({
-      ...newDatas,
+    setFormData({
+      ...formData,
       [name]: inputData,
     })
-    console.log(data)    
+    console.log(data)
   }
-  const ImgurUploader = ImgurUploaderInit({clientID: `${process.env.REACT_APP_IMGUR_CLIENTID}`})
+  const ImgurUploader = ImgurUploaderInit({
+    clientID: `${process.env.REACT_APP_IMGUR_CLIENTID}`,
+  })
 
   return (
     <EditorWrapper>
-        <CKEditor 
-          editor={ClassicEditor}
-          data=''
-          config={{
-              extraPlugins: [ImgurUploader],
-              removePlugins: ['MediaEmbed'],
-             }}
-          onReady={(editor) => {
-            console.log('Editor is ready to use!', editor)
-            editor.editing.view.change((writer) => {
-              writer.setStyle(
-                  "height",
-                  "250px",
-                  editor.editing.view.document.getRoot()
-              )
-            })
-          }}
-          onChange={handleDataChange}
-          
-        />
-      </EditorWrapper>
+      <CKEditor
+        editor={ClassicEditor}
+        data=''
+        config={{
+          extraPlugins: [ImgurUploader],
+          removePlugins: ['MediaEmbed'],
+        }}
+        onReady={(editor) => {
+          console.log('Editor is ready to use!', editor)
+          editor.editing.view.change((writer) => {
+            writer.setStyle(
+              'height',
+              '250px',
+              editor.editing.view.document.getRoot()
+            )
+          })
+        }}
+        onChange={handleDataChange}
+      />
+    </EditorWrapper>
   )
 }

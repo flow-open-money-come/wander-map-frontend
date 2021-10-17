@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { postTrails, getTrails, patchTrail } from '../../../WebAPI'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
@@ -34,7 +34,7 @@ const PageName = styled.div`
     border-bottom: solid 8px ${COLOR.green};
   }
 `
-const PageDes = styled.div`
+const PageDesc = styled.div`
   display: none;
   ${MEDIA_QUERY.lg} {
     display: block;
@@ -160,7 +160,7 @@ const ErrorMessage = styled.div`
 
 export default function TrailPostPage() {
   const [errorMessage, setErrorMessage] = useState()
-  const [newDatas, setNewDatas] = useState({
+  const [formData, setFormData] = useState({
     author_id: 1,
     title: '',
     description: '',
@@ -177,16 +177,16 @@ export default function TrailPostPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setNewDatas({
-      ...newDatas,
+    setFormData({
+      ...formData,
       [name]: value,
     })
   }
 
   const handlePostSubmit = (e) => {
-    console.log(newDatas)
+    console.log(formData)
     e.preventDefault()
-    postTrails(newDatas)
+    postTrails(formData)
       .then((res) => {
         console.log(res.data)
       })
@@ -203,16 +203,16 @@ export default function TrailPostPage() {
     getTrails(trailID)
       .then((res) => {
         console.log(res.data.data)
-        setNewDatas(res.data.data[0])
+        setFormData(res.data.data[0])
       })
       .catch((err) => {
         console.log(err.response.data)
       })
   }, [])
   const handlePatchSubmit = (e) => {
-    console.log(newDatas)
+    console.log(formData)
     e.preventDefault()
-    patchTrail(trailID, newDatas)
+    patchTrail(trailID, formData)
       .then((res) => {
         console.log(res.data)
       })
@@ -229,7 +229,7 @@ export default function TrailPostPage() {
       ) : (
         <>
           <PageName>新增步道</PageName>
-          <PageDes>Wow！又新發現什麼新步道了呢？快來昭告天下吧~</PageDes>
+          <PageDesc>Wow！又新發現什麼新步道了呢？快來昭告天下吧~</PageDesc>
         </>
       )}
 
@@ -240,7 +240,7 @@ export default function TrailPostPage() {
         <Input
           name='title'
           onChange={handleInputChange}
-          value={newDatas.title}
+          value={formData.title}
           required
         />
       </FormWrapper>
@@ -249,8 +249,8 @@ export default function TrailPostPage() {
         <FormSubTitleWrapper>
           <UploadImg
             name='cover_picture_url'
-            newDatas={newDatas}
-            setNewDatas={setNewDatas}
+            formData={formData}
+            setFormData={setFormData}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -259,7 +259,7 @@ export default function TrailPostPage() {
         <Textarea
           name='description'
           onChange={handleInputChange}
-          value={newDatas.description}
+          value={formData.description}
           required
         />
       </FormWrapper>
@@ -268,8 +268,8 @@ export default function TrailPostPage() {
         <FormSubTitleWrapper>
           <SelectLocation
             name='location'
-            newDatas={newDatas}
-            setNewDatas={setNewDatas}
+            formData={formData}
+            setFormData={setFormData}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -283,7 +283,7 @@ export default function TrailPostPage() {
                 type='number'
                 name='length'
                 onChange={handleInputChange}
-                value={newDatas.length}
+                value={formData.length}
               />
               <FormUnit>公里</FormUnit>
             </InputWrapper>
@@ -296,7 +296,7 @@ export default function TrailPostPage() {
                 type='number'
                 name='altitude'
                 onChange={handleInputChange}
-                value={newDatas.altitude}
+                value={formData.altitude}
               />
               <FormUnit>公尺</FormUnit>
             </InputWrapper>
@@ -314,7 +314,7 @@ export default function TrailPostPage() {
         <FormTitle>步道座標</FormTitle>
         <FormSubTitleWrapper>
           <CoordinateInput
-            newDatas={newDatas}
+            formData={formData}
             handleInputChange={handleInputChange}
           />
         </FormSubTitleWrapper>
@@ -324,7 +324,7 @@ export default function TrailPostPage() {
         <Input
           name='situation'
           onChange={handleInputChange}
-          value={newDatas.situation}
+          value={formData.situation}
         />
       </FormWrapper>
       <FormWrapper>
@@ -338,8 +338,8 @@ export default function TrailPostPage() {
         <FormSubTitleWrapper>
           <UploadImg
             name='map_picture_url'
-            newDatas={newDatas}
-            setNewDatas={setNewDatas}
+            formData={formData}
+            setFormData={setFormData}
           />
         </FormSubTitleWrapper>
       </FormWrapper>

@@ -227,9 +227,6 @@ export default function UserOverviewPage() {
       })
   }, [])
 
-  console.log(userData)
-
-  console.log(userID)
   return (
     <Wrapper>
       <MemberProfileWrapper>

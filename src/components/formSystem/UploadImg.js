@@ -8,7 +8,7 @@ import { NavBarButton } from '../../components/common/Button'
 const PicHolder = styled.label`
   width: 500px;
   height: 180px;
-  background-color: #eee;
+  background-color: ${COLOR.gray_light};
   border-radius: 3px;
   cursor: pointer;
   display: flex;
@@ -65,7 +65,7 @@ const ClearBtn = styled.button`
   }
 `
 
-export default function UploadImg({ name, newDatas, setNewDatas }) {
+export default function UploadImg({ name, formData, setFormData }) {
   const token = `${process.env.REACT_APP_IMGUR_TOKEN}`
   const [fileSrc, setFileSrc] = useState()
 
@@ -96,8 +96,8 @@ export default function UploadImg({ name, newDatas, setNewDatas }) {
       .then((res) => {
         // 回傳值
         let dataUrl = res.data.data.link
-        setNewDatas({
-          ...newDatas,
+        setFormData({
+          ...formData,
           [name]: dataUrl,
         })
       })

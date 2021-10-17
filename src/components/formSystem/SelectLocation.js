@@ -24,7 +24,7 @@ const Select = styled.select`
   }
 `
 
-export default function SelectLocation({ name, newDatas, setNewDatas }) {
+export default function SelectLocation({ name, formData, setFormData }) {
   const [location, setLocation] = useState({
     country: '',
     state: '',
@@ -57,8 +57,8 @@ export default function SelectLocation({ name, newDatas, setNewDatas }) {
       state: e.target.value,
     })
 
-    setNewDatas({
-      ...newDatas,
+    setFormData({
+      ...formData,
       [name]: location.country + e.target.value,
     })
   }

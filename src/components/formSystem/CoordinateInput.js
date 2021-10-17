@@ -25,7 +25,7 @@ const Input = styled.input.attrs(() => ({
   }
 `
 
-export default function CoordinateInput({ newDatas, handleInputChange }) {
+export default function CoordinateInput({ formData, handleInputChange }) {
   return (
     <>
       <InputWrapper>
@@ -33,7 +33,7 @@ export default function CoordinateInput({ newDatas, handleInputChange }) {
         <Input
           name='coordinateY'
           onChange={handleInputChange}
-          value={newDatas.coordinateY}
+          value={formData.coordinateY}
         />
       </InputWrapper>
       <InputWrapper>
@@ -41,7 +41,7 @@ export default function CoordinateInput({ newDatas, handleInputChange }) {
         <Input
           name='coordinateX'
           onChange={handleInputChange}
-          value={newDatas.coordinateX}
+          value={formData.coordinateX}
         />
       </InputWrapper>
     </>

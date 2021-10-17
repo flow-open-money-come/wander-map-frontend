@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
+import { useHistory } from 'react-router-dom'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import UsersManagement from '../../components/adminSystem/UsersManagement'
 import TrailsManagement from '../../components/adminSystem/TrailsManagement'
@@ -7,6 +8,8 @@ import ArticlesManagement from '../../components/adminSystem/ArticlesManagement'
 import { ReactComponent as UserIcon } from '../../icons/backstage/adminUser.svg'
 import { ReactComponent as TrailIcon } from '../../icons/backstage/adminTrail.svg'
 import { ReactComponent as ArticleIcon } from '../../icons/backstage/adminArticle.svg'
+import { AuthContext } from '../../context'
+
 
 const AdminPageContainer = styled.div`
   width: 80%;
@@ -142,6 +145,10 @@ const TabTitle = styled.div`
 function AdminPage() {
   const [tab, setTab] = useState('Users')
   const [recycle, setRecycle] = useState(false)
+  const { userInfo } = useContext(AuthContext)
+  const history = useHistory()
+
+  if (!userInfo || userInfo.role !== 'admin') history.push('/')
 
   return (
     <AdminPageContainer>
@@ -179,21 +186,9 @@ function AdminPage() {
           </ArticlesTab>
         </Tabs>
 
-        {tab === 'Users' && <UsersManagement setTab={setTab} />}
-        {tab === 'Trails' && (
-          <TrailsManagement
-            setTab={setTab}
-            recycle={recycle}
-            setRecycle={setRecycle}
-          />
-        )}
-        {tab === 'Articles' && (
-          <ArticlesManagement
-            setTab={setTab}
-            recycle={recycle}
-            setRecycle={setRecycle}
-          />
-        )}
+        {tab === 'Users' && <UsersManagement />}
+        {tab === 'Trails' && <TrailsManagement recycle={recycle} setRecycle={setRecycle} />}
+        {tab === 'Articles' && <ArticlesManagement recycle={recycle} setRecycle={setRecycle} />}
       </ManagementContainer>
     </AdminPageContainer>
   )

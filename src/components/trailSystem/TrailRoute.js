@@ -43,7 +43,7 @@ const RouteImg = styled.img`
   max-width: 800px;
 `
 
-function TrailRoute() {
+function TrailRoute({ routePic }) {
   return (
     <RouteWrapper>
       <Title>
@@ -51,7 +51,7 @@ function TrailRoute() {
         路線資訊
       </Title>
 
-      <RouteImg src='https://recreation.forest.gov.tw/Files/RT/Photo/001/01/001_MAP201902152.jpg' />
+      <RouteImg src={routePic} />
     </RouteWrapper>
   )
 }
