@@ -30,22 +30,12 @@ const ArticleTag = styled.div`
   }
 `
 
-export default function Tags() {
+export default function Tags({ tags }) {
   return (
     <ArticleTags>
-      <ArticleTag>一日</ArticleTag>
-      <ArticleTag>有水源</ArticleTag>
-      <ArticleTag>新手小白體驗</ArticleTag>
-      <ArticleTag>一日</ArticleTag>
-      <ArticleTag>一日</ArticleTag>
-      <ArticleTag>有水源</ArticleTag>
-      <ArticleTag>新手小白體驗</ArticleTag>
-      <ArticleTag>一日</ArticleTag>
-      <ArticleTag>一日</ArticleTag>
-      <ArticleTag>一日</ArticleTag>
-      <ArticleTag>有水源</ArticleTag>
-      <ArticleTag>新手小白體驗</ArticleTag>
-      <ArticleTag>一日</ArticleTag>
+      {tags.map((tag) => (
+        <ArticleTag>{tag}</ArticleTag>
+      ))}
     </ArticleTags>
   )
 }

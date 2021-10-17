@@ -5,6 +5,7 @@ import { ReactComponent as Right_Arrow } from '../../icons/arrow_right.svg'
 import { ReactComponent as Left_Arrow } from '../../icons/arrow_left.svg'
 import { ReactComponent as Thumb } from '../../icons/thumb_up.svg'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { Link } from 'react-router-dom'
 
 // Carousel
 
@@ -171,14 +172,21 @@ const ArticleTag = styled.div`
   color: #ffffff;
   padding: 6px 10px;
 
+  ${(props) =>
+    props.noTag &&
+    `
+    display: none;  
+  `}
+
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.xs};
     padding: 6px 14px;
   }
 `
 
-const ReadMore = styled.button`
+const ReadMore = styled(Link)`
   display: none;
+  font-size: ${FONT.s};
 
   ${MEDIA_QUERY.md} {
     display: inline;
@@ -254,30 +262,38 @@ export default function Carousel({ slides }) {
             <>
               {index === current && (
                 <>
-                  <SlideImage src={slide.image} />
+                  <SlideImage src={slide.cover_picture_url} />
                   <ArticleInfoContainer>
                     <ArticleTitleAndLikes>
                       <ArticleTitle>{slide.title}</ArticleTitle>
                       <ArticleLikes>
-                        {slide.likes}
+                        {/* {slide.likes} */}
                         <ThumbUp />
                       </ArticleLikes>
                     </ArticleTitleAndLikes>
                     <ArticleTags>
-                      {slide.tags.map((tag) => {
-                        return <ArticleTag>{tag}</ArticleTag>
-                      })}
+                      {!slide.tag_names ? (
+                        <ArticleTag noTag></ArticleTag>
+                      ) : (
+                        slide.tag_names.split(',').map((tag) => {
+                          return <ArticleTag>{tag}</ArticleTag>
+                        })
+                      )}
                     </ArticleTags>
                     <ArticleContent>{slide.content}</ArticleContent>
                     <ArticleInfo>
                       <ArticleUser>
-                        <UserAvatar src={slide.userAvatar} />
+                        {/* <UserAvatar src={slide.user_icon} /> */}
                         <UserInfo>
-                          <UserName>{slide.username}</UserName>
-                          <ArticleDate>{slide.date}</ArticleDate>
+                          {/* <UserName>{slide.nickname}</UserName> */}
+                          <ArticleDate>
+                            {new Date(slide.created_at).toLocaleString('ja')}
+                          </ArticleDate>
                         </UserInfo>
                       </ArticleUser>
-                      <ReadMore>閱讀全文</ReadMore>
+                      <ReadMore to={`/articles/${slide.article_id}`}>
+                        閱讀全文
+                      </ReadMore>
                     </ArticleInfo>
                   </ArticleInfoContainer>
                 </>

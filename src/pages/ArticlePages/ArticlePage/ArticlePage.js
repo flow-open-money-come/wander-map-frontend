@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comments'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import { ReactComponent as Review } from '../../../icons/articles/review.svg'
+import thumbSVG from '../../../icons/thumb_up.svg'
+import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
+import { apiArticle, apiArticleGetLike } from '../../../WebAPI'
+import { useParams } from 'react-router-dom'
+import { AuthContext, LoadingContext } from '../../../context'
+import useLike from '../../../hooks/useLike'
+import Loading from '../../../components/common/Loading'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -44,17 +51,20 @@ const ArticleLikes = styled.span`
 `
 
 const ThumbUp = styled.span`
-  background-image: url('https://i.imgur.com/gE3TYlC.png');
+  background-image: url('${thumbSVG}');
   background-size: contain;
   width: 30px;
   height: 30px;
   cursor: pointer;
   margin-right: 5px;
+  justify-content: center;
 
   ${(props) =>
     props.thumb &&
     `
-    background-image: url('https://i.imgur.com/aJBAUDX.png');
+      background-image: url('${thumbGreenSVG}');
+      width: 25px;
+      height: 25px;
     `}
 `
 
@@ -76,12 +86,14 @@ const CoverImg = styled.img`
   }
 `
 
-const ArticleDepartureTime = styled.div`
+const ArticleStandardInformation = styled.div`
   margin: 7px 0;
-`
 
-const ArticleLocation = styled.div`
-  margin: 21px 0 7px 0;
+  ${(props) =>
+    props.topElement &&
+    `
+     margin: 21px 0 7px 0; 
+  `}
 `
 
 const ReviewIcon = styled(Review)`
@@ -114,35 +126,102 @@ const FlexGroup = styled.div`
 `
 
 function ArticlePage() {
-  const [thumb, setThumb] = useState(false)
+  const { id } = useParams()
+  const [post, setPost] = useState([])
+  const { userInfo } = useContext(AuthContext)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const { thumb, setThumb, handleClickLike } = useLike()
+
+  useEffect(() => {
+    const getPost = async () => {
+      setIsLoading(true)
+      try {
+        let res = await apiArticle(id)
+        if (res.status === 200) {
+          setPost(res.data.data[0])
+        }
+        setIsLoading(false)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getPost()
+  }, [])
+
+  useEffect(() => {
+    const getLike = async () => {
+      setIsLoading(true)
+      try {
+        let res = await apiArticleGetLike(userInfo.user_id)
+        console.log(res)
+        if (
+          res.data.data.articles.map((article) => {
+            if (article.article_id == id) {
+              return true
+            }
+          })
+        ) {
+          setThumb(true)
+        }
+        setIsLoading(false)
+      } catch (err) {
+        console.log(err)
+      }
+    }
+    getLike()
+  }, [])
 
   return (
-    <Wrapper>
-      <CoverImg src='https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Dawu_Mt%2BHunag_Chung_Yu%E9%BB%83%E4%B8%AD%E4%BD%91%2B17755.jpg/2560px-Dawu_Mt%2BHunag_Chung_Yu%E9%BB%83%E4%B8%AD%E4%BD%91%2B17755.jpg' />
-      <ArticleTitleAndLikes>
-        <ArticleTitle>林美石磐步道</ArticleTitle>
-        <ArticleLikes>
-          <ThumbUp
-            thumb={thumb}
-            onClick={() => {
-              setThumb(!thumb)
-            }}
-          />
-          300
-        </ArticleLikes>
-      </ArticleTitleAndLikes>
-      <Tags />
-      <ArticleLocation>地點：宜蘭縣礁溪鄉 林美石磐步道</ArticleLocation>
-      <ArticleDepartureTime>
-        出發時間：2000.01.02 ~ 2000.01.03
-      </ArticleDepartureTime>
-      <ArticleContent />
-      <FlexGroup>
-        <ReviewIcon />
-        <CommentTitle>討論區</CommentTitle>
-      </FlexGroup>
-      <Comment />
-    </Wrapper>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Wrapper>
+          <CoverImg src={post.cover_picture_url} />
+          <ArticleTitleAndLikes>
+            <ArticleTitle>{post.title}</ArticleTitle>
+            <ArticleLikes>
+              {userInfo && <ThumbUp thumb={thumb} onClick={handleClickLike} />}
+              {/* {post.likes} */}
+            </ArticleLikes>
+          </ArticleTitleAndLikes>
+          {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
+          <ArticleStandardInformation topElement>
+            地點：{post.location}
+          </ArticleStandardInformation>
+          <ArticleStandardInformation>
+            出發時間：{new Date(post.departure_time).toLocaleString()}
+          </ArticleStandardInformation>
+          {/* {post.time_spent ? (
+        <ArticleStandardInformation>
+          行進時間：{post.time_spent} 小時
+        </ArticleStandardInformation>
+      ) : (
+        ''
+      )}
+      {post.length ? (
+        <ArticleStandardInformation>
+          距離：{post.length} 公里
+        </ArticleStandardInformation>
+      ) : (
+        ''
+      )}
+      {post.gpx_url ? (
+        <ArticleStandardInformation>
+          GPX：{post.gpx_url}
+        </ArticleStandardInformation>
+      ) : (
+        ''
+      )} */}
+          <ArticleContent content={post.content} />
+          <FlexGroup>
+            <ReviewIcon />
+            <CommentTitle>討論區</CommentTitle>
+          </FlexGroup>
+          <Comment isMessage={true} />
+        </Wrapper>
+      )}
+    </>
   )
 }
 
