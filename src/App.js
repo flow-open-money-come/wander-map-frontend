@@ -87,7 +87,7 @@ function App() {
               <Route path='/articles/:id'>
                 <ArticlePage />
               </Route>
-              <Route path='/trails/1'>
+              <Route path='/trails/:trailID'>
                 <TrailPage />
               </Route>
             </Switch>

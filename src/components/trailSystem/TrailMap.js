@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { FONT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailMap.svg'
+import { ReactComponent as PinSvg } from '../../icons/pin.svg'
+import GoogleMapReact from 'google-map-react'
+
+
 
 const MapWrapper = styled.div`
   width: 100%;
@@ -45,14 +49,46 @@ const MapContainer = styled.div`
   }
 `
 
-function TrailMap() {
+const Marker = styled(PinSvg)`
+  width: 30px;
+  height: 30px;
+  transform: translate(-50%, -50%);
+`
+
+
+function TrailMap({ coordinate }) {
+
+  const [mapCenter, setMapCenter] = useState({})
+  const Center = {
+    lat: 24.42360428661788,
+    lng: 121.70835976400171
+  }
+
+  useEffect(() => {
+    setMapCenter({
+      lat: coordinate.y,
+      lng: coordinate.x
+    })
+    
+  }, [coordinate])
+
   return (
     <MapWrapper>
       <Title>
         <TitleIcon />
         步道位置
       </Title>
-      <MapContainer></MapContainer>
+      <MapContainer>
+        <GoogleMapReact
+          bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
+          defaultCenter={Center}
+          center={mapCenter}
+          defaultZoom={15}
+          yesIWantToUseGoogleMapApiInternals
+        >
+          <Marker lat={mapCenter.lat} lng={mapCenter.lng} />
+        </GoogleMapReact>
+      </MapContainer>
     </MapWrapper>
   )
 }

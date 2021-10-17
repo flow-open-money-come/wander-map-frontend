@@ -22,6 +22,8 @@ export const getAllUsers = (adminToken, params) =>
 
 // trails
 export const getTrails = (params) => instance.get('/trails/' + params)
+export const getTrailArticles = (trailID, params) =>
+  instance.get('/trails/' + trailID + '/articles' + params)
 export const getHotTrails = () => instance.get('/trails/hot/5')
 export const deleteTrail = (trailID) => instance.delete('/trails/' + trailID)
 export const getDeletedTrail = (params) => instance.get('/trails/deleted' + params)
