@@ -1,5 +1,10 @@
 import { ResetStyle, GlobalStyle } from './constants/globalStyle'
-import { HashRouter as Router, Switch, Route } from 'react-router-dom'
+import {
+  HashRouter as Router,
+  Switch,
+  Route,
+  useLocation,
+} from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 import NavBar from './components/common/NavBar'
@@ -17,10 +22,19 @@ import AdminPage from './pages/AdminPage'
 import TrailPage from './pages/TrailPages/TrailPage'
 import BackToTopBtn from './components/common/BackToTopBtn'
 import ArticlePage from './pages/ArticlePages/ArticlePage'
-
 import jwt_decode from 'jwt-decode'
 import { AuthContext, LoadingContext } from './context'
 import { getAuthToken } from './utils'
+
+function ScrollToTop() {
+  const { pathname } = useLocation()
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [pathname])
+
+  return null
+}
 
 function App() {
   const [userInfo, setUserInfo] = useState(null)

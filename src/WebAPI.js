@@ -3,7 +3,7 @@ import config from './config'
 import { getAuthToken } from './utils'
 
 const instance = axios.create({
-  baseURL: `${config.apiHost}`,
+  baseURL: config.apiHost2,
 })
 
 instance.interceptors.request.use((config) => {
@@ -20,7 +20,8 @@ export const userRegister = (payload) =>
 
 // trails
 export const getTrails = (params) => instance.get('/trails' + params)
-export const getHotTrails = () => instance.get('/trails/featured')
+export const getHotTrails = () => instance.get('/trails/hot/5')
+export const getTrailsCondition = () => axios.get(config.tfrHost)
 
 // articles
 export const getArticles = () => instance.get('/articles')
@@ -64,3 +65,10 @@ export const apiCommentsPatch = (articleId, messageId, content) =>
   })
 export const apiCommentsDelete = (articleId, messageId) =>
   instance.delete(`/trails/${articleId}/comments/${messageId}`)
+export const getArticlesUnderTrail = (TrailId) =>
+  instance.get('/trails/' + TrailId + '/articles')
+
+// user
+export const userLogin = (payload) => instance.post('/users/login', payload)
+export const userRegister = (payload) =>
+  instance.post('/users/register', payload)

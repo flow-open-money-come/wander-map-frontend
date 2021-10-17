@@ -1,73 +1,44 @@
 import styled from 'styled-components'
 import GoogleMapReact from 'google-map-react'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import SearchBar from './SearchBar'
 import LocationMarker from './LocationMarker'
+import useSearch from '../../hooks/useSearch'
+import { ActiveTrailContext } from '../../context'
+import { getTrails } from '../../WebAPI'
+import useDebounce from '../../hooks/useDebounce'
+import useTrailConditions from '../../hooks/useTrailConditions'
 
 const MapSearchBarWrapper = styled.div`
-  width: 100%;
+  width: 80%;
   position: absolute;
   top: 10px;
   left: 10px;
-  z-index: 2;
+  z-index: 1;
 `
 
 const Map = (props) => {
-  // const [myPosition, setMyPosition] = useState({
-  //   lat: 24.8218635,
-  //   lng: 121.7352169,
-  // })
-  const [mapApiLoaded, setMapApiLoaded] = useState(false)
-  const [mapInstance, setMapInstance] = useState(null)
-  const [mapApi, setMapApi] = useState(null)
+  const { keyWord, handleKeyWordChange, handleKeyWordDelete } = useSearch()
+  const debouncedKeyWord = useDebounce(keyWord, 1000)
+  const [matchTrailInfos, setMatchTrailInfos] = useState([])
+  const { activeTrailArticles } = useContext(ActiveTrailContext)
+  const { trailConditions } = useTrailConditions()
 
-  // GET 回來的步道資訊
-  const trailInfos = [
-    {
-      trailId: 1,
-      center: {
-        lat: 24.8218635,
-        lng: 121.7352169,
-      },
-      trailTitle: '測試步道 A',
-      trailImageUrl: 'https://i.imgur.com/w2Y6y4z.jpg',
-    },
-    {
-      trailId: 2,
-      center: {
-        lat: 24.3224766,
-        lng: 120.9628113,
-      },
-      trailTitle: '測試步道 B',
-      trailImageUrl: 'https://i.imgur.com/w2Y6y4z.jpg',
-    },
-    {
-      trailId: 3,
-      center: {
-        lat: 23.5096881,
-        lng: 120.7957005,
-      },
-      trailTitle: '測試步道 C',
-      trailImageUrl: 'https://i.imgur.com/w2Y6y4z.jpg',
-    },
-  ]
-
-  const apiHasLoaded = (map, maps) => {
-    console.log('載入完成!')
-    setMapInstance(map)
-    setMapApi(maps)
-    setMapApiLoaded(true)
+  const handleSearchTrails = (debouncedKeyWord) => {
+    if (debouncedKeyWord) {
+      getTrails(`?limit=126&search=${debouncedKeyWord}`)
+        .then((res) => {
+          if (res.data.success) setMatchTrailInfos(res.data.data)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   }
 
-  // 進階： 移動位置自動搜尋附近的步道
-  // const handleCenterChange = () => {
-  //   if (mapApiLoaded) {
-  //     setMyPosition({
-  //       lat: mapInstance.center.lat(),
-  //       lng: mapInstance.center.lng(),
-  //     })
-  //   }
-  // }
+  useEffect(() => {
+    handleSearchTrails(debouncedKeyWord)
+  }, [debouncedKeyWord])
 
   return (
     <div
@@ -78,25 +49,55 @@ const Map = (props) => {
       }}
     >
       <MapSearchBarWrapper>
-        <SearchBar placeholder='請輸入步道關鍵字...' />
+        <SearchBar
+          placeholder='請輸入步道關鍵字...'
+          handleKeyWordChange={(e) => handleKeyWordChange(e)}
+          handleKeyWordDelete={handleKeyWordDelete}
+          inputValue={keyWord}
+          width='100%'
+        />
       </MapSearchBarWrapper>
       <GoogleMapReact
         bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
-        defaultCenter={props.center}
+        defaultCenter={props.info.coordinate}
         defaultZoom={props.zoom}
         yesIWantToUseGoogleMapApiInternals
-        onGoogleApiLoaded={({ map, maps }) => apiHasLoaded(map, maps)}
-        // onBoundsChange={handleCenterChange}
+        center={activeTrailArticles.activeTrailInfo.center}
       >
-        {trailInfos.map((trailInfo) => {
-          return (
-            <LocationMarker
-              lat={trailInfo.center.lat}
-              lng={trailInfo.center.lng}
-              trailInfo={trailInfo}
-            />
-          )
-        })}
+        {matchTrailInfos.length > 0 ? (
+          matchTrailInfos.map((trailInfo) => {
+            let trailConditionsObj = Object.assign({}, ...trailConditions)
+            let trailConditionId = Object.keys(trailConditionsObj).map((id) =>
+              parseInt(id)
+            )
+            let currentId = trailInfo.trail_id
+            let trailConditionTag =
+              trailConditionId.indexOf(currentId) < 0
+                ? '全線開放'
+                : trailConditionsObj[currentId]
+            return (
+              <LocationMarker
+                key={trailInfo.trail_id}
+                lat={trailInfo.coordinate.y}
+                lng={trailInfo.coordinate.x}
+                trailInfo={trailInfo}
+                trailConditionTag={trailConditionTag}
+              />
+            )
+          })
+        ) : (
+          <LocationMarker
+            key={1}
+            lat={props.info.coordinate.y}
+            lng={props.info.coordinate.x}
+            trailInfo={props.info}
+            trailConditionTag={
+              Object.keys(trailConditions).indexOf(1) > 0
+                ? trailConditions[0][1]
+                : '全線開放'
+            }
+          />
+        )}
       </GoogleMapReact>
     </div>
   )
@@ -104,31 +105,18 @@ const Map = (props) => {
 
 // 演示用的步道，有較多心得、比較豐富的資訊可以呈現
 Map.defaultProps = {
-  center: {
-    lat: 24.8218635,
-    lng: 121.7352169,
+  info: {
+    trail_id: 1,
+    title: '蘇花古道：大南澳越嶺段',
+    location: '宜蘭縣南澳鄉',
+    cover_picture_url:
+      'https://recreation.forest.gov.tw/Files/RT/Photo/001/05/001.jpg',
+    coordinate: {
+      y: 24.482340609862774,
+      x: 121.83785521632522,
+    },
   },
-  zoom: 17,
+  zoom: 12,
 }
 
 export default Map
-/*
-1. default: 顯示 demo 用「有較多文章」的步道，以他當作初始點，旁邊的文章列表也顯示
-2. 當使用者搜尋：
-  2.1 依據使用者輸入的關鍵字去後端拿資料
-  2.2 將顯示地點改成拿到的資料當中的所有經緯度，並顯示出步道資料
-
-states:
-  - filteredTrails: [{
-    'trail 1': {
-      trail_id: 1,
-      coordinate: {
-        x: 24, y: 121.7
-      }
-      ...
-    }
-  }]
-map trails marker and info window:
-  - after getting response...
-    - filteredTrails.map(trail => return <Map key={trail.trail_id} ><InfoWindow /></Map>)
-*/

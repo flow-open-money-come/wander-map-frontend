@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 
 // handle load more trials
 export default function useLoadMore() {
-  const [numberOfDisplay, setNumberOfDisplay] = useState(20)
+  const [numberOfDisplay, setNumberOfDisplay] = useState(21)
   let numberOfClick = useRef(0)
 
   const handleLoadMore = () => {
