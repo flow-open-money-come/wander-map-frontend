@@ -1,26 +1,26 @@
 import axios from 'axios'
 import config from './config'
 
-// User相關的 api
-const userRequest = axios.create({
-  baseURL: `${config.apiHost}/user`,
-})
-// 文章相關的 api
-const articleRequest = axios.create({
-  baseURL: `${config.apiHost}/articles`,
+const instance = axios.create({
+  baseURL: config.apiHost2,
 })
 
-// User 相關的 api
-export const apiUserLogin = (data) => userRequest.post('/signIn', data)
-export const apiUserLogout = (data) => userRequest.post('/signOut', data)
-export const apiUserSignUp = (data) => userRequest.post('/signUp', data)
+// trails
+export const getTrails = (params) => instance.get('/trails' + params)
+export const getHotTrails = () => instance.get('/trails/hot/5')
+export const getTrailsCondition = () => axios.get(config.tfrHost)
+
+// articles
+export const getArticles = () => instance.get('/articles')
+export const getArticlesUnderTrail = (TrailId) =>
+  instance.get('/trails/' + TrailId + '/articles')
 
 // 文章相關的 api
-export const apiArticlesHot = () => articleRequest.get('/hot')
-export const apiArticles = () => articleRequest.get('/')
-export const apiArticle = () => articleRequest.get('/:id')
+export const apiArticlesHot = () => articleRequest.get('/articles/hot')
+export const apiArticles = () => articleRequest.get('/articles')
+export const apiArticle = () => articleRequest.get('/articles/:articleId')
 export const apiArticlesOptions = (limit, tags, offset, search) => {
-  let url = `?`
+  let url = `/articles?`
   if (limit) {
     url += `limit=${limit}&`
   }
@@ -35,3 +35,7 @@ export const apiArticlesOptions = (limit, tags, offset, search) => {
   }
   return articleRequest.get(url)
 }
+// user
+export const userLogin = (payload) => instance.post('/users/login', payload)
+export const userRegister = (payload) =>
+  instance.post('/users/register', payload)

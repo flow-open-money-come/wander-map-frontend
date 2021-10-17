@@ -1,8 +1,11 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { COLOR, RADIUS, FONT, MEDIA_QUERY, EFFECT } from '../../constants/style'
+import { COLOR, RADIUS, FONT, MEDIA_QUERY } from '../../constants/style'
 import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
+import { ActiveTrailContext } from '../../context'
+import { useState, useEffect } from 'react'
+import { getArticlesUnderTrail } from '../../WebAPI'
 
 const HomepageContainer = styled.div`
   width: 90%;
@@ -80,10 +83,6 @@ const SubTitleWrapper = styled.div`
     padding-left: 10px;
   }
 `
-const LinkWrapper = styled(Link)`
-  display: flex;
-  align-items: center;
-`
 const TrialArticleWrapper = styled.div`
   width: 100%;
 `
@@ -93,67 +92,94 @@ const Divider = styled.div`
   background-color: ${COLOR.white};
   margin: 20px auto;
 `
+const NoMatchMsg = styled.div`
+  font-size: ${FONT.md};
+  font-weight: bold;
+  margin: 0 auto;
+  color: ${COLOR.gray};
+`
 
 function HomePage() {
+  const [activeTrailArticles, setActiveTrailArticles] = useState({
+    activeTrailInfo: {
+      trailId: '',
+      trailTitle: '',
+      trailLocation: '',
+      center: { lat: '', lng: '' },
+    },
+    articles: [],
+  })
+
+  useEffect(() => {
+    getArticlesUnderTrail(1).then((res) => {
+      setActiveTrailArticles({
+        activeTrailInfo: {
+          trailId: 1,
+          trailTitle: '蘇花古道：大南澳越嶺段',
+          trailLocation: '宜蘭縣南澳鄉',
+          center: {
+            lat: 24.482340609862774,
+            lng: 121.83785521632522,
+          },
+        },
+        articles: res.data.data,
+      })
+    })
+  }, [])
   return (
     <>
-      <HomepageContainer>
-        <HomePageWrapper>
-          <MapWrapper>
-            <Map />
-          </MapWrapper>
-          <ArticleListWrapper>
-            <TrialTitleWrapper>
-              <TrialTitleName to='trails/1'>林美石磐步道</TrialTitleName>
-              <SubTitleWrapper>
-                <TrialTitleLocation>宜蘭縣礁溪鄉</TrialTitleLocation>
-                <LinkWrapper>
-                  <TrialArticleNumber>222 篇心得</TrialArticleNumber>
-                </LinkWrapper>
-              </SubTitleWrapper>
-            </TrialTitleWrapper>
-            <Divider />
-            <TrialArticleWrapper>
-              <ArticleList
-                articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-                avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-                title={'礁溪林美石磐涼爽一日遊'}
-                user={'水怪貓貓'}
-                tags={['有水源', '賞花', '危險地形']}
-                date={'2021.9.7 / 20:20:22'}
-                content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
-          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
-          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-                lessRwd={true}
-              />
-              <ArticleList
-                articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-                avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-                title={'礁溪林美石磐涼爽一日遊'}
-                user={'水怪貓貓'}
-                tags={['有水源', '賞花', '危險地形']}
-                date={'2021.9.7 / 20:20:22'}
-                content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
-          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
-          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-                lessRwd={true}
-              />
-              <ArticleList
-                articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-                avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-                title={'礁溪林美石磐涼爽一日遊'}
-                user={'水怪貓貓'}
-                tags={['有水源', '賞花', '危險地形']}
-                date={'2021.9.7 / 20:20:22'}
-                content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
-          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
-          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-                lessRwd={true}
-              />
-            </TrialArticleWrapper>
-          </ArticleListWrapper>
-        </HomePageWrapper>
-      </HomepageContainer>
+      <ActiveTrailContext.Provider
+        value={{ activeTrailArticles, setActiveTrailArticles }}
+      >
+        <HomepageContainer>
+          <HomePageWrapper>
+            <MapWrapper>
+              <Map />
+            </MapWrapper>
+            <ArticleListWrapper>
+              <TrialTitleWrapper>
+                <TrialTitleName
+                  to={`trails/${activeTrailArticles.activeTrailInfo.trailId}`}
+                >
+                  {activeTrailArticles.activeTrailInfo.trailTitle}
+                </TrialTitleName>
+                <SubTitleWrapper>
+                  <TrialTitleLocation>
+                    {activeTrailArticles.activeTrailInfo.trailLocation}
+                  </TrialTitleLocation>
+
+                  <TrialArticleNumber>
+                    {activeTrailArticles.articles.length} 篇心得
+                  </TrialArticleNumber>
+                </SubTitleWrapper>
+              </TrialTitleWrapper>
+              <Divider />
+              <TrialArticleWrapper>
+                {activeTrailArticles.articles.length !== 0 ? (
+                  activeTrailArticles.articles.map((articleInfos) => (
+                    <ArticleList
+                      key={articleInfos.article_id}
+                      articleImgSrc={articleInfos.cover_picture_url}
+                      avatarImgSrc={articleInfos.icon_url}
+                      title={articleInfos.title}
+                      user={articleInfos.author_name}
+                      tags={
+                        articleInfos.tag_names &&
+                        articleInfos.tag_names.split(',')
+                      }
+                      date={new Date(articleInfos.created_at).toLocaleString()}
+                      content={articleInfos.content}
+                      lessRwd={true}
+                    />
+                  ))
+                ) : (
+                  <NoMatchMsg>目前還沒有心得唷，快來分享吧！</NoMatchMsg>
+                )}
+              </TrialArticleWrapper>
+            </ArticleListWrapper>
+          </HomePageWrapper>
+        </HomepageContainer>
+      </ActiveTrailContext.Provider>
     </>
   )
 }
