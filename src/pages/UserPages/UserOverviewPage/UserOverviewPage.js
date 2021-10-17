@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import styled from 'styled-components'
 import {
   COLOR,
@@ -67,12 +68,22 @@ const Info = styled.div`
   word-break: break-all;
   white-space: pre-wrap;
   text-align: center;
+  svg {
+    width: 12px;
+    height: 12px;
+    margin: 0 6px;
+  }
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
   ${MEDIA_QUERY.lg} {
     margin-top: 15px;
     font-size: ${FONT.lg};
+   
   }
 `
 const SectionWrapper = styled.div`
@@ -178,6 +189,21 @@ const ArticlesDate = styled.div`
 `
 
 export default function UserOverviewPage() {
+  const [data, setData] = useState({ hits: [] });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        'http://3.138.41.92:8000/api/v1/users/1',
+      );
+
+      setData(result.data);
+      console.log(data)
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <Wrapper>
       <MemberProfileWrapper>
@@ -187,11 +213,11 @@ export default function UserOverviewPage() {
         <Profile>
           <Info>
             <NicknameIcon />
-            野原新之助
+            野原新之助{data.nickname}
           </Info>
           <Info>
             <EmailIcon />
-            hehe@123.com
+            hehe@123.com{data.email}
           </Info>
         </Profile>
       </MemberProfileWrapper>

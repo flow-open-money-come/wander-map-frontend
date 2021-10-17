@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import SearchBar from '../common/SearchBar'
 
 const FilterContainer = styled.div`
@@ -50,11 +51,39 @@ const FilterTag = styled.button`
     `}
 `
 
-export default function ForumFilter({ tags, setTags }) {
-  const handleIsChecked = (id) => {
+const SearchBarInput = styled.input`
+  width: 80%;
+  height: 30px;
+  background-color: ${COLOR.white};
+  padding: 20px;
+  outline: none;
+  border: 1px solid ${COLOR.white};
+  transition: ${EFFECT.transition};
+`
+
+const SearchIcon = styled(SearchSvg)`
+  margin-right: 10px;
+`
+
+export default function ForumFilter({
+  tags,
+  setTags,
+  tagValue,
+  setTagValue,
+  inputValue,
+  handleInputChange,
+  handleClickSearch,
+  handleClickCross,
+}) {
+  const handleTagValue = (e) => {
+    setTagValue(
+      tagValue.find((item) => item === e.target.name)
+        ? tagValue.filter((data) => data !== e.target.name)
+        : [...tagValue, e.target.name]
+    )
     setTags(
       tags.map((tag) => {
-        if (tag.tag_id !== id) return tag
+        if (tag.tagName !== e.target.name) return tag
         return {
           ...tag,
           isChecked: !tag.isChecked,
@@ -63,6 +92,7 @@ export default function ForumFilter({ tags, setTags }) {
     )
   }
 
+  console.log(inputValue)
   return (
     <FilterContainer>
       <Filter>
@@ -73,16 +103,27 @@ export default function ForumFilter({ tags, setTags }) {
           width='100%'
           fontSize={FONT.md}
           noShadow
+          value={inputValue}
+          onChange={(e) => {
+            handleInputChange(e)
+          }}
+          onClickSearch={(e) => {
+            handleClickSearch(e)
+          }}
+          onClickCross={handleClickCross}
         />
         <FilterTags>
           {tags.map((tag) => {
             return (
               <FilterTag
-                key={tag.tag_id}
+                key={tag.tagId}
                 isChecked={tag.isChecked}
-                onClick={() => handleIsChecked(tag.tag_id)}
+                name={tag.tagName}
+                onClick={(e) => {
+                  handleTagValue(e)
+                }}
               >
-                {tag.tag_name}
+                {tag.tagName}
               </FilterTag>
             )
           })}
