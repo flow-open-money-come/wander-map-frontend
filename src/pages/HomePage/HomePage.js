@@ -163,7 +163,10 @@ function HomePage() {
                       avatarImgSrc={articleInfos.icon_url}
                       title={articleInfos.title}
                       user={articleInfos.author_name}
-                      tags={articleInfos.tag_names.split(',')}
+                      tags={
+                        articleInfos.tag_names &&
+                        articleInfos.tag_names.split(',')
+                      }
                       date={new Date(articleInfos.created_at).toLocaleString()}
                       content={articleInfos.content}
                       lessRwd={true}

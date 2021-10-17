@@ -5,10 +5,6 @@ const instance = axios.create({
   baseURL: config.apiHost2,
 })
 
-// user
-export const userLogin = (data) => instance.post('/login', data)
-export const userRegister = (data) => instance.post('/register', data)
-
 // trails
 export const getTrails = (params) => instance.get('/trails' + params)
 export const getHotTrails = () => instance.get('/trails/hot/5')
@@ -18,3 +14,8 @@ export const getTrailsCondition = () => axios.get(config.tfrHost)
 export const getArticles = () => instance.get('/articles')
 export const getArticlesUnderTrail = (TrailId) =>
   instance.get('/trails/' + TrailId + '/articles')
+
+// user
+export const userLogin = (payload) => instance.post('/users/login', payload)
+export const userRegister = (payload) =>
+  instance.post('/users/register', payload)
