@@ -23,7 +23,7 @@ import TrailPage from './pages/TrailPages/TrailPage'
 import BackToTopBtn from './components/common/BackToTopBtn'
 import ArticlePage from './pages/ArticlePages/ArticlePage'
 import jwt_decode from 'jwt-decode'
-import { AuthContext } from './context'
+import { AuthContext, LoadingContext } from './context'
 import { getAuthToken } from './utils'
 
 function ScrollToTop() {
@@ -38,6 +38,7 @@ function ScrollToTop() {
 
 function App() {
   const [userInfo, setUserInfo] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
   // had login before
   useEffect(() => {
     if (getAuthToken()) {
@@ -47,52 +48,53 @@ function App() {
   return (
     <>
       <AuthContext.Provider value={{ userInfo, setUserInfo }}>
-        <ResetStyle />
-        <GlobalStyle />
-        <Router>
-          <ScrollToTop />
-          <NavBar />
-          <Switch>
-            <Route exact path='/'>
-              <HomePage />
-            </Route>
-            <Route path='/login'>
-              <LoginPage />
-            </Route>
-            <Route path='/register'>
-              <RegisterPage />
-            </Route>
-            <Route path='/post-trail'>
-              <TrailPostPage />
-            </Route>
-            <Route path='/post-article'>
-              <ArticlePostPage />
-            </Route>
-            <Route exact path='/articles'>
-              <AllArticlesPage />
-            </Route>
-            <Route exact path='/trails'>
-              <AllTrailPage />
-            </Route>
-            <Route path='/user/userId'>
-              <UserOverviewPage />
-            </Route>
-            <Route path='/admin'>
-              <AdminPage />
-            </Route>
-            <Route path='/backstage/userId'>
-              <UserBackstage />
-            </Route>
-            <Route path='/articles/id'>
-              <ArticlePage />
-            </Route>
-            <Route path='/trails/1'>
-              <TrailPage />
-            </Route>
-          </Switch>
-          <BackToTopBtn />
-          <Footer />
-        </Router>
+        <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
+          <ResetStyle />
+          <GlobalStyle />
+          <Router>
+            <NavBar />
+            <Switch>
+              <Route exact path='/'>
+                <HomePage />
+              </Route>
+              <Route path='/login'>
+                <LoginPage />
+              </Route>
+              <Route path='/register'>
+                <RegisterPage />
+              </Route>
+              <Route path='/post-trail'>
+                <TrailPostPage />
+              </Route>
+              <Route path='/post-article'>
+                <ArticlePostPage />
+              </Route>
+              <Route exact path='/articles'>
+                <AllArticlesPage />
+              </Route>
+              <Route exact path='/trails'>
+                <AllTrailPage />
+              </Route>
+              <Route path='/user/userId'>
+                <UserOverviewPage />
+              </Route>
+              <Route path='/admin'>
+                <AdminPage />
+              </Route>
+              <Route path='/backstage/userId'>
+                <UserBackstage />
+              </Route>
+              <Route path='/articles/:id'>
+                <ArticlePage />
+              </Route>
+              <Route path='/trails/1'>
+                <TrailPage />
+              </Route>
+            </Switch>
+            <BackToTopBtn />
+            <Footer />
+          </Router>
+        </LoadingContext.Provider>
       </AuthContext.Provider>
     </>
   )
