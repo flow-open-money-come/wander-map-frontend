@@ -120,36 +120,24 @@ export default function UserArticlesManage() {
           <CoverTd>
             <TrailImg src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYWSx3Oc7QWYbB59GeeEE6JgBPIznP7_G9hQ&usqp=CAU' />
           </CoverTd>
-          <TrailsTd>
-            <a>礁溪林美石磐涼爽一日遊</a>
-          </TrailsTd>
+          <TrailsTd>礁溪林美石磐涼爽一日遊</TrailsTd>
           <BtnTd>
-            <a>
-              <EditIcon />
-            </a>
+            <EditIcon />
           </BtnTd>
           <BtnTd>
-            <a>
-              <BinIcon />
-            </a>
+            <BinIcon />
           </BtnTd>
         </TableContent>
         <TableContent>
           <CoverTd>
             <TrailImg src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYWSx3Oc7QWYbB59GeeEE6JgBPIznP7_G9hQ&usqp=CAU' />
           </CoverTd>
-          <TrailsTd>
-            <a>大雪山國家森林遊樂區一日遊</a>
-          </TrailsTd>
+          <TrailsTd>大雪山國家森林遊樂區一日遊</TrailsTd>
           <BtnTd>
-            <a>
-              <EditIcon />
-            </a>
+            <EditIcon />
           </BtnTd>
           <BtnTd>
-            <a>
-              <BinIcon />
-            </a>
+            <BinIcon />
           </BtnTd>
         </TableContent>
       </TrailsTable>

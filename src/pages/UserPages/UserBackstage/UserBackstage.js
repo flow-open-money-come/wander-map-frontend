@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import UserArticlesManage from '../../../components/userSystem/UserArticlesManage'
@@ -112,6 +113,19 @@ const UsersManagementContainer = styled.div`
 
 export default function UserBackstage() {
   const [tab, setTab] = useState('Articles')
+  const [data, setData] = useState({ hits: [] });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios(
+        'http://3.138.41.92:8000/api/v1/users/1',
+      );
+
+      setData(result.data);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <Wrapper>
@@ -123,11 +137,11 @@ export default function UserBackstage() {
           <ModifyBtn />
           <Info>
             <NicknameIcon />
-            野原新之助
+            野原新之助{data.nickname}
           </Info>
           <Info>
             <EmailIcon />
-            hehe@123.com
+            hehe@123.com{data.email}
           </Info>
         </Profile>
       </MemberProfileWrapper>
