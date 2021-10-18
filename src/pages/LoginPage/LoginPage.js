@@ -1,12 +1,7 @@
 import styled from 'styled-components'
-import jwt_decode from 'jwt-decode'
-import { Link, useHistory } from 'react-router-dom'
-import { useState, useContext } from 'react'
+import { Link } from 'react-router-dom'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import { userLogin } from '../../WebAPI'
-import { setAuthToken } from '../../utils'
-import { AuthContext } from '../../context'
-import useUserInfoValidation from '../../hooks/useUserInfoValidation'
+import useLogin from '../../hooks/useLogin'
 
 const LoginPageWrapper = styled.div`
   width: 100%;
@@ -114,41 +109,7 @@ const OuterLink = styled(Link)`
   color: ${COLOR.white};
 `
 export default function LoginPage() {
-  const [loginInfo, setLoginInfo] = useState({
-    email: '',
-    password: '',
-  })
-
-  const handleUserInfoChange = (e) => {
-    setLoginInfo({
-      ...loginInfo,
-      [e.target.name]: e.target.value,
-    })
-  }
-
-  const { setUserInfo } = useContext(AuthContext)
-  const history = useHistory()
-  const { errMsg, setErrMsg, validateUserInfos } = useUserInfoValidation()
-
-  const handleLogin = (e) => {
-    setErrMsg('')
-    e.preventDefault()
-    for (let i = 0; i < Object.keys(loginInfo).length; i++) {
-      if (!validateUserInfos(loginInfo, Object.keys(loginInfo)[i])) return
-    }
-    userLogin(loginInfo)
-      .then((res) => {
-        if (res.data.success) {
-          setAuthToken(res.data.data.token)
-          setUserInfo(jwt_decode(res.data.data.token))
-          alert('登入成功！ 歡迎大駕光臨～')
-          history.push('/')
-        }
-      })
-      .catch((err) => {
-        setErrMsg(err.response.data.message)
-      })
-  }
+  const { handleUserInfoChange, handleLogin, errMsg } = useLogin()
   return (
     <>
       <LoginPageWrapper>

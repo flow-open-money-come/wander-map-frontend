@@ -42,11 +42,10 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    // if jwt hasn't expired -> get, decode and set userInfo
     if (getAuthToken()) {
       return setUserInfo(jwt_decode(getAuthToken()))
     }
-    // if expired, refresh, get token, decode and set userInfo
+
     refreshAccessToken().then((res) => {
       if (res.data.success) {
         setAuthToken(res.data.data.token)
@@ -54,6 +53,7 @@ function App() {
       }
     })
   }, [])
+
   return (
     <>
       <AuthContext.Provider value={{ userInfo, setUserInfo }}>

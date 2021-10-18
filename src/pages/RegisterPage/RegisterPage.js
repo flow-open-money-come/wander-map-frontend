@@ -1,12 +1,7 @@
 import styled from 'styled-components'
-import { Link, useHistory } from 'react-router-dom'
-import jwt_decode from 'jwt-decode'
-import { useState, useContext } from 'react'
+import { Link } from 'react-router-dom'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import { userRegister } from '../../WebAPI'
-import { setAuthToken } from '../../utils'
-import { AuthContext } from '../../context'
-import useUserInfoValidation from '../../hooks/useUserInfoValidation'
+import useRegister from '../../hooks/useRegister'
 
 const RegisterPageWrapper = styled.div`
   width: 100%;
@@ -113,44 +108,7 @@ const OuterLink = styled(Link)`
   color: ${COLOR.white};
 `
 export default function RegisterPage() {
-  const [registerInfo, setRegisterInfo] = useState({
-    nickname: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  })
-
-  const { setUserInfo } = useContext(AuthContext)
-  const history = useHistory()
-  const { errMsg, setErrMsg, validateUserInfos } = useUserInfoValidation()
-
-  const handleUserInfoChange = (e) => {
-    setRegisterInfo({
-      ...registerInfo,
-      [e.target.name]: e.target.value,
-    })
-  }
-  const handleRegister = (e) => {
-    setErrMsg('')
-    e.preventDefault()
-    for (let i = 0; i < Object.keys(registerInfo).length; i++) {
-      if (!validateUserInfos(registerInfo, Object.keys(registerInfo)[i])) return
-    }
-    userRegister(registerInfo)
-      .then((res) => {
-        if (res.data.success) {
-          setAuthToken(res.data.data.token)
-          setUserInfo(jwt_decode(res.data.data.token))
-          alert('註冊成功！ 歡迎您的加入～')
-          history.push('/')
-        }
-      })
-      .catch((err) => {
-        if (err) {
-          setErrMsg(err.response.data.message)
-        }
-      })
-  }
+  const { handleUserInfoChange, handleRegister, errMsg } = useRegister()
 
   return (
     <>

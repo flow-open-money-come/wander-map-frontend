@@ -81,15 +81,18 @@ const NavBarLinkWrapper = styled.div`
     align-items: baseline;
   }
 `
-const DefaultAvatar = styled(Link)`
+const Avatar = styled(Link)`
   display: inline-block;
-  width: 40px;
-  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   margin-right: 10px;
-  background: url(https://i.imgur.com/r50z0vv.png) center/cover;
+  ${(props) =>
+    props.$avatar
+      ? `background: url(${props.$avatar}) center/cover;`
+      : `background: url(https://i.imgur.com/r50z0vv.png) center/cover;`}
   @media screen and (max-width: 768px) {
-    width: 25px;
-    height: 25px;
+    min-width: 25px;
+    min-height: 25px;
   }
 `
 
@@ -232,15 +235,27 @@ function NavBar() {
                 全部步道
               </NavBarLink>
               {userInfo && (
-                <NavBarLink to={`/backstage/${userInfo.user_id}`} $noBackground>
-                  <DefaultAvatar to={`/backstage/${userInfo.user_id}`} />
+                <NavBarLink
+                  to={
+                    userInfo.role === 'admin'
+                      ? `/admin`
+                      : `/backstage/${userInfo.user_id}`
+                  }
+                  $noBackground
+                >
+                  <Avatar
+                    to={`/backstage/${userInfo.user_id}`}
+                    $avatar={
+                      userInfo.icon_url !== null ? userInfo.icon_url : false
+                    }
+                  />
                   {userInfo.nickname}
                 </NavBarLink>
               )}
               <Divider />
               {userInfo && <NavBarText onClick={handleLogOut}>登出</NavBarText>}
               {!userInfo && (
-                <NavBarLink $button to='/register'>
+                <NavBarLink $button to='/login'>
                   會員註冊 / 登入
                 </NavBarLink>
               )}
