@@ -221,7 +221,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
 
   const handleDelete = (articleID, articleTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
-    deleteArticle(adminToken, articleID).then()
+    deleteArticle(articleID).then()
     alert(`刪除 ${articleTitle}`)
     setArticles(articles.filter((article) => article.article_id !== articleID))
   }

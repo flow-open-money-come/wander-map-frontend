@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext} from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
@@ -128,7 +128,7 @@ function UsersManagement() {
 
   console.log('adminToken', adminToken)
   useEffect(() => {
-    getAllUsers(adminToken, `?offset=${(page - 1) * 20}`)
+    getAllUsers(`?offset=${(page - 1) * 20}`)
       .then((res) => {
         setUsers(res.data.data.users)
       })

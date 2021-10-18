@@ -39,7 +39,7 @@ function ScrollToTop() {
 function App() {
   const [userInfo, setUserInfo] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
-  // had login before
+
   useEffect(() => {
     if (getAuthToken()) {
       setUserInfo(jwt_decode(getAuthToken()))
@@ -52,6 +52,7 @@ function App() {
           <ResetStyle />
           <GlobalStyle />
           <Router>
+            <ScrollToTop />
             <NavBar />
             <Switch>
               <Route exact path='/'>
