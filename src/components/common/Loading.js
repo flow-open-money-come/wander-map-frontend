@@ -2,16 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 import { ReactComponent as mount } from '../../../src/icons/mountain.svg'
 
-const LoadingWapper = styled.div`
+const LoadingWrapper = styled.div`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 10;
 `
 
 const MountainLoader = styled(mount)`
@@ -31,8 +32,8 @@ const MountainLoader = styled(mount)`
 
 export default function Loading() {
   return (
-    <LoadingWapper>
+    <LoadingWrapper>
       <MountainLoader />
-    </LoadingWapper>
+    </LoadingWrapper>
   )
 }

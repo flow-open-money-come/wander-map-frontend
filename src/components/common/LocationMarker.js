@@ -2,7 +2,6 @@ import styled from 'styled-components'
 import { useHistory } from 'react-router'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { ReactComponent as PinSvg } from '../../icons/pin.svg'
-import useToggle from '../../hooks/useToggle'
 import { useState, useContext } from 'react'
 import { getArticlesUnderTrail } from '../../WebAPI'
 import useDidMountEffect from '../../hooks/useDidMountEffect'
@@ -89,20 +88,22 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
 
   useDidMountEffect(() => {
     if (currentOnClickTrail === null) return
-    getArticlesUnderTrail(currentOnClickTrail).then((res) => {
-      setActiveTrailArticles({
-        activeTrailInfo: {
-          trailId: trailInfo.trail_id,
-          trailTitle: trailInfo.title,
-          trailLocation: trailInfo.location,
-          center: {
-            lat: trailInfo.coordinate.y,
-            lng: trailInfo.coordinate.x,
+    getArticlesUnderTrail(currentOnClickTrail)
+      .then((res) => {
+        setActiveTrailArticles({
+          activeTrailInfo: {
+            trailId: trailInfo.trail_id,
+            trailTitle: trailInfo.title,
+            trailLocation: trailInfo.location,
+            center: {
+              lat: trailInfo.coordinate.y,
+              lng: trailInfo.coordinate.x,
+            },
           },
-        },
-        articles: res.data.data,
+          articles: res.data.data,
+        })
       })
-    })
+      .catch((err) => console.log(err.response))
 
     setCurrentOnClickTrail(null)
   }, [currentOnClickTrail])
