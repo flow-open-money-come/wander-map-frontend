@@ -8,6 +8,7 @@ import { NavBarButton } from './Button'
 import useToggle from '../../hooks/useToggle'
 import { AuthContext } from '../../context'
 import { setAuthToken } from '../../utils'
+import { userLogout } from '../../WebAPI'
 
 const NavBarContainer = styled.div`
   width: 100%;
@@ -208,6 +209,11 @@ function NavBar() {
     if (location.pathname !== '/') history.push('/')
     setAuthToken('')
     setUserInfo(null)
+    userLogout()
+      .then((res) => {
+        if (res.data.success) alert('登出成功！ 期待再相逢～')
+      })
+      .catch((err) => console.log(err.response))
   }
 
   return (
