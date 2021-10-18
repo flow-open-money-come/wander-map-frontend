@@ -38,6 +38,8 @@ export default function useRegister() {
           alert('註冊成功！ 歡迎您的加入～')
           history.push('/')
         }
+        if (res.data.message.indexOf('already') > 0)
+          setErrMsg('電子郵件已被註冊！')
       })
       .catch((err) => {
         if (err) {
