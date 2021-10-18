@@ -141,7 +141,7 @@ export default function RegisterPage() {
         if (res.data.success) {
           setAuthToken(res.data.data.token)
           setUserInfo(jwt_decode(res.data.data.token))
-          alert('註冊成功！')
+          alert('註冊成功！ 歡迎您的加入～')
           history.push('/')
         }
       })

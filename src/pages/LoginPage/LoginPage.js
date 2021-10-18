@@ -141,7 +141,7 @@ export default function LoginPage() {
         if (res.data.success) {
           setAuthToken(res.data.data.token)
           setUserInfo(jwt_decode(res.data.data.token))
-          alert('登入成功！')
+          alert('登入成功！ 歡迎大駕光臨～')
           history.push('/')
         }
       })

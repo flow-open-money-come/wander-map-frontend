@@ -24,7 +24,8 @@ import BackToTopBtn from './components/common/BackToTopBtn'
 import ArticlePage from './pages/ArticlePages/ArticlePage'
 import jwt_decode from 'jwt-decode'
 import { AuthContext, LoadingContext } from './context'
-import { getAuthToken } from './utils'
+import { getAuthToken, setAuthToken } from './utils'
+import { refreshAccessToken } from './WebAPI'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -41,9 +42,17 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
+    // if jwt hasn't expired -> get, decode and set userInfo
     if (getAuthToken()) {
-      setUserInfo(jwt_decode(getAuthToken()))
+      return setUserInfo(jwt_decode(getAuthToken()))
     }
+    // if expired, refresh, get token, decode and set userInfo
+    refreshAccessToken().then((res) => {
+      if (res.data.success) {
+        setAuthToken(res.data.data.token)
+        setUserInfo(jwt_decode(res.data.data.token))
+      }
+    })
   }, [])
   return (
     <>
