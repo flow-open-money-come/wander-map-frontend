@@ -65,15 +65,15 @@ function App() {
               <Route path='/post-trail'>
                 <TrailPostPage />
               </Route>
-              <Route path='/patch-trail/:trailID?'>
-              <TrailPostPage />
-            </Route>
+              <Route path='/update-trail/:trailID?'>
+                <TrailPostPage />
+              </Route>
               <Route path='/post-article'>
                 <ArticlePostPage />
               </Route>
-              <Route path='/patch-article/:articleID?'>
-              <ArticlePostPage />
-            </Route>
+              <Route path='/update-article/:articleID?'>
+                <ArticlePostPage />
+              </Route>
               <Route exact path='/articles'>
                 <AllArticlesPage />
               </Route>

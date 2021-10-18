@@ -67,7 +67,7 @@ const ClearBtn = styled.button`
 
 export default function UploadImg({ name, formData, setFormData }) {
   const token = `${process.env.REACT_APP_IMGUR_TOKEN}`
-  const [fileSrc, setFileSrc] = useState()
+  const [fileSrc, setFileSrc] = useState(formData.cover_picture_url)
 
   const handleUploadFile = (e) => {
     if (!e.target.files[0]) return

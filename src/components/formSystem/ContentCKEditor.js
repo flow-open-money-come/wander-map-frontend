@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { getArticles } from '../../WebAPI'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import ImgurUploaderInit from 'ckeditor5-imgur-uploader'
@@ -15,7 +17,7 @@ const EditorWrapper = styled.div`
 `
 
 export default function ContentCKEditor({ name, formData, setFormData }) {
-  const [data, setData] = useState('')
+  const [data, setData] = useState(formData.content)
   const handleDataChange = (event, editor) => {
     let inputData = editor.getData()
     setData(inputData)
@@ -23,7 +25,6 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
       ...formData,
       [name]: inputData,
     })
-    console.log(data)
   }
   const ImgurUploader = ImgurUploaderInit({
     clientID: `${process.env.REACT_APP_IMGUR_CLIENTID}`,
@@ -33,7 +34,6 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
     <EditorWrapper>
       <CKEditor
         editor={ClassicEditor}
-        data=''
         config={{
           extraPlugins: [ImgurUploader],
           removePlugins: ['MediaEmbed'],

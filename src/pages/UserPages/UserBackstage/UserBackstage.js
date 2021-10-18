@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { getUserInfo, patchUserInfo } from '../../../WebAPI'
+import { getUserInfo } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../../constants/style'
+import UserUpdateBox from '../../../components/userSystem/UserUpdateBox '
 import UserArticlesManage from '../../../components/userSystem/UserArticlesManage'
 import UserTodoItems from '../../../components/userSystem/UserTodoItems'
 import UserCollect from '../../../components/userSystem/UserCollect'
@@ -110,25 +111,13 @@ const ModifyBtn = styled(EditIcon)`
     height: 20px;
   }
 `
-const ModifyField = styled(MemberProfileWrapper)`
-  width: 400px;
-  height: 400px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  ${(props) =>
-    props &&
-    `
-    background: ${COLOR.green};
-    color: ${COLOR.white};
-  `}
-`
-const ModifyTitle = styled(Info)``
 
 export default function UserBackstage() {
   const [tab, setTab] = useState('Articles')
+  const [popUp, setPopUp] = useState({
+    key: '',
+    isShow: false,
+  })
   const [userData, setUserData] = useState({
     user_id: '',
     nickname: '',
@@ -147,17 +136,8 @@ export default function UserBackstage() {
       })
   }, [])
 
-  const handleOnClick = () => {}
-  const handlePatchSubmit = (e) => {
-    console.log(userData)
-    e.preventDefault()
-    patchUserInfo(userID, userData)
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((err) => {
-        console.log(err.response.data)
-      })
+  const handleOnClick = () => {
+    setPopUp({ key: userData.user_id, isShow: true })
   }
 
   return (
@@ -166,21 +146,11 @@ export default function UserBackstage() {
         <Avatar>
           <AvatarPic src={`${userData.icon_url}`} />
         </Avatar>
-        <ModifyField>
-          <ModifyTitle>修改會員資料</ModifyTitle>
-          暱稱：
-          <input />
-          帳號：
-          <input />
-          密碼：
-          <input />
-          再次輸入：
-          <input />
-          返回 確認送出
-        </ModifyField>
         <Profile>
           <ModifyBtn onClick={handleOnClick} />
-
+          {popUp.isShow === true && (
+            <UserUpdateBox popUp={popUp} setPopUp={setPopUp} />
+          )}
           <Info>
             <NicknameIcon />
             {userData.nickname}

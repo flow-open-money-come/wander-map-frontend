@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import { postArticles, patchArticle } from '../../../WebAPI'
+import React, { useState, useEffect, useContext } from 'react'
+import { Link, useParams, useHistory } from 'react-router-dom'
+import { postArticles, getArticles, patchArticle } from '../../../WebAPI'
+import { AuthContext } from '../../../context'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
 import UploadImg from '../../../components/formSystem/UploadImg'
@@ -133,9 +134,13 @@ const ErrorMessage = styled.div`
 `
 
 export default function ArticlePostPage() {
+  const { userInfo } = useContext(AuthContext)
+  const history = useHistory()
+  // if (!userInfo) history.push('/')
+
   const [errorMessage, setErrorMessage] = useState()
   const [formData, setFormData] = useState({
-    author_id: 1,
+    author_id: '',
     title: '',
     cover_picture_url: '',
     location: '',
@@ -154,12 +159,13 @@ export default function ArticlePostPage() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const handlePostSubmit = (e) => {
     console.log(formData)
     e.preventDefault()
     postArticles(formData)
       .then((res) => {
         console.log(res.data)
+        history.push('/')
       })
       .catch((err) => {
         console.log(err.response.data)
@@ -169,7 +175,33 @@ export default function ArticlePostPage() {
 
   // 如有帶參數為修改心得
   const { articleID } = useParams()
-  const [articleData, setAricleData] = useState()
+
+  console.log(formData)
+
+  useEffect(() => {
+    if (!articleID) return
+    getArticles(articleID)
+      .then((res) => {
+        setFormData(res.data.data[0])
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }, [])
+
+  const handlePatchSubmit = (e) => {
+    console.log(formData)
+    e.preventDefault()
+    postArticles(formData)
+      .then((res) => {
+        console.log(res.data)
+        history.push('/')
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+        setErrorMessage('您好，標題、內文為必填喔!')
+      })
+  }
 
   return (
     <ArticlePostWrapper>
@@ -181,7 +213,6 @@ export default function ArticlePostPage() {
           <PageDesc>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDesc>
         </>
       )}
-
       <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>文章標題</FormTitle>
@@ -255,14 +286,18 @@ export default function ArticlePostPage() {
           setFormData={setFormData}
         />
       </FormWrapper>
-      <FormWrapper>
+      <FormWrapper style={{ display: 'none' }}>
         <FormTitle>GPX</FormTitle>
         <UploadGpx />
       </FormWrapper>
       <FormWrapper>
         <FormTitle />
         <SubmitBtn>
-          <Submit onClick={handleSubmit} />
+          {articleID ? (
+            <Submit onClick={handlePatchSubmit} />
+          ) : (
+            <Submit onClick={handlePostSubmit} />
+          )}
         </SubmitBtn>
       </FormWrapper>
     </ArticlePostWrapper>

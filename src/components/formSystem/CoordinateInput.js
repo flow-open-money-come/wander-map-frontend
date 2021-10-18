@@ -34,6 +34,8 @@ export default function CoordinateInput({ formData, handleInputChange }) {
           name='coordinateY'
           onChange={handleInputChange}
           value={formData.coordinateY}
+          min='22'
+          max='25'
         />
       </InputWrapper>
       <InputWrapper>
@@ -42,6 +44,8 @@ export default function CoordinateInput({ formData, handleInputChange }) {
           name='coordinateX'
           onChange={handleInputChange}
           value={formData.coordinateX}
+          min='120'
+          max='122'
         />
       </InputWrapper>
     </>

@@ -236,7 +236,6 @@ export default function TrailPostPage() {
       <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>步道名稱</FormTitle>
-
         <Input
           name='title'
           onChange={handleInputChange}
@@ -343,7 +342,7 @@ export default function TrailPostPage() {
           />
         </FormSubTitleWrapper>
       </FormWrapper>
-      <FormWrapper>
+      <FormWrapper style={{ display: 'none' }}>
         <FormTitle>GPX</FormTitle>
         <UploadGpx />
       </FormWrapper>

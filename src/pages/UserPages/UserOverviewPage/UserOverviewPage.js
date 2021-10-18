@@ -210,20 +210,18 @@ export default function UserOverviewPage() {
   useEffect(() => {
     getUserInfo(userID)
       .then((res) => {
-        console.log(res.data)
         setUserData(res.data.data)
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response)
       })
 
     getUserArticles(userID)
       .then((res) => {
-        console.log(res.data)
         setUserArticlesData(res.data.data)
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response)
       })
   }, [])
 

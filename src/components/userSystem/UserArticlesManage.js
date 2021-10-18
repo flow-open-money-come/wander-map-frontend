@@ -7,6 +7,7 @@ import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/user/user_article_manage_edit.svg'
 import { ReactComponent as PostIcon } from '../../icons/user/user_post.svg'
+import ConfirmBox from './ConfirmBox'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -45,7 +46,6 @@ const SearchField = styled.input`
     font-size: ${FONT.lg};
   }
 `
-
 const PostLink = styled.div`
   text-align: right;
   opacity: 0.8;
@@ -70,7 +70,6 @@ const TrailsTable = styled.table`
     height: 400px;
   }
 `
-
 const TableContent = styled.tr`
   text-align: center;
   font-size: ${FONT.s};
@@ -82,12 +81,10 @@ const TableContent = styled.tr`
     font-size: ${FONT.lg};
   }
 `
-
 const CoverTd = styled.td`
   display: inline;
   text-align: start;
 `
-
 const TrailImg = styled.img`
   margin: 20px 5px;
   width: 80px;
@@ -99,7 +96,6 @@ const TrailImg = styled.img`
     height: 120px;
   }
 `
-
 const TrailsTd = styled.td`
   width: 70%;
   text-align: start;
@@ -111,7 +107,6 @@ const TrailsTd = styled.td`
     width: 80%;
   }
 `
-
 const BtnTd = styled.td`
   vertical-align: middle;
   svg {
@@ -129,6 +124,10 @@ const BtnTd = styled.td`
 `
 
 export default function UserArticlesManage() {
+  const [popUp, setPopUp] = useState({
+    key: '',
+    isShow: false,
+  })
   const [userArticlesData, setUserArticlesData] = useState({
     articles: [
       {
@@ -171,15 +170,22 @@ export default function UserArticlesManage() {
             </CoverTd>
             <TrailsTd>{article.title}</TrailsTd>
             <BtnTd>
-              <Link to={`../patch-article/${article.article_id}`}>
+              <Link to={`../update-article/${article.article_id}`}>
                 <EditIcon />
               </Link>
             </BtnTd>
             <BtnTd>
-              <BinIcon />
+              <BinIcon
+                onClick={() => {
+                  setPopUp({ key: article.article_id, isShow: true })
+                }}
+              />
             </BtnTd>
           </TableContent>
         ))}
+        {popUp.isShow === true && (
+          <ConfirmBox popUp={popUp} setPopUp={setPopUp} />
+        )}
       </TrailsTable>
     </Block>
   )
