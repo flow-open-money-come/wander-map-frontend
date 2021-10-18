@@ -184,11 +184,13 @@ function TrailsManagement({ recycle, setRecycle }) {
   const [searchResults, setSearchResults] = useState('')
   const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(Math.ceil(126/20))
+  const [totalPages, setTotalPages] = useState(0)
 
   useEffect(() => {
     getTrails(`?offset=${(page - 1) * 20}&search=${searchResults}`)
-      .then((res) => setTrails(res.data.data))
+      .then((res) => {
+        setTrails(res.data.data)
+        setTotalPages(Math.ceil(res.headers['x-total-count']/20))})
       .catch((err) => console.error(err))
     getDeletedTrail(`?offset=${(page - 1) * 20}`)
       .then((res) => setDeletedTrails(res.data.data))
@@ -247,7 +249,7 @@ function TrailsManagement({ recycle, setRecycle }) {
         {!recycle &&
           trails &&
           trails.map((trail) => (
-            <TableContent>
+            <TableContent key={trail.trail_id}>
               <LinkWrapper to={`/trails/${trail.trail_id}`}>
                 <CoverTd>
                   <TrailImg src={trail.cover_picture_url} />
@@ -271,7 +273,7 @@ function TrailsManagement({ recycle, setRecycle }) {
         {recycle &&
           deletedTrails &&
           deletedTrails.map((trail) => (
-            <TableContent>
+            <TableContent key={trail.trail_id}>
               <CoverTd>
                 <TrailImg src={trail.cover_picture_url} />
               </CoverTd>

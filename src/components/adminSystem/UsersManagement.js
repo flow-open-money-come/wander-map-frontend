@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { getAuthToken } from '../../utils'
-import { getAllUsers } from '../../WebAPI'
+import { getAllUsers, changeUserRole } from '../../WebAPI'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 import Pagination from './Pagination'
@@ -66,6 +66,7 @@ const HeaderTd = styled.td`
 `
 
 const TableContent = styled.tr`
+  color: ${({ $role }) => ($role === 'suspended' ? `${COLOR.gray}` : 'black')};
   border-bottom: 0.5px solid #8f8f8f;
   text-align: center;
   font-size: ${FONT.s};
@@ -115,36 +116,39 @@ const StatusBtn = styled.button`
   }
 `
 const LinkDefault = styled(Link)`
-  color: black;
+  color: inherit;
 `
 
 function UsersManagement() {
   const [users, setUsers] = useState(null)
-  const [userStatus, setUserStatus] = useState()
-  const adminToken = getAuthToken()
+  const [toggleStatus, setToggleStatus] = useState(true)
   const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(Math.ceil(19 / 20))
+  const [totalPages, setTotalPages] = useState(0)
 
-  console.log('adminToken', adminToken)
   useEffect(() => {
     getAllUsers(`?offset=${(page - 1) * 20}`)
       .then((res) => {
         setUsers(res.data.data.users)
+        setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
       })
       .catch((err) => console.error(err))
-  }, [adminToken, page])
+  }, [page, toggleStatus])
 
-  const handleToggleState = (userID) => {
+  const handleToggleState = (userID, role) => {
     if (!userInfo || userInfo.role !== 'admin') return
-    alert('toggle')
+    if (role === 'admin') return
+    setToggleStatus(!toggleStatus)
+    if (role === 'member') changeUserRole(userID, 'suspended')
+    if (role === 'suspended') changeUserRole(userID, 'member')
+    alert('更改會員權限')
   }
 
   return (
     <Block>
       <SearchBar>
         <SearchIcon />
-        <SearchField></SearchField>
+        <SearchField />
       </SearchBar>
       <UsersTable>
         <TableHeader>
@@ -155,7 +159,7 @@ function UsersManagement() {
         </TableHeader>
         {users &&
           users.map((user) => (
-            <TableContent>
+            <TableContent key={user.user_id} $role={user.role}>
               <NicknameTd>
                 <LinkDefault to={`/user/${user.user_id}`}>{user.nickname}</LinkDefault>
               </NicknameTd>
@@ -164,10 +168,12 @@ function UsersManagement() {
               <ContentTd>
                 <StatusBtn
                   onClick={() => {
-                    handleToggleState(user.user_id)
+                    handleToggleState(user.user_id, user.role)
                   }}
                 >
-                  停權
+                  {user.role === 'member' && '停權'}
+                  {user.role === 'suspended' && '復權'}
+                  {user.role === 'admin' && '管理員'}
                 </StatusBtn>
               </ContentTd>
             </TableContent>

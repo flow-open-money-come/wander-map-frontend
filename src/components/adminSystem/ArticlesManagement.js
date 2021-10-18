@@ -200,14 +200,12 @@ function ArticlesManagement({ recycle, setRecycle }) {
   const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
-  const adminToken = getAuthToken()
 
   useEffect(() => {
-    getArticles('?limit=200')
-      .then((res) => setTotalPages(Math.ceil(res.data.data.length / 20)))
-      .catch((err) => console.error(err))
     getArticles(`?offset=${(page - 1) * 20}&search=${searchResults}`)
-      .then((res) => setArticles(res.data.data))
+      .then((res) => {
+        setArticles(res.data.data)
+        setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))})
       .catch((err) => console.error(err))
     getDeletedArticle(`?offset=${(page - 1) * 20}`)
       .then((res) => setDeletedArticles(res.data.data))
@@ -272,7 +270,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
         {!recycle &&
           articles &&
           articles.map((article) => (
-            <TableContent>
+            <TableContent key={article.article_id}>
               <LinkDefault to={`/articles/${article.article_id}`}>
                 <CoverTd>
                   <TrailImg src={article.cover_picture_url} />
@@ -296,7 +294,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
         {recycle &&
           deletedArticles &&
           deletedArticles.map((article) => (
-            <TableContent>
+            <TableContent key={article.article_id}>
               <LinkDefault to={`/articles/${article.article_id}`}>
                 <CoverTd>
                   <TrailImg src={article.cover_picture_url} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import {
   COLOR,
@@ -15,8 +15,17 @@ import TrailMap from '../../../components/trailSystem/TrailMap'
 import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
-import { getTrails, getTrailArticles } from '../../../WebAPI'
+import {
+  getTrails,
+  getTrailArticles,
+  collectTrail,
+  cancelCollected,
+  getUserCollectedTrails
+} from '../../../WebAPI'
 import { useHistory } from 'react-router-dom'
+import { AuthContext } from '../../../context'
+import { getAuthToken } from '../../../utils'
+import { object } from 'prop-types'
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -103,9 +112,10 @@ const CollectBlock = styled.div`
     margin: 0 2px;
     width: 15px;
     height: 15px;
-    path {
-      stroke: ${COLOR.white};
-    }
+    fill: ${(props) => (props.$match ? `${COLOR.green}` : ``)};
+  }
+  path {
+    stroke: ${(props) => (props.$match ? `${COLOR.green}` : `${COLOR.white}`)};
   }
   &:hover {
     cursor: pointer;
@@ -174,25 +184,47 @@ const trailDefault = {
     situation: '木棧道、碎石山徑'
 }
 
-
 function TrailPage() {
-
   const { trailID } = useParams()
   const [trailInfo, setTrailInfo] = useState(trailDefault)
   const [articles, setArticles] = useState(null)
+  const [collectedMatch, setCollectedMatch] = useState(false)
+  const [toggleChange, setToggleChange] = useState(true)
+  const { userInfo } = useContext(AuthContext)
   const history = useHistory()
+  
+  console.log('userInfo', userInfo)
 
   useEffect(() => {
     getTrails(trailID)
       .then((res) => {
-        // 若此步道已被刪除則API回傳空值，此時導到所有步道頁面
-        res.data.data[0] ? setTrailInfo(res.data.data[0]) : history.push(`/trails`)
-      })
+        res.data.data[0] ? setTrailInfo(res.data.data[0]) : history.push(`/trails`)})
       .catch((error) => console.error(error))
     getTrailArticles(trailID, '?limit=3')
       .then((res) => setArticles(res.data.data))
       .catch((error) => console.error(error))
   }, [trailID, history])
+
+  useEffect(() => {
+    //假如useContext拿不到userInfo資料就會出錯（理論上不會拿不到?），這邊先隔出來試
+    getUserCollectedTrails(userInfo.user_id)
+      .then((res) => {
+        const userCollected = (res.data.data.trails)
+        const match = userCollected.some((collection) => collection.trail_id === Number(trailID))
+        setCollectedMatch(match)
+        console.log('getttt')
+      })
+      .catch((error) => console.error(error))
+  }, [userInfo, trailID, toggleChange ])
+
+
+  console.log('collectedMatch', collectedMatch)
+
+
+  const handleToggleCollect = (userID, trailID, collectedMatch) => {
+    collectedMatch ? cancelCollected(userID, trailID) : collectTrail(userID, trailID)
+    setToggleChange(!toggleChange)
+  }
 
   return (
     <TrailPageContainer>
@@ -202,9 +234,16 @@ function TrailPage() {
           <Title>{trailInfo && trailInfo.title}</Title>
           <Desc>{trailInfo && trailInfo.description}</Desc>
         </TitleAndDesc>
-        <CollectBlock>
-          <CollectIcon />
-        </CollectBlock>
+        {userInfo && (
+          <CollectBlock
+            onClick={() => {
+              handleToggleCollect(userInfo.user_id, trailID, collectedMatch)
+            }}
+            $match={collectedMatch}
+          >
+            <CollectIcon />
+          </CollectBlock>
+        )}
       </HeadFlex>
       <InfoAndWeather>
         <TrailInfo trailInfo={trailInfo} />
