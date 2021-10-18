@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
 import EditIcon from '../../icons/backstage/edit.svg'
 import BinIcon from '../../icons/backstage/bin.svg'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import {
-  apiMessagesPost,
-  apiMessagesDelete,
-  apiMessagesPatch,
-  apiMessages,
-  apiComments,
-  apiCommentsPost,
-  apiCommentsPatch,
-  apiCommentsDelete,
+  postMessage,
+  deleteMessage,
+  patchMessage,
+  getMessages,
+  getComments,
+  postComment,
+  patchComment,
+  deleteComment,
 } from '../../WebAPI'
 import { LoadingContext, AuthContext } from '../../../src/context'
 import Loading from '../../components/common/Loading'
@@ -75,7 +75,7 @@ const InputField = styled.input`
   ${(props) =>
     !props.userInfo &&
     `
-    // pointer-events: none;
+    pointer-events: none;
   `}
 `
 
@@ -126,7 +126,7 @@ const CommentInfo = styled.div`
   justify-content: space-between;
 `
 
-const CommentViewInfo = styled.div`
+const CommentViewInfo = styled(Link)`
   display: flex;
   justify-content: start;
   align-items: center;
@@ -288,7 +288,7 @@ export default function Comments({ isMessage }) {
   useEffect(() => {
     const getMessage = async () => {
       try {
-        let res = await isMessageOrNot(apiMessages, apiComments)(id)
+        let res = await isMessageOrNot(getMessages, getComments)(id)
         if (res.status === 200) {
           setMessages(res.data.data)
         }
@@ -307,7 +307,7 @@ export default function Comments({ isMessage }) {
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(apiMessagesPost, apiCommentsPost)(
+      await isMessageOrNot(postMessage, postComment)(
         id,
         userInfo.user_id,
         inputValue
@@ -328,11 +328,7 @@ export default function Comments({ isMessage }) {
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(apiMessagesPatch, apiCommentsPatch)(
-        id,
-        messageId,
-        editValue
-      )
+      await isMessageOrNot(patchMessage, patchComment)(id, messageId, editValue)
       setEditing(false)
       setIsLoading(false)
     } catch (err) {
@@ -354,7 +350,7 @@ export default function Comments({ isMessage }) {
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(apiMessagesDelete, apiCommentsDelete)(id, messageId)
+      await isMessageOrNot(deleteMessage, deleteComment)(id, messageId)
       setIsLoading(false)
     } catch (err) {
       console.log(err)
@@ -370,7 +366,11 @@ export default function Comments({ isMessage }) {
             <Reminder reminder={reminder}>請輸入內容</Reminder>
           )}
           <CommentsHeader>
-            <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
+            <UserAvatar
+              src={
+                userInfo ? userInfo.icon_url : 'https://i.imgur.com/r50z0vv.png'
+              }
+            />
             <InputField
               userInfo={userInfo}
               value={inputValue}
@@ -387,7 +387,7 @@ export default function Comments({ isMessage }) {
           {messages.map((message) => (
             <Card>
               <CommentInfo>
-                <CommentViewInfo>
+                <CommentViewInfo to={`/user/${message.author_id}`}>
                   <UserAvatar src={message.icon_url} />
                   <CommentNickname>{message.nickname}</CommentNickname>
                 </CommentViewInfo>

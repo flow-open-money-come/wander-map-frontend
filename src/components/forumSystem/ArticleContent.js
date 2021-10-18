@@ -1,8 +1,47 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY, EFFECT } from '../../constants/style'
-import User from './User'
+import { Link } from 'react-router-dom'
 
+const UserName = styled.div`
+  margin-bottom: 5px;
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+    padding-bottom: 5px;
+  }
+`
+
+const UserInfo = styled.div`
+  font-size: ${FONT.xs};
+  align-items: center;
+  margin-left: 15px;
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.s};
+  }
+`
+const ArticleUser = styled(Link)`
+  display: flex;
+  color: ${COLOR.black};
+`
+const ArticleDate = styled.div`
+  font-size: ${FONT.xs};
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+  }
+`
+
+const UserAvatar = styled.img`
+  width: 30px;
+  height: 30px;
+
+  ${MEDIA_QUERY.md} {
+    width: 45px;
+    height: 45px;
+  }
+`
 const ArticleContentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,12 +95,18 @@ const UnfoldButton = styled.button`
   }
 `
 
-export default function ArticleContent({ content }) {
+export default function ArticleContent({ content, authorId }) {
   const [unfold, setUnfold] = useState(false)
 
   return (
     <ArticleContentContainer>
-      <User />
+      <ArticleUser to={`/user/${authorId}`}>
+        <UserAvatar src='https://i.imgur.com/eGREu6v.png' />
+        <UserInfo>
+          <UserName>水貓怪怪</UserName>
+          <ArticleDate>2021.9.7 / 20:20:22</ArticleDate>
+        </UserInfo>
+      </ArticleUser>
       <ArticleDesc unfold={unfold}>{content}</ArticleDesc>
       <UnfoldButton unfold={unfold} onClick={() => setUnfold(!unfold)}>
         {unfold ? '收合' : '展開全文'}

@@ -7,7 +7,7 @@ import thumbSVG from '../../../icons/thumb_up.svg'
 import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
-import { apiArticle, apiArticleGetLike } from '../../../WebAPI'
+import { getArticles, getArticleLike } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
@@ -65,6 +65,12 @@ const ThumbUp = styled.span`
       background-image: url('${thumbGreenSVG}');
       width: 25px;
       height: 25px;
+    `}
+
+  ${(props) =>
+    !props.userInfo &&
+    `
+    pointer-events: none;  
     `}
 `
 
@@ -136,7 +142,7 @@ function ArticlePage() {
     const getPost = async () => {
       setIsLoading(true)
       try {
-        let res = await apiArticle(id)
+        let res = await getArticles(id)
         if (res.status === 200) {
           setPost(res.data.data[0])
         }
@@ -150,9 +156,8 @@ function ArticlePage() {
 
   useEffect(() => {
     const getLike = async () => {
-      setIsLoading(true)
       try {
-        let res = await apiArticleGetLike(userInfo.user_id)
+        let res = await getArticleLike(userInfo.user_id)
         console.log(res)
         if (
           res.data.data.articles.map((article) => {
@@ -163,7 +168,6 @@ function ArticlePage() {
         ) {
           setThumb(true)
         }
-        setIsLoading(false)
       } catch (err) {
         console.log(err)
       }
@@ -181,7 +185,11 @@ function ArticlePage() {
           <ArticleTitleAndLikes>
             <ArticleTitle>{post.title}</ArticleTitle>
             <ArticleLikes>
-              {userInfo && <ThumbUp thumb={thumb} onClick={handleClickLike} />}
+              <ThumbUp
+                thumb={thumb}
+                userInfo={userInfo}
+                onClick={userInfo && handleClickLike}
+              />
               {/* {post.likes} */}
             </ArticleLikes>
           </ArticleTitleAndLikes>
@@ -213,7 +221,7 @@ function ArticlePage() {
       ) : (
         ''
       )} */}
-          <ArticleContent content={post.content} />
+          <ArticleContent content={post.content} authorId={post.author_id} />
           <FlexGroup>
             <ReviewIcon />
             <CommentTitle>討論區</CommentTitle>

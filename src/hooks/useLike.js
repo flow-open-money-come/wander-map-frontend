@@ -1,7 +1,7 @@
 import { useState, useContext } from 'react'
 import { useParams } from 'react-router-dom'
 import { AuthContext } from '../context'
-import { apiArticlePostLike, apiArticleRemoveLike } from '../WebAPI'
+import { postArticleLike, removeArticleLike } from '../WebAPI'
 
 export default function useLike() {
   const [thumb, setThumb] = useState(false)
@@ -11,7 +11,7 @@ export default function useLike() {
   const handleClickLike = () => {
     const postLike = async () => {
       try {
-        let res = await apiArticlePostLike(userInfo.user_id, id)
+        let res = await postArticleLike(userInfo.user_id, id)
         if (res.status === 200) {
           setThumb(true)
           console.log('likelikelike')
@@ -22,7 +22,7 @@ export default function useLike() {
     }
     const removeLike = async () => {
       try {
-        let res = await apiArticleRemoveLike(userInfo.user_id, id)
+        let res = await removeArticleLike(userInfo.user_id, id)
         if (res.status === 200) {
           setThumb(false)
         }

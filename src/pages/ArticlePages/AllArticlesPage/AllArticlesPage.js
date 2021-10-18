@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import styled from 'styled-components'
 import ArticleList from '../../../components/forumSystem/Article'
 import Carousel from '../../../components/forumSystem/Carousel'
@@ -6,9 +6,11 @@ import ForumFilter from '../../../components/forumSystem/Filter'
 import { ReactComponent as Hot } from '../../../icons/hot.svg'
 import { FONT, MEDIA_QUERY } from '../../../constants/style'
 import { NavBarButton } from '../../../components/common/Button'
-import { apiArticlesHot, apiArticlesOptions } from '../../../WebAPI'
+import { getArticles, getArticlesOptions } from '../../../WebAPI'
 import { COLOR } from '../../../constants/style'
 import { useInput } from '../../../hooks/useInput'
+import { LoadingContext } from '../../../context'
+import Loading from '../../../components/common/Loading'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -83,15 +85,18 @@ function AllArticlesPage() {
   const [tagValue, setTagValue] = useState([])
   const { inputValue, setInputValue, handleInputChange } = useInput()
   const [filterData, setFilterData] = useState()
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const params = useRef(5)
   let overLoad = false
 
   useEffect(() => {
-    apiArticlesHot()
+    setIsLoading(true)
+    getArticles('hot')
       .then((res) => {
         if (res.data.success) {
           setSlides(res.data.data)
         }
+        setIsLoading(false)
       })
       .catch((err) => {
         console.log(err)
@@ -100,7 +105,14 @@ function AllArticlesPage() {
 
   useEffect(() => {
     params.current = 5
-    apiArticlesOptions(5, tagValue, 0, filterData)
+    let url = ''
+    if (tagValue.length > 0) {
+      tagValue.map((tag) => (url += `&tag=${tag}`))
+    }
+    if (filterData) {
+      url += `&search=${filterData}`
+    }
+    getArticlesOptions(`?limit=5${url}`)
       .then((res) => {
         if (res.data.success) {
           setPosts(res.data.data)
@@ -115,7 +127,14 @@ function AllArticlesPage() {
     if (overLoad) {
       return
     }
-    apiArticlesOptions(5, tagValue, params.current, filterData)
+    let url = ''
+    if (tagValue.length > 0) {
+      tagValue.map((tag) => (url += `&tag=${tag}`))
+    }
+    if (filterData) {
+      url += `&search=${filterData}`
+    }
+    getArticlesOptions(`?limit=5&&offset=${params.current}${url}`)
       .then((res) => {
         if (res.data.success) {
           setPosts(posts.concat(res.data.data))
@@ -131,7 +150,7 @@ function AllArticlesPage() {
     setFilterData(inputValue)
   }
 
-  const handleClickCross = (e) => {
+  const handleClickCross = () => {
     setInputValue('')
     setFilterData('')
   }
@@ -157,7 +176,9 @@ function AllArticlesPage() {
     { tagId: 14, tagName: 'GPX', isChecked: false },
   ])
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <Wrapper>
       <TitleGroup>
         <HotIcon />
