@@ -124,6 +124,7 @@ export default function UserBackstage() {
     email: '',
     icon_url: '',
   })
+
   const { userID } = useParams()
   useEffect(() => {
     getUserInfo(userID)
@@ -149,7 +150,12 @@ export default function UserBackstage() {
         <Profile>
           <ModifyBtn onClick={handleOnClick} />
           {popUp.isShow === true && (
-            <UserUpdateBox popUp={popUp} setPopUp={setPopUp} />
+            <UserUpdateBox
+              popUp={popUp}
+              setPopUp={setPopUp}
+              userData={userData}
+              setUserData={setUserData}
+            />
           )}
           <Info>
             <NicknameIcon />

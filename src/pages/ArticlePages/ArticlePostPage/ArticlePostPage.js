@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Link, useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { postArticles, getArticles, patchArticle } from '../../../WebAPI'
 import { AuthContext } from '../../../context'
 import styled from 'styled-components'
@@ -136,8 +136,8 @@ const ErrorMessage = styled.div`
 export default function ArticlePostPage() {
   const { userInfo } = useContext(AuthContext)
   const history = useHistory()
-  // if (!userInfo) history.push('/')
-
+  if (!userInfo) history.push('/')
+  console.log(userInfo)
   const [errorMessage, setErrorMessage] = useState()
   const [formData, setFormData] = useState({
     author_id: '',

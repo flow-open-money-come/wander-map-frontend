@@ -45,7 +45,7 @@ export default function ConfirmBox({ popUp, setPopUp }) {
     deleteArticle(popUp.key)
       .then((res) => {
         console.log(res.data.data)
-        console.log('刪除成功')
+        console.log(popUp.key, '刪除成功')
       })
       .catch((err) => {
         console.log(err.response.data)

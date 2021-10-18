@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
 import { postTrails, getTrails, patchTrail } from '../../../WebAPI'
+import { AuthContext } from '../../../context'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
 import UploadImg from '../../../components/formSystem/UploadImg'
@@ -159,6 +160,10 @@ const ErrorMessage = styled.div`
 `
 
 export default function TrailPostPage() {
+  const { userInfo } = useContext(AuthContext)
+  const history = useHistory()
+  if (!userInfo) history.push('/')
+  console.log(userInfo)
   const [errorMessage, setErrorMessage] = useState()
   const [formData, setFormData] = useState({
     author_id: 1,

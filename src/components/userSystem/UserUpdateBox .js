@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import { AuthContext } from '../../context'
+import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import useUserInfoValidation from '../../hooks/useUserInfoValidation'
 import { patchUserInfo } from '../../WebAPI'
+import { AuthContext } from '../../context'
 import styled from 'styled-components'
-import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
+import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
+import UserUploadImg from '../../components/userSystem/UserUploadImg'
 
 const ModifyField = styled.div`
+  z-index: 10;
   width: 400px;
-  padding: 40px 30px;
+  padding: 30px;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -17,10 +19,10 @@ const ModifyField = styled.div`
   border: 1px solid ${COLOR.gray};
   border-radius: ${RADIUS.s};
 `
-const ModifyTitle = styled.div`
+const Title = styled.div`
   margin: 10px;
   text-align: center;
-  font-size: ${FONT.md};
+  font-size: ${FONT.lg};
 `
 const InputWrapper = styled.div`
   margin: 0 auto;
@@ -30,14 +32,13 @@ const Input = styled.input`
   width: 250px;
   height: 40px;
   padding: 20px;
-  border-radius: ${RADIUS.md};
-  margin: 10px;
-  background-color: rgba(0, 0, 0, 0.3);
   border: none;
+  border-radius: ${RADIUS.md};
+  color: ${COLOR.gray};
+  background-color: rgba(0, 0, 0, 0.3);
+  box-shadow: ${EFFECT.shadow_light};
   transition: ${EFFECT.transition};
   font-size: ${FONT.s};
-  color: ${COLOR.white};
-  box-shadow: ${EFFECT.shadow_light};
   &::placeholder {
     color: ${COLOR.white};
     text-align: center;
@@ -48,19 +49,14 @@ const Input = styled.input`
   &:focus {
     outline: none;
     border: 2px solid ${COLOR.green};
-    background-color: rgba(0, 0, 0, 0);
+    background-color: ${COLOR.white};
     box-shadow: none;
-    color: ${COLOR.gray};
-  }
-  ${MEDIA_QUERY.lg} {
-    height: 30px;
-    width: 500px;
-    font-size: ${FONT.md};
   }
 `
-const AlertMsg = styled.span`
-  margin-top: 8px;
+const AlertMsg = styled.div`
+  margin: 8px;
   font-size: ${FONT.xs};
+  color: ${COLOR.gray};
   ${(props) =>
     props.$error && `color: red; font-weight:bold; font-size:${FONT.s}`};
 `
@@ -83,79 +79,91 @@ const Btn = styled.button`
   }
 `
 
-export default function UserUpdateBox({ popUp, setPopUp }) {
-  console.log(popUp)
-  const [updateUserInfo, setUpdateUserInfo] = useState({
-    nickname: '',
+export default function UserUpdateBox({
+  popUp,
+  setPopUp,
+  userData,
+  setUserData,
+}) {
+  const { userInfo } = useContext(AuthContext)
+  const history = useHistory()
+  if (!userInfo) history.push('/')
+  const { errMsg, setErrMsg, validateUserInfos } = useUserInfoValidation()
+  const [updateUserData, setUpdateUserData] = useState({
+    nickname: userData.nickname,
+    icon_url: userData.icon_url,
     password: '',
     confirmPassword: '',
   })
 
-  const { userInfo } = useContext(AuthContext)
-  const history = useHistory()
-  const { errMsg, setErrMsg, validateUserInfos } = useUserInfoValidation()
+  const handleUserInfoChange = (e) => {
+    const { name, value } = e.target
+    setUpdateUserData({
+      ...updateUserData,
+      [name]: value,
+    })
+  }
 
-  const handleUpdateUerSubmit = (e) => {
+  const handleSubmit = (e) => {
     if (!popUp.key) return
     e.preventDefault()
     setErrMsg('')
-    for (let i = 0; i < Object.keys(updateUserInfo).length; i++) {
-      if (!validateUserInfos(updateUserInfo, Object.keys(updateUserInfo)[i]))
+    for (let i = 0; i < Object.keys(updateUserData).length; i++) {
+      if (!validateUserInfos(updateUserData, Object.keys(updateUserData)[i]))
         return
     }
-    patchUserInfo(popUp.key)
+    patchUserInfo(popUp.key, updateUserData)
       .then((res) => {
-        console.log(res.data.data)
+        console.log(res.data)
         console.log('修改成功')
+        console.log(updateUserData)
+        setUserData({
+          ...userData,
+          nickname: updateUserData.nickname,
+          icon_url: updateUserData.icon_url,
+        })
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response)
         console.log('修改不成功')
       })
     setPopUp({ ...popUp, isShow: false })
   }
 
-  const handleUserInfoChange = (e) => {
-    setUpdateUserInfo({
-      ...updateUserInfo,
-      [e.target.name]: e.target.value,
-    })
-    console.log(updateUserInfo)
-  }
-
   return (
     <ModifyField>
-      <ModifyTitle>修改會員資料</ModifyTitle>
+      <Title>修改會員資料</Title>
+
       <InputWrapper>
         <AlertMsg $error>{errMsg}</AlertMsg>
+        <UserUploadImg
+          name='icon_url'
+          updateUserData={updateUserData}
+          setUpdateUserData={setUpdateUserData}
+        />
+        <AlertMsg>檔案大小限制為3MB</AlertMsg>
         <Input
           name='nickname'
           placeholder='使用者名稱'
-          required
           onChange={handleUserInfoChange}
+          value={updateUserData.nickname}
         />
-        <br />
         <AlertMsg>至多 20 個字元</AlertMsg>
         <Input
           name='password'
           type='password'
           placeholder='密碼'
           pattern='(?=.*\d)(?=.*[a-zA-Z])^[a-zA-Z0-9!@#$%^&*]{8,}$'
-          required
           onChange={handleUserInfoChange}
         />
-        <br />
         <AlertMsg>8 位以上的英數組合</AlertMsg>
-        <br />
         <Input
           name='confirmPassword'
           type='password'
           placeholder='確認密碼'
           pattern='(?=.*\d)(?=.*[a-zA-Z])^[a-zA-Z0-9!@#$%^&*]{8,}$'
-          required
           onChange={handleUserInfoChange}
         />
-        <br />
         <AlertMsg>請再次輸入密碼</AlertMsg>
       </InputWrapper>
       <BtnWrapper>
@@ -165,7 +173,7 @@ export default function UserUpdateBox({ popUp, setPopUp }) {
         >
           返回
         </Btn>
-        <Btn type='submit' onClick={handleUpdateUerSubmit}>
+        <Btn type='submit' onClick={handleSubmit}>
           確認
         </Btn>
       </BtnWrapper>

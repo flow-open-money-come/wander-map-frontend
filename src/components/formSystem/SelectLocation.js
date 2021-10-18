@@ -26,11 +26,18 @@ const Select = styled.select`
 
 export default function SelectLocation({ name, formData, setFormData }) {
   const [location, setLocation] = useState({
-    country: `${formData.location.slice(0, 3)}`,
-    state: `${formData.location.slice(3, 6)}`,
+    country: '',
+    state: '',
   })
+  /*
+  if (formData.location !== '') {
+    setLocation({
+      country: `${formData.location.slice(0, 3)}`,
+      state: `${formData.location.slice(3, 6)}`,
+    })
+  }
   console.log(location)
-
+*/
   const countries = countriesData.map((country) => (
     <option key={country.name} value={country.name}>
       {country.name}
