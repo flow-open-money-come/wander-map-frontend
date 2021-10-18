@@ -7,7 +7,6 @@ const instance = axios.create({
 })
 
 instance.interceptors.request.use((config) => {
-  // allow cookie on cross origin request
   config.withCredentials = true
   config.headers.Authorization = `Bearer ${getAuthToken()}`
   return config
@@ -18,6 +17,8 @@ export const userLogin = (payload) => instance.post('/users/login', payload)
 export const userRegister = (payload) =>
   instance.post('/users/register', payload)
 export const getAllUsers = (params) => instance.get('/users' + params)
+export const refreshAccessToken = () => instance.get('/users/refresh')
+export const userLogout = () => instance.get('/users/logout')
 
 // trails
 // get 相關
