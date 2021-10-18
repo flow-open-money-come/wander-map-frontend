@@ -272,7 +272,8 @@ const BinButton = styled.button`
 `
 
 export default function Comments({ isMessage }) {
-  const { id } = useParams()
+  let { id } = useParams()
+  const { trailID } = useParams()
   const [reminder, setReminder] = useState('')
   const { inputValue, setInputValue, handleInputChange } = useInput()
   const [messages, setMessages] = useState([])
@@ -280,9 +281,12 @@ export default function Comments({ isMessage }) {
   const [editing, setEditing] = useState(false)
   const { userInfo } = useContext(AuthContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
-
   function isMessageOrNot(message, comment) {
     return isMessage ? message : comment
+  }
+
+  if (trailID) {
+    id = trailID
   }
 
   useEffect(() => {
