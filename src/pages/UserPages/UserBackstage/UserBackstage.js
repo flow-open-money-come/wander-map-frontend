@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { getUserInfo } from '../../../WebAPI'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import UserUpdateBox from '../../../components/userSystem/UserUpdateBox '
@@ -12,6 +12,8 @@ import UserBackstageTabs from '../../../components/userSystem/UserBackstageTabs'
 import { ReactComponent as EditIcon } from '../../../icons/backstage/edit.svg'
 import { ReactComponent as EmailIcon } from '../../../icons/user/user_email.svg'
 import { ReactComponent as NicknameIcon } from '../../../icons/user/user_nickname.svg'
+import { AuthContext, LoadingContext } from '../../../context'
+import Loading from '../../../components/common/Loading'
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -113,6 +115,10 @@ const ModifyBtn = styled(EditIcon)`
 `
 
 export default function UserBackstage() {
+  const { userInfo } = useContext(AuthContext)
+  const history = useHistory()
+  if (!userInfo) history.push('/')
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [tab, setTab] = useState('Articles')
   const [popUp, setPopUp] = useState({
     key: '',
@@ -127,10 +133,12 @@ export default function UserBackstage() {
 
   const { userID } = useParams()
   useEffect(() => {
+    setIsLoading(true)
     getUserInfo(userID)
       .then((res) => {
         console.log(res.data)
         setUserData(res.data.data)
+        setIsLoading(false)
       })
       .catch((err) => {
         console.log(err.response.data)
@@ -142,38 +150,44 @@ export default function UserBackstage() {
   }
 
   return (
-    <Wrapper>
-      <MemberProfileWrapper>
-        <Avatar>
-          <AvatarPic src={`${userData.icon_url}`} />
-        </Avatar>
-        <Profile>
-          <ModifyBtn onClick={handleOnClick} />
-          {popUp.isShow === true && (
-            <UserUpdateBox
-              popUp={popUp}
-              setPopUp={setPopUp}
-              userData={userData}
-              setUserData={setUserData}
-            />
-          )}
-          <Info>
-            <NicknameIcon />
-            {userData.nickname}
-          </Info>
-          <Info>
-            <EmailIcon />
-            {userData.email}
-          </Info>
-        </Profile>
-      </MemberProfileWrapper>
-      <UsersManagementContainer>
-        <UserBackstageTabs tab={tab} setTab={setTab} />
-        {tab === 'Articles' && <UserArticlesManage setTab={setTab} />}
-        {tab === 'Todos' && <UserTodoItems setTab={setTab} />}
-        {tab === 'Collect' && <UserCollect setTab={setTab} />}
-        {tab === 'Like' && <UserLike setTab={setTab} />}
-      </UsersManagementContainer>
-    </Wrapper>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Wrapper>
+          <MemberProfileWrapper>
+            <Avatar>
+              <AvatarPic src={`${userData.icon_url}`} />
+            </Avatar>
+            <Profile>
+              <ModifyBtn onClick={handleOnClick} />
+              {popUp.isShow === true && (
+                <UserUpdateBox
+                  popUp={popUp}
+                  setPopUp={setPopUp}
+                  userData={userData}
+                  setUserData={setUserData}
+                />
+              )}
+              <Info>
+                <NicknameIcon />
+                {userData.nickname}
+              </Info>
+              <Info>
+                <EmailIcon />
+                {userData.email}
+              </Info>
+            </Profile>
+          </MemberProfileWrapper>
+          <UsersManagementContainer>
+            <UserBackstageTabs tab={tab} setTab={setTab} />
+            {tab === 'Articles' && <UserArticlesManage setTab={setTab} />}
+            {tab === 'Todos' && <UserTodoItems setTab={setTab} />}
+            {tab === 'Collect' && <UserCollect setTab={setTab} />}
+            {tab === 'Like' && <UserLike setTab={setTab} />}
+          </UsersManagementContainer>
+        </Wrapper>
+      )}
+    </>
   )
 }

@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { useParams, useHistory } from 'react-router-dom'
-import { postArticles, getArticles, patchArticle } from '../../../WebAPI'
+import {
+  postArticles,
+  postRelateTrail,
+  getArticles,
+  patchArticle,
+} from '../../../WebAPI'
 import { AuthContext } from '../../../context'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
@@ -175,9 +180,7 @@ export default function ArticlePostPage() {
 
   // 如有帶參數為修改心得
   const { articleID } = useParams()
-
   console.log(formData)
-
   useEffect(() => {
     if (!articleID) return
     getArticles(articleID)

@@ -83,6 +83,8 @@ export const recoverArticle = (articleID) =>
 
 // 新增編輯相關
 export const postArticles = (data) => instance.post('/articles', data)
+export const postRelateTrail = (articleID) =>
+  instance.patch(`/articles/${articleID}/relate-trail`)
 export const patchArticle = (articleID, data) =>
   instance.patch(`/articles/${articleID}`, data)
 

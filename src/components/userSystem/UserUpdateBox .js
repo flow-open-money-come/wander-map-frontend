@@ -85,12 +85,13 @@ export default function UserUpdateBox({
   userData,
   setUserData,
 }) {
-  const { userInfo } = useContext(AuthContext)
+  const { userInfo, setUserInfo } = useContext(AuthContext)
   const history = useHistory()
   if (!userInfo) history.push('/')
   const { errMsg, setErrMsg, validateUserInfos } = useUserInfoValidation()
   const [updateUserData, setUpdateUserData] = useState({
     nickname: userData.nickname,
+    iconUrl: userData.icon_url,
     icon_url: userData.icon_url,
     password: '',
     confirmPassword: '',
@@ -121,6 +122,10 @@ export default function UserUpdateBox({
           ...userData,
           nickname: updateUserData.nickname,
           icon_url: updateUserData.icon_url,
+        })
+        setUserInfo({
+          ...userInfo,
+          nickname: updateUserData.nickname,
         })
       })
       .catch((err) => {

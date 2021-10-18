@@ -214,6 +214,7 @@ export default function TrailPostPage() {
         console.log(err.response.data)
       })
   }, [])
+
   const handlePatchSubmit = (e) => {
     console.log(formData)
     e.preventDefault()
@@ -255,6 +256,7 @@ export default function TrailPostPage() {
             name='cover_picture_url'
             formData={formData}
             setFormData={setFormData}
+            value={formData.cover_picture_url}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -334,7 +336,11 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>建議季節</FormTitle>
         <FormSubTitleWrapper>
-          <SelectSeason name='season' handleInputChange={handleInputChange} />
+          <SelectSeason
+            name='season'
+            handleInputChange={handleInputChange}
+            value={formData.season}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -344,6 +350,7 @@ export default function TrailPostPage() {
             name='map_picture_url'
             formData={formData}
             setFormData={setFormData}
+            value={formData.map_picture_url}
           />
         </FormSubTitleWrapper>
       </FormWrapper>

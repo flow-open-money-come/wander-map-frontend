@@ -66,9 +66,9 @@ const ClearBtn = styled.button`
   }
 `
 
-export default function UploadImg({ name, formData, setFormData }) {
+export default function UploadImg({ name, formData, setFormData, value }) {
   const token = `${process.env.REACT_APP_IMGUR_TOKEN}`
-  const [fileSrc, setFileSrc] = useState(formData.cover_picture_url)
+  const [fileSrc, setFileSrc] = useState(value)
 
   const handleUploadFile = (e) => {
     if (!e.target.files[0]) return
@@ -105,7 +105,6 @@ export default function UploadImg({ name, formData, setFormData }) {
       .catch((err) => {
         console.log(err.response)
       })
-
     e.target.value = ''
   }
 

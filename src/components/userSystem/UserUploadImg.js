@@ -67,7 +67,7 @@ export default function UserUploadImg({
   setUpdateUserData,
 }) {
   const token = `${process.env.REACT_APP_IMGUR_TOKEN}`
-  const [fileSrc, setFileSrc] = useState(updateUserData.icon_url)
+  const [fileSrc, setFileSrc] = useState(updateUserData.iconUrl)
 
   const handleUploadFile = (e) => {
     if (!e.target.files[0]) return
