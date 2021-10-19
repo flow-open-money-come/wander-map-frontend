@@ -173,32 +173,28 @@ function ArticlePage() {
   }, [])
 
   return (
-    <>
-      <Wrapper>
-        {isLoading ? (
-          <Loading />
-        ) : (
-          <>
-            <CoverImg src={post.cover_picture_url} />
-            <ArticleTitleAndLikes>
-              <ArticleTitle>{post.title}</ArticleTitle>
-              <ArticleLikes>
-                <ThumbUp
-                  thumb={thumb}
-                  userInfo={userInfo}
-                  onClick={userInfo && handleClickLike}
-                />
-                {post.count + count}
-              </ArticleLikes>
-            </ArticleTitleAndLikes>
-            {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
-            <ArticleStandardInformation topElement>
-              地點：{post.location}
-            </ArticleStandardInformation>
-            <ArticleStandardInformation>
-              出發時間：{new Date(post.departure_time).toLocaleString()}
-            </ArticleStandardInformation>
-            {/* {post.time_spent ? (
+    <Wrapper>
+      {isLoading && <Loading />}
+      <CoverImg src={post.cover_picture_url} />
+      <ArticleTitleAndLikes>
+        <ArticleTitle>{post.title}</ArticleTitle>
+        <ArticleLikes>
+          <ThumbUp
+            thumb={thumb}
+            userInfo={userInfo}
+            onClick={userInfo && handleClickLike}
+          />
+          {post.count + count}
+        </ArticleLikes>
+      </ArticleTitleAndLikes>
+      {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
+      <ArticleStandardInformation topElement>
+        地點：{post.location}
+      </ArticleStandardInformation>
+      <ArticleStandardInformation>
+        出發時間：{new Date(post.departure_time).toLocaleString()}
+      </ArticleStandardInformation>
+      {/* {post.time_spent ? (
         <ArticleStandardInformation>
           行進時間：{post.time_spent} 小時
         </ArticleStandardInformation>
@@ -219,16 +215,13 @@ function ArticlePage() {
       ) : (
         ''
       )} */}
-            <ArticleContent post={post} />
-          </>
-        )}
-        <FlexGroup>
-          <ReviewIcon />
-          <CommentTitle>討論區</CommentTitle>
-        </FlexGroup>
-        <Comment isMessage={true} />
-      </Wrapper>
-    </>
+      <ArticleContent post={post} />
+      <FlexGroup>
+        <ReviewIcon />
+        <CommentTitle>討論區</CommentTitle>
+      </FlexGroup>
+      <Comment isMessage={true} />
+    </Wrapper>
   )
 }
 

@@ -148,7 +148,6 @@ const ArticleTags = styled.div`
 
   ${MEDIA_QUERY.lg} {
     position: static;
-    max-height: 60px;
     transform: translate(0);
   }
 `

@@ -11,6 +11,7 @@ const ArticlesContainer = styled(Link)`
   margin: 35px auto 0px auto;
   padding-bottom: 20px;
   border-bottom: ${COLOR.beige} 1px solid;
+  align-items: center;
 `
 
 const ArticlesImg = styled.img`

@@ -179,10 +179,6 @@ function AllArticlesPage() {
     // { tagId: 14, tagName: 'GPX', isChecked: false },
   ])
 
-  console.log(posts)
-  console.log(totalPosts)
-  console.log(overLoad)
-
   return isLoading ? (
     <Loading />
   ) : (

@@ -127,14 +127,14 @@ const CommentInfo = styled.div`
   justify-content: space-between;
 `
 
-const CommentViewInfo = styled(Link)`
+const CommentViewInfo = styled.div`
   display: flex;
   justify-content: start;
   align-items: center;
   width: 70%;
 `
 
-const CommentNickname = styled.div`
+const CommentNickname = styled(Link)`
   font-size: ${FONT.s};
   font-weight: bold;
   color: ${COLOR.green};
@@ -390,15 +390,24 @@ export default function Comments({ isMessage }) {
         {messages.map((message) => (
           <Card>
             <CommentInfo>
-              <CommentViewInfo
-                to={
-                  userInfo && userInfo.user_id === message.author_id
-                    ? `/backstage/${message.author_id}`
-                    : `/user/${message.author_id}`
-                }
-              >
-                <UserAvatar src={message.icon_url} />
-                <CommentNickname>{message.nickname}</CommentNickname>
+              <CommentViewInfo>
+                <UserAvatar
+                  to={
+                    userInfo && userInfo.user_id === message.author_id
+                      ? `/backstage/${message.author_id}`
+                      : `/user/${message.author_id}`
+                  }
+                  src={message.icon_url}
+                />
+                <CommentNickname
+                  to={
+                    userInfo && userInfo.user_id === message.author_id
+                      ? `/backstage/${message.author_id}`
+                      : `/user/${message.author_id}`
+                  }
+                >
+                  {message.nickname}
+                </CommentNickname>
               </CommentViewInfo>
               <CommentBtn>
                 <CommentTime>

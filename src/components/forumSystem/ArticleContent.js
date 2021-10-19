@@ -4,12 +4,11 @@ import { FONT, COLOR, MEDIA_QUERY, EFFECT } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 
-const UserName = styled.div`
-  margin-bottom: 5px;
+const UserName = styled(Link)`
+  color: ${COLOR.black};
 
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
-    padding-bottom: 5px;
   }
 `
 
@@ -22,12 +21,12 @@ const UserInfo = styled.div`
     font-size: ${FONT.s};
   }
 `
-const ArticleUser = styled(Link)`
+const ArticleUser = styled.div`
   display: flex;
-  color: ${COLOR.black};
 `
 const ArticleDate = styled.div`
   font-size: ${FONT.xs};
+  margin-top: 10px;
 
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
@@ -104,16 +103,18 @@ export default function ArticleContent({ post }) {
 
   return (
     <ArticleContentContainer>
-      <ArticleUser
-        to={
-          userInfo && userInfo.user_id === post.author_id
-            ? `/backstage/${post.author_id}`
-            : `/user/${post.author_id}`
-        }
-      >
+      <ArticleUser>
         <UserAvatar src={post.icon_url} />
         <UserInfo>
-          <UserName>{post.nickname}</UserName>
+          <UserName
+            to={
+              userInfo && userInfo.user_id === post.author_id
+                ? `/backstage/${post.author_id}`
+                : `/user/${post.author_id}`
+            }
+          >
+            {post.nickname}
+          </UserName>
           <ArticleDate>
             {new Date(post.created_at).toLocaleString('ja')}
           </ArticleDate>
