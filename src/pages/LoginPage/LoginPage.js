@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import useLogin from '../../hooks/useLogin'
+import SmallRegionLoading from '../../components/common/SmallRegionLoading'
 
 const LoginPageWrapper = styled.div`
   width: 100%;
@@ -109,10 +110,12 @@ const OuterLink = styled(Link)`
   color: ${COLOR.white};
 `
 export default function LoginPage() {
-  const { handleUserInfoChange, handleLogin, errMsg } = useLogin()
+  const { handleUserInfoChange, handleLogin, errMsg, isLoadingLogin } =
+    useLogin()
   return (
     <>
       <LoginPageWrapper>
+        {isLoadingLogin && <SmallRegionLoading />}
         <Title> 會員登入 </Title>
         <LoginFormsWrapper>
           <FormWrapper>

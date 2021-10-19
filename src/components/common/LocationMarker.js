@@ -6,6 +6,7 @@ import { useState, useContext } from 'react'
 import { getArticlesUnderTrail } from '../../WebAPI'
 import useDidMountEffect from '../../hooks/useDidMountEffect'
 import { ActiveTrailContext } from '../../context'
+import { LoadingContext } from '../../context'
 
 const Marker = styled(PinSvg)`
   width: 30px;
@@ -80,6 +81,7 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
   const { activeTrailArticles, setActiveTrailArticles } =
     useContext(ActiveTrailContext)
   const history = useHistory()
+  const { setIsLoading } = useContext(LoadingContext)
 
   const handleMarkerOnclick = () => {
     if (!(activeTrailArticles.activeTrailInfo.trailId === trailInfo.trail_id))
@@ -88,6 +90,7 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
 
   useDidMountEffect(() => {
     if (currentOnClickTrail === null) return
+    setIsLoading(true)
     getArticlesUnderTrail(currentOnClickTrail)
       .then((res) => {
         setActiveTrailArticles({
@@ -102,8 +105,12 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
           },
           articles: res.data.data,
         })
+        setIsLoading(false)
       })
-      .catch((err) => console.log(err.response))
+      .catch((err) => {
+        console.log(err.response)
+        setIsLoading(false)
+      })
 
     setCurrentOnClickTrail(null)
   }, [currentOnClickTrail])

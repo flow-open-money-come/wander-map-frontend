@@ -9,6 +9,7 @@ import useToggle from '../../hooks/useToggle'
 import { AuthContext } from '../../context'
 import { setAuthToken } from '../../utils'
 import { userLogout } from '../../WebAPI'
+import swal from 'sweetalert'
 
 const NavBarContainer = styled.div`
   width: 100%;
@@ -209,14 +210,30 @@ function NavBar() {
   const location = useLocation()
 
   const handleLogOut = () => {
-    if (location.pathname !== '/') history.push('/')
-    setAuthToken('')
-    setUserInfo(null)
-    userLogout()
-      .then((res) => {
-        if (res.data.success) alert('登出成功！ 期待再相逢～')
-      })
-      .catch((err) => console.log(err.response))
+    swal({
+      title: '確定登出嗎？',
+      icon: 'warning',
+      buttons: ['取消', '確定'],
+      dangerMode: true,
+    }).then((willLogout) => {
+      if (willLogout) {
+        userLogout()
+          .then((res) => {
+            if (res.data.success) {
+              setAuthToken('')
+              setUserInfo(null)
+              swal('登出成功！', {
+                icon: 'success',
+                button: '關閉',
+              })
+              if (location.pathname !== '/') history.push('/')
+            }
+          })
+          .catch((err) => {
+            console.log(err.response)
+          })
+      }
+    })
   }
 
   return (

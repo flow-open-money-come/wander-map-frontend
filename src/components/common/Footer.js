@@ -11,6 +11,7 @@ const FooterContainer = styled.footer`
   line-height: 30px;
   position: fixed;
   bottom: 0;
+  margin-top: 20px;
 `
 export default function Footer() {
   return (

@@ -8,6 +8,8 @@ import { ActiveTrailContext } from '../../context'
 import { getTrails } from '../../WebAPI'
 import useDebounce from '../../hooks/useDebounce'
 import useTrailConditions from '../../hooks/useTrailConditions'
+import { LoadingContext } from '../../context'
+import SmallRegionLoading from './SmallRegionLoading'
 
 const MapSearchBarWrapper = styled.div`
   width: 80%;
@@ -23,22 +25,22 @@ const Map = (props) => {
   const [matchTrailInfos, setMatchTrailInfos] = useState([])
   const { activeTrailArticles } = useContext(ActiveTrailContext)
   const { trailConditions } = useTrailConditions()
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
 
-  const handleSearchTrails = (debouncedKeyWord) => {
+  useEffect(() => {
     if (debouncedKeyWord) {
+      setIsLoading(true)
       getTrails(`?limit=126&search=${debouncedKeyWord}`)
         .then((res) => {
           if (res.data.success) setMatchTrailInfos(res.data.data)
+          setIsLoading(false)
         })
         .catch((err) => {
           console.log(err)
+          setIsLoading(false)
         })
     }
-  }
-
-  useEffect(() => {
-    handleSearchTrails(debouncedKeyWord)
-  }, [debouncedKeyWord])
+  }, [debouncedKeyWord, setIsLoading])
 
   return (
     <div
@@ -64,6 +66,7 @@ const Map = (props) => {
         yesIWantToUseGoogleMapApiInternals
         center={activeTrailArticles.activeTrailInfo.center}
       >
+        {isLoading && <SmallRegionLoading />}
         {matchTrailInfos.length > 0 ? (
           matchTrailInfos.map((trailInfo) => {
             let trailConditionsObj = Object.assign({}, ...trailConditions)

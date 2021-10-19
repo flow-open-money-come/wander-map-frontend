@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import useRegister from '../../hooks/useRegister'
+import SmallRegionLoading from '../../components/common/SmallRegionLoading'
 
 const RegisterPageWrapper = styled.div`
   width: 100%;
@@ -108,11 +109,13 @@ const OuterLink = styled(Link)`
   color: ${COLOR.white};
 `
 export default function RegisterPage() {
-  const { handleUserInfoChange, handleRegister, errMsg } = useRegister()
+  const { handleUserInfoChange, handleRegister, errMsg, isLoadingRegister } =
+    useRegister()
 
   return (
     <>
       <RegisterPageWrapper>
+        {isLoadingRegister && <SmallRegionLoading />}
         <Title> 註冊成為會員，和大家分享心得吧！ </Title>
         <RegisterFormsWrapper>
           <FormWrapper>
