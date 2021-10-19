@@ -18,14 +18,14 @@ import TrailReviews from '../../../components/trailSystem/TrailReviews'
 import {
   getTrails,
   getTrailArticles,
-  collectTrail,
-  cancelCollected,
   getUserCollectedTrails
 } from '../../../WebAPI'
 import { useHistory } from 'react-router-dom'
-import { AuthContext } from '../../../context'
+import { AuthContext, LoadingContext } from '../../../context'
 import { getAuthToken } from '../../../utils'
-import { object } from 'prop-types'
+import useLike from '../../../hooks/useLike'
+import Loading from '../../../components/common/Loading'
+
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -112,19 +112,13 @@ const CollectBlock = styled.div`
     margin: 0 2px;
     width: 15px;
     height: 15px;
-    fill: ${(props) => (props.$match ? `${COLOR.green}` : ``)};
+    fill: ${(props) => (props.thumb ? `${COLOR.green}` : ``)};
   }
   path {
-    stroke: ${(props) => (props.$match ? `${COLOR.green}` : `${COLOR.white}`)};
+    stroke: ${(props) => (props.thumb ? `${COLOR.green}` : `${COLOR.white}`)};
   }
   &:hover {
     cursor: pointer;
-    svg {
-      fill: ${COLOR.green};
-    }
-    path {
-      stroke: ${COLOR.green};
-    }
   }
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.logo};
@@ -164,69 +158,44 @@ const InfoAndWeather = styled.div`
   }
 `
 
-const trailDefault = {
-    trail_id: 2,
-    title: '南澳古道',
-    description:
-      '南澳古道位在南澳鄉金洋村，是通往泰雅族舊部落的路徑之一，為「舊武塔古道」的一部分，也是泰雅族的傳統獵場。自旋檀駐在所遺址起，循南澳南溪上溯至古道終點，至合流溪與南澳南溪匯流口，共 3.8 公里。沿途平緩好走，野生動植物生態豐富，沿途有吊橋遺址、警備道路基等遺跡。',
-    location: '宜蘭縣南澳鄉',
-    coordinate: {
-      x: 121.70835976400171,
-      y: 24.42360428661788
-    },
-    altitude: 350,
-    length: 3.8,
-    season: '四季皆宜',
-    difficulty: '入門',
-    cover_picture_url:
-      'https://tluxe-aws.hmgcdn.com/public/article/2017/atl_20180628130517_581.jpg',
-    map_picture_url: 'https://recreation.forest.gov.tw/Files/RT/Photo/002/01/002_MAP.jpg',
-    situation: '木棧道、碎石山徑'
-}
-
 function TrailPage() {
-  const { trailID } = useParams()
-  const [trailInfo, setTrailInfo] = useState(trailDefault)
+  const { id } = useParams()
+  const [trailInfo, setTrailInfo] = useState('')
   const [articles, setArticles] = useState(null)
-  const [collectedMatch, setCollectedMatch] = useState(false)
-  const [toggleChange, setToggleChange] = useState(true)
   const { userInfo } = useContext(AuthContext)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const history = useHistory()
+  const { thumb, setThumb, handleClickLike } = useLike()
   
   console.log('userInfo', userInfo)
 
   useEffect(() => {
-    getTrails(trailID)
+    setIsLoading(true)
+    getTrails(id)
       .then((res) => {
-        res.data.data[0] ? setTrailInfo(res.data.data[0]) : history.push(`/trails`)})
+        res.data.data[0] ? setTrailInfo(res.data.data[0]) : history.push(`/trails`)
+        setIsLoading(false)})
       .catch((error) => console.error(error))
-    getTrailArticles(trailID, '?limit=3')
+    getTrailArticles(id, '?limit=3')
       .then((res) => setArticles(res.data.data))
       .catch((error) => console.error(error))
-  }, [trailID, history])
+  }, [id, history, setIsLoading])
 
   useEffect(() => {
-    //假如useContext拿不到userInfo資料就會出錯（理論上不會拿不到?），這邊先隔出來試
     getUserCollectedTrails(userInfo.user_id)
-      .then((res) => {
-        const userCollected = (res.data.data.trails)
-        const match = userCollected.some((collection) => collection.trail_id === Number(trailID))
-        setCollectedMatch(match)
-        console.log('getttt')
-      })
+      .then((res) =>
+        res.data.data.trails.forEach((trail) => {
+          if (trail.trail_id === id) setThumb(true)
+        })
+      )
       .catch((error) => console.error(error))
-  }, [userInfo, trailID, toggleChange ])
-
-
-  console.log('collectedMatch', collectedMatch)
-
-
-  const handleToggleCollect = (userID, trailID, collectedMatch) => {
-    collectedMatch ? cancelCollected(userID, trailID) : collectTrail(userID, trailID)
-    setToggleChange(!toggleChange)
-  }
+  }, [userInfo, id, setThumb])
 
   return (
+  <>  
+    {isLoading ? (
+        <Loading />
+      ) : (
     <TrailPageContainer>
       <HeadFlex>
         <Cover src={trailInfo && trailInfo.cover_picture_url} />
@@ -235,11 +204,7 @@ function TrailPage() {
           <Desc>{trailInfo && trailInfo.description}</Desc>
         </TitleAndDesc>
         {userInfo && (
-          <CollectBlock
-            onClick={() => {
-              handleToggleCollect(userInfo.user_id, trailID, collectedMatch)
-            }}
-            $match={collectedMatch}
+          <CollectBlock thumb={thumb} userInfo={userInfo} onClick={userInfo && handleClickLike}
           >
             <CollectIcon />
           </CollectBlock>
@@ -256,6 +221,8 @@ function TrailPage() {
       {articles && articles.length !== 0 && <TrailArticles articles={articles} />}
       <TrailReviews />
     </TrailPageContainer>
+    )}
+  </>
   )
 }
 

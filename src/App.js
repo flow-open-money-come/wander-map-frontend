@@ -97,7 +97,7 @@ function App() {
               <Route path='/articles/:id'>
                 <ArticlePage />
               </Route>
-              <Route path='/trails/:trailID'>
+              <Route path='/trails/:id'>
                 <TrailPage />
               </Route>
             </Switch>

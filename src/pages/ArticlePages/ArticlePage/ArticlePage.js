@@ -150,20 +150,15 @@ function ArticlePage() {
 
   useEffect(() => {
     const getLike = async () => {
-      setIsLoading(true)
       try {
         let res = await apiArticleGetLike(userInfo.user_id)
-        console.log(res)
-        if (
+        if (res.status === 200) {
           res.data.data.articles.map((article) => {
             if (article.article_id == id) {
-              return true
+              setThumb(true)
             }
           })
-        ) {
-          setThumb(true)
         }
-        setIsLoading(false)
       } catch (err) {
         console.log(err)
       }
@@ -181,14 +176,14 @@ function ArticlePage() {
           <ArticleTitleAndLikes>
             <ArticleTitle>{post.title}</ArticleTitle>
             <ArticleLikes>
-              {userInfo && <ThumbUp thumb={thumb} onClick={handleClickLike} />}
+              {userInfo && (
+                <ThumbUp thumb={thumb} userInfo={userInfo} onClick={userInfo && handleClickLike} />
+              )}
               {/* {post.likes} */}
             </ArticleLikes>
           </ArticleTitleAndLikes>
           {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
-          <ArticleStandardInformation topElement>
-            地點：{post.location}
-          </ArticleStandardInformation>
+          <ArticleStandardInformation topElement>地點：{post.location}</ArticleStandardInformation>
           <ArticleStandardInformation>
             出發時間：{new Date(post.departure_time).toLocaleString()}
           </ArticleStandardInformation>

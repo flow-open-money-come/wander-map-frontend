@@ -1,10 +1,9 @@
 import axios from 'axios'
 import config from './config'
 import { getAuthToken } from './utils'
-import { locationNameToCode } from './components/trailSystem/weatherUtils'
 
 const instance = axios.create({
-  baseURL: config.apiHost
+  baseURL: config.apiHost2
 })
 
 instance.interceptors.request.use((config) => {
@@ -22,9 +21,9 @@ export const userLogout = () => instance.get('/users/logout')
 
 export const getUserCollectedTrails = (userID) => instance.get(`/users/${userID}/collected-trails`)
 export const collectTrail = (userID, trailID) =>
-  instance.post('/users/' + userID + '/collected-trails' , { trail_id: trailID })
+  instance.post(`/users/${userID}/collected-trails`, { trail_id: trailID })
 export const cancelCollected = (userID, trailID) =>
-  instance.delete('/users/' + userID + '/collected-trails/' + trailID)
+  instance.delete(`/users/${userID}/collected-trails/${trailID}`)
 
 export const changeUserRole = (userID, role) => instance.patch('/users/' + userID, { role: role })
 
