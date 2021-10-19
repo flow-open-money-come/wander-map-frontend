@@ -42,8 +42,8 @@ const DropDownCheckBoxes = styled.div`
   ${(props) =>
     props.$isActive &&
     `
-    height: 145px;
-    overflow: scroll;
+    height: 130px;
+    overflow-y: scroll;
     box-shadow: ${EFFECT.shadow_light};
     `}
 `

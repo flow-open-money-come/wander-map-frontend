@@ -56,11 +56,10 @@ export const apiCommentsDelete = (articleId, messageId) =>
 export const getArticles = (params) => instance.get('/articles/' + params)
 export const apiArticles = () => instance.get('/articles')
 export const apiArticle = (articleId) => instance.get(`/articles/${articleId}`)
+
 export const apiArticlesHot = () => instance.get('/articles/hot')
 export const getTrailArticles = (trailID, params) =>
   instance.get('/trails/' + trailID + '/articles' + params)
-export const getArticlesUnderTrail = (TrailId) =>
-  instance.get('/trails/' + TrailId + '/articles')
 
 // 刪除復原相關
 export const deleteArticle = (articleID) =>

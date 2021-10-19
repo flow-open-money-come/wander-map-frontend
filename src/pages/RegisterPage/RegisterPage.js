@@ -115,7 +115,7 @@ export default function RegisterPage() {
   return (
     <>
       <RegisterPageWrapper>
-        {isLoadingRegister && <SmallRegionLoading />}
+        {isLoadingRegister && <SmallRegionLoading isFullScreen />}
         <Title> 註冊成為會員，和大家分享心得吧！ </Title>
         <RegisterFormsWrapper>
           <FormWrapper>

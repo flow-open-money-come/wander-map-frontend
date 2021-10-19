@@ -4,6 +4,7 @@ import { COLOR, FONT } from '../../constants/style'
 const FooterContainer = styled.footer`
   width: 100%;
   max-height: 60px;
+  padding: 0px 10px;
   background-color: ${COLOR.green};
   color: ${COLOR.white};
   font-size: ${FONT.s};

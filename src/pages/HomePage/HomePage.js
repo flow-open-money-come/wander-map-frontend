@@ -5,7 +5,7 @@ import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
 import { ActiveTrailContext } from '../../context'
 import { useState, useEffect } from 'react'
-import { getArticlesUnderTrail } from '../../WebAPI'
+import { getTrailArticles } from '../../WebAPI'
 
 const HomepageContainer = styled.div`
   width: 90%;
@@ -23,13 +23,14 @@ const HomePageWrapper = styled.div`
 `
 const MapWrapper = styled.div`
   width: 100%;
-  height: 600px;
+  height: 450px;
   border: 1px solid ${COLOR.beige};
   border-radius: ${RADIUS.md};
   overflow: hidden;
   z-index: 0;
   ${MEDIA_QUERY.lg} {
     width: 50%;
+    height: 600px;
     border-radius: 0px ${RADIUS.md} ${RADIUS.md} 0px;
   }
 `
@@ -112,8 +113,7 @@ function HomePage() {
   })
 
   useEffect(() => {
-    // setIsLoading(true)
-    getArticlesUnderTrail(1)
+    getTrailArticles(1, '')
       .then((res) => {
         if (res.data.success) {
           setActiveTrailArticles({
@@ -129,7 +129,6 @@ function HomePage() {
             articles: res.data.data,
           })
         }
-        // setIsLoading(false)
       })
       .catch((err) => {
         console.log(err)

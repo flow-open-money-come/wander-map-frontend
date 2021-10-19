@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useContext } from 'react'
 import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
 import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
@@ -7,9 +7,7 @@ import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { NavBarButton } from './Button'
 import useToggle from '../../hooks/useToggle'
 import { AuthContext } from '../../context'
-import { setAuthToken } from '../../utils'
-import { userLogout } from '../../WebAPI'
-import swal from 'sweetalert'
+import useLogout from '../../hooks/useLogout'
 
 const NavBarContainer = styled.div`
   width: 100%;
@@ -207,36 +205,8 @@ const Trail = styled(TrailSvg)`
 
 function NavBar() {
   const [HamburgerToggleClick, setHamburgerToggleClick] = useToggle(false)
-  const { userInfo, setUserInfo } = useContext(AuthContext)
-  const history = useHistory()
-  const location = useLocation()
-
-  const handleLogOut = () => {
-    swal({
-      title: '確定登出嗎？',
-      icon: 'warning',
-      buttons: ['取消', '確定'],
-      dangerMode: true,
-    }).then((willLogout) => {
-      if (willLogout) {
-        userLogout()
-          .then((res) => {
-            if (res.data.success) {
-              setAuthToken('')
-              setUserInfo(null)
-              swal('登出成功！', {
-                icon: 'success',
-                button: '關閉',
-              })
-              if (location.pathname !== '/') history.push('/')
-            }
-          })
-          .catch((err) => {
-            console.log(err.response)
-          })
-      }
-    })
-  }
+  const { userInfo } = useContext(AuthContext)
+  const { handleLogOut } = useLogout()
 
   return (
     <>
@@ -263,7 +233,11 @@ function NavBar() {
                   $noBackground
                 >
                   <Avatar
-                    to={`/backstage/${userInfo.user_id}`}
+                    to={
+                      userInfo.role === 'admin'
+                        ? `/admin`
+                        : `/backstage/${userInfo.user_id}`
+                    }
                     $avatar={
                       userInfo.icon_url !== null ? userInfo.icon_url : false
                     }

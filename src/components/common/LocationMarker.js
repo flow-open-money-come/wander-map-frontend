@@ -3,7 +3,7 @@ import { useHistory } from 'react-router'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { ReactComponent as PinSvg } from '../../icons/pin.svg'
 import { useState, useContext } from 'react'
-import { getArticlesUnderTrail } from '../../WebAPI'
+import { getTrailArticles } from '../../WebAPI'
 import useDidMountEffect from '../../hooks/useDidMountEffect'
 import { ActiveTrailContext } from '../../context'
 import { LoadingContext } from '../../context'
@@ -91,7 +91,7 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
   useDidMountEffect(() => {
     if (currentOnClickTrail === null) return
     setIsLoading(true)
-    getArticlesUnderTrail(currentOnClickTrail)
+    getTrailArticles(currentOnClickTrail, '')
       .then((res) => {
         setActiveTrailArticles({
           activeTrailInfo: {

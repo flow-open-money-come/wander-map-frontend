@@ -51,7 +51,7 @@ export default function useRegister() {
       })
       .catch((err) => {
         if (err) {
-          setErrMsg(err.response.data.message)
+          setErrMsg(err.response.data.data.errors[0].msg)
           setIsLoadingRegister(false)
         }
       })

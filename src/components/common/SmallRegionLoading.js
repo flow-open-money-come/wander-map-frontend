@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { COLOR } from '../../constants/style'
 
 const LoadingWrapper = styled.div`
+  z-index: 10;
   display: inline-block;
   width: 80px;
   height: 80px;
