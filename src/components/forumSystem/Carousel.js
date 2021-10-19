@@ -1,13 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { ReactComponent as Right_Arrow } from '../../icons/arrow_right.svg'
 import { ReactComponent as Left_Arrow } from '../../icons/arrow_left.svg'
 import { ReactComponent as Thumb } from '../../icons/thumb_up.svg'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
-
-// Carousel
+import { AuthContext } from '../../context'
 
 const SlideImage = styled.img`
   width: 100%;
@@ -29,40 +28,31 @@ const Slider = styled.div`
   align-items: center;
 `
 
-const ImageContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  margin: 10px;
-
-  ${MEDIA_QUERY.lg} {
-    display: flex;
-    border-radius: ${RADIUS.lg};
-    background: ${COLOR.white};
-    width: 90%;
-    height: 300px;
-    margin: 20px;
-    box-shadow: ${EFFECT.shadow_light};
-  }
-`
-
 const LeftArrow = styled(Left_Arrow)`
   position: absolute;
-  top: 50%;
-  left: -20px;
+  top: 43%;
+  left: -15px;
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
+  ${MEDIA_QUERY.md} {
+    top: 50%;
+    left: -20px;
+  }
 `
 
 const RightArrow = styled(Right_Arrow)`
   position: absolute;
-  top: 50%;
-  right: -20px;
+  top: 43%;
+  right: -15px;
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
+  ${MEDIA_QUERY.md} {
+    top: 50%;
+    right: -20px;
+  }
 `
-// 幻燈片文章內容
 
 const ArticleInfoContainer = styled.div`
   display: flex;
@@ -184,17 +174,6 @@ const ArticleTag = styled.div`
   }
 `
 
-const ReadMore = styled(Link)`
-  display: none;
-  font-size: ${FONT.s};
-
-  ${MEDIA_QUERY.md} {
-    display: inline;
-    color: ${COLOR.gray};
-    cursor: pointer;
-  }
-`
-
 const ArticleInfo = styled.div`
   display: none;
 
@@ -218,10 +197,11 @@ const UserInfo = styled.div`
     padding-top: 10px;
   }
 `
-const ArticleUser = styled.div`
+const ArticleUser = styled(Link)`
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
+  color: ${COLOR.black};
 
   ${MEDIA_QUERY.md} {
     margin-top: 9px;
@@ -232,13 +212,33 @@ const ArticleDate = styled.div`
 `
 
 const UserAvatar = styled.img`
+  border: 1px solid ${COLOR.gray_light};
+  border-radius: 50%;
   width: 45px;
   height: 45px;
+`
+
+const SlideLink = styled(Link)`
+  color: ${COLOR.black};
+  width: 100%;
+  height: 100%;
+  margin: 10px;
+
+  ${MEDIA_QUERY.lg} {
+    display: flex;
+    border-radius: ${RADIUS.lg};
+    background: ${COLOR.white};
+    width: 90%;
+    height: 300px;
+    margin: 20px;
+    box-shadow: ${EFFECT.shadow_light};
+  }
 `
 
 export default function Carousel({ slides }) {
   const [current, setCurrent] = useState(0)
   const length = slides.length
+  const { userInfo } = useContext(AuthContext)
 
   if (!Array.isArray(slides) || slides.length === 0) {
     return null
@@ -256,52 +256,53 @@ export default function Carousel({ slides }) {
     <Slider>
       <LeftArrow onClick={prevSlide}></LeftArrow>
       <RightArrow onClick={nextSlide}></RightArrow>
-      <ImageContainer>
-        {slides.map((slide, index) => {
-          return (
-            <>
-              {index === current && (
-                <>
-                  <SlideImage src={slide.cover_picture_url} />
-                  <ArticleInfoContainer>
-                    <ArticleTitleAndLikes>
-                      <ArticleTitle>{slide.title}</ArticleTitle>
-                      <ArticleLikes>
-                        {/* {slide.likes} */}
-                        <ThumbUp />
-                      </ArticleLikes>
-                    </ArticleTitleAndLikes>
-                    <ArticleTags>
-                      {!slide.tag_names ? (
-                        <ArticleTag noTag></ArticleTag>
-                      ) : (
-                        slide.tag_names.split(',').map((tag) => {
-                          return <ArticleTag>{tag}</ArticleTag>
-                        })
-                      )}
-                    </ArticleTags>
-                    <ArticleContent>{slide.content}</ArticleContent>
-                    <ArticleInfo>
-                      <ArticleUser>
-                        {/* <UserAvatar src={slide.user_icon} /> */}
-                        <UserInfo>
-                          {/* <UserName>{slide.nickname}</UserName> */}
-                          <ArticleDate>
-                            {new Date(slide.created_at).toLocaleString('ja')}
-                          </ArticleDate>
-                        </UserInfo>
-                      </ArticleUser>
-                      <ReadMore to={`/articles/${slide.article_id}`}>
-                        閱讀全文
-                      </ReadMore>
-                    </ArticleInfo>
-                  </ArticleInfoContainer>
-                </>
-              )}
-            </>
-          )
-        })}
-      </ImageContainer>
+      {slides.map((slide, index) => {
+        return (
+          <>
+            {index === current && (
+              <SlideLink to={`/articles/${slide.article_id}`}>
+                <SlideImage src={slide.cover_picture_url} />
+                <ArticleInfoContainer>
+                  <ArticleTitleAndLikes>
+                    <ArticleTitle>{slide.title}</ArticleTitle>
+                    <ArticleLikes>
+                      {slide.count}
+                      <ThumbUp />
+                    </ArticleLikes>
+                  </ArticleTitleAndLikes>
+                  <ArticleTags>
+                    {!slide.tag_names ? (
+                      <ArticleTag noTag></ArticleTag>
+                    ) : (
+                      slide.tag_names.split(',').map((tag) => {
+                        return <ArticleTag>{tag}</ArticleTag>
+                      })
+                    )}
+                  </ArticleTags>
+                  <ArticleContent>{slide.content}</ArticleContent>
+                  <ArticleInfo>
+                    <ArticleUser
+                      to={
+                        userInfo && userInfo.user_id === slide.author_id
+                          ? `/backstage/${slide.author_id}`
+                          : `/user/${slide.author_id}`
+                      }
+                    >
+                      <UserAvatar src={slide.icon_url} />
+                      <UserInfo>
+                        <UserName>{slide.nickname}</UserName>
+                        <ArticleDate>
+                          {new Date(slide.created_at).toLocaleString('ja')}
+                        </ArticleDate>
+                      </UserInfo>
+                    </ArticleUser>
+                  </ArticleInfo>
+                </ArticleInfoContainer>
+              </SlideLink>
+            )}
+          </>
+        )
+      })}
     </Slider>
   )
 }

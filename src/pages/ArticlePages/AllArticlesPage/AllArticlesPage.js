@@ -59,17 +59,17 @@ const LoadMoreBtn = styled.button`
   font-size: ${FONT.md};
   margin: 50px 0px 100px 50%;
   transform: translate(-50%);
-
-  ${(props) =>
-    props.overLoad &&
-    `
-    color: ${COLOR.gray_light};
-    pointer-events:none;
-  `}
 `
 const ArticleListWrapper = styled.div`
   width: 90%;
   margin: 0 auto;
+
+  ${(props) =>
+    props.overLoad &&
+    `
+      margin: 0 auto 100px auto;
+
+  `}
 `
 
 const NoRelatedArticleNotice = styled.div`
@@ -87,6 +87,7 @@ function AllArticlesPage() {
   const [filterData, setFilterData] = useState()
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const params = useRef(5)
+  const [totalPosts, setTotalPosts] = useState()
   let overLoad = false
 
   useEffect(() => {
@@ -116,6 +117,7 @@ function AllArticlesPage() {
       .then((res) => {
         if (res.data.success) {
           setPosts(res.data.data)
+          setTotalPosts(Number(Object.values(res.headers)[2]))
         }
       })
       .catch((err) => {
@@ -138,6 +140,7 @@ function AllArticlesPage() {
       .then((res) => {
         if (res.data.success) {
           setPosts(posts.concat(res.data.data))
+          setTotalPosts(Number(Object.values(res.headers)[2]))
         }
       })
       .catch((err) => {
@@ -155,7 +158,7 @@ function AllArticlesPage() {
     setFilterData('')
   }
 
-  if (params.current > posts.length) {
+  if (posts.length >= totalPosts) {
     overLoad = true
   }
 
@@ -173,8 +176,12 @@ function AllArticlesPage() {
     { tagId: 11, tagName: '需專業裝備', isChecked: false },
     { tagId: 12, tagName: '登山小白體驗', isChecked: false },
     { tagId: 13, tagName: '專業老手分享', isChecked: false },
-    { tagId: 14, tagName: 'GPX', isChecked: false },
+    // { tagId: 14, tagName: 'GPX', isChecked: false },
   ])
+
+  console.log(posts)
+  console.log(totalPosts)
+  console.log(overLoad)
 
   return isLoading ? (
     <Loading />
@@ -195,7 +202,7 @@ function AllArticlesPage() {
         handleClickSearch={handleClickSearch}
         handleClickCross={handleClickCross}
       />
-      <ArticleListWrapper>
+      <ArticleListWrapper overLoad={overLoad}>
         {posts.map((post) => {
           return (
             <ArticleList
@@ -207,12 +214,14 @@ function AllArticlesPage() {
               content={post.content}
               avatarImgSrc={post.user_icon}
               articlePage={`/articles/${post.article_id}`}
+              authorId={post.author_id}
             />
           )
         })}
-        {tagValue && posts.length === 0 ? (
+        {tagValue && posts.length === 0 && (
           <NoRelatedArticleNotice>暫無相關文章</NoRelatedArticleNotice>
-        ) : (
+        )}
+        {posts.length !== 0 && !overLoad && (
           <LoadMoreBtn overLoad={overLoad} onClick={handleClickLoadMore}>
             看更多
           </LoadMoreBtn>

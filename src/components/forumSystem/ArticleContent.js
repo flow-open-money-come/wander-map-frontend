@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY, EFFECT } from '../../constants/style'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../context'
 
 const UserName = styled.div`
   margin-bottom: 5px;
@@ -34,6 +35,8 @@ const ArticleDate = styled.div`
 `
 
 const UserAvatar = styled.img`
+  border: 1px solid ${COLOR.gray_light};
+  border-radius: 50%;
   width: 30px;
   height: 30px;
 
@@ -95,19 +98,28 @@ const UnfoldButton = styled.button`
   }
 `
 
-export default function ArticleContent({ content, authorId }) {
+export default function ArticleContent({ post }) {
   const [unfold, setUnfold] = useState(false)
+  const { userInfo } = useContext(AuthContext)
 
   return (
     <ArticleContentContainer>
-      <ArticleUser to={`/user/${authorId}`}>
-        <UserAvatar src='https://i.imgur.com/eGREu6v.png' />
+      <ArticleUser
+        to={
+          userInfo && userInfo.user_id === post.author_id
+            ? `/backstage/${post.author_id}`
+            : `/user/${post.author_id}`
+        }
+      >
+        <UserAvatar src={post.icon_url} />
         <UserInfo>
-          <UserName>水貓怪怪</UserName>
-          <ArticleDate>2021.9.7 / 20:20:22</ArticleDate>
+          <UserName>{post.nickname}</UserName>
+          <ArticleDate>
+            {new Date(post.created_at).toLocaleString('ja')}
+          </ArticleDate>
         </UserInfo>
       </ArticleUser>
-      <ArticleDesc unfold={unfold}>{content}</ArticleDesc>
+      <ArticleDesc unfold={unfold}>{post.content}</ArticleDesc>
       <UnfoldButton unfold={unfold} onClick={() => setUnfold(!unfold)}>
         {unfold ? '收合' : '展開全文'}
       </UnfoldButton>

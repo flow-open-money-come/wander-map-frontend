@@ -36,6 +36,7 @@ const CommentsHeader = styled.div`
 `
 
 const UserAvatar = styled.img`
+  border: 1px solid ${COLOR.gray_light};
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -217,10 +218,10 @@ const EditInput = styled.textarea`
   border-radius: ${RADIUS.s};
   margin-top: 10px;
   line-height: 1.5em;
-  opacity: 0.7;
   padding-left: 5px;
   min-width: 80%;
   padding: 5px;
+  background: ${COLOR.white};
 `
 
 const SendBtn = styled.button`
@@ -362,119 +363,119 @@ export default function Comments({ isMessage }) {
   }
   return (
     <>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <CommentsContainer>
-          {reminder === 1 && userInfo && (
-            <Reminder reminder={reminder}>請輸入內容</Reminder>
-          )}
-          <CommentsHeader>
-            <UserAvatar
-              src={
-                userInfo ? userInfo.icon_url : 'https://i.imgur.com/r50z0vv.png'
-              }
-            />
-            <InputField
-              userInfo={userInfo}
-              value={inputValue}
-              onChange={(e) => {
-                handleInputChange(e)
-                setReminder('')
-              }}
-              placeholder={!userInfo ? '請登入發表留言' : '請輸入留言...'}
-            />
-            <SentBtn onClick={(e) => handleSubmit(e)}>
-              <SendIcon />
-            </SentBtn>
-          </CommentsHeader>
-          {messages.map((message) => (
-            <Card>
-              <CommentInfo>
-                <CommentViewInfo to={`/user/${message.author_id}`}>
-                  <UserAvatar src={message.icon_url} />
-                  <CommentNickname>{message.nickname}</CommentNickname>
-                </CommentViewInfo>
-                <CommentBtn>
-                  <CommentTime>
-                    {new Date(message.created_at).toLocaleString('ja')}
-                  </CommentTime>
-                  {userInfo &&
-                    (userInfo.user_id === message.author_id ||
-                      userInfo.role === 'admin') && (
-                      <>
-                        <EditButton
-                          id={isMessageOrNot(
-                            message.message_id,
-                            message.comment_id
-                          )}
-                          onClick={handlePopUpInput}
-                        />
-                        <BinButton
-                          id={isMessageOrNot(
-                            message.message_id,
-                            message.comment_id
-                          )}
-                          onClick={(e) => {
-                            handleDeleteMessage(e)
-                          }}
-                        />
-                      </>
-                    )}
-                </CommentBtn>
-              </CommentInfo>
-              {Number(editing) ===
-              isMessageOrNot(message.message_id, message.comment_id) ? (
-                <EditWrapper>
-                  <EditInput
-                    rows='3'
+      {isLoading && <Loading />}
+      <CommentsContainer>
+        {reminder === 1 && userInfo && (
+          <Reminder reminder={reminder}>請輸入內容</Reminder>
+        )}
+        <CommentsHeader>
+          <UserAvatar
+            src={
+              userInfo ? userInfo.icon_url : 'https://i.imgur.com/r50z0vv.png'
+            }
+          />
+          <InputField
+            userInfo={userInfo}
+            value={inputValue}
+            onChange={(e) => {
+              handleInputChange(e)
+              setReminder('')
+            }}
+            placeholder={!userInfo ? '請登入發表留言' : '請輸入留言...'}
+          />
+          <SentBtn onClick={(e) => handleSubmit(e)}>
+            <SendIcon />
+          </SentBtn>
+        </CommentsHeader>
+        {messages.map((message) => (
+          <Card>
+            <CommentInfo>
+              <CommentViewInfo
+                to={
+                  userInfo && userInfo.user_id === message.author_id
+                    ? `/backstage/${message.author_id}`
+                    : `/user/${message.author_id}`
+                }
+              >
+                <UserAvatar src={message.icon_url} />
+                <CommentNickname>{message.nickname}</CommentNickname>
+              </CommentViewInfo>
+              <CommentBtn>
+                <CommentTime>
+                  {new Date(message.created_at).toLocaleString('ja')}
+                </CommentTime>
+                {userInfo &&
+                  (userInfo.user_id === message.author_id ||
+                    userInfo.role === 'admin') && (
+                    <>
+                      <EditButton
+                        id={isMessageOrNot(
+                          message.message_id,
+                          message.comment_id
+                        )}
+                        onClick={handlePopUpInput}
+                      />
+                      <BinButton
+                        id={isMessageOrNot(
+                          message.message_id,
+                          message.comment_id
+                        )}
+                        onClick={(e) => {
+                          handleDeleteMessage(e)
+                        }}
+                      />
+                    </>
+                  )}
+              </CommentBtn>
+            </CommentInfo>
+            {Number(editing) ===
+            isMessageOrNot(message.message_id, message.comment_id) ? (
+              <EditWrapper>
+                <EditInput
+                  rows='3'
+                  id={isMessageOrNot(message.message_id, message.comment_id)}
+                  onChange={(e) => {
+                    setEditValue(e.target.value)
+                    setReminder('')
+                  }}
+                  defaultValue={editValue ? editValue : message.content}
+                  type='text'
+                />
+                <div>
+                  <SendBtn
+                    editValue={editValue}
                     id={isMessageOrNot(message.message_id, message.comment_id)}
-                    onChange={(e) => {
-                      setEditValue(e.target.value)
+                    onClick={(e) => {
+                      handleEditMessage(e)
+                    }}
+                  >
+                    送出
+                  </SendBtn>
+                  <SendBtn
+                    editValue={!editValue}
+                    onClick={() => {
+                      setEditing(false)
+                      setEditValue('')
                       setReminder('')
                     }}
-                    defaultValue={editValue ? editValue : message.content}
-                    type='text'
-                  />
-                  <div>
-                    <SendBtn
-                      editValue={editValue}
-                      id={isMessageOrNot(
-                        message.message_id,
-                        message.comment_id
-                      )}
-                      onClick={(e) => {
-                        handleEditMessage(e)
-                      }}
-                    >
-                      送出
-                    </SendBtn>
-                    <SendBtn
-                      editValue={!editValue}
-                      onClick={() => {
-                        setEditing(false)
-                        setEditValue('')
-                        setReminder('')
-                      }}
-                    >
-                      取消編輯
-                    </SendBtn>
-                    {reminder === 2 && (
-                      <Reminder reminder={reminder}>請輸入修改內容</Reminder>
-                    )}
-                  </div>
-                </EditWrapper>
-              ) : (
-                <Content
-                  id={isMessageOrNot(message.message_id, message.comment_id)}
-                >
-                  {message.content}
-                </Content>
-              )}
-            </Card>
-          ))}
-        </CommentsContainer>
-      )}
+                  >
+                    取消編輯
+                  </SendBtn>
+                  {reminder === 2 && (
+                    <Reminder reminder={reminder}>請輸入修改內容</Reminder>
+                  )}
+                </div>
+              </EditWrapper>
+            ) : (
+              <Content
+                id={isMessageOrNot(message.message_id, message.comment_id)}
+              >
+                {message.content}
+              </Content>
+            )}
+          </Card>
+        ))}
+      </CommentsContainer>
     </>
   )
 }
