@@ -41,8 +41,8 @@ const Logo = styled(Link)`
 const NavBarLink = styled(Link)`
   color: ${COLOR.white};
   font-size: ${FONT.md};
-  width: 120px;
   height: 48px;
+  padding: 0px 20px;
   border-radius: 0 0 ${RADIUS.s} ${RADIUS.s};
   background-color: ${COLOR.green};
   display: flex;
@@ -60,6 +60,7 @@ const NavBarLink = styled(Link)`
   @media screen and (max-width: 768px) {
     background-color: transparent;
     color: ${COLOR.black};
+    padding: 0px;
     justify-content: space-between;
     box-shadow: none;
     ${(props) =>
@@ -78,7 +79,7 @@ const NavBarLinkWrapper = styled.div`
   @media screen and (max-width: 768px) {
     flex-direction: column;
     margin-top: 50px;
-    padding-left: 30px;
+    padding: 0px 30px;
     align-items: baseline;
   }
 `
@@ -94,6 +95,7 @@ const Avatar = styled(Link)`
   @media screen and (max-width: 768px) {
     min-width: 25px;
     min-height: 25px;
+    margin-right: 20px;
   }
 `
 

@@ -6,10 +6,14 @@ const LoadingWrapper = styled.div`
   display: inline-block;
   width: 80px;
   height: 80px;
-  position: absolute;
   transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
+  ${(props) =>
+    props.$isFullScreen
+      ? `position: absolute;
+        top: 50%;
+        left: 50%;`
+      : `margin: 0 auto;`}
+
   & div {
     position: absolute;
     border: 4px solid ${COLOR.green_light};
@@ -39,9 +43,9 @@ const LoadingWrapper = styled.div`
   }
 `
 
-export default memo(function SmallRegionLoading() {
+export default memo(function SmallRegionLoading({ isFullScreen }) {
   return (
-    <LoadingWrapper>
+    <LoadingWrapper $isFullScreen={isFullScreen}>
       <div></div>
       <div></div>
     </LoadingWrapper>
