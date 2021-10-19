@@ -3,7 +3,7 @@ import config from './config'
 import { getAuthToken } from './utils'
 
 const instance = axios.create({
-  baseURL: config.apiHost,
+  baseURL: config.apiHost2,
 })
 
 instance.interceptors.request.use((config) => {
@@ -28,6 +28,15 @@ export const getUserLiked = (userID) =>
   instance.get(`/users/${userID}/liked-articles`)
 export const refreshAccessToken = () => instance.get('/users/refresh')
 export const userLogout = () => instance.get('/users/logout')
+
+//todo
+export const getUserTodos = (userID) => instance.get(`/users/${userID}/todos`)
+export const postUserTodos = (userID, data) =>
+  instance.post(`/users/${userID}/todos`, data)
+export const patchUserTodos = (userID, todoID, data) =>
+  instance.patch(`/users/${userID}/todos/${todoID}`, data)
+export const deleteUserTodos = (userID, todoID) =>
+  instance.delete(`/users/${userID}/todos/${todoID}`)
 
 // trails
 // get 相關

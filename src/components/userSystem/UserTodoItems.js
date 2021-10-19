@@ -1,7 +1,14 @@
 import TodoItem from '../todoSystem/TodoList'
-import { useState, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, EFFECT, MEDIA_QUERY } from '../../constants/style'
+import {
+  getUserTodos,
+  postUserTodos,
+  patchUserTodos,
+  deleteUserTodos,
+} from '../../WebAPI'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -32,68 +39,123 @@ const TodoInput = styled.input.attrs((props) => ({
   }
   ${MEDIA_QUERY.lg} {
     height: 60px;
-
     font-size: ${FONT.md};
   }
 `
 
 export default function UserTodoItems() {
-  const [todos, setTodos] = useState([
-    { id: 1, content: '水壺', isDone: true },
-    { id: 2, content: '要帶水壺', isDone: false },
-    { id: 3, content: '要記得帶水壺' },
-    { id: 4, content: '可以帶兩個水壺' },
-    { id: 5, content: '帶兩個就不會忘記水壺' },
-  ])
+  const { userID } = useParams()
+  const [myTodos, setMyTodos] = useState([])
 
-  const [value, setValue] = useState('')
-  const id = useRef(6)
+  useEffect(() => {
+    getUserTodos(userID)
+      .then((res) => {
+        setMyTodos(res.data.data.todos)
+        console.log(res.data.data.todos)
+      })
+      .catch((err) => {
+        console.log(err.response)
+      })
+  }, [])
+
   //新增
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      setTodos([
-        {
-          id: id.current,
-          content: value,
-        },
-        ...todos,
-      ])
-      setValue('')
-      id.current++
-    }
-  }
-
+  const [value, setValue] = useState('')
   const handleInputChange = (e) => {
     setValue(e.target.value)
   }
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      postUserTodos(userID, { content: value })
+        .then((res) => {
+          console.log(res.data)
+          console.log('新增成功')
+          setMyTodos([
+            {
+              todo_id: res.data.data.result.insertId,
+              content: value,
+            },
+            ...myTodos,
+          ])
+        })
+        .catch((err) => {
+          console.log(err.response.data)
+        })
+      setValue('')
+    }
+  }
+
   //已完成未完成
-  const handleToggleIsDone = (id) => {
-    setTodos(
-      todos.map((todo) => {
-        if (todo.id !== id) return todo
+  const handleToggleIsDone = (todo_id) => {
+    setMyTodos(
+      myTodos.map((todo) => {
+        if (todo.todo_id !== todo_id) return todo
         return {
           ...todo,
-          isDone: !todo.isDone,
+          is_done: !todo.is_done,
         }
       })
     )
   }
   //刪除
-  const handleDeleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id))
+  const handleDeleteTodo = (todo_id) => {
+    deleteUserTodos(userID, todo_id)
+      .then((res) => {
+        console.log(res.data)
+        console.log('刪除成功')
+        setMyTodos(myTodos.filter((todo) => todo.todo_id !== todo_id))
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
   }
+  //編輯
+  const [updateValue, setUpdateValue] = useState()
+  const handleUpdateChange = (todo_id, e) => {
+    setUpdateValue({
+      ...updateValue,
+      todo_id: todo_id,
+      content: e.target.value,
+    })
+    console.log(e.target.value)
+    setMyTodos(
+      myTodos.map((todo) => {
+        if (todo.todo_id !== todo_id) return todo
+        return {
+          ...todo,
+          content: e.target.value,
+        }
+      })
+    )
+  }
+  const handleUpdateTodo = (todo_id, e) => {
+    console.log(updateValue)
+    if (updateValue.todo_id !== todo_id) return
+    patchUserTodos(userID, todo_id, { content: updateValue.content })
+      .then((res) => {
+        console.log(res.data)
+        console.log('編輯成功')
+      })
+      .catch((err) => {
+        console.log(err.response)
+      })
+
+    setUpdateValue('')
+  }
+
   return (
-    <Block className='App'>
+    <Block>
       <TodoInput
         placeholder='點擊新增待辦清單'
         value={value}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
       />
-      {todos.map((todo) => (
+      {myTodos.map((todo) => (
         <TodoItem
-          key={todo.id}
+          key={todo.todo_id}
           todo={todo}
+          handleUpdateChange={handleUpdateChange}
+          handleUpdateTodo={handleUpdateTodo}
           handleDeleteTodo={handleDeleteTodo}
           handleToggleIsDone={handleToggleIsDone}
         />

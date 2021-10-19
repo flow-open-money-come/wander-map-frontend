@@ -147,13 +147,13 @@ export default function UserArticlesManage() {
         setUserArticlesData(res.data.data)
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response)
       })
   }, [])
 
   return (
     <Block>
-      <SearchBar>
+      <SearchBar style={{ display: 'none' }}>
         <SearchIcon />
         <SearchField></SearchField>
       </SearchBar>

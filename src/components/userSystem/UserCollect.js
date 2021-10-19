@@ -98,7 +98,7 @@ export default function UserCollect() {
 
   return (
     <Block>
-      <SearchBar>
+      <SearchBar style={{ display: 'none' }}>
         <SearchIcon />
         <SearchField></SearchField>
       </SearchBar>

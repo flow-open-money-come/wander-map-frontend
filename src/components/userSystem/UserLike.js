@@ -91,7 +91,7 @@ export default function UserLike() {
 
   return (
     <Block>
-      <SearchBar>
+      <SearchBar style={{ display: 'none' }}>
         <SearchIcon />
         <SearchField></SearchField>
       </SearchBar>
