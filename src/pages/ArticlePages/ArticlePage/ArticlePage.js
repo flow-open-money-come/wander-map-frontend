@@ -7,7 +7,7 @@ import thumbSVG from '../../../icons/thumb_up.svg'
 import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
-import { getArticles, getArticleLike } from '../../../WebAPI'
+import { getArticles, getUserLiked } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
@@ -157,10 +157,10 @@ function ArticlePage() {
   useEffect(() => {
     const getLike = async () => {
       try {
-        let res = await getArticleLike(userInfo.user_id)
+        let res = await getUserLiked(userInfo.user_id)
         if (res.status === 200) {
-          res.data.data.articles.map((article) => {
-            if (article.article_id == id) {
+          res.data.data.articles.forEach((article) => {
+            if (article.article_id === id) {
               setThumb(true)
             }
           })
