@@ -11,7 +11,7 @@ import { getArticles, getArticleLike } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
-import Loading from '../../../components/common/Loading'
+import Loading from '../../../components/common/SmallRegionLoading'
 
 const Wrapper = styled.div`
   width: 90%;
