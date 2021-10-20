@@ -86,6 +86,7 @@ const Avatar = styled(Link)`
   min-width: 40px;
   min-height: 40px;
   margin-right: 10px;
+  border-radius: 50%;
   ${(props) =>
     props.$avatar
       ? `background: url(${props.$avatar}) center/cover;`
