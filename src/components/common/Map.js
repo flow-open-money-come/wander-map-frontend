@@ -35,7 +35,7 @@ const Map = (props) => {
         .then((res) => {
           if (res.data.success) setMatchTrailInfos(res.data.data)
           setIsLoading(false)
-          setZoom(8)
+          setZoom(7)
         })
         .catch((err) => {
           console.log(err)
