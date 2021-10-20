@@ -7,6 +7,7 @@ import { getTrailArticles } from '../../WebAPI'
 import useDidMountEffect from '../../hooks/useDidMountEffect'
 import { ActiveTrailContext } from '../../context'
 import { LoadingContext } from '../../context'
+import DeleteBtn from './DeleteBtn'
 
 const Marker = styled(PinSvg)`
   width: 30px;
@@ -131,6 +132,7 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
           history.push(`/trails/${trailInfo.trail_id}`)
         }}
       >
+        <DeleteBtn />
         <TrailImg src={trailInfo.cover_picture_url} />
         <TrailInfoWrapper>
           <TrailName>{trailInfo.title}</TrailName>

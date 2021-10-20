@@ -26,6 +26,7 @@ const Map = (props) => {
   const { activeTrailArticles } = useContext(ActiveTrailContext)
   const { trailConditions } = useTrailConditions()
   const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const [zoom, setZoom] = useState(12)
 
   useEffect(() => {
     if (debouncedKeyWord) {
@@ -34,6 +35,7 @@ const Map = (props) => {
         .then((res) => {
           if (res.data.success) setMatchTrailInfos(res.data.data)
           setIsLoading(false)
+          setZoom(8)
         })
         .catch((err) => {
           console.log(err)
@@ -62,9 +64,10 @@ const Map = (props) => {
       <GoogleMapReact
         bootstrapURLKeys={{ key: process.env.REACT_APP_MAP_KEY }}
         defaultCenter={props.info.coordinate}
-        defaultZoom={props.zoom}
+        defaultZoom={zoom}
         yesIWantToUseGoogleMapApiInternals
         center={activeTrailArticles.activeTrailInfo.center}
+        zoom={zoom}
       >
         {isLoading && <SmallRegionLoading />}
         {matchTrailInfos.length > 0 ? (
@@ -119,7 +122,6 @@ Map.defaultProps = {
       x: 121.83785521632522,
     },
   },
-  zoom: 12,
 }
 
 export default Map

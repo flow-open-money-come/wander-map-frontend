@@ -43,7 +43,7 @@ const ArticleListWrapper = styled.div`
     height: 600px;
     border: 1px solid ${COLOR.beige};
     border-radius: ${RADIUS.md} 0px 0px ${RADIUS.md};
-    overflow: scroll;
+    overflow-y: scroll;
     padding: 20px;
     margin-bottom: 20px;
   }

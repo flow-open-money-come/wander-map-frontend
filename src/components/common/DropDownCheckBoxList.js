@@ -63,9 +63,10 @@ const DropDownCheckBoxWrapper = styled.label`
   color: ${COLOR.gray};
   border-bottom: 0.5px solid ${COLOR.gray_light};
   display: flex;
-  padding: 10px;
+  padding: 10px 0px 10px 10px;
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.s};
+    padding: 10px;
   }
 `
 const ArrowDown = styled(ArrowDownSvg)`
