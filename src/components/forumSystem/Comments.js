@@ -357,9 +357,15 @@ export default function Comments({ isMessage }) {
     <>
       {isLoading && <Loading />}
       <CommentsContainer>
-        {reminder === 1 && userInfo && <Reminder reminder={reminder}>請輸入內容</Reminder>}
+        {reminder === 1 && userInfo && (
+          <Reminder reminder={reminder}>請輸入內容</Reminder>
+        )}
         <CommentsHeader>
-          <UserAvatar src={userInfo ? userInfo.icon_url : 'https://i.imgur.com/r50z0vv.png'} />
+          <UserAvatar
+            src={
+              userInfo ? userInfo.icon_url : 'https://i.imgur.com/r50z0vv.png'
+            }
+          />
           <InputField
             userInfo={userInfo}
             value={inputValue}
@@ -396,24 +402,35 @@ export default function Comments({ isMessage }) {
                 </CommentNickname>
               </CommentViewInfo>
               <CommentBtn>
-                <CommentTime>{new Date(message.created_at).toLocaleString('ja')}</CommentTime>
-                {userInfo && (userInfo.user_id === message.author_id || userInfo.role === 'admin') && (
-                  <>
-                    <EditButton
-                      id={isMessageOrNot(message.message_id, message.comment_id)}
-                      onClick={handlePopUpInput}
-                    />
-                    <BinButton
-                      id={isMessageOrNot(message.message_id, message.comment_id)}
-                      onClick={(e) => {
-                        handleDeleteMessage(e)
-                      }}
-                    />
-                  </>
-                )}
+                <CommentTime>
+                  {new Date(message.created_at).toLocaleString('ja')}
+                </CommentTime>
+                {userInfo &&
+                  (userInfo.user_id === message.author_id ||
+                    userInfo.role === 'admin') && (
+                    <>
+                      <EditButton
+                        id={isMessageOrNot(
+                          message.message_id,
+                          message.comment_id
+                        )}
+                        onClick={handlePopUpInput}
+                      />
+                      <BinButton
+                        id={isMessageOrNot(
+                          message.message_id,
+                          message.comment_id
+                        )}
+                        onClick={(e) => {
+                          handleDeleteMessage(e)
+                        }}
+                      />
+                    </>
+                  )}
               </CommentBtn>
             </CommentInfo>
-            {Number(editing) === isMessageOrNot(message.message_id, message.comment_id) ? (
+            {Number(editing) ===
+            isMessageOrNot(message.message_id, message.comment_id) ? (
               <EditWrapper>
                 <EditInput
                   rows='3'
@@ -445,11 +462,15 @@ export default function Comments({ isMessage }) {
                   >
                     取消編輯
                   </SendBtn>
-                  {reminder === 2 && <Reminder reminder={reminder}>請輸入修改內容</Reminder>}
+                  {reminder === 2 && (
+                    <Reminder reminder={reminder}>請輸入修改內容</Reminder>
+                  )}
                 </div>
               </EditWrapper>
             ) : (
-              <Content id={isMessageOrNot(message.message_id, message.comment_id)}>
+              <Content
+                id={isMessageOrNot(message.message_id, message.comment_id)}
+              >
                 {message.content}
               </Content>
             )}

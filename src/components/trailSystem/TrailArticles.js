@@ -75,6 +75,7 @@ function TrailArticles({ articles }) {
             tags={['有水源', '賞花', '危險地形']}
             date={new Date(article.departure_time).toLocaleString('ja')}
             content={article.content}
+            articlePage={`/articles/${article.article_id}`}
           />
         ))}
         <More to={`/articles`}>看更多</More>

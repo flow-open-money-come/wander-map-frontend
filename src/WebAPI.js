@@ -19,13 +19,23 @@ export const getAllUsers = (params) => instance.get(`/users${params}`)
 export const refreshAccessToken = () => instance.get('/users/refresh')
 export const userLogout = () => instance.get('/users/logout')
 
+export const changeUserRole = (userID, role) => instance.patch(`/users/${userID}`, { role: role })
+
+//使用者收藏步道
 export const getUserCollectedTrails = (userID) => instance.get(`/users/${userID}/collected-trails`)
 export const collectTrail = (userID, trailID) =>
   instance.post(`/users/${userID}/collected-trails`, { trail_id: trailID })
 export const cancelCollected = (userID, trailID) =>
   instance.delete(`/users/${userID}/collected-trails/${trailID}`)
 
-export const changeUserRole = (userID, role) => instance.patch(`/users/${userID}`, { role: role })
+//使用者按讚步道
+export const getArticleLike = (userId) => instance.get(`users/${userId}/liked-articles`)
+export const postArticleLike = (userId, articleId) =>
+  instance.post(`users/${userId}/liked-articles`, {
+    article_id: articleId
+  })
+export const removeArticleLike = (userId, articleId) =>
+  instance.delete(`users/${userId}/liked-articles/${articleId}`)
 
 // trails
 // get 相關
@@ -86,33 +96,6 @@ export const patchMessage = (articleId, messageId, content) =>
   })
 export const deleteMessage = (articleId, messageId) =>
   instance.delete(`/articles/${articleId}/messages/${messageId}`)
-
-// 心得按讚關聯
-export const apiArticleGetLike = (userId) => instance.get(`users/${userId}/liked-articles`)
-export const apiArticlePostLike = (userId, articleId) =>
-  instance.post(`users/${userId}/liked-articles`, {
-    article_id: articleId
-  })
-export const apiArticleRemoveLike = (userId, articleId) =>
-  instance.delete(`users/${userId}/liked-articles/${articleId}`)
-
-// 不確定這支的分類
-export const apiArticlesOptions = (limit, tags, offset, search) => {
-  let url = `/articles?`
-  if (limit) {
-    url += `limit=${limit}&`
-  }
-  if (tags && Array.isArray(tags) && tags.length > 0) {
-    tags.map((tag) => (url += `tag=${tag}&`))
-  }
-  if (offset) {
-    url += `offset=${offset}&`
-  }
-  if (search) {
-    url += `search=${search}&`
-  }
-  return instance.get(url)
-}
 
 // 其他 IMGUR WEATHER 等等
 export const getWeatherInfo = (country, town) =>
