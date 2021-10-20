@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import Loading from '../common/Loading'
+import swal from 'sweetalert'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -146,7 +147,7 @@ function UsersManagement() {
     setToggleStatus(!toggleStatus)
     if (role === 'member') changeUserRole(userID, 'suspended')
     if (role === 'suspended') changeUserRole(userID, 'member')
-    alert('更改會員權限')
+    swal(`更改會員權限`)
   }
 
   return (

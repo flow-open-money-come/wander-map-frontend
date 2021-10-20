@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import Loading from '../common/Loading'
+import swal from 'sweetalert'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -209,14 +210,14 @@ function TrailsManagement({ recycle, setRecycle }) {
   const handleDelete = (trailID, trailTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
     deleteTrail(trailID).then()
-    alert(`刪除 ${trailTitle}`)
+    swal(`已刪除步道`, `${trailTitle}`, 'success')
     setTrails(trails.filter((trail) => trail.trail_id !== trailID))
   }
 
   const handleRecover = (trailID, trailTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
     recoverTrail(trailID).then()
-    alert(`恢復 ${trailTitle}`)
+    swal(`恢復步道`, `${trailTitle}`, 'success')
     setDeletedTrails(deletedTrails.filter((trail) => trail.trail_id !== trailID))
   }
 

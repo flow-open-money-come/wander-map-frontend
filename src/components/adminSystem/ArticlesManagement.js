@@ -10,6 +10,7 @@ import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import { getAuthToken } from '../../utils'
 import Loading from '../common/Loading'
+import swal from 'sweetalert'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -225,14 +226,14 @@ function ArticlesManagement({ recycle, setRecycle }) {
   const handleDelete = (articleID, articleTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
     deleteArticle(articleID).then()
-    alert(`刪除 ${articleTitle}`)
+    swal(`已刪除文章`, `${articleTitle}`, 'success')
     setArticles(articles.filter((article) => article.article_id !== articleID))
   }
 
   const handleRecover = (articleID, articleTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
     recoverArticle(articleID).then()
-    alert(`恢復 ${articleTitle}`)
+    swal(`恢復文章`, `${articleTitle}`, 'success')
     setDeletedArticles(deletedArticles.filter((article) => article.article_id !== articleID))
   }
 
