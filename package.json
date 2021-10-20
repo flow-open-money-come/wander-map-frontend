@@ -24,6 +24,10 @@
     "react-spinners": "^0.11.0",
     "styled-components": "^5.3.1",
     "sweetalert": "^2.1.2",
+<<<<<<< HEAD
+=======
+    "uuid": "^8.3.2",
+>>>>>>> f08eb8c248867ddbe08f9d68529fcf7975095873
     "web-vitals": "^1.1.2"
   },
   "scripts": {

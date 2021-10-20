@@ -43,22 +43,18 @@ export const deleteUserTodos = (userID, todoID) =>
   instance.delete(`/users/${userID}/todos/${todoID}`)
 
 //使用者收藏步道
-export const getUserCollectedTrails = (userID) =>
-  instance.get(`/users/${userID}/collected-trails`)
 export const collectTrail = (userID, trailID) =>
   instance.post(`/users/${userID}/collected-trails`, { trail_id: trailID })
 export const cancelCollected = (userID, trailID) =>
   instance.delete(`/users/${userID}/collected-trails/${trailID}`)
 
 //使用者按讚步道
-export const getArticleLike = (userId) =>
-  instance.get(`users/${userId}/liked-articles`)
-export const postArticleLike = (userId, articleId) =>
-  instance.post(`users/${userId}/liked-articles`, {
-    article_id: articleId,
+export const postArticleLike = (userID, articleID) =>
+  instance.post(`users/${userID}/liked-articles`, {
+    article_id: articleID,
   })
-export const removeArticleLike = (userId, articleId) =>
-  instance.delete(`users/${userId}/liked-articles/${articleId}`)
+export const removeArticleLike = (userID, articleID) =>
+  instance.delete(`users/${userID}/liked-articles/${articleID}`)
 
 // trails
 // get 相關
@@ -79,30 +75,25 @@ export const patchTrail = (trailID, data) =>
   instance.patch(`/trails/${trailID}`, data)
 
 // 步道評論CRUD
-export const getComments = (articleId) =>
-  instance.get(`/trails/${articleId}/comments`)
-export const postComment = (articleId, authorId, content) =>
-  instance.post(`/trails/${articleId}/comments`, {
-    author_id: authorId,
+export const getComments = (articleID) =>
+  instance.get(`/trails/${articleID}/comments`)
+export const postComment = (articleID, authorID, content) =>
+  instance.post(`/trails/${articleID}/comments`, {
+    author_id: authorID,
     content,
   })
-export const patchComment = (articleId, messageId, content) =>
-  instance.patch(`/trails/${articleId}/comments/${messageId}`, {
+export const patchComment = (articleID, messageID, content) =>
+  instance.patch(`/trails/${articleID}/comments/${messageID}`, {
     content,
   })
-export const deleteComment = (articleId, messageId) =>
-  instance.delete(`/trails/${articleId}/comments/${messageId}`)
+export const deleteComment = (articleID, messageID) =>
+  instance.delete(`/trails/${articleID}/comments/${messageID}`)
 
 // articles
 // get 相關
 export const getArticles = (params) => instance.get(`/articles${params}`)
-export const apiArticles = () => instance.get('/articles')
-export const apiArticle = (articleId) => instance.get(`/articles/${articleId}`)
-export const apiArticlesHot = () => instance.get('/articles/hot')
 export const getTrailArticles = (trailID, params) =>
   instance.get(`/trails/${trailID}/articles/${params}`)
-export const getArticlesUnderTrail = (TrailId) =>
-  instance.get(`/trails/${TrailId}/articles`)
 
 // 刪除復原相關
 export const deleteArticle = (articleID) =>
@@ -114,25 +105,23 @@ export const recoverArticle = (articleID) =>
 
 // 新增編輯相關
 export const postArticles = (data) => instance.post('/articles', data)
-export const postRelateTrail = (articleID) =>
-  instance.patch(`/articles/${articleID}/relate-trail`)
 export const patchArticle = (articleID, data) =>
   instance.patch(`/articles/${articleID}`, data)
 
 // 心得評論CRUD
-export const getMessages = (articleId) =>
-  instance.get(`/articles/${articleId}/messages`)
-export const postMessage = (articleId, authorId, content) =>
-  instance.post(`/articles/${articleId}/messages`, {
-    author_id: authorId,
+export const getMessages = (articleID) =>
+  instance.get(`/articles/${articleID}/messages`)
+export const postMessage = (articleID, authorID, content) =>
+  instance.post(`/articles/${articleID}/messages`, {
+    author_id: authorID,
     content,
   })
-export const patchMessage = (articleId, messageId, content) =>
-  instance.patch(`/articles/${articleId}/messages/${messageId}`, {
+export const patchMessage = (articleID, messageID, content) =>
+  instance.patch(`/articles/${articleID}/messages/${messageID}`, {
     content,
   })
-export const deleteMessage = (articleId, messageId) =>
-  instance.delete(`/articles/${articleId}/messages/${messageId}`)
+export const deleteMessage = (articleID, messageID) =>
+  instance.delete(`/articles/${articleID}/messages/${messageID}`)
 
 // 其他 IMGUR WEATHER 等等
 export const getWeatherInfo = (country, town) =>
