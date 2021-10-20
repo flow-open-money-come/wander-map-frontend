@@ -166,7 +166,7 @@ export default function TrailPostPage() {
   console.log(userInfo)
   const [errorMessage, setErrorMessage] = useState()
   const [formData, setFormData] = useState({
-    author_id: 1,
+    author_id: userInfo.user_id,
     title: '',
     description: '',
     location: '',
@@ -194,6 +194,8 @@ export default function TrailPostPage() {
     postTrails(formData)
       .then((res) => {
         console.log(res.data)
+        let id = res.data.data.result.insertId
+        history.push(`/trails/${id}`)
       })
       .catch((err) => {
         console.log(err.response.data)

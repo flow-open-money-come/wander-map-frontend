@@ -43,7 +43,6 @@ export const deleteUserTodos = (userID, todoID) =>
   instance.delete(`/users/${userID}/todos/${todoID}`)
 
 //使用者收藏步道
-
 export const collectTrail = (userID, trailID) =>
   instance.post(`/users/${userID}/collected-trails`, { trail_id: trailID })
 export const cancelCollected = (userID, trailID) =>
