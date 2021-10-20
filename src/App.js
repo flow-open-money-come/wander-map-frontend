@@ -6,7 +6,6 @@ import {
   useLocation,
 } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-
 import NavBar from './components/common/NavBar'
 import Footer from './components/common/Footer'
 import HomePage from './pages/HomePage'
@@ -80,7 +79,13 @@ function App() {
               <Route path='/post-trail'>
                 <TrailPostPage />
               </Route>
+              <Route path='/update-trail/:trailID?'>
+                <TrailPostPage />
+              </Route>
               <Route path='/post-article'>
+                <ArticlePostPage />
+              </Route>
+              <Route path='/update-article/:articleID?'>
                 <ArticlePostPage />
               </Route>
               <Route exact path='/articles'>
@@ -89,13 +94,13 @@ function App() {
               <Route exact path='/trails'>
                 <AllTrailPage />
               </Route>
-              <Route path='/user/userId'>
+              <Route path='/user/:userID'>
                 <UserOverviewPage />
               </Route>
               <Route path='/admin'>
                 <AdminPage />
               </Route>
-              <Route path='/backstage/userId'>
+              <Route path='/backstage/:userID'>
                 <UserBackstage />
               </Route>
               <Route path='/articles/:id'>

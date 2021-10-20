@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'
+import React, { useState, useEffect, useContext } from 'react'
+import { getUserInfo } from '../../../WebAPI'
+import { useParams, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../../constants/style'
+import UserUpdateBox from '../../../components/userSystem/UserUpdateBox '
 import UserArticlesManage from '../../../components/userSystem/UserArticlesManage'
 import UserTodoItems from '../../../components/userSystem/UserTodoItems'
 import UserCollect from '../../../components/userSystem/UserCollect'
@@ -10,6 +12,8 @@ import UserBackstageTabs from '../../../components/userSystem/UserBackstageTabs'
 import { ReactComponent as EditIcon } from '../../../icons/backstage/edit.svg'
 import { ReactComponent as EmailIcon } from '../../../icons/user/user_email.svg'
 import { ReactComponent as NicknameIcon } from '../../../icons/user/user_nickname.svg'
+import { AuthContext, LoadingContext } from '../../../context'
+import Loading from '../../../components/common/Loading'
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -21,7 +25,6 @@ const Wrapper = styled.div`
     align-items: center;
   }
 `
-
 const MemberProfileWrapper = styled.div`
   display: flex;
   justify-content: center;
@@ -40,7 +43,7 @@ const Avatar = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 50%;
-  background-color: ${COLOR.gray};
+  background-color: ${COLOR.white};
 `
 const AvatarPic = styled.img`
   width: 100px;
@@ -65,19 +68,6 @@ const Profile = styled.div`
   }
 `
 
-const ModifyBtn = styled(EditIcon)`
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 6px;
-  color: ${COLOR.green};
-  ${MEDIA_QUERY.lg} {
-    width: 20px;
-    height: 20px;
-  }
-`
 const Info = styled.div`
   font-size: ${FONT.s};
   margin: 6px;
@@ -110,48 +100,94 @@ const UsersManagementContainer = styled.div`
     padding-bottom: 0px;
   }
 `
+const ModifyBtn = styled(EditIcon)`
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 6px;
+  color: ${COLOR.green};
+  ${MEDIA_QUERY.lg} {
+    width: 20px;
+    height: 20px;
+  }
+`
 
 export default function UserBackstage() {
+  const { userInfo } = useContext(AuthContext)
+  const history = useHistory()
+
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [tab, setTab] = useState('Articles')
-  const [data, setData] = useState({ hits: [] });
+  const [popUp, setPopUp] = useState({
+    key: '',
+    isShow: false,
+  })
+  const [userData, setUserData] = useState({
+    user_id: '',
+    nickname: '',
+    email: '',
+    icon_url: '',
+  })
 
+  const { userID } = useParams()
   useEffect(() => {
-    const fetchData = async () => {
-      const result = await axios(
-        'http://3.138.41.92:8000/api/v1/users/1',
-      );
+    setIsLoading(true)
+    getUserInfo(userID)
+      .then((res) => {
+        console.log(res.data)
+        setUserData(res.data.data)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }, [])
 
-      setData(result.data);
-    };
-
-    fetchData();
-  }, []);
+  const handleOnClick = () => {
+    setPopUp({ key: userData.user_id, isShow: true })
+  }
 
   return (
-    <Wrapper>
-      <MemberProfileWrapper>
-        <Avatar>
-          <AvatarPic src='https://s.yimg.com/os/creatr-uploaded-images/2021-09/50aee8d0-0cca-11ec-afd6-ddd0414a9b75' />
-        </Avatar>
-        <Profile>
-          <ModifyBtn />
-          <Info>
-            <NicknameIcon />
-            野原新之助{data.nickname}
-          </Info>
-          <Info>
-            <EmailIcon />
-            hehe@123.com{data.email}
-          </Info>
-        </Profile>
-      </MemberProfileWrapper>
-      <UsersManagementContainer>
-        <UserBackstageTabs tab={tab} setTab={setTab} />
-        {tab === 'Articles' && <UserArticlesManage setTab={setTab} />}
-        {tab === 'Todos' && <UserTodoItems setTab={setTab} />}
-        {tab === 'Collect' && <UserCollect setTab={setTab} />}
-        {tab === 'Like' && <UserLike setTab={setTab} />}
-      </UsersManagementContainer>
-    </Wrapper>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Wrapper>
+          <MemberProfileWrapper>
+            <Avatar>
+              <AvatarPic src={`${userData.icon_url}`} />
+            </Avatar>
+            <Profile>
+              <ModifyBtn onClick={handleOnClick} />
+              {popUp.isShow === true && (
+                <UserUpdateBox
+                  popUp={popUp}
+                  setPopUp={setPopUp}
+                  userData={userData}
+                  setUserData={setUserData}
+                />
+              )}
+              <Info>
+                <NicknameIcon />
+                {userData.nickname}
+              </Info>
+              <Info>
+                <EmailIcon />
+                {userData.email}
+              </Info>
+            </Profile>
+          </MemberProfileWrapper>
+          <UsersManagementContainer>
+            <UserBackstageTabs tab={tab} setTab={setTab} />
+            {tab === 'Articles' && <UserArticlesManage setTab={setTab} />}
+            {tab === 'Todos' && <UserTodoItems setTab={setTab} />}
+            {tab === 'Collect' && <UserCollect setTab={setTab} />}
+            {tab === 'Like' && <UserLike setTab={setTab} />}
+          </UsersManagementContainer>
+        </Wrapper>
+      )}
+    </>
   )
 }

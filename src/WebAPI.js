@@ -21,6 +21,25 @@ export const userLogout = () => instance.get('/users/logout')
 
 export const changeUserRole = (userID, role) => instance.patch(`/users/${userID}`, { role: role })
 
+export const getUserInfo = (userID) => instance.get(`/users/${userID}`)
+export const patchUserInfo = (userID, data) =>
+  instance.patch(`/users/${userID}`, data)
+export const getUserArticles = (userID) =>
+  instance.get(`/users/${userID}/articles`)
+export const getUserCollect = (userID) =>
+  instance.get(`/users/${userID}/collected-trails`)
+export const getUserLiked = (userID) =>
+  instance.get(`/users/${userID}/liked-articles`)
+
+//todo
+export const getUserTodos = (userID) => instance.get(`/users/${userID}/todos`)
+export const postUserTodos = (userID, data) =>
+  instance.post(`/users/${userID}/todos`, data)
+export const patchUserTodos = (userID, todoID, data) =>
+  instance.patch(`/users/${userID}/todos/${todoID}`, data)
+export const deleteUserTodos = (userID, todoID) =>
+  instance.delete(`/users/${userID}/todos/${todoID}`)
+
 //使用者收藏步道
 export const getUserCollectedTrails = (userID) => instance.get(`/users/${userID}/collected-trails`)
 export const collectTrail = (userID, trailID) =>
@@ -50,6 +69,8 @@ export const recoverTrail = (trailID) => instance.patch(`/trails/deleted/${trail
 
 // 新增編輯相關
 export const postTrails = (data) => instance.post('/trails', data)
+export const patchTrail = (trailID, data) =>
+  instance.patch(`/trails/${trailID}`, data)
 
 // 步道評論CRUD
 export const getComments = (articleId) => instance.get(`/trails/${articleId}/comments`)
@@ -82,6 +103,10 @@ export const recoverArticle = (articleID) => instance.patch(`/articles/deleted/$
 
 // 新增編輯相關
 export const postArticles = (data) => instance.post('/articles', data)
+export const postRelateTrail = (articleID) =>
+  instance.patch(`/articles/${articleID}/relate-trail`)
+export const patchArticle = (articleID, data) =>
+  instance.patch(`/articles/${articleID}`, data)
 
 // 心得評論CRUD
 export const getMessages = (articleId) => instance.get(`/articles/${articleId}/messages`)
