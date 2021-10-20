@@ -117,7 +117,6 @@ const ModifyBtn = styled(EditIcon)`
 export default function UserBackstage() {
   const { userInfo } = useContext(AuthContext)
   const history = useHistory()
-
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [tab, setTab] = useState('Articles')
   const [popUp, setPopUp] = useState({
