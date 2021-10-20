@@ -53,12 +53,9 @@ export const deleteComment = (articleId, messageId) =>
 
 // articles
 // get 相關
-export const getArticles = (params) => instance.get('/articles/' + params)
-export const getArticlesOptions = (params) => instance.get(`/articles${params}`)
+export const getArticles = (params) => instance.get(`/articles${params}`)
 export const getTrailArticles = (trailID, params) =>
   instance.get('/trails/' + trailID + '/articles' + params)
-export const getArticlesUnderTrail = (TrailId) =>
-  instance.get('/trails/' + TrailId + '/articles')
 
 // 刪除復原相關
 export const deleteArticle = (articleID) =>

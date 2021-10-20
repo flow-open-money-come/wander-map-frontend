@@ -6,7 +6,7 @@ import ForumFilter from '../../../components/forumSystem/Filter'
 import { ReactComponent as Hot } from '../../../icons/hot.svg'
 import { FONT, MEDIA_QUERY } from '../../../constants/style'
 import { NavBarButton } from '../../../components/common/Button'
-import { getArticles, getArticlesOptions } from '../../../WebAPI'
+import { getArticles, getArticles } from '../../../WebAPI'
 import { COLOR } from '../../../constants/style'
 import { useInput } from '../../../hooks/useInput'
 import { LoadingContext } from '../../../context'
@@ -92,7 +92,7 @@ function AllArticlesPage() {
 
   useEffect(() => {
     setIsLoading(true)
-    getArticles('hot')
+    getArticles('/hot')
       .then((res) => {
         if (res.data.success) {
           setSlides(res.data.data)
@@ -113,7 +113,7 @@ function AllArticlesPage() {
     if (filterData) {
       url += `&search=${filterData}`
     }
-    getArticlesOptions(`?limit=5${url}`)
+    getArticles(`?limit=5${url}`)
       .then((res) => {
         if (res.data.success) {
           setPosts(res.data.data)
@@ -136,7 +136,7 @@ function AllArticlesPage() {
     if (filterData) {
       url += `&search=${filterData}`
     }
-    getArticlesOptions(`?limit=5&&offset=${params.current}${url}`)
+    getArticles(`?limit=5&&offset=${params.current}${url}`)
       .then((res) => {
         if (res.data.success) {
           setPosts(posts.concat(res.data.data))
