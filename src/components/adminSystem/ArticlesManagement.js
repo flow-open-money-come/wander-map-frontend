@@ -6,9 +6,10 @@ import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
 import { getArticles, deleteArticle, getDeletedArticle, recoverArticle } from '../../WebAPI'
 import { Link } from 'react-router-dom'
-import { AuthContext } from '../../context'
+import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import { getAuthToken } from '../../utils'
+import Loading from '../common/Loading'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -200,17 +201,21 @@ function ArticlesManagement({ recycle, setRecycle }) {
   const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
 
   useEffect(() => {
+    setIsLoading(true)
     getArticles(`?offset=${(page - 1) * 20}&search=${searchResults}`)
       .then((res) => {
         setArticles(res.data.data)
-        setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))})
+        setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
+        setIsLoading(false)
+      })
       .catch((err) => console.error(err))
     getDeletedArticle(`?offset=${(page - 1) * 20}`)
       .then((res) => setDeletedArticles(res.data.data))
       .catch((err) => console.error(err))
-  }, [page, searchResults, recycle])
+  }, [page, searchResults, recycle, setIsLoading])
 
   useEffect(() => {
     if (!searchValue) setSearchResults('')
@@ -232,90 +237,96 @@ function ArticlesManagement({ recycle, setRecycle }) {
   }
 
   return (
-    <Block>
-      <SearchBar>
-        <SearchIcon />
-        <SearchField
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') setSearchResults(searchValue)
-          }}
-        />
-      </SearchBar>
-      <RecycleBlock>
-        {recycle && (
-          <>
-            <RecycleTitle>刪除列表</RecycleTitle>
-            <BackBtn
-              onClick={() => {
-                setRecycle(false)
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Block>
+          <SearchBar>
+            <SearchIcon />
+            <SearchField
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') setSearchResults(searchValue)
               }}
-            >
-              返回
-            </BackBtn>
-          </>
-        )}
-        {!recycle && (
-          <RecycleBin
-            onClick={() => {
-              setRecycle(true)
-            }}
-          >
-            <BinIcon />
-          </RecycleBin>
-        )}
-      </RecycleBlock>
-      <TrailsTable>
-        {!recycle &&
-          articles &&
-          articles.map((article) => (
-            <TableContent key={article.article_id}>
-              <LinkDefault to={`/articles/${article.article_id}`}>
-                <CoverTd>
-                  <TrailImg src={article.cover_picture_url} />
-                </CoverTd>
-                <TrailsTd>{article.title}</TrailsTd>
-              </LinkDefault>
-              <CreatorTd>
-                <LinkDefault to={`/users/${article.author_id}`}>{article.nickname}</LinkDefault>
-              </CreatorTd>
-              <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
-              <BtnTd>
-                <BinIcon
+            />
+          </SearchBar>
+          <RecycleBlock>
+            {recycle && (
+              <>
+                <RecycleTitle>刪除列表</RecycleTitle>
+                <BackBtn
                   onClick={() => {
-                    handleDelete(article.article_id, article.title)
+                    setRecycle(false)
                   }}
-                />
-              </BtnTd>
-            </TableContent>
-          ))}
-        {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
-        {recycle &&
-          deletedArticles &&
-          deletedArticles.map((article) => (
-            <TableContent key={article.article_id}>
-              <LinkDefault to={`/articles/${article.article_id}`}>
-                <CoverTd>
-                  <TrailImg src={article.cover_picture_url} />
-                </CoverTd>
-                <TrailsTd>{article.title}</TrailsTd>
-              </LinkDefault>
-              <CreatorTd>
-                <LinkDefault to={`/users/${article.author_id}`}>{article.nickname}</LinkDefault>
-              </CreatorTd>
-              <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
-              <BtnTd>
-                <RecoverIcon
-                  onClick={() => {
-                    handleRecover(article.article_id, article.title)
-                  }}
-                />
-              </BtnTd>
-            </TableContent>
-          ))}
-      </TrailsTable>
-    </Block>
+                >
+                  返回
+                </BackBtn>
+              </>
+            )}
+            {!recycle && (
+              <RecycleBin
+                onClick={() => {
+                  setRecycle(true)
+                }}
+              >
+                <BinIcon />
+              </RecycleBin>
+            )}
+          </RecycleBlock>
+          <TrailsTable>
+            {!recycle &&
+              articles &&
+              articles.map((article) => (
+                <TableContent key={article.article_id}>
+                  <LinkDefault to={`/articles/${article.article_id}`}>
+                    <CoverTd>
+                      <TrailImg src={article.cover_picture_url} />
+                    </CoverTd>
+                    <TrailsTd>{article.title}</TrailsTd>
+                  </LinkDefault>
+                  <CreatorTd>
+                    <LinkDefault to={`/users/${article.author_id}`}>{article.nickname}</LinkDefault>
+                  </CreatorTd>
+                  <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
+                  <BtnTd>
+                    <BinIcon
+                      onClick={() => {
+                        handleDelete(article.article_id, article.title)
+                      }}
+                    />
+                  </BtnTd>
+                </TableContent>
+              ))}
+            {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
+            {recycle &&
+              deletedArticles &&
+              deletedArticles.map((article) => (
+                <TableContent key={article.article_id}>
+                  <LinkDefault to={`/articles/${article.article_id}`}>
+                    <CoverTd>
+                      <TrailImg src={article.cover_picture_url} />
+                    </CoverTd>
+                    <TrailsTd>{article.title}</TrailsTd>
+                  </LinkDefault>
+                  <CreatorTd>
+                    <LinkDefault to={`/users/${article.author_id}`}>{article.nickname}</LinkDefault>
+                  </CreatorTd>
+                  <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
+                  <BtnTd>
+                    <RecoverIcon
+                      onClick={() => {
+                        handleRecover(article.article_id, article.title)
+                      }}
+                    />
+                  </BtnTd>
+                </TableContent>
+              ))}
+          </TrailsTable>
+        </Block>
+      )}
+    </>
   )
 }
 

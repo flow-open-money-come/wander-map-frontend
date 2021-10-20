@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styled from 'styled-components'
 import { FONT, RADIUS, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailMap.svg'
@@ -59,17 +59,19 @@ const Marker = styled(PinSvg)`
 function TrailMap({ coordinate }) {
 
   const [mapCenter, setMapCenter] = useState({})
+  const isUnmounted = useRef(false)
   const Center = {
     lat: 24.42360428661788,
     lng: 121.70835976400171
   }
 
   useEffect(() => {
-    setMapCenter({
-      lat: coordinate.y,
-      lng: coordinate.x
-    })
-    
+    if (!isUnmounted.current) {
+      setMapCenter({
+        lat: coordinate.y,
+        lng: coordinate.x
+      })
+    }
   }, [coordinate])
 
   return (

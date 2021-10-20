@@ -7,9 +7,9 @@ import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
 import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
 import { getTrails, deleteTrail, getDeletedTrail, recoverTrail } from '../../WebAPI'
 import { Link } from 'react-router-dom'
-import { AuthContext } from '../../context'
+import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
-
+import Loading from '../common/Loading'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -185,17 +185,21 @@ function TrailsManagement({ recycle, setRecycle }) {
   const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
 
   useEffect(() => {
+    setIsLoading(true)
     getTrails(`?offset=${(page - 1) * 20}&search=${searchResults}`)
       .then((res) => {
         setTrails(res.data.data)
-        setTotalPages(Math.ceil(res.headers['x-total-count']/20))})
+        setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
+        setIsLoading(false)
+      })
       .catch((err) => console.error(err))
     getDeletedTrail(`?offset=${(page - 1) * 20}`)
       .then((res) => setDeletedTrails(res.data.data))
       .catch((err) => console.error(err))
-  }, [page, searchResults, recycle])
+  }, [page, searchResults, recycle, setIsLoading])
 
 
   useEffect(() => {
@@ -217,79 +221,85 @@ function TrailsManagement({ recycle, setRecycle }) {
   }
 
   return (
-    <Block>
-      <SearchBar>
-        <SearchIcon />
-        <SearchField
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') setSearchResults(searchValue)
-          }}
-        />
-      </SearchBar>
-      <RecycleBlock>
-        {recycle && (
-          <>
-            <RecycleTitle>刪除列表</RecycleTitle>
-            <BackBtn onClick={() => setRecycle(false)}>返回</BackBtn>
-          </>
-        )}
-        {!recycle && (
-          <RecycleBin
-            onClick={() => {
-              setRecycle(true)
-            }}
-          >
-            <BinIcon />
-          </RecycleBin>
-        )}
-      </RecycleBlock>
-      <TrailsTable>
-        {!recycle &&
-          trails &&
-          trails.map((trail) => (
-            <TableContent key={trail.trail_id}>
-              <LinkWrapper to={`/trails/${trail.trail_id}`}>
-                <CoverTd>
-                  <TrailImg src={trail.cover_picture_url} />
-                </CoverTd>
-                <TrailsTd>{trail.title}</TrailsTd>
-              </LinkWrapper>
-              <CreatorTd>admin</CreatorTd>
-              <BtnTd>
-                <Link to={`/trails/${trail.trail_id}`}>
-                  <EditIcon />
-                </Link>
-                <BinIcon
-                  onClick={() => {
-                    handleDelete(trail.trail_id, trail.title)
-                  }}
-                />
-              </BtnTd>
-            </TableContent>
-          ))}
-        {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
-        {recycle &&
-          deletedTrails &&
-          deletedTrails.map((trail) => (
-            <TableContent key={trail.trail_id}>
-              <CoverTd>
-                <TrailImg src={trail.cover_picture_url} />
-              </CoverTd>
-              <TrailsTd>{trail.title}</TrailsTd>
-              <CreatorTd>admin</CreatorTd>
-              <BtnTd>
-                <RecoverIcon
-                  onClick={() => {
-                    handleRecover(trail.trail_id, trail.title)
-                  }}
-                />
-              </BtnTd>
-            </TableContent>
-          ))}
-      </TrailsTable>
-    </Block>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Block>
+          <SearchBar>
+            <SearchIcon />
+            <SearchField
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') setSearchResults(searchValue)
+              }}
+            />
+          </SearchBar>
+          <RecycleBlock>
+            {recycle && (
+              <>
+                <RecycleTitle>刪除列表</RecycleTitle>
+                <BackBtn onClick={() => setRecycle(false)}>返回</BackBtn>
+              </>
+            )}
+            {!recycle && (
+              <RecycleBin
+                onClick={() => {
+                  setRecycle(true)
+                }}
+              >
+                <BinIcon />
+              </RecycleBin>
+            )}
+          </RecycleBlock>
+          <TrailsTable>
+            {!recycle &&
+              trails &&
+              trails.map((trail) => (
+                <TableContent key={trail.trail_id}>
+                  <LinkWrapper to={`/trails/${trail.trail_id}`}>
+                    <CoverTd>
+                      <TrailImg src={trail.cover_picture_url} />
+                    </CoverTd>
+                    <TrailsTd>{trail.title}</TrailsTd>
+                  </LinkWrapper>
+                  <CreatorTd>admin</CreatorTd>
+                  <BtnTd>
+                    <Link to={`/trails/${trail.trail_id}`}>
+                      <EditIcon />
+                    </Link>
+                    <BinIcon
+                      onClick={() => {
+                        handleDelete(trail.trail_id, trail.title)
+                      }}
+                    />
+                  </BtnTd>
+                </TableContent>
+              ))}
+            {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
+            {recycle &&
+              deletedTrails &&
+              deletedTrails.map((trail) => (
+                <TableContent key={trail.trail_id}>
+                  <CoverTd>
+                    <TrailImg src={trail.cover_picture_url} />
+                  </CoverTd>
+                  <TrailsTd>{trail.title}</TrailsTd>
+                  <CreatorTd>admin</CreatorTd>
+                  <BtnTd>
+                    <RecoverIcon
+                      onClick={() => {
+                        handleRecover(trail.trail_id, trail.title)
+                      }}
+                    />
+                  </BtnTd>
+                </TableContent>
+              ))}
+          </TrailsTable>
+        </Block>
+      )}
+    </>
   )
 }
 

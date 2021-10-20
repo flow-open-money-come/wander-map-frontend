@@ -25,6 +25,7 @@ import { AuthContext, LoadingContext } from '../../../context'
 import { getAuthToken } from '../../../utils'
 import useLike from '../../../hooks/useLike'
 import Loading from '../../../components/common/Loading'
+import jwt_decode from 'jwt-decode'
 
 
 const TrailPageContainer = styled.div`
@@ -166,7 +167,9 @@ function TrailPage() {
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const history = useHistory()
   const { thumb, setThumb, handleClickLike } = useLike()
-  
+  // 未知原因 useContext(AuthContext) 有時會抓不到值 直接在此decode
+  // const userInfo = jwt_decode(getAuthToken())
+
   console.log('userInfo', userInfo)
 
   useEffect(() => {
@@ -174,7 +177,8 @@ function TrailPage() {
     getTrails(id)
       .then((res) => {
         res.data.data[0] ? setTrailInfo(res.data.data[0]) : history.push(`/trails`)
-        setIsLoading(false)})
+        setIsLoading(false)
+      })
       .catch((error) => console.error(error))
     getTrailArticles(id, '?limit=3')
       .then((res) => setArticles(res.data.data))
@@ -192,37 +196,36 @@ function TrailPage() {
   }, [userInfo, id, setThumb])
 
   return (
-  <>  
-    {isLoading ? (
+    <>
+      {isLoading ? (
         <Loading />
       ) : (
-    <TrailPageContainer>
-      <HeadFlex>
-        <Cover src={trailInfo && trailInfo.cover_picture_url} />
-        <TitleAndDesc>
-          <Title>{trailInfo && trailInfo.title}</Title>
-          <Desc>{trailInfo && trailInfo.description}</Desc>
-        </TitleAndDesc>
-        {userInfo && (
-          <CollectBlock thumb={thumb} userInfo={userInfo} onClick={userInfo && handleClickLike}
-          >
-            <CollectIcon />
-          </CollectBlock>
-        )}
-      </HeadFlex>
-      <InfoAndWeather>
-        <TrailInfo trailInfo={trailInfo} />
-        <Weather location={trailInfo && trailInfo.location} />
-      </InfoAndWeather>
-      <TrailMap coordinate={trailInfo && trailInfo.coordinate} />
-      {trailInfo && trailInfo.map_picture_url && (
-        <TrailRoute routePic={trailInfo && trailInfo.map_picture_url} />
+        <TrailPageContainer>
+          <HeadFlex>
+            <Cover src={trailInfo && trailInfo.cover_picture_url} />
+            <TitleAndDesc>
+              <Title>{trailInfo && trailInfo.title}</Title>
+              <Desc>{trailInfo && trailInfo.description}</Desc>
+            </TitleAndDesc>
+            {userInfo && (
+              <CollectBlock thumb={thumb} userInfo={userInfo} onClick={userInfo && handleClickLike}>
+                <CollectIcon />
+              </CollectBlock>
+            )}
+          </HeadFlex>
+          <InfoAndWeather>
+            <TrailInfo trailInfo={trailInfo} />
+            <Weather location={trailInfo && trailInfo.location} />
+          </InfoAndWeather>
+          <TrailMap coordinate={trailInfo && trailInfo.coordinate} />
+          {trailInfo && trailInfo.map_picture_url && (
+            <TrailRoute routePic={trailInfo && trailInfo.map_picture_url} />
+          )}
+          {articles && articles.length !== 0 && <TrailArticles articles={articles} />}
+          <TrailReviews />
+        </TrailPageContainer>
       )}
-      {articles && articles.length !== 0 && <TrailArticles articles={articles} />}
-      <TrailReviews />
-    </TrailPageContainer>
-    )}
-  </>
+    </>
   )
 }
 

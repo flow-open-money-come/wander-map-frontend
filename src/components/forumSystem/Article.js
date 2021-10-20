@@ -158,6 +158,7 @@ const TitleAndTags = styled.div`
 `
 
 export default function ArticleList({
+  id,
   title,
   content,
   tags,
@@ -169,7 +170,7 @@ export default function ArticleList({
   articlePage,
 }) {
   return (
-    <ArticlesContainer>
+    <ArticlesContainer key={id}>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <TitleAndTags $lessRwd={lessRwd}>

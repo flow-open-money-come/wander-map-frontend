@@ -5,8 +5,9 @@ import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { getAuthToken } from '../../utils'
 import { getAllUsers, changeUserRole } from '../../WebAPI'
 import { Link } from 'react-router-dom'
-import { AuthContext } from '../../context'
+import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
+import Loading from '../common/Loading'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -125,15 +126,19 @@ function UsersManagement() {
   const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const [suspended, setSuspended] = useState(false) //優化延遲問題用
 
   useEffect(() => {
+    setIsLoading(true)
     getAllUsers(`?offset=${(page - 1) * 20}`)
       .then((res) => {
         setUsers(res.data.data.users)
         setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
+        setIsLoading(false)
       })
       .catch((err) => console.error(err))
-  }, [page, toggleStatus])
+  }, [page, toggleStatus, setIsLoading])
 
   const handleToggleState = (userID, role) => {
     if (!userInfo || userInfo.role !== 'admin') return
@@ -145,42 +150,48 @@ function UsersManagement() {
   }
 
   return (
-    <Block>
-      <SearchBar>
-        <SearchIcon />
-        <SearchField />
-      </SearchBar>
-      <UsersTable>
-        <TableHeader>
-          <HeaderTd>暱稱</HeaderTd>
-          <HeaderTd>帳號</HeaderTd>
-          <HeaderTd>入會日期</HeaderTd>
-          <HeaderTd>狀態</HeaderTd>
-        </TableHeader>
-        {users &&
-          users.map((user) => (
-            <TableContent key={user.user_id} $role={user.role}>
-              <NicknameTd>
-                <LinkDefault to={`/user/${user.user_id}`}>{user.nickname}</LinkDefault>
-              </NicknameTd>
-              <EmailTd>{user.email}</EmailTd>
-              <ContentTd>{new Date(user.created_at).toLocaleDateString('ja')}</ContentTd>
-              <ContentTd>
-                <StatusBtn
-                  onClick={() => {
-                    handleToggleState(user.user_id, user.role)
-                  }}
-                >
-                  {user.role === 'member' && '停權'}
-                  {user.role === 'suspended' && '復權'}
-                  {user.role === 'admin' && '管理員'}
-                </StatusBtn>
-              </ContentTd>
-            </TableContent>
-          ))}
-      </UsersTable>
-      <Pagination page={page} setPage={setPage} totalPages={totalPages} />
-    </Block>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Block>
+          <SearchBar>
+            <SearchIcon />
+            <SearchField />
+          </SearchBar>
+          <UsersTable>
+            <TableHeader>
+              <HeaderTd>暱稱</HeaderTd>
+              <HeaderTd>帳號</HeaderTd>
+              <HeaderTd>入會日期</HeaderTd>
+              <HeaderTd>狀態</HeaderTd>
+            </TableHeader>
+            {users &&
+              users.map((user) => (
+                <TableContent key={user.user_id} $role={user.role}>
+                  <NicknameTd>
+                    <LinkDefault to={`/user/${user.user_id}`}>{user.nickname}</LinkDefault>
+                  </NicknameTd>
+                  <EmailTd>{user.email}</EmailTd>
+                  <ContentTd>{new Date(user.created_at).toLocaleDateString('ja')}</ContentTd>
+                  <ContentTd>
+                    <StatusBtn
+                      onClick={() => {
+                        handleToggleState(user.user_id, user.role)
+                      }}
+                    >
+                      {user.role === 'member' && '停權'}
+                      {user.role === 'suspended' && '復權'}
+                      {user.role === 'admin' && '管理員'}
+                    </StatusBtn>
+                  </ContentTd>
+                </TableContent>
+              ))}
+          </UsersTable>
+          <Pagination page={page} setPage={setPage} totalPages={totalPages} />
+        </Block>
+      )}
+    </>
   )
 }
 

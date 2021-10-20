@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
 import EditIcon from '../../icons/backstage/edit.svg'
 import BinIcon from '../../icons/backstage/bin.svg'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import {
-  apiMessagesPost,
-  apiMessagesDelete,
-  apiMessagesPatch,
-  apiMessages,
-  apiComments,
-  apiCommentsPost,
-  apiCommentsPatch,
-  apiCommentsDelete,
+  postMessage,
+  deleteMessage,
+  patchMessage,
+  getMessages,
+  getComments,
+  postComment,
+  patchComment,
+  deleteComment
 } from '../../WebAPI'
 import { LoadingContext, AuthContext } from '../../../src/context'
 import Loading from '../../components/common/Loading'
@@ -36,6 +36,7 @@ const CommentsHeader = styled.div`
 `
 
 const UserAvatar = styled.img`
+  border: 1px solid ${COLOR.gray_light};
   width: 35px;
   height: 35px;
   border-radius: 50%;
@@ -71,11 +72,10 @@ const InputField = styled.input`
     height: 40px;
     margin: 10px 20px;
   }
-
   ${(props) =>
     !props.userInfo &&
     `
-    // pointer-events: none;
+    pointer-events: none;
   `}
 `
 
@@ -133,7 +133,7 @@ const CommentViewInfo = styled.div`
   width: 70%;
 `
 
-const CommentNickname = styled.div`
+const CommentNickname = styled(Link)`
   font-size: ${FONT.s};
   font-weight: bold;
   color: ${COLOR.green};
@@ -171,7 +171,6 @@ const CommentBtn = styled.div`
     margin: 0 3px;
     width: 15px;
     height: 15px;
-
     &:hover {
       cursor: pointer;
       opacity: 0.7;
@@ -217,10 +216,10 @@ const EditInput = styled.textarea`
   border-radius: ${RADIUS.s};
   margin-top: 10px;
   line-height: 1.5em;
-  opacity: 0.7;
   padding-left: 5px;
   min-width: 80%;
   padding: 5px;
+  background: ${COLOR.white};
 `
 
 const SendBtn = styled.button`
@@ -232,7 +231,6 @@ const SendBtn = styled.button`
   &:focus {
     outline: none;
   }
-
   ${(props) =>
     props.editValue &&
     `
@@ -251,7 +249,6 @@ const EditWrapper = styled.div`
 const Reminder = styled.span`
   color: ${COLOR.pink};
   font-size: ${FONT.s};
-
   ${(props) =>
     props.reminder === 1 &&
     `
@@ -272,7 +269,8 @@ const BinButton = styled.button`
 `
 
 export default function Comments({ isMessage }) {
-  const { id } = useParams()
+  let { id } = useParams()
+  const { trailID } = useParams()
   const [reminder, setReminder] = useState('')
   const { inputValue, setInputValue, handleInputChange } = useInput()
   const [messages, setMessages] = useState([])
@@ -280,15 +278,18 @@ export default function Comments({ isMessage }) {
   const [editing, setEditing] = useState(false)
   const { userInfo } = useContext(AuthContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
-
   function isMessageOrNot(message, comment) {
     return isMessage ? message : comment
+  }
+
+  if (trailID) {
+    id = trailID
   }
 
   useEffect(() => {
     const getMessage = async () => {
       try {
-        let res = await isMessageOrNot(apiMessages, apiComments)(id)
+        let res = await isMessageOrNot(getMessages, getComments)(id)
         if (res.status === 200) {
           setMessages(res.data.data)
         }
@@ -307,11 +308,7 @@ export default function Comments({ isMessage }) {
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(apiMessagesPost, apiCommentsPost)(
-        id,
-        userInfo.user_id,
-        inputValue
-      )
+      await isMessageOrNot(postMessage, postComment)(id, userInfo.user_id, inputValue)
       setIsLoading(false)
       setInputValue('')
     } catch (err) {
@@ -328,11 +325,7 @@ export default function Comments({ isMessage }) {
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(apiMessagesPatch, apiCommentsPatch)(
-        id,
-        messageId,
-        editValue
-      )
+      await isMessageOrNot(patchMessage, patchComment)(id, messageId, editValue)
       setEditing(false)
       setIsLoading(false)
     } catch (err) {
@@ -354,7 +347,7 @@ export default function Comments({ isMessage }) {
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(apiMessagesDelete, apiCommentsDelete)(id, messageId)
+      await isMessageOrNot(deleteMessage, deleteComment)(id, messageId)
       setIsLoading(false)
     } catch (err) {
       console.log(err)
@@ -362,115 +355,107 @@ export default function Comments({ isMessage }) {
   }
   return (
     <>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <CommentsContainer>
-          {reminder === 1 && userInfo && (
-            <Reminder reminder={reminder}>請輸入內容</Reminder>
-          )}
-          <CommentsHeader>
-            <UserAvatar src='https://tinyurl.com/rp7x8r9c' />
-            <InputField
-              userInfo={userInfo}
-              value={inputValue}
-              onChange={(e) => {
-                handleInputChange(e)
-                setReminder('')
-              }}
-              placeholder={!userInfo ? '請登入發表留言' : '請輸入留言...'}
-            />
-            <SentBtn onClick={(e) => handleSubmit(e)}>
-              <SendIcon />
-            </SentBtn>
-          </CommentsHeader>
-          {messages.map((message) => (
-            <Card>
-              <CommentInfo>
-                <CommentViewInfo>
-                  <UserAvatar src={message.icon_url} />
-                  <CommentNickname>{message.nickname}</CommentNickname>
-                </CommentViewInfo>
-                <CommentBtn>
-                  <CommentTime>
-                    {new Date(message.created_at).toLocaleString('ja')}
-                  </CommentTime>
-                  {userInfo &&
-                    (userInfo.user_id === message.author_id ||
-                      userInfo.role === 'admin') && (
-                      <>
-                        <EditButton
-                          id={isMessageOrNot(
-                            message.message_id,
-                            message.comment_id
-                          )}
-                          onClick={handlePopUpInput}
-                        />
-                        <BinButton
-                          id={isMessageOrNot(
-                            message.message_id,
-                            message.comment_id
-                          )}
-                          onClick={(e) => {
-                            handleDeleteMessage(e)
-                          }}
-                        />
-                      </>
-                    )}
-                </CommentBtn>
-              </CommentInfo>
-              {Number(editing) ===
-              isMessageOrNot(message.message_id, message.comment_id) ? (
-                <EditWrapper>
-                  <EditInput
-                    rows='3'
+      {isLoading && <Loading />}
+      <CommentsContainer>
+        {reminder === 1 && userInfo && <Reminder reminder={reminder}>請輸入內容</Reminder>}
+        <CommentsHeader>
+          <UserAvatar src={userInfo ? userInfo.icon_url : 'https://i.imgur.com/r50z0vv.png'} />
+          <InputField
+            userInfo={userInfo}
+            value={inputValue}
+            onChange={(e) => {
+              handleInputChange(e)
+              setReminder('')
+            }}
+            placeholder={!userInfo ? '請登入發表留言' : '請輸入留言...'}
+          />
+          <SentBtn onClick={(e) => handleSubmit(e)}>
+            <SendIcon />
+          </SentBtn>
+        </CommentsHeader>
+        {messages.map((message) => (
+          <Card>
+            <CommentInfo>
+              <CommentViewInfo>
+                <UserAvatar
+                  to={
+                    userInfo && userInfo.user_id === message.author_id
+                      ? `/backstage/${message.author_id}`
+                      : `/user/${message.author_id}`
+                  }
+                  src={message.icon_url}
+                />
+                <CommentNickname
+                  to={
+                    userInfo && userInfo.user_id === message.author_id
+                      ? `/backstage/${message.author_id}`
+                      : `/user/${message.author_id}`
+                  }
+                >
+                  {message.nickname}
+                </CommentNickname>
+              </CommentViewInfo>
+              <CommentBtn>
+                <CommentTime>{new Date(message.created_at).toLocaleString('ja')}</CommentTime>
+                {userInfo && (userInfo.user_id === message.author_id || userInfo.role === 'admin') && (
+                  <>
+                    <EditButton
+                      id={isMessageOrNot(message.message_id, message.comment_id)}
+                      onClick={handlePopUpInput}
+                    />
+                    <BinButton
+                      id={isMessageOrNot(message.message_id, message.comment_id)}
+                      onClick={(e) => {
+                        handleDeleteMessage(e)
+                      }}
+                    />
+                  </>
+                )}
+              </CommentBtn>
+            </CommentInfo>
+            {Number(editing) === isMessageOrNot(message.message_id, message.comment_id) ? (
+              <EditWrapper>
+                <EditInput
+                  rows='3'
+                  id={isMessageOrNot(message.message_id, message.comment_id)}
+                  onChange={(e) => {
+                    setEditValue(e.target.value)
+                    setReminder('')
+                  }}
+                  defaultValue={editValue ? editValue : message.content}
+                  type='text'
+                />
+                <div>
+                  <SendBtn
+                    editValue={editValue}
                     id={isMessageOrNot(message.message_id, message.comment_id)}
-                    onChange={(e) => {
-                      setEditValue(e.target.value)
+                    onClick={(e) => {
+                      handleEditMessage(e)
+                    }}
+                  >
+                    送出
+                  </SendBtn>
+                  <SendBtn
+                    editValue={!editValue}
+                    onClick={() => {
+                      setEditing(false)
+                      setEditValue('')
                       setReminder('')
                     }}
-                    defaultValue={editValue ? editValue : message.content}
-                    type='text'
-                  />
-                  <div>
-                    <SendBtn
-                      editValue={editValue}
-                      id={isMessageOrNot(
-                        message.message_id,
-                        message.comment_id
-                      )}
-                      onClick={(e) => {
-                        handleEditMessage(e)
-                      }}
-                    >
-                      送出
-                    </SendBtn>
-                    <SendBtn
-                      editValue={!editValue}
-                      onClick={() => {
-                        setEditing(false)
-                        setEditValue('')
-                        setReminder('')
-                      }}
-                    >
-                      取消編輯
-                    </SendBtn>
-                    {reminder === 2 && (
-                      <Reminder reminder={reminder}>請輸入修改內容</Reminder>
-                    )}
-                  </div>
-                </EditWrapper>
-              ) : (
-                <Content
-                  id={isMessageOrNot(message.message_id, message.comment_id)}
-                >
-                  {message.content}
-                </Content>
-              )}
-            </Card>
-          ))}
-        </CommentsContainer>
-      )}
+                  >
+                    取消編輯
+                  </SendBtn>
+                  {reminder === 2 && <Reminder reminder={reminder}>請輸入修改內容</Reminder>}
+                </div>
+              </EditWrapper>
+            ) : (
+              <Content id={isMessageOrNot(message.message_id, message.comment_id)}>
+                {message.content}
+              </Content>
+            )}
+          </Card>
+        ))}
+      </CommentsContainer>
     </>
   )
 }

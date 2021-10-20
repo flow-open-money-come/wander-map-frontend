@@ -42,17 +42,17 @@ export const recoverTrail = (trailID) => instance.patch('/trails/deleted/' + tra
 export const postTrails = (data) => instance.post('/trails', data)
 
 // 步道評論CRUD
-export const apiComments = (articleId) => instance.get(`/trails/${articleId}/comments`)
-export const apiCommentsPost = (articleId, authorId, content) =>
+export const getComments = (articleId) => instance.get(`/trails/${articleId}/comments`)
+export const postComment = (articleId, authorId, content) =>
   instance.post(`/trails/${articleId}/comments`, {
     author_id: authorId,
     content
   })
-export const apiCommentsPatch = (articleId, messageId, content) =>
+export const patchComment = (articleId, messageId, content) =>
   instance.patch(`/trails/${articleId}/comments/${messageId}`, {
     content
   })
-export const apiCommentsDelete = (articleId, messageId) =>
+export const deleteComment = (articleId, messageId) =>
   instance.delete(`/trails/${articleId}/comments/${messageId}`)
 
 // articles
@@ -74,17 +74,17 @@ export const recoverArticle = (articleID) => instance.patch('/articles/deleted/'
 export const postArticles = (data) => instance.post('/articles', data)
 
 // 心得評論CRUD
-export const apiMessages = (articleId) => instance.get(`/articles/${articleId}/messages`)
-export const apiMessagesPost = (articleId, authorId, content) =>
+export const getMessages = (articleId) => instance.get(`/articles/${articleId}/messages`)
+export const postMessage = (articleId, authorId, content) =>
   instance.post(`/articles/${articleId}/messages`, {
     author_id: authorId,
     content
   })
-export const apiMessagesPatch = (articleId, messageId, content) =>
+export const patchMessage = (articleId, messageId, content) =>
   instance.patch(`/articles/${articleId}/messages/${messageId}`, {
     content
   })
-export const apiMessagesDelete = (articleId, messageId) =>
+export const deleteMessage = (articleId, messageId) =>
   instance.delete(`/articles/${articleId}/messages/${messageId}`)
 
 // 心得按讚關聯

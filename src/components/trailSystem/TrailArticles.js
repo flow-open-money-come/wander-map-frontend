@@ -67,6 +67,7 @@ function TrailArticles({ articles }) {
       <ArticlesContainer>
         {articles.map((article) => (
           <ArticleList
+            id={article.article_id}
             articleImgSrc={article.cover_picture_url}
             avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
             title={article.title}
