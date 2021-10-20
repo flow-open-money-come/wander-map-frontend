@@ -104,7 +104,9 @@ export default function UserCollect() {
       </SearchBar>
       <TrailsWrapper>
         {userCollectData.trails.length !== 0 ? (
-          (trailInfo) => <TrailCard trailInfo={trailInfo} />
+          userCollectData.trails.map((trailInfo) => (
+            <TrailCard trailInfo={trailInfo} />
+          ))
         ) : (
           <EmptyInfo>
             <EmptyIcon />

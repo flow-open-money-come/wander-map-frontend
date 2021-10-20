@@ -3,6 +3,11 @@ import styled from 'styled-components'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
+import ReactHtmlParser, {
+  processNodes,
+  convertNodeToElement,
+  htmlparser2,
+} from 'react-html-parser'
 
 const ArticlesContainer = styled(Link)`
   color: ${COLOR.black};
@@ -15,13 +20,13 @@ const ArticlesContainer = styled(Link)`
 `
 
 const ArticlesImg = styled.img`
-  width: 120px;
+  min-width: 120px;
   height: 120px;
   border-radius: ${RADIUS.lg};
   align-self: center;
   object-fit: cover;
   ${MEDIA_QUERY.md} {
-    width: 150px;
+    min-width: 150px;
     height: 150px;
     margin-right: 13px;
   }
@@ -180,7 +185,9 @@ export default function ArticleList({
               })}
           </ArticlesTags>
         </TitleAndTags>
-        <ArticlesContent $lessRwd={lessRwd}>{content}</ArticlesContent>
+        <ArticlesContent $lessRwd={lessRwd}>
+          {ReactHtmlParser(content)}
+        </ArticlesContent>
         <ArticlesInfo>
           <ArticlesUser
             to={

@@ -83,6 +83,7 @@ export default function UserLike() {
     getUserLiked(userID)
       .then((res) => {
         setUserLikeData(res.data.data)
+        console.log(res.data.data)
       })
       .catch((err) => {
         console.log(err.response.data)
@@ -101,9 +102,9 @@ export default function UserLike() {
             <ArticleList
               key={article.article_id}
               articleImgSrc={article.cover_picture_url}
-              avatarImgSrc={''}
+              avatarImgSrc={article.icon_url}
               title={article.title}
-              user={''}
+              user={article.nickname}
               tags={article.tag_names.split(',')}
               date={article.created_at}
               content={article.content}

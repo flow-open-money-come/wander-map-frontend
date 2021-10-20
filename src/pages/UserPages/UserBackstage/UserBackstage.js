@@ -117,7 +117,6 @@ const ModifyBtn = styled(EditIcon)`
 export default function UserBackstage() {
   const { userInfo } = useContext(AuthContext)
   const history = useHistory()
-
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [tab, setTab] = useState('Articles')
   const [popUp, setPopUp] = useState({
@@ -136,12 +135,11 @@ export default function UserBackstage() {
     setIsLoading(true)
     getUserInfo(userID)
       .then((res) => {
-        console.log(res.data)
         setUserData(res.data.data)
         setIsLoading(false)
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response)
       })
   }, [])
 

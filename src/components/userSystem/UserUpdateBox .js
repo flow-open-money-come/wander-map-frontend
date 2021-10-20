@@ -126,6 +126,8 @@ export default function UserUpdateBox({
         setUserInfo({
           ...userInfo,
           nickname: updateUserData.nickname,
+          icon_url: updateUserData.iconUrl,
+          iconUrl: updateUserData.iconUrl,
         })
       })
       .catch((err) => {

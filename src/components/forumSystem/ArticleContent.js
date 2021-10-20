@@ -3,6 +3,11 @@ import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY, EFFECT } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
+import ReactHtmlParser, {
+  processNodes,
+  convertNodeToElement,
+  htmlparser2,
+} from 'react-html-parser'
 
 const UserName = styled(Link)`
   color: ${COLOR.black};
@@ -64,7 +69,7 @@ const ArticleDesc = styled.div`
   border-top: 1px solid ${COLOR.beige};
   margin: 15px 0;
   width: 100%;
-  max-height: 40rem;
+  max-height: 38rem;
   font-size: ${FONT.s};
   line-height: 40px;
   text-overflow: ellipsis;
@@ -78,7 +83,7 @@ const ArticleDesc = styled.div`
   ${(props) =>
     props.unfold &&
     `
-    overflow: visible;
+    overflow: auto;
     max-height: fit-content;
   `}
 `
@@ -120,7 +125,7 @@ export default function ArticleContent({ post }) {
           </ArticleDate>
         </UserInfo>
       </ArticleUser>
-      <ArticleDesc unfold={unfold}>{post.content}</ArticleDesc>
+      <ArticleDesc unfold={unfold}>{ReactHtmlParser(post.content)}</ArticleDesc>
       <UnfoldButton unfold={unfold} onClick={() => setUnfold(!unfold)}>
         {unfold ? '收合' : '展開全文'}
       </UnfoldButton>

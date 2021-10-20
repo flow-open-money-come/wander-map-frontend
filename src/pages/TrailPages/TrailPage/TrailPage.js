@@ -15,18 +15,13 @@ import TrailMap from '../../../components/trailSystem/TrailMap'
 import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
-import {
-  getTrails,
-  getTrailArticles,
-  getUserCollectedTrails
-} from '../../../WebAPI'
+import { getTrails, getTrailArticles, getUserCollect } from '../../../WebAPI'
 import { useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import { getAuthToken } from '../../../utils'
 import useLike from '../../../hooks/useLike'
 import Loading from '../../../components/common/Loading'
 import jwt_decode from 'jwt-decode'
-
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -176,7 +171,9 @@ function TrailPage() {
     setIsLoading(true)
     getTrails(id)
       .then((res) => {
-        res.data.data[0] ? setTrailInfo(res.data.data[0]) : history.push(`/trails`)
+        res.data.data[0]
+          ? setTrailInfo(res.data.data[0])
+          : history.push(`/trails`)
         setIsLoading(false)
       })
       .catch((error) => console.error(error))
@@ -186,7 +183,7 @@ function TrailPage() {
   }, [id, history, setIsLoading])
 
   useEffect(() => {
-    getUserCollectedTrails(userInfo.user_id)
+    getUserCollect(userInfo.user_id)
       .then((res) =>
         res.data.data.trails.forEach((trail) => {
           if (trail.trail_id === id) setThumb(true)
@@ -208,7 +205,11 @@ function TrailPage() {
               <Desc>{trailInfo && trailInfo.description}</Desc>
             </TitleAndDesc>
             {userInfo && (
-              <CollectBlock thumb={thumb} userInfo={userInfo} onClick={userInfo && handleClickLike}>
+              <CollectBlock
+                thumb={thumb}
+                userInfo={userInfo}
+                onClick={userInfo && handleClickLike}
+              >
                 <CollectIcon />
               </CollectBlock>
             )}
@@ -221,7 +222,9 @@ function TrailPage() {
           {trailInfo && trailInfo.map_picture_url && (
             <TrailRoute routePic={trailInfo && trailInfo.map_picture_url} />
           )}
-          {articles && articles.length !== 0 && <TrailArticles articles={articles} />}
+          {articles && articles.length !== 0 && (
+            <TrailArticles articles={articles} />
+          )}
           <TrailReviews />
         </TrailPageContainer>
       )}
