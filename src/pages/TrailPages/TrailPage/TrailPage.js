@@ -163,12 +163,12 @@ function TrailPage() {
   const { id } = useParams()
   const [trailInfo, setTrailInfo] = useState('')
   const [articles, setArticles] = useState(null)
-  const { userInfo } = useContext(AuthContext)
+  // const { userInfo } = useContext(AuthContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const history = useHistory()
   const { thumb, setThumb, handleClickLike } = useLike()
   // 未知原因 useContext(AuthContext) 有時會抓不到值 直接在此decode
-  // const userInfo = jwt_decode(getAuthToken())
+  const userInfo = jwt_decode(getAuthToken())
 
   console.log('userInfo', userInfo)
 

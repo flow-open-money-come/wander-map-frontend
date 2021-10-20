@@ -15,7 +15,7 @@ instance.interceptors.request.use((config) => {
 // user
 export const userLogin = (payload) => instance.post('/users/login', payload)
 export const userRegister = (payload) => instance.post('/users/register', payload)
-export const getAllUsers = (params) => instance.get('/users' + params)
+export const getAllUsers = (params) => instance.get(`/users${params}`)
 export const refreshAccessToken = () => instance.get('/users/refresh')
 export const userLogout = () => instance.get('/users/logout')
 
@@ -25,18 +25,18 @@ export const collectTrail = (userID, trailID) =>
 export const cancelCollected = (userID, trailID) =>
   instance.delete(`/users/${userID}/collected-trails/${trailID}`)
 
-export const changeUserRole = (userID, role) => instance.patch('/users/' + userID, { role: role })
+export const changeUserRole = (userID, role) => instance.patch(`/users/${userID}`, { role: role })
 
 // trails
 // get 相關
-export const getTrails = (params) => instance.get('/trails/' + params)
+export const getTrails = (params) => instance.get(`/trails/${params}`)
 export const getHotTrails = () => instance.get('/trails/hot/5')
 export const getTrailsCondition = () => axios.get(config.tfrHost)
 
 // 刪除復原相關
-export const deleteTrail = (trailID) => instance.delete('/trails/' + trailID)
-export const getDeletedTrail = (params) => instance.get('/trails/deleted' + params)
-export const recoverTrail = (trailID) => instance.patch('/trails/deleted/' + trailID)
+export const deleteTrail = (trailID) => instance.delete(`/trails/${trailID}`)
+export const getDeletedTrail = (params) => instance.get(`/trails/deleted/${params}`)
+export const recoverTrail = (trailID) => instance.patch(`/trails/deleted/${trailID}`)
 
 // 新增編輯相關
 export const postTrails = (data) => instance.post('/trails', data)
@@ -57,18 +57,18 @@ export const deleteComment = (articleId, messageId) =>
 
 // articles
 // get 相關
-export const getArticles = (params) => instance.get('/articles/' + params)
+export const getArticles = (params) => instance.get(`/articles${params}`)
 export const apiArticles = () => instance.get('/articles')
 export const apiArticle = (articleId) => instance.get(`/articles/${articleId}`)
 export const apiArticlesHot = () => instance.get('/articles/hot')
 export const getTrailArticles = (trailID, params) =>
-  instance.get('/trails/' + trailID + '/articles' + params)
-export const getArticlesUnderTrail = (TrailId) => instance.get('/trails/' + TrailId + '/articles')
+  instance.get(`/trails/${trailID}/articles/${params}`)
+export const getArticlesUnderTrail = (TrailId) => instance.get(`/trails/${TrailId}/articles`)
 
 // 刪除復原相關
-export const deleteArticle = (articleID) => instance.delete('/articles/' + articleID)
-export const getDeletedArticle = (params) => instance.get('/articles/deleted' + params)
-export const recoverArticle = (articleID) => instance.patch('/articles/deleted/' + articleID)
+export const deleteArticle = (articleID) => instance.delete(`/articles/${articleID}`)
+export const getDeletedArticle = (params) => instance.get(`/articles/deleted${params}`)
+export const recoverArticle = (articleID) => instance.patch(`/articles/deleted/${articleID}`)
 
 // 新增編輯相關
 export const postArticles = (data) => instance.post('/articles', data)
