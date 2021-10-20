@@ -3,7 +3,7 @@ import config from './config'
 import { getAuthToken } from './utils'
 
 const instance = axios.create({
-  baseURL: config.apiHost,
+  baseURL: config.apiHost2,
 })
 
 instance.interceptors.request.use((config) => {
@@ -22,7 +22,7 @@ export const userLogout = () => instance.get('/users/logout')
 
 // trails
 // get 相關
-export const getTrails = (params) => instance.get('/trails/' + params)
+export const getTrails = (params) => instance.get('/trails' + params)
 export const getHotTrails = () => instance.get('/trails/hot/5')
 export const getTrailsCondition = () => axios.get(config.tfrHost)
 
@@ -56,11 +56,10 @@ export const apiCommentsDelete = (articleId, messageId) =>
 export const getArticles = (params) => instance.get('/articles/' + params)
 export const apiArticles = () => instance.get('/articles')
 export const apiArticle = (articleId) => instance.get(`/articles/${articleId}`)
+
 export const apiArticlesHot = () => instance.get('/articles/hot')
 export const getTrailArticles = (trailID, params) =>
   instance.get('/trails/' + trailID + '/articles' + params)
-export const getArticlesUnderTrail = (TrailId) =>
-  instance.get('/trails/' + TrailId + '/articles')
 
 // 刪除復原相關
 export const deleteArticle = (articleID) =>

@@ -3,10 +3,9 @@ import { Link } from 'react-router-dom'
 import { COLOR, RADIUS, FONT, MEDIA_QUERY } from '../../constants/style'
 import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
-import { ActiveTrailContext, LoadingContext } from '../../context'
-import { useState, useEffect, useContext } from 'react'
-import { getArticlesUnderTrail } from '../../WebAPI'
-import Loading from '../../components/common/Loading'
+import { ActiveTrailContext } from '../../context'
+import { useState, useEffect } from 'react'
+import { getTrailArticles } from '../../WebAPI'
 
 const HomepageContainer = styled.div`
   width: 90%;
@@ -24,27 +23,29 @@ const HomePageWrapper = styled.div`
 `
 const MapWrapper = styled.div`
   width: 100%;
-  height: 600px;
+  height: 450px;
   border: 1px solid ${COLOR.beige};
   border-radius: ${RADIUS.md};
   overflow: hidden;
   z-index: 0;
   ${MEDIA_QUERY.lg} {
     width: 50%;
+    height: 600px;
     border-radius: 0px ${RADIUS.md} ${RADIUS.md} 0px;
   }
 `
 const ArticleListWrapper = styled.div`
   width: 100%;
-  height: 600px;
-  margin: 20px auto;
+  margin: 20px auto 60px auto;
   border: none;
-  padding: 20px 20px 40px 20px;
-  overflow: scroll;
   ${MEDIA_QUERY.lg} {
     width: 49%;
+    height: 600px;
     border: 1px solid ${COLOR.beige};
     border-radius: ${RADIUS.md} 0px 0px ${RADIUS.md};
+    overflow-y: scroll;
+    padding: 20px;
+    margin-bottom: 20px;
   }
 `
 const TrialTitleWrapper = styled.div`
@@ -101,7 +102,6 @@ const NoMatchMsg = styled.div`
 `
 
 function HomePage() {
-  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [activeTrailArticles, setActiveTrailArticles] = useState({
     activeTrailInfo: {
       trailId: '',
@@ -113,8 +113,7 @@ function HomePage() {
   })
 
   useEffect(() => {
-    setIsLoading(true)
-    getArticlesUnderTrail(1)
+    getTrailArticles(1, '')
       .then((res) => {
         if (res.data.success) {
           setActiveTrailArticles({
@@ -130,72 +129,65 @@ function HomePage() {
             articles: res.data.data,
           })
         }
-        setIsLoading(false)
       })
       .catch((err) => {
         console.log(err)
       })
-  }, [setIsLoading])
+  }, [])
   return (
     <>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <ActiveTrailContext.Provider
-          value={{ activeTrailArticles, setActiveTrailArticles }}
-        >
-          <HomepageContainer>
-            <HomePageWrapper>
-              <MapWrapper>
-                <Map />
-              </MapWrapper>
-              <ArticleListWrapper>
-                <TrialTitleWrapper>
-                  <TrialTitleName
-                    to={`trails/${activeTrailArticles.activeTrailInfo.trailId}`}
-                  >
-                    {activeTrailArticles.activeTrailInfo.trailTitle}
-                  </TrialTitleName>
-                  <SubTitleWrapper>
-                    <TrialTitleLocation>
-                      {activeTrailArticles.activeTrailInfo.trailLocation}
-                    </TrialTitleLocation>
+      <ActiveTrailContext.Provider
+        value={{ activeTrailArticles, setActiveTrailArticles }}
+      >
+        <HomepageContainer>
+          <HomePageWrapper>
+            <MapWrapper>
+              <Map />
+            </MapWrapper>
+            <ArticleListWrapper>
+              <TrialTitleWrapper>
+                <TrialTitleName
+                  to={`trails/${activeTrailArticles.activeTrailInfo.trailId}`}
+                >
+                  {activeTrailArticles.activeTrailInfo.trailTitle}
+                </TrialTitleName>
+                <SubTitleWrapper>
+                  <TrialTitleLocation>
+                    {activeTrailArticles.activeTrailInfo.trailLocation}
+                  </TrialTitleLocation>
 
-                    <TrialArticleNumber>
-                      {activeTrailArticles.articles.length} 篇心得
-                    </TrialArticleNumber>
-                  </SubTitleWrapper>
-                </TrialTitleWrapper>
-                <Divider />
-                <TrialArticleWrapper>
-                  {activeTrailArticles.articles.length !== 0 ? (
-                    activeTrailArticles.articles.map((articleInfos) => (
-                      <ArticleList
-                        key={articleInfos.article_id}
-                        articleImgSrc={articleInfos.cover_picture_url}
-                        avatarImgSrc={articleInfos.icon_url}
-                        title={articleInfos.title}
-                        user={articleInfos.author_name}
-                        tags={
-                          articleInfos.tag_names &&
-                          articleInfos.tag_names.split(',')
-                        }
-                        date={new Date(
-                          articleInfos.created_at
-                        ).toLocaleString()}
-                        content={articleInfos.content}
-                        lessRwd={true}
-                      />
-                    ))
-                  ) : (
-                    <NoMatchMsg>目前還沒有心得唷，快來分享吧！</NoMatchMsg>
-                  )}
-                </TrialArticleWrapper>
-              </ArticleListWrapper>
-            </HomePageWrapper>
-          </HomepageContainer>
-        </ActiveTrailContext.Provider>
-      )}
+                  <TrialArticleNumber>
+                    {activeTrailArticles.articles.length} 篇心得
+                  </TrialArticleNumber>
+                </SubTitleWrapper>
+              </TrialTitleWrapper>
+              <Divider />
+              <TrialArticleWrapper>
+                {activeTrailArticles.articles.length !== 0 ? (
+                  activeTrailArticles.articles.map((articleInfos) => (
+                    <ArticleList
+                      key={articleInfos.article_id}
+                      articleImgSrc={articleInfos.cover_picture_url}
+                      avatarImgSrc={articleInfos.icon_url}
+                      title={articleInfos.title}
+                      user={articleInfos.author_name}
+                      tags={
+                        articleInfos.tag_names &&
+                        articleInfos.tag_names.split(',')
+                      }
+                      date={new Date(articleInfos.created_at).toLocaleString()}
+                      content={articleInfos.content}
+                      lessRwd={true}
+                    />
+                  ))
+                ) : (
+                  <NoMatchMsg>目前還沒有心得唷，快來分享吧！</NoMatchMsg>
+                )}
+              </TrialArticleWrapper>
+            </ArticleListWrapper>
+          </HomePageWrapper>
+        </HomepageContainer>
+      </ActiveTrailContext.Provider>
     </>
   )
 }
