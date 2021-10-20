@@ -253,7 +253,9 @@ export default function UserOverviewPage() {
             <Articles>
               <ArticlesTitle>{article.title}</ArticlesTitle>
               <ArticlesContent>{article.content}</ArticlesContent>
-              <ArticlesDate>{article.created_at}</ArticlesDate>
+              <ArticlesDate>
+                {new Date(article.created_at).toLocaleString('ja')}
+              </ArticlesDate>
             </Articles>
           </ArticlesWrapper>
         ))}

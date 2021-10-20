@@ -91,11 +91,16 @@ export default function UserTodoItems() {
         if (todo.todo_id !== todo_id) return todo
         return {
           ...todo,
-          is_done: !todo.is_done,
+          is_done: todo.is_done === 1 ? 0 : 1,
         }
       })
     )
-    patchUserTodos(userID, todo_id, { is_done: !myTodos.is_done })
+    patchUserTodos(userID, todo_id, {
+      isDone:
+        myTodos.filter((todo) => todo.todo_id === todo_id)[0].is_done === 1
+          ? 0
+          : 1,
+    })
       .then((res) => {
         console.log(res.data)
         console.log('修改成功')
@@ -136,7 +141,9 @@ export default function UserTodoItems() {
     )
   }
   const handleUpdateTodo = (todo_id, e) => {
-    console.log(updateValue)
+    if (!todo_id) {
+      e.preventDefault()
+    }
     if (updateValue.todo_id !== todo_id) return
     patchUserTodos(userID, todo_id, { content: updateValue.content })
       .then((res) => {

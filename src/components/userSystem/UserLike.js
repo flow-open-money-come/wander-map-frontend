@@ -56,7 +56,7 @@ const ArticlesWrapper = styled.div`
   }
 `
 const EmptyInfo = styled.div`
-  margin: 50px auto;
+  margin: 80px auto;
   display: flex;
   justify-content: center;
   align-items: flex-end;

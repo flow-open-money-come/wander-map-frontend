@@ -186,7 +186,11 @@ export default function UserArticlesManage() {
           </TableContent>
         ))}
         {popUp.isShow === true && (
-          <ConfirmBox popUp={popUp} setPopUp={setPopUp} />
+          <ConfirmBox
+            popUp={popUp}
+            setPopUp={setPopUp}
+            setUserArticlesData={setUserArticlesData}
+          />
         )}
       </TrailsTable>
     </Block>

@@ -142,10 +142,10 @@ export default function ArticlePostPage() {
   const { userInfo } = useContext(AuthContext)
   const history = useHistory()
   if (!userInfo) history.push('/')
-  console.log(userInfo)
+
   const [errorMessage, setErrorMessage] = useState()
   const [formData, setFormData] = useState({
-    author_id: '',
+    author_id: userInfo.user_id,
     title: '',
     cover_picture_url: '',
     location: '',
@@ -180,7 +180,6 @@ export default function ArticlePostPage() {
 
   // 如有帶參數為修改心得
   const { articleID } = useParams()
-  console.log(formData)
   useEffect(() => {
     if (!articleID) return
     getArticles(articleID)
