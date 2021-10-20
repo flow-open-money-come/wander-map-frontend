@@ -14,7 +14,6 @@ const TodosWrapper = styled.div`
     font-size: ${FONT.md};
   }
 `
-
 const TodoContent = styled.input.attrs((props) => ({
   type: 'text',
 }))`
@@ -35,7 +34,6 @@ const TodoContent = styled.input.attrs((props) => ({
     color:${COLOR.gray}
   `}
 `
-
 const Button = styled.button`
   background: transparent;
   margin: 0.1em;
