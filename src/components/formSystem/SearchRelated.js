@@ -40,7 +40,7 @@ const Select = styled.select`
   }
 `
 
-export default function SearchRelated({ name, newDatas, setNewDatas }) {
+export default function SearchRelated({ name, formData, setFormData }) {
   const [keyWord, setKeyWord] = useState('')
   const [filteredData, setFilteredDate] = useState(trailsData)
   const [myMultiplier, setMyMultiplier] = useState((x) => 3 * x)
@@ -61,8 +61,8 @@ export default function SearchRelated({ name, newDatas, setNewDatas }) {
   }, [keyWord])
 
   const handleSelectChange = (e) => {
-    setNewDatas({
-      ...newDatas,
+    setFormData({
+      ...formData,
       [name]: e.target.value,
     })
   }

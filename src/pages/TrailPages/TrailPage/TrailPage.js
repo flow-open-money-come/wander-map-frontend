@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import {
   COLOR,
@@ -15,8 +15,13 @@ import TrailMap from '../../../components/trailSystem/TrailMap'
 import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
-import { getTrails, getTrailArticles } from '../../../WebAPI'
+import { getTrails, getTrailArticles, getUserCollect } from '../../../WebAPI'
 import { useHistory } from 'react-router-dom'
+import { AuthContext, LoadingContext } from '../../../context'
+import { getAuthToken } from '../../../utils'
+import useLike from '../../../hooks/useLike'
+import Loading from '../../../components/common/Loading'
+import jwt_decode from 'jwt-decode'
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -103,18 +108,13 @@ const CollectBlock = styled.div`
     margin: 0 2px;
     width: 15px;
     height: 15px;
-    path {
-      stroke: ${COLOR.white};
-    }
+    fill: ${(props) => (props.thumb ? `${COLOR.green}` : ``)};
+  }
+  path {
+    stroke: ${(props) => (props.thumb ? `${COLOR.green}` : `${COLOR.white}`)};
   }
   &:hover {
     cursor: pointer;
-    svg {
-      fill: ${COLOR.green};
-    }
-    path {
-      stroke: ${COLOR.green};
-    }
   }
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.logo};
@@ -154,69 +154,81 @@ const InfoAndWeather = styled.div`
   }
 `
 
-const trailDefault = {
-    trail_id: 2,
-    title: '南澳古道',
-    description:
-      '南澳古道位在南澳鄉金洋村，是通往泰雅族舊部落的路徑之一，為「舊武塔古道」的一部分，也是泰雅族的傳統獵場。自旋檀駐在所遺址起，循南澳南溪上溯至古道終點，至合流溪與南澳南溪匯流口，共 3.8 公里。沿途平緩好走，野生動植物生態豐富，沿途有吊橋遺址、警備道路基等遺跡。',
-    location: '宜蘭縣南澳鄉',
-    coordinate: {
-      x: 121.70835976400171,
-      y: 24.42360428661788
-    },
-    altitude: 350,
-    length: 3.8,
-    season: '四季皆宜',
-    difficulty: '入門',
-    cover_picture_url:
-      'https://tluxe-aws.hmgcdn.com/public/article/2017/atl_20180628130517_581.jpg',
-    map_picture_url: 'https://recreation.forest.gov.tw/Files/RT/Photo/002/01/002_MAP.jpg',
-    situation: '木棧道、碎石山徑'
-}
-
-
 function TrailPage() {
-
-  const { trailID } = useParams()
-  const [trailInfo, setTrailInfo] = useState(trailDefault)
+  const { id } = useParams()
+  const [trailInfo, setTrailInfo] = useState('')
   const [articles, setArticles] = useState(null)
+  // const { userInfo } = useContext(AuthContext)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const history = useHistory()
+  const { thumb, setThumb, handleClickLike } = useLike()
+  // 未知原因 useContext(AuthContext) 有時會抓不到值 直接在此decode
+  const userInfo = jwt_decode(getAuthToken())
+
+  console.log('userInfo', userInfo)
 
   useEffect(() => {
-    getTrails(trailID)
+    setIsLoading(true)
+    getTrails(id)
       .then((res) => {
-        // 若此步道已被刪除則API回傳空值，此時導到所有步道頁面
-        res.data.data[0] ? setTrailInfo(res.data.data[0]) : history.push(`/trails`)
+        res.data.data[0]
+          ? setTrailInfo(res.data.data[0])
+          : history.push(`/trails`)
+        setIsLoading(false)
       })
       .catch((error) => console.error(error))
-    getTrailArticles(trailID, '?limit=3')
+    getTrailArticles(id, '?limit=3')
       .then((res) => setArticles(res.data.data))
       .catch((error) => console.error(error))
-  }, [trailID, history])
+  }, [id, history, setIsLoading])
+
+  useEffect(() => {
+    getUserCollect(userInfo.user_id)
+      .then((res) =>
+        res.data.data.trails.forEach((trail) => {
+          if (trail.trail_id === id) setThumb(true)
+        })
+      )
+      .catch((error) => console.error(error))
+  }, [userInfo, id, setThumb])
 
   return (
-    <TrailPageContainer>
-      <HeadFlex>
-        <Cover src={trailInfo && trailInfo.cover_picture_url} />
-        <TitleAndDesc>
-          <Title>{trailInfo && trailInfo.title}</Title>
-          <Desc>{trailInfo && trailInfo.description}</Desc>
-        </TitleAndDesc>
-        <CollectBlock>
-          <CollectIcon />
-        </CollectBlock>
-      </HeadFlex>
-      <InfoAndWeather>
-        <TrailInfo trailInfo={trailInfo} />
-        <Weather location={trailInfo && trailInfo.location} />
-      </InfoAndWeather>
-      <TrailMap coordinate={trailInfo && trailInfo.coordinate} />
-      {trailInfo && trailInfo.map_picture_url && (
-        <TrailRoute routePic={trailInfo && trailInfo.map_picture_url} />
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <TrailPageContainer>
+          <HeadFlex>
+            <Cover src={trailInfo && trailInfo.cover_picture_url} />
+            <TitleAndDesc>
+              <Title>{trailInfo && trailInfo.title}</Title>
+              <Desc>{trailInfo && trailInfo.description}</Desc>
+            </TitleAndDesc>
+            {userInfo && (
+              <CollectBlock
+                thumb={thumb}
+                userInfo={userInfo}
+                onClick={userInfo && handleClickLike}
+              >
+                <CollectIcon />
+              </CollectBlock>
+            )}
+          </HeadFlex>
+          <InfoAndWeather>
+            <TrailInfo trailInfo={trailInfo} />
+            <Weather location={trailInfo && trailInfo.location} />
+          </InfoAndWeather>
+          <TrailMap coordinate={trailInfo && trailInfo.coordinate} />
+          {trailInfo && trailInfo.map_picture_url && (
+            <TrailRoute routePic={trailInfo && trailInfo.map_picture_url} />
+          )}
+          {articles && articles.length !== 0 && (
+            <TrailArticles articles={articles} />
+          )}
+          <TrailReviews />
+        </TrailPageContainer>
       )}
-      {articles && articles.length !== 0 && <TrailArticles articles={articles} />}
-      <TrailReviews />
-    </TrailPageContainer>
+    </>
   )
 }
 

@@ -2,19 +2,20 @@ import axios from 'axios'
 import config from '../../config'
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { FONT, COLOR } from '../../constants/style'
+import { COLOR, RADIUS } from '../../constants/style'
 import { ReactComponent as ImageSvg } from '../../icons/image.svg'
 import { NavBarButton } from '../../components/common/Button'
 
 const PicHolder = styled.label`
-  width: 500px;
+  margin: 0 auto;
+  width: 250px;
   height: 180px;
   background-color: ${COLOR.gray_light};
-  border-radius: 3px;
+  border-radius: ${RADIUS.md};
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   text-align: center;
 `
@@ -36,12 +37,6 @@ const ImageIcon = styled(ImageSvg)`
   height: 30px;
   color: ${COLOR.green};
 `
-const UploadNotice = styled.div`
-  font-size: ${FONT.xs};
-  margin-top: 30px;
-  margin-bottom: 5px;
-`
-
 const UploadPreview = styled.div`
   max-width: 100%;
   max-height: 100%;
@@ -66,9 +61,13 @@ const ClearBtn = styled.button`
   }
 `
 
-export default function UploadImg({ name, formData, setFormData }) {
+export default function UserUploadImg({
+  name,
+  updateUserData,
+  setUpdateUserData,
+}) {
   const token = `${process.env.REACT_APP_IMGUR_TOKEN}`
-  const [fileSrc, setFileSrc] = useState()
+  const [fileSrc, setFileSrc] = useState(updateUserData.iconUrl)
 
   const handleUploadFile = (e) => {
     if (!e.target.files[0]) return
@@ -97,15 +96,15 @@ export default function UploadImg({ name, formData, setFormData }) {
       .then((res) => {
         // 回傳值
         let dataUrl = res.data.data.link
-        setFormData({
-          ...formData,
+        setUpdateUserData({
+          ...updateUserData,
           [name]: dataUrl,
         })
       })
       .catch((err) => {
         console.log(err.response)
       })
-    console.log(fileSrc)
+
     e.target.value = ''
   }
 
@@ -129,9 +128,6 @@ export default function UploadImg({ name, formData, setFormData }) {
           <br />
           點擊上傳
           <UploadInput name={name} onChange={handleUploadFile} required />
-          <UploadNotice>
-            建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
-          </UploadNotice>
         </>
       )}
     </PicHolder>

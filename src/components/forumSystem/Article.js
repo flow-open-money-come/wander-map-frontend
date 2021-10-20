@@ -1,24 +1,32 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
+import { AuthContext } from '../../context'
+import ReactHtmlParser, {
+  processNodes,
+  convertNodeToElement,
+  htmlparser2,
+} from 'react-html-parser'
 
-const ArticlesContainer = styled.div`
+const ArticlesContainer = styled(Link)`
+  color: ${COLOR.black};
   width: 100%;
   display: flex;
   margin: 35px auto 0px auto;
   padding-bottom: 20px;
   border-bottom: ${COLOR.beige} 1px solid;
+  align-items: center;
 `
 
 const ArticlesImg = styled.img`
-  width: 120px;
+  min-width: 120px;
   height: 120px;
   border-radius: ${RADIUS.lg};
   align-self: center;
   object-fit: cover;
   ${MEDIA_QUERY.md} {
-    width: 150px;
+    min-width: 150px;
     height: 150px;
     margin-right: 13px;
   }
@@ -27,6 +35,7 @@ const UserAvatar = styled.img`
   width: 30px;
   height: 30px;
   border-radius: 50%;
+  border: 1px solid ${COLOR.gray_light};
 
   ${MEDIA_QUERY.md} {
     width: 45px;
@@ -103,10 +112,11 @@ const ArticlesInfoContainer = styled.div`
     min-width: calc(100% - 173px);
   }
 `
-const ArticlesUser = styled.div`
+const ArticlesUser = styled(Link)`
   margin-top: 5px;
   display: flex;
   justify-content: space-between;
+  color: ${COLOR.black};
   ${MEDIA_QUERY.md} {
     margin-top: 9px;
   }
@@ -129,16 +139,6 @@ const UserInfo = styled.div`
   }
 `
 
-const ReadMore = styled(Link)`
-  font-size: ${FONT.xs};
-  display: none;
-  ${MEDIA_QUERY.md} {
-    display: inline;
-    color: ${COLOR.gray};
-    cursor: pointer;
-  }
-`
-
 const ArticlesInfo = styled.div`
   display: flex;
   justify-content: flex-end;
@@ -158,6 +158,7 @@ const TitleAndTags = styled.div`
 `
 
 export default function ArticleList({
+  id,
   title,
   content,
   tags,
@@ -167,29 +168,40 @@ export default function ArticleList({
   avatarImgSrc,
   lessRwd,
   articlePage,
+  authorId,
 }) {
+  const { userInfo } = useContext(AuthContext)
+
   return (
-    <ArticlesContainer>
+    <ArticlesContainer key={id} to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <TitleAndTags $lessRwd={lessRwd}>
           <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
           <ArticlesTags>
-            {tags && tags.map((tag) => {
-              return <ArticlesTag $lessRwd={lessRwd}>{tag}</ArticlesTag>
-            })}
+            {tags &&
+              tags.map((tag) => {
+                return <ArticlesTag $lessRwd={lessRwd}>{tag}</ArticlesTag>
+              })}
           </ArticlesTags>
         </TitleAndTags>
-        <ArticlesContent $lessRwd={lessRwd}>{content}</ArticlesContent>
+        <ArticlesContent $lessRwd={lessRwd}>
+          {ReactHtmlParser(content)}
+        </ArticlesContent>
         <ArticlesInfo>
-          <ArticlesUser>
+          <ArticlesUser
+            to={
+              userInfo && userInfo.user_id === authorId
+                ? `/backstage/${authorId}`
+                : `/user/${authorId}`
+            }
+          >
             <UserAvatar src={avatarImgSrc} />
             <UserInfo>
               <UserName>{user}</UserName>
               <ArticlesDate>{date}</ArticlesDate>
             </UserInfo>
           </ArticlesUser>
-          <ReadMore to={articlePage}>閱讀全文</ReadMore>
         </ArticlesInfo>
       </ArticlesInfoContainer>
     </ArticlesContainer>

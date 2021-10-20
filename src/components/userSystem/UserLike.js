@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { getUserLiked } from '../../WebAPI'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
+import { ReactComponent as EmptyIcon } from '../../icons/user/user_empty_collect.svg'
 import ArticleList from '../forumSystem/Article'
 
 const Block = styled.div`
@@ -10,7 +13,8 @@ const Block = styled.div`
   width: 100%;
   min-height: 70vh;
   height: 400px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 `
 const SearchBar = styled.div`
   border: 1px solid #c4c4c4;
@@ -31,7 +35,6 @@ const SearchBar = styled.div`
     }
   }
 `
-
 const SearchField = styled.input`
   width: calc(100% - 20px);
   border: none;
@@ -41,7 +44,6 @@ const SearchField = styled.input`
     font-size: ${FONT.lg};
   }
 `
-
 const ArticlesWrapper = styled.div`
   margin: 20px auto;
   width: 90%;
@@ -53,69 +55,72 @@ const ArticlesWrapper = styled.div`
     margin: 50px auto;
   }
 `
-
-const More = styled.div`
-  position: absolute;
-  right: 0;
-  bottom: -1;
-  margin: 10px 0;
-  color: ${COLOR.green};
-  font-size: ${FONT.s};
+const EmptyInfo = styled.div`
+  margin: 80px auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  opacity: 0.8;
+  svg {
+    width: 130px;
+    height: 130px;
+    margin: 0 20px;
+  }
+`
+const EmptyMsg = styled.div`
+  font-size: ${FONT.md};
   font-weight: bold;
-  &:hover {
-    cursor: pointer;
-  }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
-  }
+  color: ${COLOR.gray};
 `
 
 export default function UserLike() {
+  const [userLikeData, setUserLikeData] = useState({
+    articles: [{ author_id: '', tag_names: '' }],
+  })
+  const { userID } = useParams()
+
+  useEffect(() => {
+    getUserLiked(userID)
+      .then((res) => {
+        setUserLikeData(res.data.data)
+        console.log(res.data.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }, [])
+
   return (
     <Block>
-      <SearchBar>
+      <SearchBar style={{ display: 'none' }}>
         <SearchIcon />
         <SearchField></SearchField>
       </SearchBar>
       <ArticlesWrapper>
-        <ArticleList
-          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-          title={'礁溪林美石磐涼爽一日遊'}
-          user={'水怪貓貓'}
-          tags={['有水源', '賞花', '危險地形']}
-          date={'2021.9.7 / 20:20:22'}
-          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
-          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
-          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-          lessRwd
-        />
-        <ArticleList
-          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-          title={'礁溪林美石磐涼爽一日遊'}
-          user={'水怪貓貓'}
-          tags={['有水源', '賞花', '危險地形']}
-          date={'2021.9.7 / 20:20:22'}
-          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
-          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
-          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-          lessRwd
-        />
-        <ArticleList
-          articleImgSrc={'https://i.imgur.com/w2Y6y4z.jpg'}
-          avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
-          title={'礁溪林美石磐涼爽一日遊'}
-          user={'水怪貓貓'}
-          tags={['有水源', '賞花', '危險地形']}
-          date={'2021.9.7 / 20:20:22'}
-          content={`林美石磐步道有著低海拔亞熱帶溪谷的景色，步道沿舊水圳整建，
-          現寬敞平緩好走、又不失幽幽古意；沿途生態豐富，樹林成蔭，
-          潺潺流水，散發陣陣芬多精，走在其中清爽無比...`}
-          lessRwd
-        />
-
-        <More>看更多</More>
+        {userLikeData.articles.length !== 0 ? (
+          userLikeData.articles.map((article) => (
+            <ArticleList
+              key={article.article_id}
+              articleImgSrc={article.cover_picture_url}
+              avatarImgSrc={article.icon_url}
+              title={article.title}
+              user={article.nickname}
+              tags={article.tag_names.split(',')}
+              date={article.created_at}
+              content={article.content}
+              lessRwd={true}
+            />
+          ))
+        ) : (
+          <EmptyInfo>
+            <EmptyIcon />
+            <EmptyMsg>
+              還沒有按讚喔～
+              <br />
+              快去看看大家的心得分享吧
+            </EmptyMsg>
+          </EmptyInfo>
+        )}
       </ArticlesWrapper>
     </Block>
   )

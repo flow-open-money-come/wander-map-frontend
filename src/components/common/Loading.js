@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ReactComponent as mount } from '../../../src/icons/mountain.svg'
+import { ReactComponent as mount } from '../../../src/icons/logo.svg'
 
 const LoadingWrapper = styled.div`
   position: fixed;
@@ -16,13 +16,14 @@ const LoadingWrapper = styled.div`
 `
 
 const MountainLoader = styled(mount)`
-  height: 60px;
-  width: 60px;
-  animation: spin 1s linear infinite;
+  height: 80px;
+  width: 80px;
+  animation: spin 0.6s linear infinite;
+  animation-direction: alternate;
 
   @keyframes spin {
     0% {
-      transform: scale(0.8);
+      transform: scale(0.7);
     }
     100% {
       transform: scale(1.2);

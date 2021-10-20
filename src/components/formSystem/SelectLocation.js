@@ -24,12 +24,20 @@ const Select = styled.select`
   }
 `
 
-export default function SelectLocation({ name, newDatas, setNewDatas }) {
+export default function SelectLocation({ name, formData, setFormData }) {
   const [location, setLocation] = useState({
     country: '',
     state: '',
   })
-
+  /*
+  if (formData.location !== '') {
+    setLocation({
+      country: `${formData.location.slice(0, 3)}`,
+      state: `${formData.location.slice(3, 6)}`,
+    })
+  }
+  console.log(location)
+*/
   const countries = countriesData.map((country) => (
     <option key={country.name} value={country.name}>
       {country.name}
@@ -57,8 +65,8 @@ export default function SelectLocation({ name, newDatas, setNewDatas }) {
       state: e.target.value,
     })
 
-    setNewDatas({
-      ...newDatas,
+    setFormData({
+      ...formData,
       [name]: location.country + e.target.value,
     })
   }

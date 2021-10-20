@@ -1,5 +1,12 @@
-import React, { useState } from 'react'
-import { postArticles } from '../../../WebAPI'
+import React, { useState, useEffect, useContext } from 'react'
+import { useParams, useHistory } from 'react-router-dom'
+import {
+  postArticles,
+  postRelateTrail,
+  getArticles,
+  patchArticle,
+} from '../../../WebAPI'
+import { AuthContext } from '../../../context'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
 import UploadImg from '../../../components/formSystem/UploadImg'
@@ -33,7 +40,7 @@ const PageName = styled.div`
     border-bottom: solid 8px ${COLOR.green};
   }
 `
-const PageDes = styled.div`
+const PageDesc = styled.div`
   display: none;
   ${MEDIA_QUERY.lg} {
     display: block;
@@ -42,7 +49,6 @@ const PageDes = styled.div`
     margin-bottom: 50px;
   }
 `
-
 const FormWrapper = styled.div`
   margin: 20px;
   font-size: ${FONT.s};
@@ -78,7 +84,6 @@ const FormSubTitleWrapper = styled.div`
     width: 500px;
   }
 `
-
 const Input = styled.input.attrs((props) => ({
   type: 'text',
 }))`
@@ -106,7 +111,6 @@ const Date = styled.input.attrs((props) => ({
     font-size: ${FONT.md};
   }
 `
-
 const SubmitBtn = styled.div`
   text-align: right;
   margin-bottom: 50px;
@@ -131,18 +135,21 @@ const ErrorMessage = styled.div`
   margin: 20px auto;
   color: #ff0000;
   font-weight: 600;
-  font-size: ${FONT.s};  
+  font-size: ${FONT.s};
 `
 
 export default function ArticlePostPage() {
+  const { userInfo } = useContext(AuthContext)
+  const history = useHistory()
+  if (!userInfo) history.push('/')
+
   const [errorMessage, setErrorMessage] = useState()
-  const [newDatas, setNewDatas] = useState({
-    author_id: 1,
+  const [formData, setFormData] = useState({
+    author_id: userInfo.user_id,
     title: '',
     cover_picture_url: '',
     location: '',
     departure_time: '',
-    end_time: '',
     related: '',
     tags: '',
     content: '',
@@ -150,18 +157,47 @@ export default function ArticlePostPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setNewDatas({
-      ...newDatas,
+    setFormData({
+      ...formData,
       [name]: value,
     })
   }
 
-  const handleSubmit = (e) => {
-    console.log(newDatas)
+  const handlePostSubmit = (e) => {
+    console.log(formData)
     e.preventDefault()
-    postArticles(newDatas)
+    postArticles(formData)
       .then((res) => {
         console.log(res.data)
+        let id = res.data.data.result.insertId
+        history.push(`/articles/${id}`)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+        setErrorMessage('您好，標題、內文為必填喔!')
+      })
+  }
+
+  // 如有帶參數為修改心得
+  const { articleID } = useParams()
+  useEffect(() => {
+    if (!articleID) return
+    getArticles(articleID)
+      .then((res) => {
+        setFormData(res.data.data[0])
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }, [])
+
+  const handlePatchSubmit = (e) => {
+    console.log(formData)
+    e.preventDefault()
+    postArticles(formData)
+      .then((res) => {
+        console.log(res.data)
+        history.push('/')
       })
       .catch((err) => {
         console.log(err.response.data)
@@ -171,15 +207,21 @@ export default function ArticlePostPage() {
 
   return (
     <ArticlePostWrapper>
-      <PageName>新增心得</PageName>
-      <PageDes>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDes>
+      {articleID ? (
+        <PageName>編輯心得</PageName>
+      ) : (
+        <>
+          <PageName>新增心得</PageName>
+          <PageDesc>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDesc>
+        </>
+      )}
       <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>文章標題</FormTitle>
         <Input
           name='title'
           onChange={handleInputChange}
-          value={newDatas.title}
+          value={formData.title}
           required
         />
       </FormWrapper>
@@ -188,8 +230,8 @@ export default function ArticlePostPage() {
         <FormSubTitleWrapper>
           <UploadImg
             name='cover_picture_url'
-            newDatas={newDatas}
-            setNewDatas={setNewDatas}
+            formData={formData}
+            setFormData={setFormData}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -198,8 +240,8 @@ export default function ArticlePostPage() {
         <FormSubTitleWrapper>
           <SelectLocation
             name='location'
-            newDatas={newDatas}
-            setNewDatas={setNewDatas}
+            formData={formData}
+            setFormData={setFormData}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -210,14 +252,14 @@ export default function ArticlePostPage() {
             name='departure_time'
             placeholder='開始日期'
             onChange={handleInputChange}
-            value={newDatas.departure_time}
+            value={formData.departure_time}
           />
           　—　
           <Date
             name='end_time'
             placeholder='結束日期'
             onChange={handleInputChange}
-            value={newDatas.end_time}
+            value={formData.end_time}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -226,34 +268,38 @@ export default function ArticlePostPage() {
         <SearchRelated
           name='related'
           handleInputChange={handleInputChange}
-          newDatas={newDatas}
-          setNewDatas={setNewDatas}
+          formData={formData}
+          setFormData={setFormData}
         />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>分類</FormTitle>
         <CategoryTags
           name='tags'
-          newDatas={newDatas}
-          setNewDatas={setNewDatas}
+          formData={formData}
+          setFormData={setFormData}
         />
       </FormWrapper>
       <FormWrapper>
         <FormTitle />
         <ContentCKEditor
           name='content'
-          newDatas={newDatas}
-          setNewDatas={setNewDatas}
+          formData={formData}
+          setFormData={setFormData}
         />
       </FormWrapper>
-      <FormWrapper>
+      <FormWrapper style={{ display: 'none' }}>
         <FormTitle>GPX</FormTitle>
         <UploadGpx />
       </FormWrapper>
       <FormWrapper>
         <FormTitle />
         <SubmitBtn>
-          <Submit onClick={handleSubmit} />
+          {articleID ? (
+            <Submit onClick={handlePatchSubmit} />
+          ) : (
+            <Submit onClick={handlePostSubmit} />
+          )}
         </SubmitBtn>
       </FormWrapper>
     </ArticlePostWrapper>

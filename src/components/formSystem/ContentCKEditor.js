@@ -1,4 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { getArticles } from '../../WebAPI'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import ImgurUploaderInit from 'ckeditor5-imgur-uploader'
@@ -14,43 +16,40 @@ const EditorWrapper = styled.div`
   }
 `
 
-
-export default function ContentCKEditor({ name, newDatas, setNewDatas }) {
-
-  const [data, setData] = useState('')
+export default function ContentCKEditor({ name, formData, setFormData }) {
+  const [data, setData] = useState(formData.content)
   const handleDataChange = (event, editor) => {
     let inputData = editor.getData()
     setData(inputData)
-    setNewDatas({
-      ...newDatas,
+    setFormData({
+      ...formData,
       [name]: inputData,
     })
-    console.log(data)    
   }
-  const ImgurUploader = ImgurUploaderInit({clientID: `${process.env.REACT_APP_IMGUR_CLIENTID}`})
+  const ImgurUploader = ImgurUploaderInit({
+    clientID: `${process.env.REACT_APP_IMGUR_CLIENTID}`,
+  })
 
   return (
     <EditorWrapper>
-        <CKEditor 
-          editor={ClassicEditor}
-          data=''
-          config={{
-              extraPlugins: [ImgurUploader],
-              removePlugins: ['MediaEmbed'],
-             }}
-          onReady={(editor) => {
-            console.log('Editor is ready to use!', editor)
-            editor.editing.view.change((writer) => {
-              writer.setStyle(
-                  "height",
-                  "250px",
-                  editor.editing.view.document.getRoot()
-              )
-            })
-          }}
-          onChange={handleDataChange}
-          
-        />
-      </EditorWrapper>
+      <CKEditor
+        editor={ClassicEditor}
+        config={{
+          extraPlugins: [ImgurUploader],
+          removePlugins: ['MediaEmbed'],
+        }}
+        onReady={(editor) => {
+          console.log('Editor is ready to use!', editor)
+          editor.editing.view.change((writer) => {
+            writer.setStyle(
+              'height',
+              '250px',
+              editor.editing.view.document.getRoot()
+            )
+          })
+        }}
+        onChange={handleDataChange}
+      />
+    </EditorWrapper>
   )
 }

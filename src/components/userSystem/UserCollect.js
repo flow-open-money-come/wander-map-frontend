@@ -1,6 +1,10 @@
+import React, { useState, useEffect } from 'react'
+import { getUserCollect } from '../../WebAPI'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
+import { ReactComponent as EmptyIcon } from '../../icons/user/user_empty_collect.svg'
 import TrailCard from '../trailSystem/TrailCard'
 
 const Block = styled.div`
@@ -9,7 +13,8 @@ const Block = styled.div`
   width: 100%;
   min-height: 70vh;
   height: 400px;
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
 `
 const SearchBar = styled.div`
   border: 1px solid #c4c4c4;
@@ -49,27 +54,69 @@ const TrailsWrapper = styled.div`
     flex-wrap: wrap;
   }
 `
+const EmptyInfo = styled.div`
+  margin: 80px auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  opacity: 0.8;
+  svg {
+    width: 130px;
+    height: 130px;
+    margin: 0 20px;
+  }
+`
+const EmptyMsg = styled.div`
+  font-size: ${FONT.md};
+  font-weight: bold;
+  color: ${COLOR.gray};
+`
 
 export default function UserCollect() {
-  const trailInfo = {
-    title: '林美石磐步道',
-    location: '宜蘭縣礁溪鄉',
-    cover_picture_url:
-      'https://images.unsplash.com/photo-1500964757637-c85e8a162699?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1806&q=80',
-    required_time: '一天',
-    season: '四季皆宜',
-  }
+  const [userCollectData, setUserCollectData] = useState({
+    trails: [
+      {
+        title: '',
+        location: '',
+        cover_picture_url: '',
+        required_time: '',
+        season: '',
+      },
+    ],
+  })
+  const { userID } = useParams()
+
+  useEffect(() => {
+    getUserCollect(userID)
+      .then((res) => {
+        setUserCollectData(res.data.data)
+      })
+      .catch((err) => {
+        console.log(err.response.data)
+      })
+  }, [])
+
   return (
     <Block>
-      <SearchBar>
+      <SearchBar style={{ display: 'none' }}>
         <SearchIcon />
         <SearchField></SearchField>
       </SearchBar>
       <TrailsWrapper>
-        <TrailCard trailInfo={trailInfo} />
-        <TrailCard trailInfo={trailInfo} />
-        <TrailCard trailInfo={trailInfo} />
-        <TrailCard trailInfo={trailInfo} />
+        {userCollectData.trails.length !== 0 ? (
+          userCollectData.trails.map((trailInfo) => (
+            <TrailCard trailInfo={trailInfo} />
+          ))
+        ) : (
+          <EmptyInfo>
+            <EmptyIcon />
+            <EmptyMsg>
+              還沒有收藏喔～
+              <br />
+              快去看看有那些步道吧
+            </EmptyMsg>
+          </EmptyInfo>
+        )}
       </TrailsWrapper>
     </Block>
   )
