@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { COLOR, FONT, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/article.svg'
 import ArticleList from '../forumSystem/Article.js'
+import { Link } from 'react-router-dom'
 
 const ArticlesWrapper = styled.div`
   width: 100%;
@@ -40,7 +41,7 @@ const ArticlesContainer = styled.div`
   position: relative;
 `
 
-const More = styled.div`
+const More = styled(Link)`
   position: absolute;
   right: 0;
   bottom: -1;
@@ -66,6 +67,7 @@ function TrailArticles({ articles }) {
       <ArticlesContainer>
         {articles.map((article) => (
           <ArticleList
+            id={article.article_id}
             articleImgSrc={article.cover_picture_url}
             avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
             title={article.title}
@@ -76,7 +78,7 @@ function TrailArticles({ articles }) {
             articlePage={`/articles/${article.article_id}`}
           />
         ))}
-        <More>看更多</More>
+        <More to={`/articles`}>看更多</More>
       </ArticlesContainer>
     </ArticlesWrapper>
   )

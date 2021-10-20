@@ -1,11 +1,12 @@
 import { useState, useContext } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useRouteMatch } from 'react-router-dom'
 import { AuthContext } from '../context'
-import { postArticleLike, removeArticleLike } from '../WebAPI'
+import { postArticleLike, removeArticleLike, collectTrail, cancelCollected } from '../WebAPI'
 
 export default function useLike() {
   const [thumb, setThumb] = useState(false)
   const { id } = useParams()
+  const isArticlePage = useRouteMatch('/articles')
   const { userInfo } = useContext(AuthContext)
   const [count, setCount] = useState(null)
 
@@ -13,9 +14,11 @@ export default function useLike() {
     setThumb(!thumb)
     thumb ? setCount(count - 1) : setCount(count + 1)
 
-    const postLike = async () => {
+    const postLike = async (isArticlePage) => {
       try {
-        let res = await postArticleLike(userInfo.user_id, id)
+        let res = await (isArticlePage
+          ? postArticleLike(userInfo.user_id, id)
+          : collectTrail(userInfo.user_id, id))
         if (res.status !== 200) {
           alert('按讚失敗')
         }
@@ -23,9 +26,11 @@ export default function useLike() {
         console.log(err)
       }
     }
-    const removeLike = async () => {
+    const removeLike = async (isArticlePage) => {
       try {
-        let res = await removeArticleLike(userInfo.user_id, id)
+        let res = await (isArticlePage
+          ? removeArticleLike(userInfo.user_id, id)
+          : cancelCollected(userInfo.user_id, id))
         if (res.status !== 200) {
           alert('取消按讚失敗')
         }
@@ -34,9 +39,9 @@ export default function useLike() {
       }
     }
     if (thumb) {
-      removeLike()
+      removeLike(isArticlePage)
     } else {
-      postLike()
+      postLike(isArticlePage)
     }
   }
   return {
@@ -44,6 +49,6 @@ export default function useLike() {
     setThumb,
     handleClickLike,
     count,
-    setCount,
+    setCount
   }
 }

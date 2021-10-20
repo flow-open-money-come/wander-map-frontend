@@ -43,7 +43,7 @@ function TrailReviews() {
         <TitleIcon />
         評論區
       </Title>
-      <Comments />
+      <Comments isMessage={false} />
     </ReviewWrapper>
   )
 }

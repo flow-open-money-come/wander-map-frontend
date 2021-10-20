@@ -136,7 +136,7 @@ function AllArticlesPage() {
     if (filterData) {
       url += `&search=${filterData}`
     }
-    getArticles(`?limit=5&&offset=${params.current}${url}`)
+    getArticles(`?limit=5&offset=${params.current}${url}`)
       .then((res) => {
         if (res.data.success) {
           setPosts(posts.concat(res.data.data))

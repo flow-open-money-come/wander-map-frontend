@@ -7,6 +7,7 @@ import { ReactComponent as PopIcon } from '../../icons/weather/weather-RainProba
 import WeatherIcon from './WeatherIcon.js'
 import { locationNameToCode } from './weatherUtils.js'
 import axios from 'axios'
+// import { getWeatherInfo } from '../../WebAPI.js'
 
 const WeatherWrapper = styled.div`
   width: 100%;
@@ -122,6 +123,7 @@ const RainProbability = styled(Temperature)``
 const Weather = ({ location }) => {
   const position = location || '宜蘭縣礁溪鄉'
   const country = position.slice(0, 3)
+  const countryCode = locationNameToCode(country)
   const town = position.slice(3, position.length)
 
   const [weatherElement, setWeatherElement] = useState({
@@ -140,35 +142,43 @@ const Weather = ({ location }) => {
     }).format(new window.Date(dateTime))
   }
 
+  // console.log(countryCode)
+  
   useEffect(() => {
     axios(
-      `https://opendata.cwb.gov.tw/api/v1/rest/datastore/${locationNameToCode(country)}?Authorization=${process.env.REACT_APP_WEATHER_TOKEN}&locationName=${town}&elementName=T,Wx,PoP12h`
-    ).then((res) => {
-        const locationData = res.data.records.locations[0].location[0]
-        const weatherInfo = []
-        for (let i = 0; i < 14; i += 2) {
-          const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
-            neededElements[item.elementName] = item.time[i].elementValue[0].value
-            neededElements['weatherCode'] =
-              locationData.weatherElement[2].time[i].elementValue[1].value
-            return neededElements
-          }, {})
-          weatherInfo.push(weatherElements)
-        }
+      `https://opendata.cwb.gov.tw/api/v1/rest/datastore/${locationNameToCode(
+        country
+      )}?Authorization=${
+        process.env.REACT_APP_WEATHER_TOKEN
+      }&locationName=${town}&elementName=T,Wx,PoP12h`
+    )
+    // getWeatherInfo(countryCode, town)
+    .then((res) => {
+      const locationData = res.data.records.locations[0].location[0]
+      const weatherInfo = []
+      for (let i = 0; i < 14; i += 2) {
+        const weatherElements = locationData.weatherElement.reduce((neededElements, item) => {
+          neededElements[item.elementName] = item.time[i].elementValue[0].value
+          neededElements['weatherCode'] =
+            locationData.weatherElement[2].time[i].elementValue[1].value
+          return neededElements
+        }, {})
+        weatherInfo.push(weatherElements)
+      }
 
-        let [weekTemperature, weekWeatherCode, weekRainPossibility] = [[], [], []]
+      let [weekTemperature, weekWeatherCode, weekRainPossibility] = [[], [], []]
 
-        for (let day = 0; day < 7; day++) {
-          weekTemperature.push(weatherInfo[day].T)
-          weekWeatherCode.push(weatherInfo[day].weatherCode)
-          weekRainPossibility.push(weatherInfo[day].PoP12h)
-        }
-        setWeatherElement({
-          temperature: weekTemperature,
-          weatherCode: weekWeatherCode,
-          rainPossibility: weekRainPossibility
-        })
+      for (let day = 0; day < 7; day++) {
+        weekTemperature.push(weatherInfo[day].T)
+        weekWeatherCode.push(weatherInfo[day].weatherCode)
+        weekRainPossibility.push(weatherInfo[day].PoP12h)
+      }
+      setWeatherElement({
+        temperature: weekTemperature,
+        weatherCode: weekWeatherCode,
+        rainPossibility: weekRainPossibility
       })
+    })
   }, [country, town])
 
   const dayLoop = [0, 1, 2, 3, 4, 5, 6]

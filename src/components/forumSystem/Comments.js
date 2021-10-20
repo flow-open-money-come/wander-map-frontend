@@ -13,7 +13,7 @@ import {
   getComments,
   postComment,
   patchComment,
-  deleteComment,
+  deleteComment
 } from '../../WebAPI'
 import { LoadingContext, AuthContext } from '../../../src/context'
 import Loading from '../../components/common/Loading'
@@ -72,7 +72,6 @@ const InputField = styled.input`
     height: 40px;
     margin: 10px 20px;
   }
-
   ${(props) =>
     !props.userInfo &&
     `
@@ -172,7 +171,6 @@ const CommentBtn = styled.div`
     margin: 0 3px;
     width: 15px;
     height: 15px;
-
     &:hover {
       cursor: pointer;
       opacity: 0.7;
@@ -233,7 +231,6 @@ const SendBtn = styled.button`
   &:focus {
     outline: none;
   }
-
   ${(props) =>
     props.editValue &&
     `
@@ -252,7 +249,6 @@ const EditWrapper = styled.div`
 const Reminder = styled.span`
   color: ${COLOR.pink};
   font-size: ${FONT.s};
-
   ${(props) =>
     props.reminder === 1 &&
     `
@@ -312,11 +308,7 @@ export default function Comments({ isMessage }) {
     }
     setIsLoading(true)
     try {
-      await isMessageOrNot(postMessage, postComment)(
-        id,
-        userInfo.user_id,
-        inputValue
-      )
+      await isMessageOrNot(postMessage, postComment)(id, userInfo.user_id, inputValue)
       setIsLoading(false)
       setInputValue('')
     } catch (err) {
