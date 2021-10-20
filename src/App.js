@@ -46,12 +46,16 @@ function App() {
       return setUserInfo(jwt_decode(getAuthToken()))
     }
 
-    refreshAccessToken().then((res) => {
-      if (res.data.success) {
-        setAuthToken(res.data.data.token)
-        setUserInfo(jwt_decode(res.data.data.token))
-      }
-    })
+    refreshAccessToken()
+      .then((res) => {
+        if (res.data.success) {
+          setAuthToken(res.data.data.token)
+          setUserInfo(jwt_decode(res.data.data.token))
+        }
+      })
+      .catch((err) => {
+        console.log(err.response)
+      })
   }, [])
 
   return (

@@ -112,11 +112,11 @@ function AllTrailPage() {
   const [isLoadingFilter, setIsLoadingFilter] = useState(false)
 
   useEffect(() => {
-    let params = ''
-    if (checkedOptions.length !== 0 || debouncedKeyWord)
-      params = `&${checkedOptions.join('&')}`
+    let params = []
+    if (checkedOptions.length !== 0) params.push(`&${checkedOptions.join('&')}`)
+    if (debouncedKeyWord) params.push(`&search=${debouncedKeyWord}`)
     setIsLoadingFilter(true)
-    getTrails(`?limit=126&search=${debouncedKeyWord}${params}`)
+    getTrails(`?limit=126${params.join('')}`)
       .then((res) => {
         if (res.data.success) setFilteredTrailInfos(res.data.data)
         setIsLoadingFilter(false)

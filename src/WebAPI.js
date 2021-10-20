@@ -22,7 +22,7 @@ export const userLogout = () => instance.get('/users/logout')
 
 // trails
 // get 相關
-export const getTrails = (params) => instance.get('/trails/' + params)
+export const getTrails = (params) => instance.get('/trails' + params)
 export const getHotTrails = () => instance.get('/trails/hot/5')
 export const getTrailsCondition = () => axios.get(config.tfrHost)
 
