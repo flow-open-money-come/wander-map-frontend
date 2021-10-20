@@ -1,5 +1,5 @@
 const config = {
-  apiHost: 'https://wandermap.tw/api/v1/',
+  apiHost: 'https://api.wandermap.tw/api/v1/',
   apiHost2: 'https://backup.wandermap.tw/api/v1/',
   tfrHost: 'https://recreation.forest.gov.tw/mis/api/OpenStatus/Trail',
   imgurHost: 'https://api.imgur.com/3/image/',
