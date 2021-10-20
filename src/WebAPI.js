@@ -37,27 +37,23 @@ export const recoverTrail = (trailID) =>
 export const postTrails = (data) => instance.post('/trails', data)
 
 // 步道評論CRUD
-export const apiComments = (articleId) =>
+export const getComments = (articleId) =>
   instance.get(`/trails/${articleId}/comments`)
-export const apiCommentsPost = (articleId, authorId, content) =>
+export const postComment = (articleId, authorId, content) =>
   instance.post(`/trails/${articleId}/comments`, {
     author_id: authorId,
     content,
   })
-export const apiCommentsPatch = (articleId, messageId, content) =>
+export const patchComment = (articleId, messageId, content) =>
   instance.patch(`/trails/${articleId}/comments/${messageId}`, {
     content,
   })
-export const apiCommentsDelete = (articleId, messageId) =>
+export const deleteComment = (articleId, messageId) =>
   instance.delete(`/trails/${articleId}/comments/${messageId}`)
 
 // articles
 // get 相關
-export const getArticles = (params) => instance.get('/articles/' + params)
-export const apiArticles = () => instance.get('/articles')
-export const apiArticle = (articleId) => instance.get(`/articles/${articleId}`)
-
-export const apiArticlesHot = () => instance.get('/articles/hot')
+export const getArticles = (params) => instance.get(`/articles${params}`)
 export const getTrailArticles = (trailID, params) =>
   instance.get('/trails/' + trailID + '/articles' + params)
 
@@ -73,46 +69,28 @@ export const recoverArticle = (articleID) =>
 export const postArticles = (data) => instance.post('/articles', data)
 
 // 心得評論CRUD
-export const apiMessages = (articleId) =>
+export const getMessages = (articleId) =>
   instance.get(`/articles/${articleId}/messages`)
-export const apiMessagesPost = (articleId, authorId, content) =>
+export const postMessage = (articleId, authorId, content) =>
   instance.post(`/articles/${articleId}/messages`, {
     author_id: authorId,
     content,
   })
-export const apiMessagesPatch = (articleId, messageId, content) =>
+export const patchMessage = (articleId, messageId, content) =>
   instance.patch(`/articles/${articleId}/messages/${messageId}`, {
     content,
   })
-export const apiMessagesDelete = (articleId, messageId) =>
+export const deleteMessage = (articleId, messageId) =>
   instance.delete(`/articles/${articleId}/messages/${messageId}`)
 
 // 心得按讚關聯
-export const apiArticleGetLike = (userId) =>
+export const getArticleLike = (userId) =>
   instance.get(`users/${userId}/liked-articles`)
-export const apiArticlePostLike = (userId, articleId) =>
+export const postArticleLike = (userId, articleId) =>
   instance.post(`users/${userId}/liked-articles`, {
     article_id: articleId,
   })
-export const apiArticleRemoveLike = (userId, articleId) =>
+export const removeArticleLike = (userId, articleId) =>
   instance.delete(`users/${userId}/liked-articles/${articleId}`)
-
-// 不確定這支的分類
-export const apiArticlesOptions = (limit, tags, offset, search) => {
-  let url = `/articles?`
-  if (limit) {
-    url += `limit=${limit}&`
-  }
-  if (tags && Array.isArray(tags) && tags.length > 0) {
-    tags.map((tag) => (url += `tag=${tag}&`))
-  }
-  if (offset) {
-    url += `offset=${offset}&`
-  }
-  if (search) {
-    url += `search=${search}&`
-  }
-  return instance.get(url)
-}
 
 // 其他 IMGUR WEATHER 等等

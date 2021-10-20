@@ -1,8 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY, EFFECT } from '../../constants/style'
-import User from './User'
+import { Link } from 'react-router-dom'
+import { AuthContext } from '../../context'
 
+const UserName = styled(Link)`
+  color: ${COLOR.black};
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+  }
+`
+
+const UserInfo = styled.div`
+  font-size: ${FONT.xs};
+  align-items: center;
+  margin-left: 15px;
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.s};
+  }
+`
+const ArticleUser = styled.div`
+  display: flex;
+`
+const ArticleDate = styled.div`
+  font-size: ${FONT.xs};
+  margin-top: 10px;
+
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
+  }
+`
+
+const UserAvatar = styled.img`
+  border: 1px solid ${COLOR.gray_light};
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+
+  ${MEDIA_QUERY.md} {
+    width: 45px;
+    height: 45px;
+  }
+`
 const ArticleContentContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -56,13 +97,30 @@ const UnfoldButton = styled.button`
   }
 `
 
-export default function ArticleContent({ content }) {
+export default function ArticleContent({ post }) {
   const [unfold, setUnfold] = useState(false)
+  const { userInfo } = useContext(AuthContext)
 
   return (
     <ArticleContentContainer>
-      <User />
-      <ArticleDesc unfold={unfold}>{content}</ArticleDesc>
+      <ArticleUser>
+        <UserAvatar src={post.icon_url} />
+        <UserInfo>
+          <UserName
+            to={
+              userInfo && userInfo.user_id === post.author_id
+                ? `/backstage/${post.author_id}`
+                : `/user/${post.author_id}`
+            }
+          >
+            {post.nickname}
+          </UserName>
+          <ArticleDate>
+            {new Date(post.created_at).toLocaleString('ja')}
+          </ArticleDate>
+        </UserInfo>
+      </ArticleUser>
+      <ArticleDesc unfold={unfold}>{post.content}</ArticleDesc>
       <UnfoldButton unfold={unfold} onClick={() => setUnfold(!unfold)}>
         {unfold ? '收合' : '展開全文'}
       </UnfoldButton>

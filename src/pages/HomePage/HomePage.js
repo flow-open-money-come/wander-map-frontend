@@ -178,6 +178,7 @@ function HomePage() {
                       date={new Date(articleInfos.created_at).toLocaleString()}
                       content={articleInfos.content}
                       lessRwd={true}
+                      articlePage={`/articles/${articleInfos.article_id}`}
                     />
                   ))
                 ) : (

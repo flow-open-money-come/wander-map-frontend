@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react'
+import React, { useState, useEffect, useRef, useContext } from 'react'
 import styled from 'styled-components'
 import ArticleList from '../../../components/forumSystem/Article'
 import Carousel from '../../../components/forumSystem/Carousel'
@@ -6,9 +6,11 @@ import ForumFilter from '../../../components/forumSystem/Filter'
 import { ReactComponent as Hot } from '../../../icons/hot.svg'
 import { FONT, MEDIA_QUERY } from '../../../constants/style'
 import { NavBarButton } from '../../../components/common/Button'
-import { apiArticlesHot, apiArticlesOptions } from '../../../WebAPI'
+import { getArticles, getArticles } from '../../../WebAPI'
 import { COLOR } from '../../../constants/style'
 import { useInput } from '../../../hooks/useInput'
+import { LoadingContext } from '../../../context'
+import Loading from '../../../components/common/Loading'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -57,17 +59,17 @@ const LoadMoreBtn = styled.button`
   font-size: ${FONT.md};
   margin: 50px 0px 100px 50%;
   transform: translate(-50%);
-
-  ${(props) =>
-    props.overLoad &&
-    `
-    color: ${COLOR.gray_light};
-    pointer-events:none;
-  `}
 `
 const ArticleListWrapper = styled.div`
   width: 90%;
   margin: 0 auto;
+
+  ${(props) =>
+    props.overLoad &&
+    `
+      margin: 0 auto 100px auto;
+
+  `}
 `
 
 const NoRelatedArticleNotice = styled.div`
@@ -83,15 +85,19 @@ function AllArticlesPage() {
   const [tagValue, setTagValue] = useState([])
   const { inputValue, setInputValue, handleInputChange } = useInput()
   const [filterData, setFilterData] = useState()
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const params = useRef(5)
+  const [totalPosts, setTotalPosts] = useState()
   let overLoad = false
 
   useEffect(() => {
-    apiArticlesHot()
+    setIsLoading(true)
+    getArticles('/hot')
       .then((res) => {
         if (res.data.success) {
           setSlides(res.data.data)
         }
+        setIsLoading(false)
       })
       .catch((err) => {
         console.log(err)
@@ -100,10 +106,18 @@ function AllArticlesPage() {
 
   useEffect(() => {
     params.current = 5
-    apiArticlesOptions(5, tagValue, 0, filterData)
+    let url = ''
+    if (tagValue.length > 0) {
+      tagValue.map((tag) => (url += `&tag=${tag}`))
+    }
+    if (filterData) {
+      url += `&search=${filterData}`
+    }
+    getArticles(`?limit=5${url}`)
       .then((res) => {
         if (res.data.success) {
           setPosts(res.data.data)
+          setTotalPosts(Number(Object.values(res.headers)[2]))
         }
       })
       .catch((err) => {
@@ -115,10 +129,18 @@ function AllArticlesPage() {
     if (overLoad) {
       return
     }
-    apiArticlesOptions(5, tagValue, params.current, filterData)
+    let url = ''
+    if (tagValue.length > 0) {
+      tagValue.map((tag) => (url += `&tag=${tag}`))
+    }
+    if (filterData) {
+      url += `&search=${filterData}`
+    }
+    getArticles(`?limit=5&&offset=${params.current}${url}`)
       .then((res) => {
         if (res.data.success) {
           setPosts(posts.concat(res.data.data))
+          setTotalPosts(Number(Object.values(res.headers)[2]))
         }
       })
       .catch((err) => {
@@ -131,12 +153,12 @@ function AllArticlesPage() {
     setFilterData(inputValue)
   }
 
-  const handleClickCross = (e) => {
+  const handleClickCross = () => {
     setInputValue('')
     setFilterData('')
   }
 
-  if (params.current > posts.length) {
+  if (posts.length >= totalPosts) {
     overLoad = true
   }
 
@@ -154,10 +176,12 @@ function AllArticlesPage() {
     { tagId: 11, tagName: '需專業裝備', isChecked: false },
     { tagId: 12, tagName: '登山小白體驗', isChecked: false },
     { tagId: 13, tagName: '專業老手分享', isChecked: false },
-    { tagId: 14, tagName: 'GPX', isChecked: false },
+    // { tagId: 14, tagName: 'GPX', isChecked: false },
   ])
 
-  return (
+  return isLoading ? (
+    <Loading />
+  ) : (
     <Wrapper>
       <TitleGroup>
         <HotIcon />
@@ -174,7 +198,7 @@ function AllArticlesPage() {
         handleClickSearch={handleClickSearch}
         handleClickCross={handleClickCross}
       />
-      <ArticleListWrapper>
+      <ArticleListWrapper overLoad={overLoad}>
         {posts.map((post) => {
           return (
             <ArticleList
@@ -186,12 +210,14 @@ function AllArticlesPage() {
               content={post.content}
               avatarImgSrc={post.user_icon}
               articlePage={`/articles/${post.article_id}`}
+              authorId={post.author_id}
             />
           )
         })}
-        {tagValue && posts.length === 0 ? (
+        {tagValue && posts.length === 0 && (
           <NoRelatedArticleNotice>暫無相關文章</NoRelatedArticleNotice>
-        ) : (
+        )}
+        {posts.length !== 0 && !overLoad && (
           <LoadMoreBtn overLoad={overLoad} onClick={handleClickLoadMore}>
             看更多
           </LoadMoreBtn>

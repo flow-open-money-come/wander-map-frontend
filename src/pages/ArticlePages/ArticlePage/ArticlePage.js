@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useLayoutEffect } from 'react'
 import styled from 'styled-components'
 import Comment from '../../../components/forumSystem/Comments'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../../constants/style'
@@ -7,7 +7,7 @@ import thumbSVG from '../../../icons/thumb_up.svg'
 import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
-import { apiArticle, apiArticleGetLike } from '../../../WebAPI'
+import { getArticles, getArticleLike } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
@@ -65,6 +65,12 @@ const ThumbUp = styled.span`
       background-image: url('${thumbGreenSVG}');
       width: 25px;
       height: 25px;
+    `}
+
+  ${(props) =>
+    !props.userInfo &&
+    `
+    pointer-events: none;  
     `}
 `
 
@@ -130,40 +136,35 @@ function ArticlePage() {
   const [post, setPost] = useState([])
   const { userInfo } = useContext(AuthContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
-  const { thumb, setThumb, handleClickLike } = useLike()
+  const { thumb, setThumb, handleClickLike, count } = useLike()
 
   useEffect(() => {
+    setIsLoading(true)
     const getPost = async () => {
-      setIsLoading(true)
       try {
-        let res = await apiArticle(id)
+        let res = await getArticles(id)
         if (res.status === 200) {
           setPost(res.data.data[0])
         }
-        setIsLoading(false)
       } catch (err) {
         console.log(err)
       }
+      setIsLoading(false)
     }
     getPost()
   }, [])
 
   useEffect(() => {
     const getLike = async () => {
-      setIsLoading(true)
       try {
-        let res = await apiArticleGetLike(userInfo.user_id)
-        console.log(res)
-        if (
+        let res = await getArticleLike(userInfo.user_id)
+        if (res.status === 200) {
           res.data.data.articles.map((article) => {
             if (article.article_id == id) {
-              return true
+              setThumb(true)
             }
           })
-        ) {
-          setThumb(true)
         }
-        setIsLoading(false)
       } catch (err) {
         console.log(err)
       }
@@ -172,27 +173,28 @@ function ArticlePage() {
   }, [])
 
   return (
-    <>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <Wrapper>
-          <CoverImg src={post.cover_picture_url} />
-          <ArticleTitleAndLikes>
-            <ArticleTitle>{post.title}</ArticleTitle>
-            <ArticleLikes>
-              {userInfo && <ThumbUp thumb={thumb} onClick={handleClickLike} />}
-              {/* {post.likes} */}
-            </ArticleLikes>
-          </ArticleTitleAndLikes>
-          {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
-          <ArticleStandardInformation topElement>
-            地點：{post.location}
-          </ArticleStandardInformation>
-          <ArticleStandardInformation>
-            出發時間：{new Date(post.departure_time).toLocaleString()}
-          </ArticleStandardInformation>
-          {/* {post.time_spent ? (
+    <Wrapper>
+      {isLoading && <Loading />}
+      <CoverImg src={post.cover_picture_url} />
+      <ArticleTitleAndLikes>
+        <ArticleTitle>{post.title}</ArticleTitle>
+        <ArticleLikes>
+          <ThumbUp
+            thumb={thumb}
+            userInfo={userInfo}
+            onClick={userInfo && handleClickLike}
+          />
+          {post.count + count}
+        </ArticleLikes>
+      </ArticleTitleAndLikes>
+      {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
+      <ArticleStandardInformation topElement>
+        地點：{post.location}
+      </ArticleStandardInformation>
+      <ArticleStandardInformation>
+        出發時間：{new Date(post.departure_time).toLocaleString()}
+      </ArticleStandardInformation>
+      {/* {post.time_spent ? (
         <ArticleStandardInformation>
           行進時間：{post.time_spent} 小時
         </ArticleStandardInformation>
@@ -213,15 +215,13 @@ function ArticlePage() {
       ) : (
         ''
       )} */}
-          <ArticleContent content={post.content} />
-          <FlexGroup>
-            <ReviewIcon />
-            <CommentTitle>討論區</CommentTitle>
-          </FlexGroup>
-          <Comment isMessage={true} />
-        </Wrapper>
-      )}
-    </>
+      <ArticleContent post={post} />
+      <FlexGroup>
+        <ReviewIcon />
+        <CommentTitle>討論區</CommentTitle>
+      </FlexGroup>
+      <Comment isMessage={true} />
+    </Wrapper>
   )
 }
 
