@@ -169,7 +169,8 @@ export default function ArticlePostPage() {
     postArticles(formData)
       .then((res) => {
         console.log(res.data)
-        history.push('/')
+        let id = res.data.data.result.insertId
+        history.push(`/articles/${id}`)
       })
       .catch((err) => {
         console.log(err.response.data)
