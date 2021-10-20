@@ -95,6 +95,14 @@ export default function UserTodoItems() {
         }
       })
     )
+    patchUserTodos(userID, todo_id, { is_done: !myTodos.is_done })
+      .then((res) => {
+        console.log(res.data)
+        console.log('修改成功')
+      })
+      .catch((err) => {
+        console.log(err.response)
+      })
   }
   //刪除
   const handleDeleteTodo = (todo_id) => {
@@ -138,7 +146,6 @@ export default function UserTodoItems() {
       .catch((err) => {
         console.log(err.response)
       })
-
     setUpdateValue('')
   }
 

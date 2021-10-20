@@ -29,16 +29,11 @@ const TodoContent = styled.input.attrs((props) => ({
     border-bottom: 1.5px solid ${COLOR.green};
   }
   ${(props) =>
-    props.is_done &&
+    props.$is_done &&
     `
     text-decoration: line-through;
     color:${COLOR.gray}
   `}
-`
-const CheckBox = styled.input.attrs((props) => ({
-  type: 'checkbox',
-}))`
-  border: none;
 `
 
 const Button = styled.button`
@@ -81,10 +76,10 @@ export default function TodoItem({
   return (
     <TodosWrapper data-todo-id={todo.todo_id}>
       <Button>
-        <CheckBox checked={todo.is_done} onChange={handleToggleClick} />
+        <CheckIcon onClick={handleToggleClick} />
       </Button>
       <TodoContent
-        isDone={todo.is_done}
+        $is_done={todo.is_done}
         value={todo.content}
         onChange={(e) => handleUpdateChange(todo.todo_id, e)}
       />

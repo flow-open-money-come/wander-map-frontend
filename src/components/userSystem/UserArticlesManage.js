@@ -165,9 +165,11 @@ export default function UserArticlesManage() {
       <TrailsTable>
         {userArticlesData.articles.map((article) => (
           <TableContent>
-            <CoverTd>
-              <TrailImg src={article.cover_picture_url} />
-            </CoverTd>
+            <Link to={`../articles/${article.article_id}`}>
+              <CoverTd>
+                <TrailImg src={article.cover_picture_url} />
+              </CoverTd>
+            </Link>
             <TrailsTd>{article.title}</TrailsTd>
             <BtnTd>
               <Link to={`../update-article/${article.article_id}`}>

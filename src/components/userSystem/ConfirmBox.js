@@ -1,8 +1,9 @@
 import { deleteArticle } from '../../WebAPI'
 import styled from 'styled-components'
-import { COLOR, FONT, RADIUS } from '../../constants/style'
+import { COLOR, FONT, RADIUS, EFFECT } from '../../constants/style'
 
 const Wrapper = styled.div`
+  z-index: 10;
   width: 300px;
   height: 200px;
   padding: 50px 30px;
@@ -13,28 +14,30 @@ const Wrapper = styled.div`
   background-color: white;
   border: 1px solid ${COLOR.gray};
   border-radius: ${RADIUS.s};
+  box-shadow: ${EFFECT.shadow_light};
 `
 const Warning = styled.div`
   margin: 10px;
   text-align: center;
-  font-size: ${FONT.md};
+  font-size: ${FONT.lg};
 `
 const BtnWrapper = styled.div`
+  margin: 0 auto;
   text-align: center;
 `
-const Btn = styled.div`
+const Btn = styled.button`
   opacity: 0.8;
   display: inline-block;
   padding: 10px 20px;
   margin: 20px;
   color: ${COLOR.white};
   font-size: ${FONT.s};
-  background: #8a8686;
-  border-radius: ${RADIUS.s};
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: ${RADIUS.md};
   transition: 0.5s;
   &:hover {
     cursor: pointer;
-    background: rgba(0, 0, 0, 0.4);
+    background: ${COLOR.green};
   }
 `
 
