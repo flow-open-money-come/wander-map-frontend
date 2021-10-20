@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Link, useHistory, useLocation } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useContext } from 'react'
 import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
 import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
@@ -7,7 +7,7 @@ import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { NavBarButton } from './Button'
 import useToggle from '../../hooks/useToggle'
 import { AuthContext } from '../../context'
-import { setAuthToken } from '../../utils'
+import useLogout from '../../hooks/useLogout'
 
 const NavBarContainer = styled.div`
   width: 100%;
@@ -39,8 +39,8 @@ const Logo = styled(Link)`
 const NavBarLink = styled(Link)`
   color: ${COLOR.white};
   font-size: ${FONT.md};
-  width: 120px;
   height: 48px;
+  padding: 0px 20px;
   border-radius: 0 0 ${RADIUS.s} ${RADIUS.s};
   background-color: ${COLOR.green};
   display: flex;
@@ -58,6 +58,7 @@ const NavBarLink = styled(Link)`
   @media screen and (max-width: 768px) {
     background-color: transparent;
     color: ${COLOR.black};
+    padding: 0px;
     justify-content: space-between;
     box-shadow: none;
     ${(props) =>
@@ -76,19 +77,23 @@ const NavBarLinkWrapper = styled.div`
   @media screen and (max-width: 768px) {
     flex-direction: column;
     margin-top: 50px;
-    padding-left: 30px;
+    padding: 0px 30px;
     align-items: baseline;
   }
 `
-const DefaultAvatar = styled(Link)`
+const Avatar = styled(Link)`
   display: inline-block;
-  width: 40px;
-  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
   margin-right: 10px;
-  background: url(https://i.imgur.com/r50z0vv.png) center/cover;
+  ${(props) =>
+    props.$avatar
+      ? `background: url(${props.$avatar}) center/cover;`
+      : `background: url(https://i.imgur.com/r50z0vv.png) center/cover;`}
   @media screen and (max-width: 768px) {
-    width: 25px;
-    height: 25px;
+    min-width: 25px;
+    min-height: 25px;
+    margin-right: 20px;
   }
 `
 
@@ -200,15 +205,8 @@ const Trail = styled(TrailSvg)`
 
 function NavBar() {
   const [HamburgerToggleClick, setHamburgerToggleClick] = useToggle(false)
-  const { userInfo, setUserInfo } = useContext(AuthContext)
-  const history = useHistory()
-  const location = useLocation()
-
-  const handleLogOut = () => {
-    if (location.pathname !== '/') history.push('/')
-    setAuthToken('')
-    setUserInfo(null)
-  }
+  const { userInfo } = useContext(AuthContext)
+  const { handleLogOut } = useLogout()
 
   return (
     <>
@@ -226,15 +224,31 @@ function NavBar() {
                 全部步道
               </NavBarLink>
               {userInfo && (
-                <NavBarLink to={`/backstage/${userInfo.user_id}`} $noBackground>
-                  <DefaultAvatar to={`/backstage/${userInfo.user_id}`} />
+                <NavBarLink
+                  to={
+                    userInfo.role === 'admin'
+                      ? `/admin`
+                      : `/backstage/${userInfo.user_id}`
+                  }
+                  $noBackground
+                >
+                  <Avatar
+                    to={
+                      userInfo.role === 'admin'
+                        ? `/admin`
+                        : `/backstage/${userInfo.user_id}`
+                    }
+                    $avatar={
+                      userInfo.icon_url !== null ? userInfo.icon_url : false
+                    }
+                  />
                   {userInfo.nickname}
                 </NavBarLink>
               )}
               <Divider />
               {userInfo && <NavBarText onClick={handleLogOut}>登出</NavBarText>}
               {!userInfo && (
-                <NavBarLink $button to='/register'>
+                <NavBarLink $button to='/login'>
                   會員註冊 / 登入
                 </NavBarLink>
               )}

@@ -2,11 +2,11 @@ import styled from 'styled-components'
 import { useHistory } from 'react-router'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { ReactComponent as PinSvg } from '../../icons/pin.svg'
-import useToggle from '../../hooks/useToggle'
 import { useState, useContext } from 'react'
-import { getArticlesUnderTrail } from '../../WebAPI'
+import { getTrailArticles } from '../../WebAPI'
 import useDidMountEffect from '../../hooks/useDidMountEffect'
 import { ActiveTrailContext } from '../../context'
+import { LoadingContext } from '../../context'
 
 const Marker = styled(PinSvg)`
   width: 30px;
@@ -81,6 +81,7 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
   const { activeTrailArticles, setActiveTrailArticles } =
     useContext(ActiveTrailContext)
   const history = useHistory()
+  const { setIsLoading } = useContext(LoadingContext)
 
   const handleMarkerOnclick = () => {
     if (!(activeTrailArticles.activeTrailInfo.trailId === trailInfo.trail_id))
@@ -89,20 +90,27 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
 
   useDidMountEffect(() => {
     if (currentOnClickTrail === null) return
-    getArticlesUnderTrail(currentOnClickTrail).then((res) => {
-      setActiveTrailArticles({
-        activeTrailInfo: {
-          trailId: trailInfo.trail_id,
-          trailTitle: trailInfo.title,
-          trailLocation: trailInfo.location,
-          center: {
-            lat: trailInfo.coordinate.y,
-            lng: trailInfo.coordinate.x,
+    setIsLoading(true)
+    getTrailArticles(currentOnClickTrail, '')
+      .then((res) => {
+        setActiveTrailArticles({
+          activeTrailInfo: {
+            trailId: trailInfo.trail_id,
+            trailTitle: trailInfo.title,
+            trailLocation: trailInfo.location,
+            center: {
+              lat: trailInfo.coordinate.y,
+              lng: trailInfo.coordinate.x,
+            },
           },
-        },
-        articles: res.data.data,
+          articles: res.data.data,
+        })
+        setIsLoading(false)
       })
-    })
+      .catch((err) => {
+        console.log(err.response)
+        setIsLoading(false)
+      })
 
     setCurrentOnClickTrail(null)
   }, [currentOnClickTrail])

@@ -17,7 +17,7 @@ const FilteredTrailCard = styled.div`
     height: 300px;
   }
   ${MEDIA_QUERY.lg} {
-    margin-left: 20px;
+    margin: 20px;
   }
 `
 const FilteredTrailImgWrapper = styled.div`

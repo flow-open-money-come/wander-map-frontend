@@ -3,11 +3,10 @@ import config from './config'
 import { getAuthToken } from './utils'
 
 const instance = axios.create({
-  baseURL: config.apiHost,
+  baseURL: config.apiHost2,
 })
 
 instance.interceptors.request.use((config) => {
-  // allow cookie on cross origin request
   config.withCredentials = true
   config.headers.Authorization = `Bearer ${getAuthToken()}`
   return config
@@ -18,10 +17,12 @@ export const userLogin = (payload) => instance.post('/users/login', payload)
 export const userRegister = (payload) =>
   instance.post('/users/register', payload)
 export const getAllUsers = (params) => instance.get('/users' + params)
+export const refreshAccessToken = () => instance.get('/users/refresh')
+export const userLogout = () => instance.get('/users/logout')
 
 // trails
 // get 相關
-export const getTrails = (params) => instance.get('/trails/' + params)
+export const getTrails = (params) => instance.get('/trails' + params)
 export const getHotTrails = () => instance.get('/trails/hot/5')
 export const getTrailsCondition = () => axios.get(config.tfrHost)
 

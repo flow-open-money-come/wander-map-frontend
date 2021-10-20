@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import { ReactComponent as CloseSvg } from '../../icons/close.svg'
+import { memo } from 'react'
 
 const SearchBarWrapper = styled.div`
   width: ${(props) => {
@@ -69,7 +70,7 @@ const SearchBarInput = styled.input`
   }
 `
 
-export default function SearchBar({
+export default memo(function SearchBar({
   placeholder,
   horizontalAlign,
   noBorderRadius,
@@ -108,4 +109,4 @@ export default function SearchBar({
       </SearchBarWrapper>
     </>
   )
-}
+})

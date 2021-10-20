@@ -5,7 +5,7 @@ import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
 import { ActiveTrailContext } from '../../context'
 import { useState, useEffect } from 'react'
-import { getArticlesUnderTrail } from '../../WebAPI'
+import { getTrailArticles } from '../../WebAPI'
 
 const HomepageContainer = styled.div`
   width: 90%;
@@ -23,27 +23,29 @@ const HomePageWrapper = styled.div`
 `
 const MapWrapper = styled.div`
   width: 100%;
-  height: 600px;
+  height: 450px;
   border: 1px solid ${COLOR.beige};
   border-radius: ${RADIUS.md};
   overflow: hidden;
   z-index: 0;
   ${MEDIA_QUERY.lg} {
     width: 50%;
+    height: 600px;
     border-radius: 0px ${RADIUS.md} ${RADIUS.md} 0px;
   }
 `
 const ArticleListWrapper = styled.div`
   width: 100%;
-  height: 600px;
-  margin: 20px auto;
+  margin: 20px auto 60px auto;
   border: none;
-  padding: 20px 20px 40px 20px;
-  overflow: scroll;
   ${MEDIA_QUERY.lg} {
     width: 49%;
+    height: 600px;
     border: 1px solid ${COLOR.beige};
     border-radius: ${RADIUS.md} 0px 0px ${RADIUS.md};
+    overflow-y: scroll;
+    padding: 20px;
+    margin-bottom: 20px;
   }
 `
 const TrialTitleWrapper = styled.div`
@@ -111,20 +113,26 @@ function HomePage() {
   })
 
   useEffect(() => {
-    getArticlesUnderTrail(1).then((res) => {
-      setActiveTrailArticles({
-        activeTrailInfo: {
-          trailId: 1,
-          trailTitle: '蘇花古道：大南澳越嶺段',
-          trailLocation: '宜蘭縣南澳鄉',
-          center: {
-            lat: 24.482340609862774,
-            lng: 121.83785521632522,
-          },
-        },
-        articles: res.data.data,
+    getTrailArticles(1, '')
+      .then((res) => {
+        if (res.data.success) {
+          setActiveTrailArticles({
+            activeTrailInfo: {
+              trailId: 1,
+              trailTitle: '蘇花古道：大南澳越嶺段',
+              trailLocation: '宜蘭縣南澳鄉',
+              center: {
+                lat: 24.482340609862774,
+                lng: 121.83785521632522,
+              },
+            },
+            articles: res.data.data,
+          })
+        }
       })
-    })
+      .catch((err) => {
+        console.log(err)
+      })
   }, [])
   return (
     <>

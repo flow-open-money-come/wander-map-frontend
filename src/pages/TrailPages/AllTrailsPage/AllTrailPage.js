@@ -13,6 +13,7 @@ import useLoadMore from '../../../hooks/useLoadMore'
 import useDebounce from '../../../hooks/useDebounce'
 import useHotTrailsCarousel from '../../../hooks/useHotTrailsCarousel'
 import useTrailFilters from '../../../hooks/useTrialFilters'
+import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
@@ -83,11 +84,11 @@ const DropDownContainer = styled.div`
   top: -20px;
 `
 const FilteredTrailsWrapper = styled.div`
-  width: 80%;
+  width: 90%;
   margin: 0 auto;
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
+  justify-content: center;
 `
 
 const LoadMoreBtn = styled.div`
@@ -108,17 +109,21 @@ function AllTrailPage() {
   const { keyWord, handleKeyWordChange, handleKeyWordDelete } = useSearch()
   const debouncedKeyWord = useDebounce(keyWord, 1000)
   const { numberOfDisplay, handleLoadMore } = useLoadMore()
+  const [isLoadingFilter, setIsLoadingFilter] = useState(false)
 
   useEffect(() => {
-    let params = ''
-    if (checkedOptions.length !== 0 || debouncedKeyWord)
-      params = `&${checkedOptions.join('&')}`
-    getTrails(`?limit=126&search=${debouncedKeyWord}${params}`)
+    let params = []
+    if (checkedOptions.length !== 0) params.push(`&${checkedOptions.join('&')}`)
+    if (debouncedKeyWord) params.push(`&search=${debouncedKeyWord}`)
+    setIsLoadingFilter(true)
+    getTrails(`?limit=126${params.join('')}`)
       .then((res) => {
         if (res.data.success) setFilteredTrailInfos(res.data.data)
+        setIsLoadingFilter(false)
       })
       .catch((err) => {
         console.log(err)
+        setIsLoadingFilter(false)
       })
   }, [checkedOptions, debouncedKeyWord])
 
@@ -182,17 +187,22 @@ function AllTrailPage() {
             />
           </SearchBarWrapper>
         </DropDownContainer>
-        <FilteredTrailsWrapper>
-          {filteredTrailInfos.length > 0 ? (
-            filteredTrailInfos
-              .slice(0, numberOfDisplay)
-              .map((trailInfo) => (
-                <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
-              ))
-          ) : (
-            <NoMatchMsg>查無步道。</NoMatchMsg>
-          )}
-        </FilteredTrailsWrapper>
+        {isLoadingFilter ? (
+          <SmallRegionLoading isFullScreen />
+        ) : (
+          <FilteredTrailsWrapper>
+            {filteredTrailInfos.length > 0 ? (
+              filteredTrailInfos
+                .slice(0, numberOfDisplay)
+                .map((trailInfo) => (
+                  <TrailCard key={trailInfo.trail_id} trailInfo={trailInfo} />
+                ))
+            ) : (
+              <NoMatchMsg>查無步道。</NoMatchMsg>
+            )}
+          </FilteredTrailsWrapper>
+        )}
+
         {filteredTrailInfos.length > 21 &&
           numberOfDisplay < filteredTrailInfos.length && (
             <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
