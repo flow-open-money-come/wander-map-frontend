@@ -142,7 +142,7 @@ function ArticlePage() {
     setIsLoading(true)
     const getPost = async () => {
       try {
-        let res = await getArticles(id)
+        let res = await getArticles(`/${id}`)
         if (res.status === 200) {
           setPost(res.data.data[0])
         }
