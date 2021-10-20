@@ -150,7 +150,6 @@ export default function ArticlePostPage() {
     cover_picture_url: '',
     location: '',
     departure_time: '',
-    end_time: '',
     related: '',
     tags: '',
     content: '',

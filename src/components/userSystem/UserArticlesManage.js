@@ -143,7 +143,6 @@ export default function UserArticlesManage() {
   useEffect(() => {
     getUserArticles(userID)
       .then((res) => {
-        console.log(res.data)
         setUserArticlesData(res.data.data)
       })
       .catch((err) => {

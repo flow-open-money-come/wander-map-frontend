@@ -117,11 +117,11 @@ export default function UserUpdateBox({
       .then((res) => {
         console.log(res.data)
         console.log('修改成功')
-        console.log(updateUserData)
         setUserData({
           ...userData,
           nickname: updateUserData.nickname,
-          icon_url: updateUserData.icon_url,
+          icon_url: updateUserData.iconUrl,
+          iconUrl: updateUserData.iconUrl,
         })
         setUserInfo({
           ...userInfo,
@@ -138,11 +138,10 @@ export default function UserUpdateBox({
   return (
     <ModifyField>
       <Title>修改會員資料</Title>
-
       <InputWrapper>
         <AlertMsg $error>{errMsg}</AlertMsg>
         <UserUploadImg
-          name='icon_url'
+          name='iconUrl'
           updateUserData={updateUserData}
           setUpdateUserData={setUpdateUserData}
         />

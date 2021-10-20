@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getUserInfo, getUserArticles } from '../../../WebAPI'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import {
   COLOR,
@@ -30,7 +30,7 @@ const MemberProfileWrapper = styled.div`
   }
   ${MEDIA_QUERY.lg} {
     margin: 50px auto;
-    width: 25%;
+    width: 30%;
     min-width: 30vmin;
   }
 `
@@ -43,8 +43,8 @@ const Avatar = styled.div`
   margin: 20px auto;
 `
 const AvatarPic = styled.img`
-  width: 40vmin;
-  height: 40vmin;
+  width: 30vmin;
+  height: 30vmin;
   object-fit: cover;
   object-position: center;
   ${MEDIA_QUERY.lg} {
@@ -87,7 +87,7 @@ const Info = styled.div`
   }
 `
 const SectionWrapper = styled.div`
-  margin: 0 auto;
+  margin: 80px auto;
   width: 90%;
   ${MEDIA_QUERY.lg} {
     width: 60%;
@@ -249,7 +249,9 @@ export default function UserOverviewPage() {
         </SectionTitle>
         {userArticlesData.articles.map((article) => (
           <ArticlesWrapper>
-            <ArticlesPic src={article.cover_picture_url} />
+            <Link to={`../articles/${article.article_id}`}>
+              <ArticlesPic src={article.cover_picture_url} />
+            </Link>
             <Articles>
               <ArticlesTitle>{article.title}</ArticlesTitle>
               <ArticlesContent>{article.content}</ArticlesContent>

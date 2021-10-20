@@ -92,7 +92,6 @@ export default function ForumFilter({
     )
   }
 
-  console.log(inputValue)
   return (
     <FilterContainer>
       <Filter>
@@ -103,14 +102,14 @@ export default function ForumFilter({
           width='100%'
           fontSize={FONT.md}
           noShadow
-          value={inputValue}
-          onChange={(e) => {
+          inputValue={inputValue}
+          handleKeyWordChange={(e) => {
             handleInputChange(e)
           }}
-          onClickSearch={(e) => {
+          handleSearchTrails={(e) => {
             handleClickSearch(e)
           }}
-          onClickCross={handleClickCross}
+          handleKeyWordDelete={handleClickCross}
         />
         <FilterTags>
           {tags.map((tag) => {
