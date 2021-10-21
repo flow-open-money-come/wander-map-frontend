@@ -160,6 +160,7 @@ function TrailPage() {
   const [articles, setArticles] = useState(null)
   // const { userInfo } = useContext(AuthContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const [loadingCollect, setLoadingCollect] = useState(false)
   const history = useHistory()
   const { thumb, setThumb, handleClickLike } = useLike()
   // 未知原因 useContext(AuthContext) 有時會抓不到值 直接在此decode
@@ -174,6 +175,7 @@ function TrailPage() {
         res.data.data[0]
           ? setTrailInfo(res.data.data[0])
           : history.push(`/trails`)
+        setLoadingCollect(true)
         setIsLoading(false)
       })
       .catch((error) => console.error(error))
@@ -186,11 +188,11 @@ function TrailPage() {
     getUserCollect(userInfo.user_id)
       .then((res) =>
         res.data.data.trails.forEach((trail) => {
-          if (trail.trail_id === id) setThumb(true)
+          if (trail.trail_id == id) setThumb(true)
         })
       )
       .catch((error) => console.error(error))
-  }, [userInfo, id, setThumb])
+  }, [userInfo, id, setThumb, loadingCollect])
 
   return (
     <>
