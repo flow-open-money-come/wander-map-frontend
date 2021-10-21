@@ -85,9 +85,7 @@ export default function UserLike() {
         setUserLikeData(res.data.data)
         console.log(res.data.data)
       })
-      .catch((err) => {
-        console.log(err.response.data)
-      })
+      .catch((err) => {})
   }, [])
 
   return (
@@ -105,10 +103,11 @@ export default function UserLike() {
               avatarImgSrc={article.icon_url}
               title={article.title}
               user={article.nickname}
-              tags={article.tag_names.split(',')}
+              tags={!article.tag_names ? [] : article.tag_names.split(',')}
               date={article.created_at}
               content={article.content}
               lessRwd={true}
+              articlePage={`/articles/${article.article_id}`}
             />
           ))
         ) : (
