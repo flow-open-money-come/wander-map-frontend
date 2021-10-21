@@ -9,7 +9,6 @@ import { getArticles, deleteArticle, getDeletedArticle, recoverArticle } from '.
 import { Link } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
-import Loading from '../common/Loading'
 import swal from 'sweetalert'
 import SmallRegionLoading from '../common/SmallRegionLoading'
 
