@@ -367,12 +367,16 @@ export default function Comments({ isMessage }) {
         messageId
       )
       if (res.status === 200) {
-        swal('已刪除')
+        swal('已刪除', {
+          icon: 'success',
+        })
         setLoadingComment(false)
       }
     } catch (err) {
       console.log(err)
-      swal('刪除失敗')
+      swal('刪除失敗', {
+        icon: 'error',
+      })
       setLoadingComment(false)
     }
   }
