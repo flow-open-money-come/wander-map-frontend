@@ -4,6 +4,7 @@ import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
+import { ReactComponent as RecycleIcon } from '../../icons/backstage/recycle.svg'
 import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
 import { getTrails, deleteTrail, getDeletedTrail, recoverTrail } from '../../WebAPI'
 import { Link } from 'react-router-dom'
@@ -11,13 +12,9 @@ import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import Loading from '../common/Loading'
 import swal from 'sweetalert'
+import SmallRegionLoading from '../common/SmallRegionLoading'
 
-const Block = styled.div`
-  border: 2px solid ${COLOR.green};
-  border-radius: 0 ${RADIUS.s} ${RADIUS.s} ${RADIUS.s};
-  width: 100%;
-  min-height: 70vh;
-`
+
 const SearchBar = styled.div`
   border: 1px solid #c4c4c4;
   border-radius: ${RADIUS.s};
@@ -209,9 +206,26 @@ function TrailsManagement({ recycle, setRecycle }) {
 
   const handleDelete = (trailID, trailTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
-    deleteTrail(trailID).then()
-    swal(`已刪除步道`, `${trailTitle}`, 'success')
-    setTrails(trails.filter((trail) => trail.trail_id !== trailID))
+    swal({
+      title: '確定刪除嗎？',
+      icon: 'warning',
+      buttons: ['取消', '確定'],
+      dangerMode: true
+    }).then((willDo) => {
+      if (willDo) {
+        deleteTrail(trailID)
+          .then((res) => {
+            if (res.data.success) {
+              setTrails(trails.filter((trail) => trail.trail_id !== trailID))
+              swal(`已刪除步道 ${trailTitle}`, {
+                icon: 'success',
+                button: '關閉'
+              })
+            }
+          })
+          .catch((err) => console.log(err.response))
+      }
+    })
   }
 
   const handleRecover = (trailID, trailTitle) => {
@@ -224,9 +238,9 @@ function TrailsManagement({ recycle, setRecycle }) {
   return (
     <>
       {isLoading ? (
-        <Loading />
+        <SmallRegionLoading isFullScreen />
       ) : (
-        <Block>
+        <>
           <SearchBar>
             <SearchIcon />
             <SearchField
@@ -250,7 +264,7 @@ function TrailsManagement({ recycle, setRecycle }) {
                   setRecycle(true)
                 }}
               >
-                <BinIcon />
+                <RecycleIcon />
               </RecycleBin>
             )}
           </RecycleBlock>
@@ -298,7 +312,7 @@ function TrailsManagement({ recycle, setRecycle }) {
                 </TableContent>
               ))}
           </TrailsTable>
-        </Block>
+        </>
       )}
     </>
   )

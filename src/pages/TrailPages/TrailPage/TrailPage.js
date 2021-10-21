@@ -20,7 +20,7 @@ import { useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import { getAuthToken } from '../../../utils'
 import useLike from '../../../hooks/useLike'
-import Loading from '../../../components/common/Loading'
+import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 import jwt_decode from 'jwt-decode'
 
 const TrailPageContainer = styled.div`
@@ -195,7 +195,7 @@ function TrailPage() {
   return (
     <>
       {isLoading ? (
-        <Loading />
+        <SmallRegionLoading isFullScreen/>
       ) : (
         <TrailPageContainer>
           <HeadFlex>
@@ -205,11 +205,7 @@ function TrailPage() {
               <Desc>{trailInfo && trailInfo.description}</Desc>
             </TitleAndDesc>
             {userInfo && (
-              <CollectBlock
-                thumb={thumb}
-                userInfo={userInfo}
-                onClick={userInfo && handleClickLike}
-              >
+              <CollectBlock thumb={thumb} userInfo={userInfo} onClick={userInfo && handleClickLike}>
                 <CollectIcon />
               </CollectBlock>
             )}
@@ -222,9 +218,7 @@ function TrailPage() {
           {trailInfo && trailInfo.map_picture_url && (
             <TrailRoute routePic={trailInfo && trailInfo.map_picture_url} />
           )}
-          {articles && articles.length !== 0 && (
-            <TrailArticles articles={articles} />
-          )}
+          {articles && articles.length !== 0 && <TrailArticles articles={articles} />}
           <TrailReviews />
         </TrailPageContainer>
       )}
