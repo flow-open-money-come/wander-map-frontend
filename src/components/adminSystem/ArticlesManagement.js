@@ -90,6 +90,10 @@ const RecycleBin = styled.div`
   &:hover {
     cursor: pointer;
   }
+  svg {
+    width: 20px;
+    height: 20px;
+  }
   ${MEDIA_QUERY.md} {
     margin: 0 20px;
     svg {

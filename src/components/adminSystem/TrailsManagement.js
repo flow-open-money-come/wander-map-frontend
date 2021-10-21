@@ -87,6 +87,10 @@ const RecycleBin = styled.div`
   &:hover {
     cursor: pointer;
   }
+  svg {
+    width: 20px;
+    height: 20px;
+  }
   ${MEDIA_QUERY.md} {
     margin: 0 20px;
     svg {
@@ -280,7 +284,7 @@ function TrailsManagement({ recycle, setRecycle }) {
                   </LinkWrapper>
                   <CreatorTd>admin</CreatorTd>
                   <BtnTd>
-                    <Link to={`/trails/${trail.trail_id}`}>
+                    <Link to={`/update-trail/${trail.trail_id}`}>
                       <EditIcon />
                     </Link>
                     <BinIcon
