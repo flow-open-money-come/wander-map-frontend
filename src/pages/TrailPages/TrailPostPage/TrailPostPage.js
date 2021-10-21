@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
 import { postTrails, getTrails, patchTrail } from '../../../WebAPI'
 import { AuthContext } from '../../../context'
 import styled from 'styled-components'
@@ -159,26 +159,29 @@ const ErrorMessage = styled.div`
   font-size: ${FONT.s};
 `
 
+
+
 export default function TrailPostPage() {
   const { userInfo } = useContext(AuthContext)
+  let isPostPage = useRouteMatch('/post-trail')
+  const { trailID } = useParams()
   const history = useHistory()
-  if (!userInfo) history.push('/')
-  console.log(userInfo)
   const [errorMessage, setErrorMessage] = useState()
-  const [formData, setFormData] = useState({
-    author_id: userInfo.user_id,
-    title: '',
-    description: '',
-    location: '',
-    altitude: '',
-    length: '',
-    situation: '',
-    season: '',
-    difficulty: '',
-    coordinateX: '',
-    coordinateY: '',
-    cover_picture_url: '',
-  })
+  const [formData, setFormData] = useState({ author_id: userInfo.user_id })
+
+  if (!userInfo || userInfo.role !== 'admin') history.push('/')
+
+  useEffect(() => {
+    if (!isPostPage) {
+      getTrails(trailID)
+        .then((res) => {
+          setFormData(res.data.data[0])
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    } 
+  }, [trailID, isPostPage])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -189,40 +192,28 @@ export default function TrailPostPage() {
   }
 
   const handlePostSubmit = (e) => {
-    console.log(formData)
+    // console.log(formData)
     e.preventDefault()
     postTrails(formData)
       .then((res) => {
-        console.log(res.data)
-        let id = res.data.data.result.insertId
+        console.log('PostSubmit',res.data)
+        const id = res.data.data.insertId
         history.push(`/trails/${id}`)
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response)
         setErrorMessage('親愛的管理員您好，所有欄位皆必填喔!')
       })
   }
 
-  // 如有帶參數為修改步道
-  const { trailID } = useParams()
-
-  useEffect(() => {
-    getTrails(trailID)
-      .then((res) => {
-        console.log(res.data.data)
-        setFormData(res.data.data[0])
-      })
-      .catch((err) => {
-        console.log(err.response.data)
-      })
-  }, [])
 
   const handlePatchSubmit = (e) => {
-    console.log(formData)
+    console.log('before PatchSubmit',formData)
     e.preventDefault()
     patchTrail(trailID, formData)
       .then((res) => {
-        console.log(res.data)
+        console.log('patchTrail',res.data)
+        history.push(`/trails/${trailID}`)
       })
       .catch((err) => {
         console.log(err.response.data)
@@ -232,24 +223,18 @@ export default function TrailPostPage() {
 
   return (
     <TrailsPostWrapper>
-      {trailID ? (
-        <PageName>編輯步道</PageName>
-      ) : (
+      {isPostPage ? (
         <>
           <PageName>新增步道</PageName>
           <PageDesc>Wow！又新發現什麼新步道了呢？快來昭告天下吧~</PageDesc>
         </>
+      ) : (
+        <PageName>編輯步道</PageName>
       )}
-
       <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>步道名稱</FormTitle>
-        <Input
-          name='title'
-          onChange={handleInputChange}
-          value={formData.title}
-          required
-        />
+        <Input name='title' onChange={handleInputChange} value={formData.title} required />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>封面圖片</FormTitle>
@@ -274,11 +259,7 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>步道地點</FormTitle>
         <FormSubTitleWrapper>
-          <SelectLocation
-            name='location'
-            formData={formData}
-            setFormData={setFormData}
-          />
+          <SelectLocation name='location' formData={formData} setFormData={setFormData} />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -315,25 +296,19 @@ export default function TrailPostPage() {
         <FormTitle>步道難度</FormTitle>
         <DifficultyRadio
           name='difficulty'
+          value={formData.difficulty}
           handleInputChange={handleInputChange}
         />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道座標</FormTitle>
         <FormSubTitleWrapper>
-          <CoordinateInput
-            formData={formData}
-            handleInputChange={handleInputChange}
-          />
+          <CoordinateInput formData={formData && formData} handleInputChange={handleInputChange} />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道特色</FormTitle>
-        <Input
-          name='situation'
-          onChange={handleInputChange}
-          value={formData.situation}
-        />
+        <Input name='situation' onChange={handleInputChange} value={formData.situation} />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>建議季節</FormTitle>
@@ -363,10 +338,10 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle />
         <SubmitBtn>
-          {trailID ? (
-            <Submit onClick={handlePatchSubmit} />
-          ) : (
+          {isPostPage ? (
             <Submit onClick={handlePostSubmit} />
+          ) : (
+            <Submit onClick={handlePatchSubmit} />
           )}
         </SubmitBtn>
       </FormWrapper>
