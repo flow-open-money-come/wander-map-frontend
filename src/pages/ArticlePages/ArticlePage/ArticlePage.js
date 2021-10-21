@@ -198,12 +198,20 @@ function ArticlePage() {
             </ArticleLikes>
           </ArticleTitleAndLikes>
           {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
-          <ArticleStandardInformation topElement>
-            地點：{post.location}
-          </ArticleStandardInformation>
-          <ArticleStandardInformation>
-            出發時間：{new Date(post.departure_time).toLocaleString()}
-          </ArticleStandardInformation>
+          {post.location ? (
+            <ArticleStandardInformation topElement>
+              地點：{post.location}
+            </ArticleStandardInformation>
+          ) : (
+            ''
+          )}
+          {post.departure_time ? (
+            <ArticleStandardInformation>
+              出發日期：{new Date(post.departure_time).toLocaleDateString()}
+            </ArticleStandardInformation>
+          ) : (
+            ''
+          )}
           {/* {post.time_spent ? (
         <ArticleStandardInformation>
           行進時間：{post.time_spent} 小時
