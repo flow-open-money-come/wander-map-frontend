@@ -211,7 +211,7 @@ function AllArticlesPage() {
           handleClickSearch={handleClickSearch}
           handleClickCross={handleClickCross}
         />
-        {isLoading && <SmallRegionLoading />}
+        {isLoading && <SmallRegionLoading isFullScreen />}
         <ArticleListWrapper overLoad={overLoad}>
           {posts.map((post) => {
             return (
