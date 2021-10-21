@@ -69,12 +69,14 @@ const ArticleDesc = styled.div`
   border-top: 1px solid ${COLOR.beige};
   margin: 15px 0;
   width: 100%;
-  max-height: 38rem;
+  max-height: 60rem;
   font-size: ${FONT.s};
   line-height: 40px;
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: wrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 10;
+  -webkit-box-orient: vertical;
 
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
@@ -85,6 +87,8 @@ const ArticleDesc = styled.div`
     `
     overflow: auto;
     max-height: fit-content;
+    display: flex;
+    flex-direction: column;
   `}
 `
 
@@ -114,7 +118,9 @@ export default function ArticleContent({ post }) {
           <UserName
             to={
               userInfo && userInfo.user_id === post.author_id
-                ? `/backstage/${post.author_id}`
+                ? userInfo.role === 'admin'
+                  ? `/admin`
+                  : `/backstage/${post.author_id}`
                 : `/user/${post.author_id}`
             }
           >

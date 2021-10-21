@@ -8,10 +8,10 @@ import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
 import { getArticles, getUserLiked } from '../../../WebAPI'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
-import Loading from '../../../components/common/SmallRegionLoading'
+import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -62,6 +62,7 @@ const ThumbUp = styled.span`
   ${(props) =>
     props.thumb &&
     `
+      transform: translate(-2px, -2px);
       background-image: url('${thumbGreenSVG}');
       width: 25px;
       height: 25px;
@@ -137,30 +138,36 @@ function ArticlePage() {
   const { userInfo } = useContext(AuthContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const { thumb, setThumb, handleClickLike, count } = useLike()
+  const [loadingLike, setLoadingLike] = useState(false)
+  let history = useHistory()
 
   useEffect(() => {
     setIsLoading(true)
     const getPost = async () => {
       try {
         let res = await getArticles(`/${id}`)
-        if (res.status === 200) {
+        if (res.data.data.length > 0) {
           setPost(res.data.data[0])
+          setLoadingLike(true)
+        } else {
+          history.goBack()
         }
       } catch (err) {
+        history.goBack()
         console.log(err)
       }
       setIsLoading(false)
     }
     getPost()
-  }, [])
+  }, [id])
 
   useEffect(() => {
     const getLike = async () => {
       try {
         let res = await getUserLiked(userInfo.user_id)
-        if (res.status === 200) {
-          res.data.data.articles.forEach((article) => {
-            if (article.article_id === id) {
+        if (res.data.data.articles.length > 0) {
+          res.data.data.articles.map((article) => {
+            if (article.article_id == id) {
               setThumb(true)
             }
           })
@@ -170,31 +177,34 @@ function ArticlePage() {
       }
     }
     getLike()
-  }, [])
+  }, [loadingLike, id])
 
   return (
     <Wrapper>
-      {isLoading && <Loading />}
-      <CoverImg src={post.cover_picture_url} />
-      <ArticleTitleAndLikes>
-        <ArticleTitle>{post.title}</ArticleTitle>
-        <ArticleLikes>
-          <ThumbUp
-            thumb={thumb}
-            userInfo={userInfo}
-            onClick={userInfo && handleClickLike}
-          />
-          {post.count + count}
-        </ArticleLikes>
-      </ArticleTitleAndLikes>
-      {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
-      <ArticleStandardInformation topElement>
-        地點：{post.location}
-      </ArticleStandardInformation>
-      <ArticleStandardInformation>
-        出發時間：{new Date(post.departure_time).toLocaleString()}
-      </ArticleStandardInformation>
-      {/* {post.time_spent ? (
+      {isLoading ? (
+        <SmallRegionLoading isFullScreen />
+      ) : (
+        <>
+          <CoverImg src={post.cover_picture_url} />
+          <ArticleTitleAndLikes>
+            <ArticleTitle>{post.title}</ArticleTitle>
+            <ArticleLikes>
+              <ThumbUp
+                thumb={thumb}
+                userInfo={userInfo}
+                onClick={userInfo && handleClickLike}
+              />
+              {post.count + count}
+            </ArticleLikes>
+          </ArticleTitleAndLikes>
+          {post.tag_names ? <Tags tags={post.tag_names.split(',')} /> : ''}
+          <ArticleStandardInformation topElement>
+            地點：{post.location}
+          </ArticleStandardInformation>
+          <ArticleStandardInformation>
+            出發時間：{new Date(post.departure_time).toLocaleString()}
+          </ArticleStandardInformation>
+          {/* {post.time_spent ? (
         <ArticleStandardInformation>
           行進時間：{post.time_spent} 小時
         </ArticleStandardInformation>
@@ -215,12 +225,14 @@ function ArticlePage() {
       ) : (
         ''
       )} */}
-      <ArticleContent post={post} />
-      <FlexGroup>
-        <ReviewIcon />
-        <CommentTitle>討論區</CommentTitle>
-      </FlexGroup>
-      <Comment isMessage={true} />
+          <ArticleContent post={post} />
+          <FlexGroup>
+            <ReviewIcon />
+            <CommentTitle>討論區</CommentTitle>
+          </FlexGroup>
+          <Comment isMessage={true} />
+        </>
+      )}
     </Wrapper>
   )
 }

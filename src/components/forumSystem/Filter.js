@@ -110,6 +110,11 @@ export default function ForumFilter({
             handleClickSearch(e)
           }}
           handleKeyWordDelete={handleClickCross}
+          handleKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              handleClickSearch(e)
+            }
+          }}
         />
         <FilterTags>
           {tags.map((tag) => {

@@ -81,6 +81,7 @@ export default memo(function SearchBar({
   handleSearchTrails,
   handleKeyWordDelete,
   inputValue,
+  handleKeyDown,
 }) {
   return (
     <>
@@ -96,6 +97,7 @@ export default memo(function SearchBar({
           $fontSize={fontSize}
           onChange={handleKeyWordChange}
           value={inputValue}
+          onKeyDown={handleKeyDown}
         />
         <CloseIconWrapper onClick={handleKeyWordDelete}>
           <CloseIcon />

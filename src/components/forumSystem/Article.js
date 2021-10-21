@@ -171,7 +171,6 @@ export default function ArticleList({
   authorId,
 }) {
   const { userInfo } = useContext(AuthContext)
-
   return (
     <ArticlesContainer key={id} to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
@@ -192,7 +191,9 @@ export default function ArticleList({
           <ArticlesUser
             to={
               userInfo && userInfo.user_id === authorId
-                ? `/backstage/${authorId}`
+                ? userInfo.role === 'admin'
+                  ? `/admin`
+                  : `/backstage/${authorId}`
                 : `/user/${authorId}`
             }
           >
