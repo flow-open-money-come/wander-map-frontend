@@ -74,17 +74,17 @@ export default function UploadImg({ name, formData, setFormData }) {
     if (!e.target.files[0]) return
     let file = e.target.files[0]
     let reader = new FileReader()
-    let formData = new FormData()
-    formData.append('image', file)
-    formData.append('album', 'Znitr92')
+    let imageData = new FormData()
+    imageData.append('image', file)
+    imageData.append('album', 'Znitr92')
 
     axios({
       method: 'post',
       url: config.imgurHost,
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`
       },
-      data: formData,
+      data: imageData
     })
       .then((res) => {
         // 預覽
@@ -99,7 +99,7 @@ export default function UploadImg({ name, formData, setFormData }) {
         let dataUrl = res.data.data.link
         setFormData({
           ...formData,
-          [name]: dataUrl,
+          [name]: dataUrl
         })
       })
       .catch((err) => {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { FONT, MEDIA_QUERY } from '../../constants/style'
 import countriesData from './LocationData'
@@ -29,15 +29,16 @@ export default function SelectLocation({ name, formData, setFormData }) {
     country: '',
     state: '',
   })
-  /*
-  if (formData.location !== '') {
-    setLocation({
-      country: `${formData.location.slice(0, 3)}`,
-      state: `${formData.location.slice(3, 6)}`,
-    })
-  }
-  console.log(location)
-*/
+
+  useEffect(() => {
+    if (formData.location) {
+      setLocation({
+        country: `${formData.location.slice(0, 3)}`,
+        state: `${formData.location.slice(3, formData.location.length)}`
+      })
+    }
+  }, [formData])
+
   const countries = countriesData.map((country) => (
     <option key={country.name} value={country.name}>
       {country.name}
