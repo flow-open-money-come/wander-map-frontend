@@ -173,7 +173,7 @@ export default function ArticlePostPage() {
         history.push(`/articles/${id}`)
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response)
         setErrorMessage('您好，標題、內文為必填喔!')
       })
   }

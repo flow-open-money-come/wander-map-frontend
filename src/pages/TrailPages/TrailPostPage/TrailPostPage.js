@@ -213,7 +213,7 @@ export default function TrailPostPage() {
         setFormData(res.data.data[0])
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response)
       })
   }, [])
 
