@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { COLOR, FONT, MEDIA_QUERY, RADIUS } from '../../../constants/style'
+import {
+  COLOR,
+  FONT,
+  MEDIA_QUERY,
+  RADIUS,
+  EFFECT,
+} from '../../../constants/style'
 import { ReactComponent as StarSvg } from '../../../icons/star.svg'
 import SearchBar from '../../../components/common/SearchBar'
 import DropDownCheckBoxList from '../../../components/common/DropDownCheckBoxList'
@@ -14,6 +20,7 @@ import useDebounce from '../../../hooks/useDebounce'
 import useHotTrailsCarousel from '../../../hooks/useHotTrailsCarousel'
 import useTrailFilters from '../../../hooks/useTrialFilters'
 import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
@@ -56,6 +63,10 @@ const FeaturedTrailsCarousel = styled.img`
   ${MEDIA_QUERY.lg} {
     height: 300px;
     margin-top: 5px;
+  }
+  transition: ${EFFECT.transition};
+  &:hover {
+    opacity: 0.8;
   }
 `
 const FeaturedTrailName = styled.div`
@@ -121,8 +132,8 @@ function AllTrailPage() {
         if (res.data.success) setFilteredTrailInfos(res.data.data)
         setIsLoadingFilter(false)
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         setIsLoadingFilter(false)
       })
   }, [checkedOptions, debouncedKeyWord])
@@ -141,6 +152,7 @@ function AllTrailPage() {
             handleKeyWordChange={(e) => handleKeyWordChange(e)}
             handleKeyWordDelete={handleKeyWordDelete}
             inputValue={keyWord}
+            withoutSearchIcon
           />
         </SearchBarWrapper>
         <FeaturedTrailsCarouselWrapper
@@ -184,11 +196,12 @@ function AllTrailPage() {
               handleKeyWordChange={(e) => handleKeyWordChange(e)}
               handleKeyWordDelete={handleKeyWordDelete}
               inputValue={keyWord}
+              withoutSearchIcon
             />
           </SearchBarWrapper>
         </DropDownContainer>
         {isLoadingFilter ? (
-          <SmallRegionLoading isFullScreen />
+          <SmallRegionLoading />
         ) : (
           <FilteredTrailsWrapper>
             {filteredTrailInfos.length > 0 ? (

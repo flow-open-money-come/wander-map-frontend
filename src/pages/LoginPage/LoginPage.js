@@ -115,7 +115,7 @@ export default function LoginPage() {
   return (
     <>
       <LoginPageWrapper>
-        {isLoadingLogin && <SmallRegionLoading isFullScreen />}
+        {isLoadingLogin && <SmallRegionLoading />}
         <Title> 會員登入 </Title>
         <LoginFormsWrapper>
           <FormWrapper>

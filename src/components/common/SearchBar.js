@@ -12,6 +12,7 @@ const SearchBarWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  overflow: hidden;
   ${(props) => props.$horizontalAlign && `margin: 0 auto;`}
   border-radius: ${(props) => {
     return props.$noBorderRadius ? '0;' : `${RADIUS.md};`
@@ -19,6 +20,10 @@ const SearchBarWrapper = styled.div`
   box-shadow: ${(props) => {
     return props.$noShadow ? 'none;' : `${EFFECT.shadow_light};`
   }};
+  ${(props) =>
+    props.$withoutSearchIcon &&
+    `
+  justify-content: start;`}
 `
 
 const SearchIcon = styled(SearchSvg)`
@@ -37,6 +42,7 @@ const SearchIconWrapper = styled.div`
   transition: ${EFFECT.transition};
   ${(props) =>
     !props.$noBorderRadius && `border-radius: 0 ${RADIUS.md} ${RADIUS.md} 0;`}
+  ${(props) => props.$withoutSearchIcon && `display:none`}
 `
 const CloseIcon = styled(CloseSvg)`
   position: absolute;
@@ -52,6 +58,7 @@ const CloseIconWrapper = styled.div`
   border: 1px solid ${COLOR.white};
   position: relative;
   transition: ${EFFECT.transition};
+  ${(props) => props.$withoutSearchIcon && `width: 20%;`}
 `
 const SearchBarInput = styled.input`
   width: 80%;
@@ -81,6 +88,7 @@ export default memo(function SearchBar({
   handleSearchTrails,
   handleKeyWordDelete,
   inputValue,
+  withoutSearchIcon,
 }) {
   return (
     <>
@@ -89,6 +97,7 @@ export default memo(function SearchBar({
         $noBorderRadius={noBorderRadius}
         $noShadow={noShadow}
         $width={width}
+        $withoutSearchIcon={withoutSearchIcon}
       >
         <SearchBarInput
           placeholder={placeholder}
@@ -97,12 +106,16 @@ export default memo(function SearchBar({
           onChange={handleKeyWordChange}
           value={inputValue}
         />
-        <CloseIconWrapper onClick={handleKeyWordDelete}>
+        <CloseIconWrapper
+          onClick={handleKeyWordDelete}
+          $withoutSearchIcon={withoutSearchIcon}
+        >
           <CloseIcon />
         </CloseIconWrapper>
         <SearchIconWrapper
           $noBorderRadius={noBorderRadius}
           onClick={handleSearchTrails}
+          $withoutSearchIcon={withoutSearchIcon}
         >
           <SearchIcon />
         </SearchIconWrapper>
