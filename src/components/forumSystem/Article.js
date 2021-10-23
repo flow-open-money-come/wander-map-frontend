@@ -171,7 +171,7 @@ export default function ArticleList({
             })}
         </ArticlesTags>
         <ArticlesContent $lessRwd={lessRwd}>
-          {ReactHtmlParser(content)}
+          {ReactHtmlParser(content.replace(/<img[^>]*>/g, ''))}
         </ArticlesContent>
         <ArticlesInfo>
           <ArticlesUser
