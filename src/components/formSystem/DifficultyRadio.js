@@ -24,27 +24,27 @@ const Radio = styled.input.attrs((props) => ({
   }
 `
 
-export default function DifficultyRadio({ name, handleInputChange }) {
+export default function DifficultyRadio({ name, value, handleInputChange }) {
   return (
     <RadioWrapper onChange={handleInputChange}>
       <label>
-        <Radio value='新手' name={name} />
+        <Radio value='新手' name={name} checked={value === '新手'} />
         新手
       </label>
       <label>
-        <Radio value='入門' name={name} />
+        <Radio value='入門' name={name} checked={value === '入門'} />
         入門
       </label>
       <label>
-        <Radio value='進階' name={name} />
+        <Radio value='進階' name={name} checked={value === '進階'} />
         進階
       </label>
       <label>
-        <Radio value='挑戰' name={name} />
+        <Radio value='挑戰' name={name} checked={value === '挑戰'} />
         挑戰
       </label>
       <label>
-        <Radio value='困難' name={name} />
+        <Radio value='困難' name={name} checked={value === '困難'} />
         困難
       </label>
     </RadioWrapper>

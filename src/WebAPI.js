@@ -3,7 +3,7 @@ import config from './config'
 import { getAuthToken } from './utils'
 
 const instance = axios.create({
-  baseURL: config.apiHost,
+  baseURL: config.apiHost2,
 })
 
 instance.interceptors.request.use((config) => {
@@ -20,7 +20,7 @@ export const getAllUsers = (params) => instance.get(`/users${params}`)
 export const refreshAccessToken = () => instance.get('/users/refresh')
 export const userLogout = () => instance.get('/users/logout')
 
-export const changeUserRole = (userID, role) =>
+export const patchUserRole = (userID, role) =>
   instance.patch(`/users/${userID}`, { role: role })
 
 export const getUserInfo = (userID) => instance.get(`/users/${userID}`)
@@ -91,7 +91,7 @@ export const deleteComment = (articleID, messageID) =>
 
 // articles
 // get 相關
-export const getArticles = (params) => instance.get(`/articles${params}`)
+export const getArticles = (params) => instance.get(`/articles/${params}`)
 export const getTrailArticles = (trailID, params) =>
   instance.get(`/trails/${trailID}/articles/${params}`)
 
@@ -129,3 +129,13 @@ export const getWeatherInfo = (country, town) =>
     config.weatherHost,
     `${country}?Authorization=${process.env.REACT_APP_WEATHER_TOKEN}&locationName=${town}&elementName=T,Wx,PoP12h`
   )
+
+export const postImgur = (imageData) =>
+  axios({
+    method: 'post',
+    url: config.imgurHost,
+    headers: {
+      Authorization: `Bearer ${process.env.REACT_APP_IMGUR_TOKEN}`,
+    },
+    data: imageData,
+  })

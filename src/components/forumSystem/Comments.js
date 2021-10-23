@@ -13,11 +13,12 @@ import {
   getComments,
   postComment,
   patchComment,
-  deleteComment
+  deleteComment,
 } from '../../WebAPI'
-import { LoadingContext, AuthContext } from '../../../src/context'
-import Loading from '../../components/common/Loading'
+import { AuthContext } from '../../../src/context'
+import SmallRegionLoading from '../../components/common/SmallRegionLoading'
 import { useInput } from '../../hooks/useInput'
+import swal from 'sweetalert'
 
 const CommentsContainer = styled.div`
   width: 100%;
@@ -37,11 +38,11 @@ const CommentsHeader = styled.div`
 
 const UserAvatar = styled.img`
   border: 1px solid ${COLOR.gray_light};
-  width: 35px;
+  min-width: 35px;
   height: 35px;
   border-radius: 50%;
   ${MEDIA_QUERY.lg} {
-    width: 50px;
+    min-width: 50px;
     height: 50px;
   }
 `
@@ -277,7 +278,7 @@ export default function Comments({ isMessage }) {
   const [editValue, setEditValue] = useState('')
   const [editing, setEditing] = useState(false)
   const { userInfo } = useContext(AuthContext)
-  const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const [loadingComment, setLoadingComment] = useState(false)
   function isMessageOrNot(message, comment) {
     return isMessage ? message : comment
   }
@@ -295,10 +296,11 @@ export default function Comments({ isMessage }) {
         }
       } catch (err) {
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       }
     }
     getMessage()
-  }, [setInputValue, setEditValue, setIsLoading, isLoading])
+  }, [setInputValue, setEditValue, setLoadingComment, loadingComment, userInfo])
 
   const handleSubmit = async (e) => {
     setReminder('')
@@ -306,13 +308,18 @@ export default function Comments({ isMessage }) {
       setReminder(1)
       return e.preventDefault()
     }
-    setIsLoading(true)
+    setLoadingComment(true)
     try {
-      await isMessageOrNot(postMessage, postComment)(id, userInfo.user_id, inputValue)
-      setIsLoading(false)
+      await isMessageOrNot(postMessage, postComment)(
+        id,
+        userInfo.user_id,
+        inputValue
+      )
+      setLoadingComment(false)
       setInputValue('')
     } catch (err) {
       console.log(err)
+      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
     }
   }
 
@@ -323,13 +330,14 @@ export default function Comments({ isMessage }) {
       setReminder(2)
       return e.preventDefault()
     }
-    setIsLoading(true)
+    setLoadingComment(true)
     try {
       await isMessageOrNot(patchMessage, patchComment)(id, messageId, editValue)
       setEditing(false)
-      setIsLoading(false)
+      setLoadingComment(false)
     } catch (err) {
       console.log(err)
+      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
     }
     setEditValue('')
   }
@@ -345,17 +353,39 @@ export default function Comments({ isMessage }) {
     if (editing) {
       return e.preventDefault
     }
-    setIsLoading(true)
     try {
-      await isMessageOrNot(deleteMessage, deleteComment)(id, messageId)
-      setIsLoading(false)
+      await swal({
+        title: '刪除',
+        text: '確定要刪除嗎',
+        icon: 'warning',
+        dangerMode: true,
+      })
     } catch (err) {
       console.log(err)
+      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+    }
+    setLoadingComment(true)
+    try {
+      let res = await isMessageOrNot(deleteMessage, deleteComment)(
+        id,
+        messageId
+      )
+      if (res.status === 200) {
+        swal('已刪除', {
+          icon: 'success',
+        })
+        setLoadingComment(false)
+      }
+    } catch (err) {
+      swal('刪除失敗', {
+        icon: 'error',
+      })
+      setLoadingComment(false)
     }
   }
+
   return (
     <>
-      {isLoading && <Loading />}
       <CommentsContainer>
         {reminder === 1 && userInfo && (
           <Reminder reminder={reminder}>請輸入內容</Reminder>
@@ -386,7 +416,9 @@ export default function Comments({ isMessage }) {
                 <UserAvatar
                   to={
                     userInfo && userInfo.user_id === message.author_id
-                      ? `/backstage/${message.author_id}`
+                      ? userInfo.role === 'admin'
+                        ? `/admin`
+                        : `/backstage/${message.author_id}`
                       : `/user/${message.author_id}`
                   }
                   src={message.icon_url}
@@ -394,7 +426,9 @@ export default function Comments({ isMessage }) {
                 <CommentNickname
                   to={
                     userInfo && userInfo.user_id === message.author_id
-                      ? `/backstage/${message.author_id}`
+                      ? userInfo.role === 'admin'
+                        ? `/admin`
+                        : `/backstage/${message.author_id}`
                       : `/user/${message.author_id}`
                   }
                 >
@@ -476,6 +510,7 @@ export default function Comments({ isMessage }) {
             )}
           </Card>
         ))}
+        {loadingComment && <SmallRegionLoading />}
       </CommentsContainer>
     </>
   )

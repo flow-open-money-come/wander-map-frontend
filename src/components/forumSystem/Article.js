@@ -63,9 +63,6 @@ const ArticlesTag = styled.span`
     margin-right: 10px;
   }
   ${MEDIA_QUERY.lg} {
-    &:first-child {
-      margin-left: 30px;
-    }
     margin-right: 17px;
   }
   `}
@@ -147,15 +144,6 @@ const ArticlesInfo = styled.div`
     justify-content: space-between;
   }
 `
-const TitleAndTags = styled.div`
-  ${(props) =>
-    !props.$lessRwd &&
-    `
-    ${MEDIA_QUERY.lg} {
-        display: flex;
-      }
-    `}
-`
 
 export default function ArticleList({
   id,
@@ -171,28 +159,27 @@ export default function ArticleList({
   authorId,
 }) {
   const { userInfo } = useContext(AuthContext)
-
   return (
     <ArticlesContainer key={id} to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
-        <TitleAndTags $lessRwd={lessRwd}>
-          <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
-          <ArticlesTags>
-            {tags &&
-              tags.map((tag) => {
-                return <ArticlesTag $lessRwd={lessRwd}>{tag}</ArticlesTag>
-              })}
-          </ArticlesTags>
-        </TitleAndTags>
+        <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
+        <ArticlesTags>
+          {tags &&
+            tags.map((tag) => {
+              return <ArticlesTag $lessRwd={lessRwd}>{tag}</ArticlesTag>
+            })}
+        </ArticlesTags>
         <ArticlesContent $lessRwd={lessRwd}>
-          {ReactHtmlParser(content)}
+          {ReactHtmlParser(content.replace(/<img[^>]*>/g, ''))}
         </ArticlesContent>
         <ArticlesInfo>
           <ArticlesUser
             to={
               userInfo && userInfo.user_id === authorId
-                ? `/backstage/${authorId}`
+                ? userInfo.role === 'admin'
+                  ? `/admin`
+                  : `/backstage/${authorId}`
                 : `/user/${authorId}`
             }
           >

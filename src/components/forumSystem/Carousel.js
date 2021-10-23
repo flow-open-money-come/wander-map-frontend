@@ -283,7 +283,9 @@ export default function Carousel({ slides }) {
                     <ArticleUser
                       to={
                         userInfo && userInfo.user_id === slide.author_id
-                          ? `/backstage/${slide.author_id}`
+                          ? userInfo.role === 'admin'
+                            ? `/admin`
+                            : `/backstage/${slide.author_id}`
                           : `/user/${slide.author_id}`
                       }
                     >

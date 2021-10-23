@@ -43,11 +43,12 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
           editor.editing.view.change((writer) => {
             writer.setStyle(
               'height',
-              '250px',
+              '300px',
               editor.editing.view.document.getRoot()
             )
           })
         }}
+        data={formData.content}
         onChange={handleDataChange}
       />
     </EditorWrapper>

@@ -10,7 +10,8 @@ import { getArticles } from '../../../WebAPI'
 import { COLOR } from '../../../constants/style'
 import { useInput } from '../../../hooks/useInput'
 import { LoadingContext } from '../../../context'
-import Loading from '../../../components/common/Loading'
+import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -94,17 +95,36 @@ function AllArticlesPage() {
     setIsLoading(true)
     getArticles('/hot')
       .then((res) => {
-        if (res.data.success) {
+        if (res.data.data.length > 0) {
           setSlides(res.data.data)
+        } else {
+          getArticles('?limit=5')
+            .then((res) => {
+              if (res.data.status === 200) {
+                setSlides(res.data.data)
+                setIsLoading(false)
+              }
+            })
+            .catch((err) => {
+              console.log(err)
+              if (err) {
+                swal(
+                  'Oh 不！',
+                  '請求失敗！請稍候再試一次，或者聯繫我們。',
+                  'error'
+                )
+              }
+            })
         }
-        setIsLoading(false)
       })
       .catch((err) => {
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }, [])
 
   useEffect(() => {
+    setIsLoading(true)
     params.current = 5
     let url = ''
     if (tagValue.length > 0) {
@@ -118,14 +138,17 @@ function AllArticlesPage() {
         if (res.data.success) {
           setPosts(res.data.data)
           setTotalPosts(Number(Object.values(res.headers)[2]))
+          setIsLoading(false)
         }
       })
       .catch((err) => {
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }, [tagValue, filterData])
 
   const handleClickLoadMore = () => {
+    setIsLoading(true)
     if (overLoad) {
       return
     }
@@ -141,10 +164,12 @@ function AllArticlesPage() {
         if (res.data.success) {
           setPosts(posts.concat(res.data.data))
           setTotalPosts(Number(Object.values(res.headers)[2]))
+          setIsLoading(false)
         }
       })
       .catch((err) => {
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
     params.current += 5
   }
@@ -179,51 +204,52 @@ function AllArticlesPage() {
     // { tagId: 14, tagName: 'GPX', isChecked: false },
   ])
 
-  return isLoading ? (
-    <Loading />
-  ) : (
-    <Wrapper>
-      <TitleGroup>
-        <HotIcon />
-        <Title>熱門文章</Title>
-      </TitleGroup>
-      <Carousel slides={slides} />
-      <ForumFilter
-        tags={tags}
-        setTags={setTags}
-        tagValue={tagValue}
-        setTagValue={setTagValue}
-        inputValue={inputValue}
-        handleInputChange={handleInputChange}
-        handleClickSearch={handleClickSearch}
-        handleClickCross={handleClickCross}
-      />
-      <ArticleListWrapper overLoad={overLoad}>
-        {posts.map((post) => {
-          return (
-            <ArticleList
-              articleImgSrc={post.cover_picture_url}
-              title={post.title}
-              user={post.nickname}
-              tags={!post.tag_names ? [] : post.tag_names.split(',')}
-              date={new Date(post.created_at).toLocaleString('ja')}
-              content={post.content}
-              avatarImgSrc={post.user_icon}
-              articlePage={`/articles/${post.article_id}`}
-              authorId={post.author_id}
-            />
-          )
-        })}
-        {tagValue && posts.length === 0 && (
-          <NoRelatedArticleNotice>暫無相關文章</NoRelatedArticleNotice>
-        )}
-        {posts.length !== 0 && !overLoad && (
-          <LoadMoreBtn overLoad={overLoad} onClick={handleClickLoadMore}>
-            看更多
-          </LoadMoreBtn>
-        )}
-      </ArticleListWrapper>
-    </Wrapper>
+  return (
+    <>
+      <Wrapper>
+        <TitleGroup>
+          <HotIcon />
+          <Title>熱門文章</Title>
+        </TitleGroup>
+        <Carousel slides={slides} />
+        <ForumFilter
+          tags={tags}
+          setTags={setTags}
+          tagValue={tagValue}
+          setTagValue={setTagValue}
+          inputValue={inputValue}
+          handleInputChange={handleInputChange}
+          handleClickSearch={handleClickSearch}
+          handleClickCross={handleClickCross}
+        />
+        {isLoading && <SmallRegionLoading isFullScreen />}
+        <ArticleListWrapper overLoad={overLoad}>
+          {posts.map((post) => {
+            return (
+              <ArticleList
+                articleImgSrc={post.cover_picture_url}
+                title={post.title}
+                user={post.nickname}
+                tags={!post.tag_names ? [] : post.tag_names.split(',')}
+                date={new Date(post.created_at).toLocaleString('ja')}
+                content={post.content}
+                avatarImgSrc={post.user_icon}
+                articlePage={`/articles/${post.article_id}`}
+                authorId={post.author_id}
+              />
+            )
+          })}
+          {tagValue && posts.length === 0 && (
+            <NoRelatedArticleNotice>暫無相關文章</NoRelatedArticleNotice>
+          )}
+          {posts.length !== 0 && !overLoad && (
+            <LoadMoreBtn overLoad={overLoad} onClick={handleClickLoadMore}>
+              看更多
+            </LoadMoreBtn>
+          )}
+        </ArticleListWrapper>
+      </Wrapper>
+    </>
   )
 }
 

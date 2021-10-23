@@ -56,7 +56,6 @@ const More = styled(Link)`
     font-size: ${FONT.md};
   }
 `
-
 function TrailArticles({ articles }) {
   return (
     <ArticlesWrapper>
@@ -69,13 +68,14 @@ function TrailArticles({ articles }) {
           <ArticleList
             id={article.article_id}
             articleImgSrc={article.cover_picture_url}
-            avatarImgSrc={'https://i.imgur.com/eGREu6v.png'}
+            avatarImgSrc={article.icon_url}
             title={article.title}
-            user={'水怪貓貓'}
-            tags={['有水源', '賞花', '危險地形']}
+            user={article.author_name}
+            tags={!article.tag_names ? [] : article.tag_names.split(',')}
             date={new Date(article.departure_time).toLocaleString('ja')}
             content={article.content}
             articlePage={`/articles/${article.article_id}`}
+            authorId={article.author_id}
           />
         ))}
         <More to={`/articles`}>看更多</More>

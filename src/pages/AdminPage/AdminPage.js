@@ -142,6 +142,13 @@ const TabTitle = styled.div`
   }
 `
 
+const PageContainer = styled.div`
+  border: 2px solid ${COLOR.green};
+  border-radius: 0 ${RADIUS.s} ${RADIUS.s} ${RADIUS.s};
+  width: 100%;
+  min-height: 70vh;
+`
+
 function AdminPage() {
   const [tab, setTab] = useState('Users')
   const [recycle, setRecycle] = useState(false)
@@ -185,10 +192,11 @@ function AdminPage() {
             <TabTitle>心得列表</TabTitle>
           </ArticlesTab>
         </Tabs>
-
-        {tab === 'Users' && <UsersManagement />}
-        {tab === 'Trails' && <TrailsManagement recycle={recycle} setRecycle={setRecycle} />}
-        {tab === 'Articles' && <ArticlesManagement recycle={recycle} setRecycle={setRecycle} />}
+        <PageContainer>
+          {tab === 'Users' && <UsersManagement />}
+          {tab === 'Trails' && <TrailsManagement recycle={recycle} setRecycle={setRecycle} />}
+          {tab === 'Articles' && <ArticlesManagement recycle={recycle} setRecycle={setRecycle} />}
+        </PageContainer>
       </ManagementContainer>
     </AdminPageContainer>
   )

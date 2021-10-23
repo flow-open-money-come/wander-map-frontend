@@ -30,8 +30,8 @@ export default function useLogout() {
               if (location.pathname !== '/') return history.push('/')
             }
           })
-          .catch((err) => {
-            console.log(err.response)
+          .catch(() => {
+            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
           })
       }
     })

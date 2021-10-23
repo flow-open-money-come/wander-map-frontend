@@ -52,7 +52,7 @@ export default function ConfirmBox({ popUp, setPopUp }) {
         console.log(popUp.key, '刪除成功')
       })
       .catch((err) => {
-        console.log(err.response.data)
+        console.log(err.response)
         console.log('刪除不成功')
       })
     setPopUp({ ...popUp, isShow: false })

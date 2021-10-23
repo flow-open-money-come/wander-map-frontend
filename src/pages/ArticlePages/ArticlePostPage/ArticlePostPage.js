@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import {
-  postArticles,
-  postRelateTrail,
-  getArticles,
-  patchArticle,
-} from '../../../WebAPI'
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
+import { postArticles, getArticles, patchArticle } from '../../../WebAPI'
 import { AuthContext } from '../../../context'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
@@ -16,6 +11,7 @@ import UploadGpx from '../../../components/formSystem/UploadGpx'
 import CategoryTags from '../../../components/formSystem/CategoryTags'
 import ContentCKEditor from '../../../components/formSystem/ContentCKEditor'
 import { NavBarButton } from '../../../components/common/Button'
+import swal from 'sweetalert'
 
 const ArticlePostWrapper = styled.div`
   margin: 0 auto;
@@ -140,20 +136,28 @@ const ErrorMessage = styled.div`
 
 export default function ArticlePostPage() {
   const { userInfo } = useContext(AuthContext)
+  let isPostPage = useRouteMatch('/post-article')
+  const { articleID } = useParams()
   const history = useHistory()
   if (!userInfo) history.push('/')
 
   const [errorMessage, setErrorMessage] = useState()
   const [formData, setFormData] = useState({
     author_id: userInfo.user_id,
-    title: '',
-    cover_picture_url: '',
-    location: '',
-    departure_time: '',
-    related: '',
-    tags: '',
-    content: '',
   })
+
+  useEffect(() => {
+    if (!isPostPage) {
+      getArticles(articleID)
+        .then((res) => {
+          setFormData(res.data.data[0])
+          console.log(formData)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [articleID, isPostPage])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -168,36 +172,25 @@ export default function ArticlePostPage() {
     e.preventDefault()
     postArticles(formData)
       .then((res) => {
-        console.log(res.data)
-        let id = res.data.data.result.insertId
-        history.push(`/articles/${id}`)
+        let articleID = res.data.message.split(' ').slice(-1)[0]
+        swal('發佈成功', {
+          icon: 'success',
+          button: '關閉',
+        })
+        history.push(`/articles/${articleID}`)
       })
-      .catch((err) => {
-        console.log(err.response.data)
-        setErrorMessage('您好，標題、內文為必填喔!')
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }
-
-  // 如有帶參數為修改心得
-  const { articleID } = useParams()
-  useEffect(() => {
-    if (!articleID) return
-    getArticles(articleID)
-      .then((res) => {
-        setFormData(res.data.data[0])
-      })
-      .catch((err) => {
-        console.log(err.response.data)
-      })
-  }, [])
 
   const handlePatchSubmit = (e) => {
     console.log(formData)
     e.preventDefault()
-    postArticles(formData)
+    patchArticle(articleID, formData)
       .then((res) => {
         console.log(res.data)
-        history.push('/')
+        history.push(`/articles/${articleID}`)
       })
       .catch((err) => {
         console.log(err.response.data)
@@ -232,6 +225,7 @@ export default function ArticlePostPage() {
             name='cover_picture_url'
             formData={formData}
             setFormData={setFormData}
+            setErrorMessage={setErrorMessage}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -266,7 +260,7 @@ export default function ArticlePostPage() {
       <FormWrapper>
         <FormTitle>相關步道</FormTitle>
         <SearchRelated
-          name='related'
+          name='relatedTrail'
           handleInputChange={handleInputChange}
           formData={formData}
           setFormData={setFormData}
