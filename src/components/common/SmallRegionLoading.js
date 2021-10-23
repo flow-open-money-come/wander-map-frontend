@@ -7,14 +7,14 @@ const LoadingWrapper = styled.div`
   display: inline-block;
   width: 80px;
   height: 80px;
-  transform: translate(-50%, -50%);
   ${(props) =>
     props.$isLocal
       ? `margin: 0 auto;`
       : `
   position: fixed;
   left: 50%;
-  top: 50%;`}
+  top: 50%;
+  transform: translate(-50%, -50%);`}
 
   & div {
     position: absolute;
