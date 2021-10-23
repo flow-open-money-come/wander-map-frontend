@@ -31,7 +31,7 @@ export default function useLogout() {
             }
           })
           .catch((err) => {
-            console.log(err.response)
+            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
           })
       }
     })

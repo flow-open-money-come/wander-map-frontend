@@ -4,20 +4,14 @@ import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
+import { ReactComponent as RecycleIcon } from '../../icons/backstage/recycle.svg'
 import { getArticles, deleteArticle, getDeletedArticle, recoverArticle } from '../../WebAPI'
 import { Link } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
-import { getAuthToken } from '../../utils'
-import Loading from '../common/Loading'
 import swal from 'sweetalert'
+import SmallRegionLoading from '../common/SmallRegionLoading'
 
-const Block = styled.div`
-  border: 2px solid ${COLOR.green};
-  border-radius: 0 ${RADIUS.s} ${RADIUS.s} ${RADIUS.s};
-  width: 100%;
-  min-height: 70vh;
-`
 const SearchBar = styled.div`
   border: 1px solid #c4c4c4;
   border-radius: ${RADIUS.s};
@@ -95,6 +89,10 @@ const RecycleBin = styled.div`
   }
   &:hover {
     cursor: pointer;
+  }
+  svg {
+    width: 20px;
+    height: 20px;
   }
   ${MEDIA_QUERY.md} {
     margin: 0 20px;
@@ -212,7 +210,10 @@ function ArticlesManagement({ recycle, setRecycle }) {
         setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
         setIsLoading(false)
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+      })
     getDeletedArticle(`?offset=${(page - 1) * 20}`)
       .then((res) => setDeletedArticles(res.data.data))
       .catch((err) => console.error(err))
@@ -225,9 +226,26 @@ function ArticlesManagement({ recycle, setRecycle }) {
 
   const handleDelete = (articleID, articleTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
-    deleteArticle(articleID).then()
-    swal(`已刪除文章`, `${articleTitle}`, 'success')
-    setArticles(articles.filter((article) => article.article_id !== articleID))
+    swal({
+      title: '確定刪除嗎？',
+      icon: 'warning',
+      buttons: ['取消', '確定'],
+      dangerMode: true
+    }).then((willDo) => {
+      if (willDo) {
+        deleteArticle(articleID)
+          .then((res) => {
+            if (res.data.success) {
+              setArticles(articles.filter((article) => article.article_id !== articleID))
+              swal(`已刪除文章 ${articleTitle}`, {
+                icon: 'success',
+                button: '關閉'
+              })
+            }
+          })
+          .catch((err) => console.log(err.response))
+      }
+    })
   }
 
   const handleRecover = (articleID, articleTitle) => {
@@ -240,9 +258,9 @@ function ArticlesManagement({ recycle, setRecycle }) {
   return (
     <>
       {isLoading ? (
-        <Loading />
+        <SmallRegionLoading isFullScreen />
       ) : (
-        <Block>
+        <>
           <SearchBar>
             <SearchIcon />
             <SearchField
@@ -254,7 +272,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
             />
           </SearchBar>
           <RecycleBlock>
-            {recycle && (
+            {recycle ? (
               <>
                 <RecycleTitle>刪除列表</RecycleTitle>
                 <BackBtn
@@ -265,14 +283,13 @@ function ArticlesManagement({ recycle, setRecycle }) {
                   返回
                 </BackBtn>
               </>
-            )}
-            {!recycle && (
+            ) : (
               <RecycleBin
                 onClick={() => {
                   setRecycle(true)
                 }}
               >
-                <BinIcon />
+                <RecycleIcon />
               </RecycleBin>
             )}
           </RecycleBlock>
@@ -325,7 +342,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
                 </TableContent>
               ))}
           </TrailsTable>
-        </Block>
+        </>
       )}
     </>
   )
