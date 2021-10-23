@@ -296,6 +296,7 @@ export default function Comments({ isMessage }) {
         }
       } catch (err) {
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       }
     }
     getMessage()
@@ -318,6 +319,7 @@ export default function Comments({ isMessage }) {
       setInputValue('')
     } catch (err) {
       console.log(err)
+      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
     }
   }
 
@@ -335,6 +337,7 @@ export default function Comments({ isMessage }) {
       setLoadingComment(false)
     } catch (err) {
       console.log(err)
+      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
     }
     setEditValue('')
   }
@@ -359,6 +362,7 @@ export default function Comments({ isMessage }) {
       })
     } catch (err) {
       console.log(err)
+      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
     }
     setLoadingComment(true)
     try {
@@ -373,7 +377,6 @@ export default function Comments({ isMessage }) {
         setLoadingComment(false)
       }
     } catch (err) {
-      console.log(err)
       swal('刪除失敗', {
         icon: 'error',
       })

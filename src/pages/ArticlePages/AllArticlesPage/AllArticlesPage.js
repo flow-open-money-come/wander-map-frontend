@@ -11,6 +11,7 @@ import { COLOR } from '../../../constants/style'
 import { useInput } from '../../../hooks/useInput'
 import { LoadingContext } from '../../../context'
 import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -106,11 +107,19 @@ function AllArticlesPage() {
             })
             .catch((err) => {
               console.log(err)
+              if (err) {
+                swal(
+                  'Oh 不！',
+                  '請求失敗！請稍候再試一次，或者聯繫我們。',
+                  'error'
+                )
+              }
             })
         }
       })
       .catch((err) => {
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }, [])
 
@@ -134,6 +143,7 @@ function AllArticlesPage() {
       })
       .catch((err) => {
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }, [tagValue, filterData])
 
@@ -159,6 +169,7 @@ function AllArticlesPage() {
       })
       .catch((err) => {
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
     params.current += 5
   }

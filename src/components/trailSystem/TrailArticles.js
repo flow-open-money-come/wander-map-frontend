@@ -76,6 +76,7 @@ function TrailArticles({ articles }) {
             date={new Date(article.departure_time).toLocaleString('ja')}
             content={article.content}
             articlePage={`/articles/${article.article_id}`}
+            authorId={article.article_id}
           />
         ))}
         <More to={`/articles`}>看更多</More>

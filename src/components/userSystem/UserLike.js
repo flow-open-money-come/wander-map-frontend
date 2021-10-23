@@ -108,6 +108,7 @@ export default function UserLike() {
               content={article.content}
               lessRwd={true}
               articlePage={`/articles/${article.article_id}`}
+              authorId={article.article_id}
             />
           ))
         ) : (

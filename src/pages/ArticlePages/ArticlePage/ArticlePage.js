@@ -12,6 +12,7 @@ import { useParams, useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
 import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const Wrapper = styled.div`
   width: 90%;
@@ -153,8 +154,8 @@ function ArticlePage() {
           history.goBack()
         }
       } catch (err) {
-        history.goBack()
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       }
       setIsLoading(false)
     }
@@ -174,9 +175,12 @@ function ArticlePage() {
         }
       } catch (err) {
         console.log(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       }
     }
-    getLike()
+    if (userInfo) {
+      getLike()
+    }
   }, [loadingLike, id])
 
   return (
