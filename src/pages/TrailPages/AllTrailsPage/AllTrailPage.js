@@ -1,7 +1,13 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { COLOR, FONT, MEDIA_QUERY, RADIUS } from '../../../constants/style'
+import {
+  COLOR,
+  FONT,
+  MEDIA_QUERY,
+  RADIUS,
+  EFFECT,
+} from '../../../constants/style'
 import { ReactComponent as StarSvg } from '../../../icons/star.svg'
 import SearchBar from '../../../components/common/SearchBar'
 import DropDownCheckBoxList from '../../../components/common/DropDownCheckBoxList'
@@ -57,6 +63,10 @@ const FeaturedTrailsCarousel = styled.img`
   ${MEDIA_QUERY.lg} {
     height: 300px;
     margin-top: 5px;
+  }
+  transition: ${EFFECT.transition};
+  &:hover {
+    opacity: 0.8;
   }
 `
 const FeaturedTrailName = styled.div`

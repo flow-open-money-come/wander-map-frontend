@@ -51,6 +51,11 @@ const TrailImg = styled.img`
   width: 100%;
   height: 150px;
   object-fit: cover;
+  overflow: hidden;
+  transition: ${EFFECT.transition};
+  &:hover {
+    opacity: 0.8;
+  }
 `
 const TrailName = styled.div`
   font-size: ${FONT.md};
