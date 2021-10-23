@@ -69,7 +69,7 @@ const Map = (props) => {
         center={activeTrailArticles.activeTrailInfo.center}
         zoom={zoom}
       >
-        {isLoading && <SmallRegionLoading />}
+        {isLoading && <SmallRegionLoading isLocal />}
         {matchTrailInfos.length > 0 ? (
           matchTrailInfos.map((trailInfo) => {
             let trailConditionsObj = Object.assign({}, ...trailConditions)
