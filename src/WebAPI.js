@@ -4,6 +4,7 @@ import { getAuthToken } from './utils'
 
 const instance = axios.create({
   baseURL: config.apiHost2,
+
 })
 
 instance.interceptors.request.use((config) => {
@@ -20,8 +21,7 @@ export const getAllUsers = (params) => instance.get(`/users${params}`)
 export const refreshAccessToken = () => instance.get('/users/refresh')
 export const userLogout = () => instance.get('/users/logout')
 
-export const changeUserRole = (userID, role) =>
-  instance.patch(`/users/${userID}`, { role: role })
+export const patchUserRole = (userID, role) => instance.patch(`/users/${userID}`, { role: role })
 
 export const getUserInfo = (userID) => instance.get(`/users/${userID}`)
 export const patchUserInfo = (userID, data) =>

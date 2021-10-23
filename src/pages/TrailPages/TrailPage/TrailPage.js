@@ -18,10 +18,9 @@ import TrailReviews from '../../../components/trailSystem/TrailReviews'
 import { getTrails, getTrailArticles, getUserCollect } from '../../../WebAPI'
 import { useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
-import { getAuthToken } from '../../../utils'
 import useLike from '../../../hooks/useLike'
-import Loading from '../../../components/common/Loading'
-import jwt_decode from 'jwt-decode'
+import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -158,14 +157,11 @@ function TrailPage() {
   const { id } = useParams()
   const [trailInfo, setTrailInfo] = useState('')
   const [articles, setArticles] = useState(null)
-  // const { userInfo } = useContext(AuthContext)
+  const { userInfo } = useContext(AuthContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const [loadingCollect, setLoadingCollect] = useState(false)
   const history = useHistory()
   const { thumb, setThumb, handleClickLike } = useLike()
-  // 未知原因 useContext(AuthContext) 有時會抓不到值 直接在此decode
-  const userInfo = jwt_decode(getAuthToken())
-
-  console.log('userInfo', userInfo)
 
   useEffect(() => {
     setIsLoading(true)
@@ -174,28 +170,40 @@ function TrailPage() {
         res.data.data[0]
           ? setTrailInfo(res.data.data[0])
           : history.push(`/trails`)
+        setLoadingCollect(true)
         setIsLoading(false)
       })
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+      })
     getTrailArticles(id, '?limit=3')
       .then((res) => setArticles(res.data.data))
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+    })
   }, [id, history, setIsLoading])
 
   useEffect(() => {
-    getUserCollect(userInfo.user_id)
-      .then((res) =>
-        res.data.data.trails.forEach((trail) => {
-          if (trail.trail_id === id) setThumb(true)
+    if (userInfo) {
+      getUserCollect(userInfo.user_id)
+        .then((res) =>
+          res.data.data.trails.forEach((trail) => {
+            if (trail.trail_id == id) setThumb(true)
+          })
+        )
+        .catch((error) => {
+          console.error(error)
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         })
-      )
-      .catch((error) => console.error(error))
-  }, [userInfo, id, setThumb])
+    }
+  }, [userInfo, id, setThumb, loadingCollect])
 
   return (
     <>
       {isLoading ? (
-        <Loading />
+        <SmallRegionLoading isFullScreen/>
       ) : (
         <TrailPageContainer>
           <HeadFlex>
@@ -205,11 +213,7 @@ function TrailPage() {
               <Desc>{trailInfo && trailInfo.description}</Desc>
             </TitleAndDesc>
             {userInfo && (
-              <CollectBlock
-                thumb={thumb}
-                userInfo={userInfo}
-                onClick={userInfo && handleClickLike}
-              >
+              <CollectBlock thumb={thumb} userInfo={userInfo} onClick={userInfo && handleClickLike}>
                 <CollectIcon />
               </CollectBlock>
             )}
@@ -222,9 +226,7 @@ function TrailPage() {
           {trailInfo && trailInfo.map_picture_url && (
             <TrailRoute routePic={trailInfo && trailInfo.map_picture_url} />
           )}
-          {articles && articles.length !== 0 && (
-            <TrailArticles articles={articles} />
-          )}
+          {articles && articles.length !== 0 && <TrailArticles articles={articles} />}
           <TrailReviews />
         </TrailPageContainer>
       )}
