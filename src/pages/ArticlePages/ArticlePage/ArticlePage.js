@@ -205,9 +205,13 @@ function ArticlePage() {
           ) : (
             ''
           )}
-          {post.departure_time ? (
+          {post.departure_time || post.end_time ? (
             <ArticleStandardInformation>
-              出發日期：{new Date(post.departure_time).toLocaleDateString()}
+              行程日期：{new Date(post.departure_time).toLocaleDateString()}
+              {new Date(post.departure_time).toLocaleDateString() !==
+              new Date(post.end_time).toLocaleDateString()
+                ? ` - ${new Date(post.end_time).toLocaleDateString()}`
+                : ''}
             </ArticleStandardInformation>
           ) : (
             ''

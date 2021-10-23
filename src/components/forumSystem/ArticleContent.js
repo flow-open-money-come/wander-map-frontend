@@ -89,7 +89,7 @@ const ArticleDesc = styled.div`
     max-height: fit-content;
     display: flex;
     flex-direction: column;
-  `}
+   `}
 `
 
 const UnfoldButton = styled.button`
