@@ -159,13 +159,12 @@ const ErrorMessage = styled.div`
   font-size: ${FONT.s};
 `
 
-
-
 export default function TrailPostPage() {
   const { userInfo } = useContext(AuthContext)
   let isPostPage = useRouteMatch('/post-trail')
   const { trailID } = useParams()
   const history = useHistory()
+
   const [errorMessage, setErrorMessage] = useState()
   const [formData, setFormData] = useState({ author_id: userInfo.user_id })
 
@@ -180,7 +179,7 @@ export default function TrailPostPage() {
         .catch((err) => {
           console.log(err)
         })
-    } 
+    }
   }, [trailID, isPostPage])
 
   const handleInputChange = (e) => {
@@ -196,7 +195,7 @@ export default function TrailPostPage() {
     e.preventDefault()
     postTrails(formData)
       .then((res) => {
-        console.log('PostSubmit',res.data)
+        console.log('PostSubmit', res.data)
         const id = res.data.data.insertId
         history.push(`/trails/${id}`)
       })
@@ -206,13 +205,12 @@ export default function TrailPostPage() {
       })
   }
 
-
   const handlePatchSubmit = (e) => {
-    console.log('before PatchSubmit',formData)
+    console.log('before PatchSubmit', formData)
     e.preventDefault()
     patchTrail(trailID, formData)
       .then((res) => {
-        console.log('patchTrail',res.data)
+        console.log('patchTrail', res.data)
         history.push(`/trails/${trailID}`)
       })
       .catch((err) => {
@@ -234,7 +232,12 @@ export default function TrailPostPage() {
       <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>步道名稱</FormTitle>
-        <Input name='title' onChange={handleInputChange} value={formData.title} required />
+        <Input
+          name='title'
+          onChange={handleInputChange}
+          value={formData.title}
+          required
+        />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>封面圖片</FormTitle>
@@ -243,7 +246,7 @@ export default function TrailPostPage() {
             name='cover_picture_url'
             formData={formData}
             setFormData={setFormData}
-            value={formData.cover_picture_url}
+            setErrorMessage={setErrorMessage}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -259,7 +262,11 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>步道地點</FormTitle>
         <FormSubTitleWrapper>
-          <SelectLocation name='location' formData={formData} setFormData={setFormData} />
+          <SelectLocation
+            name='location'
+            formData={formData}
+            setFormData={setFormData}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
@@ -303,12 +310,19 @@ export default function TrailPostPage() {
       <FormWrapper>
         <FormTitle>步道座標</FormTitle>
         <FormSubTitleWrapper>
-          <CoordinateInput formData={formData && formData} handleInputChange={handleInputChange} />
+          <CoordinateInput
+            formData={formData && formData}
+            handleInputChange={handleInputChange}
+          />
         </FormSubTitleWrapper>
       </FormWrapper>
       <FormWrapper>
         <FormTitle>步道特色</FormTitle>
-        <Input name='situation' onChange={handleInputChange} value={formData.situation} />
+        <Input
+          name='situation'
+          onChange={handleInputChange}
+          value={formData.situation}
+        />
       </FormWrapper>
       <FormWrapper>
         <FormTitle>建議季節</FormTitle>
@@ -327,7 +341,7 @@ export default function TrailPostPage() {
             name='map_picture_url'
             formData={formData}
             setFormData={setFormData}
-            value={formData.map_picture_url}
+            setErrorMessage={setErrorMessage}
           />
         </FormSubTitleWrapper>
       </FormWrapper>

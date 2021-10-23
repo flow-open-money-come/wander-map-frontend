@@ -1,10 +1,9 @@
-import axios from 'axios'
-import config from '../../config'
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { COLOR, RADIUS } from '../../constants/style'
 import { ReactComponent as ImageSvg } from '../../icons/image.svg'
 import { NavBarButton } from '../../components/common/Button'
+import { postImgur } from '../../WebAPI'
 
 const PicHolder = styled.label`
   margin: 0 auto;
@@ -66,25 +65,17 @@ export default function UserUploadImg({
   updateUserData,
   setUpdateUserData,
 }) {
-  const token = `${process.env.REACT_APP_IMGUR_TOKEN}`
   const [fileSrc, setFileSrc] = useState(updateUserData.iconUrl)
 
   const handleUploadFile = (e) => {
     if (!e.target.files[0]) return
     let file = e.target.files[0]
     let reader = new FileReader()
-    let formData = new FormData()
-    formData.append('image', file)
-    formData.append('album', 'Znitr92')
+    let imageData = new FormData()
+    imageData.append('image', file)
+    imageData.append('album', 'Znitr92')
 
-    axios({
-      method: 'post',
-      url: config.imgurHost,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: formData,
-    })
+    postImgur(imageData)
       .then((res) => {
         // 預覽
         reader.onload = function () {

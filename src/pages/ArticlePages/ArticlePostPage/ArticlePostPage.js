@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { useParams, useHistory } from 'react-router-dom'
-import {
-  postArticles,
-  postRelateTrail,
-  getArticles,
-  patchArticle,
-} from '../../../WebAPI'
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom'
+import { postArticles, getArticles, patchArticle } from '../../../WebAPI'
 import { AuthContext } from '../../../context'
 import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY } from '../../../constants/style'
@@ -140,20 +135,28 @@ const ErrorMessage = styled.div`
 
 export default function ArticlePostPage() {
   const { userInfo } = useContext(AuthContext)
+  let isPostPage = useRouteMatch('/post-article')
+  const { articleID } = useParams()
   const history = useHistory()
   if (!userInfo) history.push('/')
 
   const [errorMessage, setErrorMessage] = useState()
   const [formData, setFormData] = useState({
     author_id: userInfo.user_id,
-    title: '',
-    cover_picture_url: '',
-    location: '',
-    departure_time: '',
-    related: '',
-    tags: '',
-    content: '',
   })
+
+  useEffect(() => {
+    if (!isPostPage) {
+      getArticles(articleID)
+        .then((res) => {
+          setFormData(res.data.data[0])
+          console.log(formData)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
+  }, [articleID, isPostPage])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -169,8 +172,9 @@ export default function ArticlePostPage() {
     postArticles(formData)
       .then((res) => {
         console.log(res.data)
-        let id = res.data.data.result.insertId
-        history.push(`/articles/${id}`)
+        let articleID = res.data.result.insertId
+        history.push(`/backstage/`)
+        console.log(articleID)
       })
       .catch((err) => {
         console.log(err.response)
@@ -178,26 +182,13 @@ export default function ArticlePostPage() {
       })
   }
 
-  // 如有帶參數為修改心得
-  const { articleID } = useParams()
-  useEffect(() => {
-    if (!articleID) return
-    getArticles(articleID)
-      .then((res) => {
-        setFormData(res.data.data[0])
-      })
-      .catch((err) => {
-        console.log(err.response.data)
-      })
-  }, [])
-
   const handlePatchSubmit = (e) => {
     console.log(formData)
     e.preventDefault()
-    postArticles(formData)
+    patchArticle(articleID, formData)
       .then((res) => {
         console.log(res.data)
-        history.push('/')
+        history.push(`/articles/${articleID}`)
       })
       .catch((err) => {
         console.log(err.response.data)
@@ -232,6 +223,7 @@ export default function ArticlePostPage() {
             name='cover_picture_url'
             formData={formData}
             setFormData={setFormData}
+            setErrorMessage={setErrorMessage}
           />
         </FormSubTitleWrapper>
       </FormWrapper>

@@ -48,6 +48,7 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
             )
           })
         }}
+        data={formData.content}
         onChange={handleDataChange}
       />
     </EditorWrapper>

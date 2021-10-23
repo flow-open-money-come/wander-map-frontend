@@ -1,10 +1,9 @@
-import axios from 'axios'
-import config from '../../config'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR } from '../../constants/style'
 import { ReactComponent as ImageSvg } from '../../icons/image.svg'
 import { NavBarButton } from '../../components/common/Button'
+import { postImgur } from '../../WebAPI'
 
 const PicHolder = styled.label`
   width: 500px;
@@ -66,9 +65,20 @@ const ClearBtn = styled.button`
   }
 `
 
-export default function UploadImg({ name, formData, setFormData }) {
-  const token = `${process.env.REACT_APP_IMGUR_TOKEN}`
+export default function UploadImg({
+  name,
+  formData,
+  setFormData,
+  setErrorMessage,
+}) {
   const [fileSrc, setFileSrc] = useState()
+  useEffect(() => {
+    if (formData.cover_picture_url) {
+      setFileSrc(formData.cover_picture_url)
+    } else if (formData.map_picture_url) {
+      setFileSrc(formData.map_picture_url)
+    }
+  }, [formData])
 
   const handleUploadFile = (e) => {
     if (!e.target.files[0]) return
@@ -78,14 +88,7 @@ export default function UploadImg({ name, formData, setFormData }) {
     imageData.append('image', file)
     imageData.append('album', 'Znitr92')
 
-    axios({
-      method: 'post',
-      url: config.imgurHost,
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      data: imageData
-    })
+    postImgur(imageData)
       .then((res) => {
         // 預覽
         reader.onload = function () {
@@ -99,13 +102,17 @@ export default function UploadImg({ name, formData, setFormData }) {
         let dataUrl = res.data.data.link
         setFormData({
           ...formData,
-          [name]: dataUrl
+          [name]: dataUrl,
         })
       })
       .catch((err) => {
+        console.log('沒打成功')
         console.log(err.response)
+        if (err.response.status === 400) {
+          setErrorMessage('圖片檔案過大，請重新上傳')
+        }
       })
-    console.log(fileSrc)
+
     e.target.value = ''
   }
 

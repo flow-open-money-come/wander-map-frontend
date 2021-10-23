@@ -34,7 +34,7 @@ export default function SelectLocation({ name, formData, setFormData }) {
     if (formData.location) {
       setLocation({
         country: `${formData.location.slice(0, 3)}`,
-        state: `${formData.location.slice(3, formData.location.length)}`
+        state: `${formData.location.slice(3, formData.location.length)}`,
       })
     }
   }, [formData])
