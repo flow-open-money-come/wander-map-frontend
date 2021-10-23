@@ -6,6 +6,7 @@ import { useState, useContext } from 'react'
 import { getTrailArticles } from '../../WebAPI'
 import useDidMountEffect from '../../hooks/useDidMountEffect'
 import { ActiveTrailContext } from '../../context'
+import swal from 'sweetalert'
 
 const Marker = styled(PinSvg)`
   width: 30px;
@@ -49,6 +50,7 @@ const InfoWindow = styled.div`
 const TrailImg = styled.img`
   width: 100%;
   height: 150px;
+  object-fit: cover;
 `
 const TrailName = styled.div`
   font-size: ${FONT.md};
@@ -109,8 +111,8 @@ export default function LocationMarker({
         })
         setIsLoadingMap(false)
       })
-      .catch((err) => {
-        console.log(err.response)
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         setIsLoadingMap(false)
       })
 

@@ -9,6 +9,7 @@ import { getTrails } from '../../WebAPI'
 import useDebounce from '../../hooks/useDebounce'
 import useTrailConditions from '../../hooks/useTrailConditions'
 import SmallRegionLoading from './SmallRegionLoading'
+import swal from 'sweetalert'
 
 const MapSearchBarWrapper = styled.div`
   width: 80%;
@@ -32,12 +33,19 @@ const Map = (props) => {
       setIsLoadingMap(true)
       getTrails(`?limit=126&search=${debouncedKeyWord}`)
         .then((res) => {
-          if (res.data.success) setMatchTrailInfos(res.data.data)
-          setIsLoadingMap(false)
-          setZoom(7)
+          if (res.data.success) {
+            if (res.data.data.length === 0) {
+              setIsLoadingMap(false)
+              swal('查無步道！', '換個關鍵字試試看吧～')
+              return
+            }
+            setMatchTrailInfos(res.data.data)
+            setIsLoadingMap(false)
+            setZoom(7)
+          }
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
           setIsLoadingMap(false)
         })
     }

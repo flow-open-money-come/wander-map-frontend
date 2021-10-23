@@ -14,6 +14,7 @@ import useDebounce from '../../../hooks/useDebounce'
 import useHotTrailsCarousel from '../../../hooks/useHotTrailsCarousel'
 import useTrailFilters from '../../../hooks/useTrialFilters'
 import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
@@ -121,8 +122,8 @@ function AllTrailPage() {
         if (res.data.success) setFilteredTrailInfos(res.data.data)
         setIsLoadingFilter(false)
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         setIsLoadingFilter(false)
       })
   }, [checkedOptions, debouncedKeyWord])
@@ -190,7 +191,7 @@ function AllTrailPage() {
           </SearchBarWrapper>
         </DropDownContainer>
         {isLoadingFilter ? (
-          <SmallRegionLoading isFullScreen />
+          <SmallRegionLoading />
         ) : (
           <FilteredTrailsWrapper>
             {filteredTrailInfos.length > 0 ? (
