@@ -1,18 +1,27 @@
 import React from 'react'
 import styled from 'styled-components'
+import { FONT, MEDIA_QUERY } from '../../constants/style'
 
 const PaginationWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
-  width: 300px;
-  margin: 30px auto;
+  width: 100px;
+  margin: 20px auto;
+  ${MEDIA_QUERY.md} {
+    width: 300px;
+  }
 `
 const PageRedirect = styled.a`
   text-decoration: none;
   color: #7f9e23;
+  font-size: ${FONT.s};
+  margin: 0 5px;
   &:hover {
     cursor: pointer;
+  }
+  ${MEDIA_QUERY.md} {
+    font-size: ${FONT.md};
   }
 `
 const PageNumber = styled.div``

@@ -4,20 +4,16 @@ import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
+import { ReactComponent as RecycleIcon } from '../../icons/backstage/recycle.svg'
 import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
 import { getTrails, deleteTrail, getDeletedTrail, recoverTrail } from '../../WebAPI'
 import { Link } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
-import Loading from '../common/Loading'
 import swal from 'sweetalert'
+import SmallRegionLoading from '../common/SmallRegionLoading'
 
-const Block = styled.div`
-  border: 2px solid ${COLOR.green};
-  border-radius: 0 ${RADIUS.s} ${RADIUS.s} ${RADIUS.s};
-  width: 100%;
-  min-height: 70vh;
-`
+
 const SearchBar = styled.div`
   border: 1px solid #c4c4c4;
   border-radius: ${RADIUS.s};
@@ -90,6 +86,10 @@ const RecycleBin = styled.div`
   }
   &:hover {
     cursor: pointer;
+  }
+  svg {
+    width: 20px;
+    height: 20px;
   }
   ${MEDIA_QUERY.md} {
     margin: 0 20px;
@@ -196,7 +196,10 @@ function TrailsManagement({ recycle, setRecycle }) {
         setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
         setIsLoading(false)
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+      })
     getDeletedTrail(`?offset=${(page - 1) * 20}`)
       .then((res) => setDeletedTrails(res.data.data))
       .catch((err) => console.error(err))
@@ -209,9 +212,26 @@ function TrailsManagement({ recycle, setRecycle }) {
 
   const handleDelete = (trailID, trailTitle) => {
     if (!userInfo || userInfo.role !== 'admin') return
-    deleteTrail(trailID).then()
-    swal(`已刪除步道`, `${trailTitle}`, 'success')
-    setTrails(trails.filter((trail) => trail.trail_id !== trailID))
+    swal({
+      title: '確定刪除嗎？',
+      icon: 'warning',
+      buttons: ['取消', '確定'],
+      dangerMode: true
+    }).then((willDo) => {
+      if (willDo) {
+        deleteTrail(trailID)
+          .then((res) => {
+            if (res.data.success) {
+              setTrails(trails.filter((trail) => trail.trail_id !== trailID))
+              swal(`已刪除步道 ${trailTitle}`, {
+                icon: 'success',
+                button: '關閉'
+              })
+            }
+          })
+          .catch((err) => console.log(err.response))
+      }
+    })
   }
 
   const handleRecover = (trailID, trailTitle) => {
@@ -224,9 +244,9 @@ function TrailsManagement({ recycle, setRecycle }) {
   return (
     <>
       {isLoading ? (
-        <Loading />
+        <SmallRegionLoading isFullScreen />
       ) : (
-        <Block>
+        <>
           <SearchBar>
             <SearchIcon />
             <SearchField
@@ -250,7 +270,7 @@ function TrailsManagement({ recycle, setRecycle }) {
                   setRecycle(true)
                 }}
               >
-                <BinIcon />
+                <RecycleIcon />
               </RecycleBin>
             )}
           </RecycleBlock>
@@ -267,7 +287,7 @@ function TrailsManagement({ recycle, setRecycle }) {
                   </LinkWrapper>
                   <CreatorTd>admin</CreatorTd>
                   <BtnTd>
-                    <Link to={`/trails/${trail.trail_id}`}>
+                    <Link to={`/update-trail/${trail.trail_id}`}>
                       <EditIcon />
                     </Link>
                     <BinIcon
@@ -298,7 +318,7 @@ function TrailsManagement({ recycle, setRecycle }) {
                 </TableContent>
               ))}
           </TrailsTable>
-        </Block>
+        </>
       )}
     </>
   )
