@@ -3,9 +3,10 @@ import { Link } from 'react-router-dom'
 import { COLOR, RADIUS, FONT, MEDIA_QUERY } from '../../constants/style'
 import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
-import { ActiveTrailContext } from '../../context'
-import { useState, useEffect } from 'react'
+import { ActiveTrailContext, LoadingContext } from '../../context'
+import { useState, useEffect, useContext } from 'react'
 import { getTrailArticles } from '../../WebAPI'
+import SmallRegionLoading from '../../components/common/SmallRegionLoading'
 
 const HomepageContainer = styled.div`
   width: 90%;
@@ -102,6 +103,7 @@ const NoMatchMsg = styled.div`
 `
 
 function HomePage() {
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [activeTrailArticles, setActiveTrailArticles] = useState({
     activeTrailInfo: {
       trailId: '',
@@ -113,6 +115,7 @@ function HomePage() {
   })
 
   useEffect(() => {
+    setIsLoading(true)
     getTrailArticles(1, '')
       .then((res) => {
         if (res.data.success) {
@@ -128,18 +131,21 @@ function HomePage() {
             },
             articles: res.data.data,
           })
+          setIsLoading(false)
         }
       })
       .catch((err) => {
         console.log(err)
+        setIsLoading(false)
       })
-  }, [])
+  }, [setIsLoading])
   return (
     <>
       <ActiveTrailContext.Provider
         value={{ activeTrailArticles, setActiveTrailArticles }}
       >
         <HomepageContainer>
+          {isLoading && <SmallRegionLoading />}
           <HomePageWrapper>
             <MapWrapper>
               <Map />

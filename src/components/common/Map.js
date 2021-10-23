@@ -8,7 +8,6 @@ import { ActiveTrailContext } from '../../context'
 import { getTrails } from '../../WebAPI'
 import useDebounce from '../../hooks/useDebounce'
 import useTrailConditions from '../../hooks/useTrailConditions'
-import { LoadingContext } from '../../context'
 import SmallRegionLoading from './SmallRegionLoading'
 
 const MapSearchBarWrapper = styled.div`
@@ -25,24 +24,24 @@ const Map = (props) => {
   const [matchTrailInfos, setMatchTrailInfos] = useState([])
   const { activeTrailArticles } = useContext(ActiveTrailContext)
   const { trailConditions } = useTrailConditions()
-  const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const [isLoadingMap, setIsLoadingMap] = useState(false)
   const [zoom, setZoom] = useState(12)
 
   useEffect(() => {
     if (debouncedKeyWord) {
-      setIsLoading(true)
+      setIsLoadingMap(true)
       getTrails(`?limit=126&search=${debouncedKeyWord}`)
         .then((res) => {
           if (res.data.success) setMatchTrailInfos(res.data.data)
-          setIsLoading(false)
+          setIsLoadingMap(false)
           setZoom(7)
         })
         .catch((err) => {
           console.log(err)
-          setIsLoading(false)
+          setIsLoadingMap(false)
         })
     }
-  }, [debouncedKeyWord, setIsLoading])
+  }, [debouncedKeyWord, setIsLoadingMap])
 
   return (
     <div
@@ -69,7 +68,7 @@ const Map = (props) => {
         center={activeTrailArticles.activeTrailInfo.center}
         zoom={zoom}
       >
-        {isLoading && <SmallRegionLoading isLocal />}
+        {isLoadingMap && <SmallRegionLoading isLocal />}
         {matchTrailInfos.length > 0 ? (
           matchTrailInfos.map((trailInfo) => {
             let trailConditionsObj = Object.assign({}, ...trailConditions)
@@ -88,6 +87,7 @@ const Map = (props) => {
                 lng={trailInfo.coordinate.x}
                 trailInfo={trailInfo}
                 trailConditionTag={trailConditionTag}
+                setIsLoadingMap={setIsLoadingMap}
               />
             )
           })
