@@ -210,7 +210,10 @@ function ArticlesManagement({ recycle, setRecycle }) {
         setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
         setIsLoading(false)
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+      })
     getDeletedArticle(`?offset=${(page - 1) * 20}`)
       .then((res) => setDeletedArticles(res.data.data))
       .catch((err) => console.error(err))

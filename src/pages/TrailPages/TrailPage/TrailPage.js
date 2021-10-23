@@ -22,6 +22,7 @@ import { getAuthToken } from '../../../utils'
 import useLike from '../../../hooks/useLike'
 import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 import jwt_decode from 'jwt-decode'
+import swal from 'sweetalert'
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -178,10 +179,16 @@ function TrailPage() {
         setLoadingCollect(true)
         setIsLoading(false)
       })
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+      })
     getTrailArticles(id, '?limit=3')
       .then((res) => setArticles(res.data.data))
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+    })
   }, [id, history, setIsLoading])
 
   useEffect(() => {
@@ -191,7 +198,10 @@ function TrailPage() {
           if (trail.trail_id == id) setThumb(true)
         })
       )
-      .catch((error) => console.error(error))
+      .catch((error) => {
+        console.error(error)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+      })
   }, [userInfo, id, setThumb, loadingCollect])
 
   return (
