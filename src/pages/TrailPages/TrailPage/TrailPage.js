@@ -159,15 +159,11 @@ function TrailPage() {
   const { id } = useParams()
   const [trailInfo, setTrailInfo] = useState('')
   const [articles, setArticles] = useState(null)
-  // const { userInfo } = useContext(AuthContext)
+  const { userInfo } = useContext(AuthContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [loadingCollect, setLoadingCollect] = useState(false)
   const history = useHistory()
   const { thumb, setThumb, handleClickLike } = useLike()
-  // 未知原因 useContext(AuthContext) 有時會抓不到值 直接在此decode
-  const userInfo = jwt_decode(getAuthToken())
-
-  console.log('userInfo', userInfo)
 
   useEffect(() => {
     setIsLoading(true)
@@ -192,16 +188,18 @@ function TrailPage() {
   }, [id, history, setIsLoading])
 
   useEffect(() => {
-    getUserCollect(userInfo.user_id)
-      .then((res) =>
-        res.data.data.trails.forEach((trail) => {
-          if (trail.trail_id == id) setThumb(true)
+    if (userInfo) {
+      getUserCollect(userInfo.user_id)
+        .then((res) =>
+          res.data.data.trails.forEach((trail) => {
+            if (trail.trail_id == id) setThumb(true)
+          })
+        )
+        .catch((error) => {
+          console.error(error)
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         })
-      )
-      .catch((error) => {
-        console.error(error)
-        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-      })
+    }
   }, [userInfo, id, setThumb, loadingCollect])
 
   return (
