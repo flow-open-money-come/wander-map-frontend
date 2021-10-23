@@ -106,7 +106,6 @@ function UsersManagement() {
       })
       .catch((err) => console.error(err))
   }, [page, setIsLoading, toggleStatus])
-  console.log(toggleStatus)
 
   const handleToggleState = (userID, nickname, role) => {
     if (!userInfo || userInfo.role !== 'admin') return
