@@ -141,6 +141,7 @@ function AllTrailPage() {
             handleKeyWordChange={(e) => handleKeyWordChange(e)}
             handleKeyWordDelete={handleKeyWordDelete}
             inputValue={keyWord}
+            withoutSearchIcon
           />
         </SearchBarWrapper>
         <FeaturedTrailsCarouselWrapper
@@ -184,6 +185,7 @@ function AllTrailPage() {
               handleKeyWordChange={(e) => handleKeyWordChange(e)}
               handleKeyWordDelete={handleKeyWordDelete}
               inputValue={keyWord}
+              withoutSearchIcon
             />
           </SearchBarWrapper>
         </DropDownContainer>

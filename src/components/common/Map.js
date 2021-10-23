@@ -58,6 +58,7 @@ const Map = (props) => {
           handleKeyWordDelete={handleKeyWordDelete}
           inputValue={keyWord}
           width='100%'
+          withoutSearchIcon
         />
       </MapSearchBarWrapper>
       <GoogleMapReact
