@@ -85,7 +85,9 @@ export default function UserLike() {
         setUserLikeData(res.data.data)
         console.log(res.data.data)
       })
-      .catch((err) => {})
+      .catch((err) => {
+        console.log(err)
+      })
   }, [])
 
   return (
