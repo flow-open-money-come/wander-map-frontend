@@ -260,7 +260,7 @@ export default function ArticlePostPage() {
       <FormWrapper>
         <FormTitle>相關步道</FormTitle>
         <SearchRelated
-          name='related'
+          name='relatedTrail'
           handleInputChange={handleInputChange}
           formData={formData}
           setFormData={setFormData}

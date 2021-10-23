@@ -43,7 +43,6 @@ const Select = styled.select`
 export default function SearchRelated({ name, formData, setFormData }) {
   const [keyWord, setKeyWord] = useState('')
   const [filteredData, setFilteredDate] = useState(trailsData)
-  const [myMultiplier, setMyMultiplier] = useState((x) => 3 * x)
 
   const updateSearch = (e) => {
     setKeyWord(e.target.value)
@@ -55,9 +54,9 @@ export default function SearchRelated({ name, formData, setFormData }) {
       )
     )
   }
+
   useEffect(() => {
     itemsFilter()
-    setMyMultiplier()
   }, [keyWord])
 
   const handleSelectChange = (e) => {
