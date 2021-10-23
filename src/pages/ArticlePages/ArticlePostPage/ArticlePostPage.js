@@ -11,6 +11,7 @@ import UploadGpx from '../../../components/formSystem/UploadGpx'
 import CategoryTags from '../../../components/formSystem/CategoryTags'
 import ContentCKEditor from '../../../components/formSystem/ContentCKEditor'
 import { NavBarButton } from '../../../components/common/Button'
+import swal from 'sweetalert'
 
 const ArticlePostWrapper = styled.div`
   margin: 0 auto;
@@ -171,14 +172,15 @@ export default function ArticlePostPage() {
     e.preventDefault()
     postArticles(formData)
       .then((res) => {
-        console.log(res.data)
-        let articleID = res.data.result.insertId
-        history.push(`/backstage/`)
-        console.log(articleID)
+        let articleID = res.data.message.split(' ').slice(-1)[0]
+        swal('發佈成功', {
+          icon: 'success',
+          button: '關閉',
+        })
+        history.push(`/articles/${articleID}`)
       })
-      .catch((err) => {
-        console.log(err.response)
-        setErrorMessage('您好，標題、內文為必填喔!')
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }
 

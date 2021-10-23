@@ -8,8 +8,8 @@ import { ActiveTrailContext } from '../../context'
 import { getTrails } from '../../WebAPI'
 import useDebounce from '../../hooks/useDebounce'
 import useTrailConditions from '../../hooks/useTrailConditions'
-import { LoadingContext } from '../../context'
 import SmallRegionLoading from './SmallRegionLoading'
+import swal from 'sweetalert'
 
 const MapSearchBarWrapper = styled.div`
   width: 80%;
@@ -25,24 +25,31 @@ const Map = (props) => {
   const [matchTrailInfos, setMatchTrailInfos] = useState([])
   const { activeTrailArticles } = useContext(ActiveTrailContext)
   const { trailConditions } = useTrailConditions()
-  const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const [isLoadingMap, setIsLoadingMap] = useState(false)
   const [zoom, setZoom] = useState(12)
 
   useEffect(() => {
     if (debouncedKeyWord) {
-      setIsLoading(true)
+      setIsLoadingMap(true)
       getTrails(`?limit=126&search=${debouncedKeyWord}`)
         .then((res) => {
-          if (res.data.success) setMatchTrailInfos(res.data.data)
-          setIsLoading(false)
-          setZoom(7)
+          if (res.data.success) {
+            if (res.data.data.length === 0) {
+              setIsLoadingMap(false)
+              swal('查無步道！', '換個關鍵字試試看吧～')
+              return
+            }
+            setMatchTrailInfos(res.data.data)
+            setIsLoadingMap(false)
+            setZoom(7)
+          }
         })
-        .catch((err) => {
-          console.log(err)
-          setIsLoading(false)
+        .catch(() => {
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          setIsLoadingMap(false)
         })
     }
-  }, [debouncedKeyWord, setIsLoading])
+  }, [debouncedKeyWord, setIsLoadingMap])
 
   return (
     <div
@@ -59,6 +66,7 @@ const Map = (props) => {
           handleKeyWordDelete={handleKeyWordDelete}
           inputValue={keyWord}
           width='100%'
+          withoutSearchIcon
         />
       </MapSearchBarWrapper>
       <GoogleMapReact
@@ -69,7 +77,7 @@ const Map = (props) => {
         center={activeTrailArticles.activeTrailInfo.center}
         zoom={zoom}
       >
-        {isLoading && <SmallRegionLoading />}
+        {isLoadingMap && <SmallRegionLoading isLocal />}
         {matchTrailInfos.length > 0 ? (
           matchTrailInfos.map((trailInfo) => {
             let trailConditionsObj = Object.assign({}, ...trailConditions)
@@ -88,6 +96,7 @@ const Map = (props) => {
                 lng={trailInfo.coordinate.x}
                 trailInfo={trailInfo}
                 trailConditionTag={trailConditionTag}
+                setIsLoadingMap={setIsLoadingMap}
               />
             )
           })

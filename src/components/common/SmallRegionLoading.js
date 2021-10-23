@@ -9,11 +9,12 @@ const LoadingWrapper = styled.div`
   height: 80px;
   transform: translate(-50%, -50%);
   ${(props) =>
-    props.$isFullScreen
-      ? `position: absolute;
-        top: 50%;
-        left: 50%;`
-      : `margin: 0 auto;`}
+    props.$isLocal
+      ? `margin: 0 auto;`
+      : `
+  position: fixed;
+  left: 50%;
+  top: 50%;`}
 
   & div {
     position: absolute;
@@ -44,9 +45,9 @@ const LoadingWrapper = styled.div`
   }
 `
 
-export default memo(function SmallRegionLoading({ isFullScreen }) {
+export default memo(function SmallRegionLoading({ isLocal }) {
   return (
-    <LoadingWrapper $isFullScreen={isFullScreen}>
+    <LoadingWrapper $isLocal={isLocal}>
       <div></div>
       <div></div>
     </LoadingWrapper>
