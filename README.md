@@ -26,8 +26,8 @@ Wander Map 是一個結合台灣步道資訊檢索及遊歷心得分享的二合
 ### 會員系統
 
 註冊成為會員之使用者可以發表心得 (CRUD) 及評論 (CRUD)。在個人後台除了能檢視個人
-資訊外，也可管理個人發表過的文章、收藏之步道、按讚過的步道，也能擁有自己專屬的備
-忘錄 (CRUD)。
+資訊外，也可管理個人發表過的文章、收藏之步道、按讚過的步道，也能擁有自己專屬的裝
+備清單 (CRUD)。
 
 > 權限系統： 主要三種角色，權限低到高分別為未登入使用者、會員及管理員。
 >
@@ -51,23 +51,24 @@ Wander Map 是一個結合台灣步道資訊檢索及遊歷心得分享的二合
 
 ## 使用技術
 
-| 套件                                                                       | 敘述                                                                                                                                                              |
-| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [React](https://reactjs.org/) (Hook)                                       | UI implementation library                                                                                                                                         |
-| [React Router](https://reactrouter.com/)                                   | SPA routing implementation                                                                                                                                        |
-| [styled-components](https://styled-components.com/docs/basics)             | 實作 CSS-in-JS                                                                                                                                                    |
-| [Google-map-react](https://www.npmjs.com/package/google-map-react)         | is a component written over a small set of the Google Maps API. It allows you to render any React component on the Google Map.                                    |
-| [ckeditor5-react](https://www.npmjs.com/package/@ckeditor/ckeditor5-react) | CKEditor 5 builds are a set of ready-to-use rich text editors. Every "build" provides a single type of editor with a set of features and a default configuration. |
-| [jwt-decode](https://www.npmjs.com/package/jwt-decode)                     | decoding JWTs token which are Base64Url encoded                                                                                                                   |
-| [axios](https://axios-http.com/docs/intro)                                 | a promise-based HTTP Client for node.js and the browser. It                                                                                                       |
-| [sweetalert](https://sweetalert.js.org/guides/)                            | a replacement for JS alert                                                                                                                                        |
-|                                                                            |                                                                                                                                                                   |
+| 套件                                                                       | 敘述                                                              |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------- |
+| [React](https://reactjs.org/) (Hook)                                       | SPA, UI building of reusable function components and custom hooks |
+| React Context                                                              | menage data through the nested component tree                     |
+| [React Router](https://reactrouter.com/)                                   | For SPA routing implementation                                    |
+| [styled-components](https://styled-components.com/docs/basics)             | For CSS-in-JS implementation                                      |
+| [Google-map-react](https://www.npmjs.com/package/google-map-react)         | A component written over a small set of the Google Maps API.      |
+| [ckeditor5-react](https://www.npmjs.com/package/@ckeditor/ckeditor5-react) | CKEditor 5 builds are a set of ready-to-use rich text editors.    |
+| [jwt-decode](https://www.npmjs.com/package/jwt-decode)                     | Decoding JWTs token which are Base64Url encoded                   |
+| [axios](https://axios-http.com/docs/intro)                                 | A promise-based HTTP Client for node.js and the browser. It       |
+| [sweetalert](https://sweetalert.js.org/guides/)                            | A replacement for JS alert                                        |
+|                                                                            |                                                                   |
 
 | 其他                                                                                             | 敘述                           |
 | ------------------------------------------------------------------------------------------------ | ------------------------------ |
 | [prettier](https://prettier.io/)                                                                 | 維持專案程式碼風格統一         |
 | [ESLint](https://create-react-app.dev/docs/setting-up-your-editor/)                              | Create-react-app eslint config |
-| [Netlify](https://docs.netlify.com/?_ga=2.190209259.1714598831.1634974332-1934839556.1633767074) | 前端部屬                       |
+| [Netlify](https://docs.netlify.com/?_ga=2.190209259.1714598831.1634974332-1934839556.1633767074) | 前端部屬工具                   |
 | [Figma](https://www.figma.com/)                                                                  | WireFrame 繪製                 |
 |                                                                                                  |                                |
 
@@ -76,37 +77,49 @@ Wander Map 是一個結合台灣步道資訊檢索及遊歷心得分享的二合
 | [林務局開放資料](https://recreation.forest.gov.tw/Service/OpenData)                         | 首頁：步道路況資訊                                   |
 | [中央氣象局](https://opendata.cwb.gov.tw/devManual/insrtuction)                             | 單一步道資訊頁面：當地近七天天氣                     |
 | [Maps JavaScript API](https://developers.google.com/maps/documentation/javascript/overview) | 首頁及單一步道資訊頁面：地圖搜尋功能及步道地點標示圖 |
-| [imgur api](https://apidocs.imgur.com/)                                                     | 新增文章、新增步道及會員個人後台：圖片上傳           |
+| [imgur API](https://apidocs.imgur.com/)                                                     | 新增文章、新增步道及會員個人後台：圖片上傳           |
 |                                                                                             |                                                      |
 
 ## 如何執行
 
-1. Clone 本專案至本地端
-2. `npm install` 安裝專案 dependencies。
-3. 在專案根目錄新增環境變數檔案 `.env`，填入專案所需之所有環境變數。
-4. `npm run build` 建立專案 production 版本。
-5. `npm run deploy` 在 GitHub 上部屬本專案，設定部屬 branch 為 gh-pages。
+### 1. Clone 本專案至本地端
+
+### 2. `npm install`
+
+安裝專案 dependencies。
+
+### 3. 建立環境變數檔
+
+在專案根目錄新增環境變數檔案 `.env`，填入專案所需之所有環境變數。
+
+### 4. `npm run build`
+
+建立專案 production 版本。
+
+### 5. `npm run deploy`
+
+在 GitHub 上部屬本專案，設定部屬 branch 為 gh-pages。
 
 ## 專案分工
 
-此專案為 Lidemy 程式導師實驗計畫的五名學生共同完成的，以下為專案分工。
+此專案為 Lidemy 程式導師實驗計畫的五名學生共同完成的，以下為專案分工：
 
 - [@cmtilo](https://github.com/cmtilo): 專案構想、wireframe 繪製、前端（會員個人
   頁面（公開＆會員）、新增步道頁面、新增心得頁面
 - [@ddylanlin](https://github.com/ddylanlin): 專案雛形發想、wireframe 繪製、前端
   （管理員後台、單一步道頁面）、後端（詳見
   [Wander Map 後端 repository](https://github.com/flow-open-money-come/wander-map-backend)
-  readme）
-- [@torai55](https://github.com/torai55):專案構想、後端（詳見
+  README）
+- [@torai55](https://github.com/torai55): 專案構想、後端（詳見
   [Wander Map 後端 repository](https://github.com/flow-open-money-come/wander-map-backend)
-  readme）
+  README）
 - [@WenYHsieh](https://github.com/WenYHsieh): 專案構想、wireframe 繪製、前端 （
   主要負責人。功能測試拓荒（google map, 圖片上傳, ckeditor 串接）、首頁、全部步
   道頁面、會員系統、部屬）
 - [@yymarlerr](https://github.com/yymarlerr): 專案雛形發想、專案構想、wireframe
   繪製、前端 （單一心得頁面、全部心得頁面 ）、後端（詳見
   [Wander Map 後端 repository](https://github.com/flow-open-money-come/wander-map-backend)
-  readme）
+  README）
 
 ## [專案後端](https://github.com/flow-open-money-come/wander-map-backend)
 
