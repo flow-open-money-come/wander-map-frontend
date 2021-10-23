@@ -190,6 +190,7 @@ function HomePage() {
                         content={articleInfos.content}
                         lessRwd={true}
                         articlePage={`/articles/${articleInfos.article_id}`}
+                        authorId={articleInfos.author_id}
                       />
                     ))
                   ) : (
