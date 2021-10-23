@@ -38,11 +38,11 @@ const CommentsHeader = styled.div`
 
 const UserAvatar = styled.img`
   border: 1px solid ${COLOR.gray_light};
-  width: 35px;
+  min-width: 35px;
   height: 35px;
   border-radius: 50%;
   ${MEDIA_QUERY.lg} {
-    width: 50px;
+    min-width: 50px;
     height: 50px;
   }
 `
@@ -300,7 +300,7 @@ export default function Comments({ isMessage }) {
       }
     }
     getMessage()
-  }, [setInputValue, setEditValue, setLoadingComment, loadingComment])
+  }, [setInputValue, setEditValue, setLoadingComment, loadingComment, userInfo])
 
   const handleSubmit = async (e) => {
     setReminder('')

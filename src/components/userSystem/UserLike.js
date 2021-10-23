@@ -105,10 +105,10 @@ export default function UserLike() {
               user={article.nickname}
               tags={!article.tag_names ? [] : article.tag_names.split(',')}
               date={article.created_at}
-              content={article.content}
+              content={article.content ? article.content : ''}
               lessRwd={true}
               articlePage={`/articles/${article.article_id}`}
-              authorId={article.article_id}
+              authorId={article.author_id}
             />
           ))
         ) : (

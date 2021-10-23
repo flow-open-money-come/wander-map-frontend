@@ -7,8 +7,8 @@ import thumbSVG from '../../../icons/thumb_up.svg'
 import thumbGreenSVG from '../../../icons/thumb_up_green.svg'
 import Tags from '../../../components/forumSystem/ArticleTags'
 import ArticleContent from '../../../components/forumSystem/ArticleContent'
-import { getArticles, getUserLiked } from '../../../WebAPI'
-import { useParams, useHistory } from 'react-router-dom'
+import { getArticles, getUserLiked, getTrails } from '../../../WebAPI'
+import { useParams, useHistory, Link } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
 import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
@@ -83,14 +83,21 @@ const ArticleTitleAndLikes = styled.div`
 `
 
 const CoverImg = styled.img`
+  align-self: center;
   width: 100%;
-  height: 40%;
+  height: 200px;
   justify-content: center;
   margin: 20px 0;
   border-radius: ${RADIUS.lg};
+  object-fit: cover;
 
   ${MEDIA_QUERY.md} {
     margin: 61px 0 44px 0;
+    height: 300px;
+  }
+
+  ${MEDIA_QUERY.lg} {
+    height: 450px;
   }
 `
 
@@ -100,7 +107,7 @@ const ArticleStandardInformation = styled.div`
   ${(props) =>
     props.topElement &&
     `
-     margin: 21px 0 7px 0; 
+     margin: 7px 0 7px 0; 
   `}
 `
 
@@ -133,6 +140,10 @@ const FlexGroup = styled.div`
   margin: 20px auto;
 `
 
+const RelatedTrail = styled(Link)`
+  color: ${COLOR.black};
+`
+
 function ArticlePage() {
   const { id } = useParams()
   const [post, setPost] = useState([])
@@ -140,6 +151,7 @@ function ArticlePage() {
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const { thumb, setThumb, handleClickLike, count } = useLike()
   const [loadingLike, setLoadingLike] = useState(false)
+  const [relatedTrailID, setRelatedTrailID] = useState(null)
   let history = useHistory()
 
   useEffect(() => {
@@ -160,7 +172,15 @@ function ArticlePage() {
       setIsLoading(false)
     }
     getPost()
-  }, [id])
+  }, [id, userInfo, setRelatedTrailID])
+
+  if (post.trail_title) {
+    getTrails(`?search=${post.trail_title}`).then((res) => {
+      if (res.data.data[0].trail_id) {
+        setRelatedTrailID(res.data.data[0].trail_id)
+      }
+    })
+  }
 
   useEffect(() => {
     const getLike = async () => {
@@ -181,7 +201,7 @@ function ArticlePage() {
     if (userInfo) {
       getLike()
     }
-  }, [loadingLike, id])
+  }, [loadingLike, id, userInfo])
 
   return (
     <Wrapper>
@@ -216,6 +236,16 @@ function ArticlePage() {
               new Date(post.end_time).toLocaleDateString()
                 ? ` - ${new Date(post.end_time).toLocaleDateString()}`
                 : ''}
+            </ArticleStandardInformation>
+          ) : (
+            ''
+          )}
+          {post.trail_title ? (
+            <ArticleStandardInformation>
+              相關步道：
+              <RelatedTrail to={`/trails/${relatedTrailID}`}>
+                {post.trail_title}{' '}
+              </RelatedTrail>
             </ArticleStandardInformation>
           ) : (
             ''
