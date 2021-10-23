@@ -18,10 +18,8 @@ import TrailReviews from '../../../components/trailSystem/TrailReviews'
 import { getTrails, getTrailArticles, getUserCollect } from '../../../WebAPI'
 import { useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
-import { getAuthToken } from '../../../utils'
 import useLike from '../../../hooks/useLike'
 import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
-import jwt_decode from 'jwt-decode'
 import swal from 'sweetalert'
 
 const TrailPageContainer = styled.div`
