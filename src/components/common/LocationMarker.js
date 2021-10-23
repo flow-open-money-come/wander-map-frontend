@@ -6,7 +6,7 @@ import { useState, useContext } from 'react'
 import { getTrailArticles } from '../../WebAPI'
 import useDidMountEffect from '../../hooks/useDidMountEffect'
 import { ActiveTrailContext } from '../../context'
-import { LoadingContext } from '../../context'
+import swal from 'sweetalert'
 
 const Marker = styled(PinSvg)`
   width: 30px;
@@ -50,6 +50,12 @@ const InfoWindow = styled.div`
 const TrailImg = styled.img`
   width: 100%;
   height: 150px;
+  object-fit: cover;
+  overflow: hidden;
+  transition: ${EFFECT.transition};
+  &:hover {
+    opacity: 0.8;
+  }
 `
 const TrailName = styled.div`
   font-size: ${FONT.md};
@@ -76,12 +82,15 @@ const TrailInfoWrapper = styled.div`
   align-items: center;
 `
 
-export default function LocationMarker({ trailInfo, trailConditionTag }) {
+export default function LocationMarker({
+  trailInfo,
+  trailConditionTag,
+  setIsLoadingMap,
+}) {
   const [currentOnClickTrail, setCurrentOnClickTrail] = useState(null)
   const { activeTrailArticles, setActiveTrailArticles } =
     useContext(ActiveTrailContext)
   const history = useHistory()
-  const { setIsLoading } = useContext(LoadingContext)
 
   const handleMarkerOnclick = () => {
     if (!(activeTrailArticles.activeTrailInfo.trailId === trailInfo.trail_id))
@@ -90,7 +99,7 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
 
   useDidMountEffect(() => {
     if (currentOnClickTrail === null) return
-    setIsLoading(true)
+    setIsLoadingMap(true)
     getTrailArticles(currentOnClickTrail, '')
       .then((res) => {
         setActiveTrailArticles({
@@ -105,11 +114,11 @@ export default function LocationMarker({ trailInfo, trailConditionTag }) {
           },
           articles: res.data.data,
         })
-        setIsLoading(false)
+        setIsLoadingMap(false)
       })
-      .catch((err) => {
-        console.log(err.response)
-        setIsLoading(false)
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+        setIsLoadingMap(false)
       })
 
     setCurrentOnClickTrail(null)

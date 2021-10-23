@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom'
 import { COLOR, RADIUS, FONT, MEDIA_QUERY } from '../../constants/style'
 import Map from '../../components/common/Map'
 import ArticleList from '../../components/forumSystem/Article'
-import { ActiveTrailContext } from '../../context'
-import { useState, useEffect } from 'react'
+import { ActiveTrailContext, LoadingContext } from '../../context'
+import { useState, useEffect, useContext } from 'react'
 import { getTrailArticles } from '../../WebAPI'
+import SmallRegionLoading from '../../components/common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const HomepageContainer = styled.div`
   width: 90%;
@@ -102,6 +104,7 @@ const NoMatchMsg = styled.div`
 `
 
 function HomePage() {
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [activeTrailArticles, setActiveTrailArticles] = useState({
     activeTrailInfo: {
       trailId: '',
@@ -113,6 +116,7 @@ function HomePage() {
   })
 
   useEffect(() => {
+    setIsLoading(true)
     getTrailArticles(1, '')
       .then((res) => {
         if (res.data.success) {
@@ -128,67 +132,75 @@ function HomePage() {
             },
             articles: res.data.data,
           })
+          setIsLoading(false)
         }
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+        setIsLoading(false)
       })
-  }, [])
+  }, [setIsLoading])
   return (
     <>
-      <ActiveTrailContext.Provider
-        value={{ activeTrailArticles, setActiveTrailArticles }}
-      >
-        <HomepageContainer>
-          <HomePageWrapper>
-            <MapWrapper>
-              <Map />
-            </MapWrapper>
-            <ArticleListWrapper>
-              <TrialTitleWrapper>
-                <TrialTitleName
-                  to={`trails/${activeTrailArticles.activeTrailInfo.trailId}`}
-                >
-                  {activeTrailArticles.activeTrailInfo.trailTitle}
-                </TrialTitleName>
-                <SubTitleWrapper>
-                  <TrialTitleLocation>
-                    {activeTrailArticles.activeTrailInfo.trailLocation}
-                  </TrialTitleLocation>
+      {isLoading ? (
+        <SmallRegionLoading />
+      ) : (
+        <ActiveTrailContext.Provider
+          value={{ activeTrailArticles, setActiveTrailArticles }}
+        >
+          <HomepageContainer>
+            <HomePageWrapper>
+              <MapWrapper>
+                <Map />
+              </MapWrapper>
+              <ArticleListWrapper>
+                <TrialTitleWrapper>
+                  <TrialTitleName
+                    to={`trails/${activeTrailArticles.activeTrailInfo.trailId}`}
+                  >
+                    {activeTrailArticles.activeTrailInfo.trailTitle}
+                  </TrialTitleName>
+                  <SubTitleWrapper>
+                    <TrialTitleLocation>
+                      {activeTrailArticles.activeTrailInfo.trailLocation}
+                    </TrialTitleLocation>
 
-                  <TrialArticleNumber>
-                    {activeTrailArticles.articles.length} 篇心得
-                  </TrialArticleNumber>
-                </SubTitleWrapper>
-              </TrialTitleWrapper>
-              <Divider />
-              <TrialArticleWrapper>
-                {activeTrailArticles.articles.length !== 0 ? (
-                  activeTrailArticles.articles.map((articleInfos) => (
-                    <ArticleList
-                      key={articleInfos.article_id}
-                      articleImgSrc={articleInfos.cover_picture_url}
-                      avatarImgSrc={articleInfos.icon_url}
-                      title={articleInfos.title}
-                      user={articleInfos.author_name}
-                      tags={
-                        articleInfos.tag_names &&
-                        articleInfos.tag_names.split(',')
-                      }
-                      date={new Date(articleInfos.created_at).toLocaleString()}
-                      content={articleInfos.content}
-                      lessRwd={true}
-                      articlePage={`/articles/${articleInfos.article_id}`}
-                    />
-                  ))
-                ) : (
-                  <NoMatchMsg>目前還沒有心得唷，快來分享吧！</NoMatchMsg>
-                )}
-              </TrialArticleWrapper>
-            </ArticleListWrapper>
-          </HomePageWrapper>
-        </HomepageContainer>
-      </ActiveTrailContext.Provider>
+                    <TrialArticleNumber>
+                      {activeTrailArticles.articles.length} 篇心得
+                    </TrialArticleNumber>
+                  </SubTitleWrapper>
+                </TrialTitleWrapper>
+                <Divider />
+                <TrialArticleWrapper>
+                  {activeTrailArticles.articles.length !== 0 ? (
+                    activeTrailArticles.articles.map((articleInfos) => (
+                      <ArticleList
+                        key={articleInfos.article_id}
+                        articleImgSrc={articleInfos.cover_picture_url}
+                        avatarImgSrc={articleInfos.icon_url}
+                        title={articleInfos.title}
+                        user={articleInfos.author_name}
+                        tags={
+                          articleInfos.tag_names &&
+                          articleInfos.tag_names.split(',')
+                        }
+                        date={new Date(
+                          articleInfos.created_at
+                        ).toLocaleString()}
+                        content={articleInfos.content}
+                        lessRwd={true}
+                        articlePage={`/articles/${articleInfos.article_id}`}
+                      />
+                    ))
+                  ) : (
+                    <NoMatchMsg>目前還沒有心得唷，快來分享吧！</NoMatchMsg>
+                  )}
+                </TrialArticleWrapper>
+              </ArticleListWrapper>
+            </HomePageWrapper>
+          </HomepageContainer>
+        </ActiveTrailContext.Provider>
+      )}
     </>
   )
 }
