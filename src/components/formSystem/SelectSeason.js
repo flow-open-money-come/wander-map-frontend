@@ -14,7 +14,7 @@ const Select = styled.select`
 
 export default function SelectSeason({ name, handleInputChange, value }) {
   return (
-    <Select name={name} onChange={handleInputChange}>
+    <Select name={name} value={value} onChange={handleInputChange}>
       <option value='' disabled selected>
         請選擇
       </option>
@@ -22,9 +22,15 @@ export default function SelectSeason({ name, handleInputChange, value }) {
       <option value='春季' defaultChecked>
         春季
       </option>
-      <option value='夏季'>夏季</option>
-      <option value='秋季'>秋季</option>
-      <option value='冬季'>冬季</option>
+      <option value='夏季' >
+        夏季
+      </option>
+      <option value='秋季' >
+        秋季
+      </option>
+      <option value='冬季' >
+        冬季
+      </option>
     </Select>
   )
 }
