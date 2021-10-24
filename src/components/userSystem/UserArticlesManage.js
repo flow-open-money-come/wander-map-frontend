@@ -3,11 +3,12 @@ import { getUserArticles } from '../../WebAPI'
 import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/user/user_article_manage_edit.svg'
 import { ReactComponent as PostIcon } from '../../icons/user/user_post.svg'
 import ConfirmBox from './ConfirmBox'
+import SmallRegionLoading from '../common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -18,47 +19,24 @@ const Block = styled.div`
   overflow-y: scroll;
   overflow-x: hidden;
 `
-const SearchBar = styled.div`
-  border: 1px solid #c4c4c4;
-  border-radius: ${RADIUS.s};
-  width: 95%;
-  height: 25px;
-  margin: 10px auto;
-  display: flex;
-  align-items: center;
-  padding-left: 3px;
-  ${MEDIA_QUERY.lg} {
-    margin: 30px auto;
-    height: 45px;
-    svg {
-      width: 30px;
-      height: 30px;
-      margin: 0 5px;
-    }
-  }
-`
-const SearchField = styled.input`
-  width: calc(100% - 20px);
-  border: none;
-  outline: none;
-  ${MEDIA_QUERY.lg} {
-    width: calc(100% - 30px);
-    font-size: ${FONT.lg};
-  }
-`
+
 const PostLink = styled.div`
   text-align: right;
-  opacity: 0.8;
+  transition: ${EFFECT.transition};
+  border-bottom: 1px solid ${COLOR.beige};
+  position: sticky;
+  top: 0;
+  background-color: ${COLOR.white};
+  opacity: 0.7;
   svg {
     width: 30px;
     height: 30px;
     margin: 20px;
+    transition: ${EFFECT.transition};
     &:hover {
       cursor: pointer;
-      transition: ${EFFECT.transition};
-      transform: scale(1.5);
+      transform: scale(1.2);
       transform-origin: (15px, 0);
-      opacity: 1;
     }
   }
 `
@@ -89,6 +67,7 @@ const TrailImg = styled.img`
   margin: 20px 5px;
   width: 80px;
   height: 80px;
+  object-fit: cover;
   border-radius: ${RADIUS.lg};
   background-color: #eee;
   ${MEDIA_QUERY.md} {
@@ -101,7 +80,7 @@ const TrailsTd = styled.td`
   text-align: start;
   padding: 10px;
   vertical-align: middle;
-  font-size: ${FONT.md};
+  font-size: ${FONT.lg};
   font-weight: 700;
   ${MEDIA_QUERY.md} {
     width: 80%;
@@ -139,51 +118,55 @@ export default function UserArticlesManage() {
     ],
   })
   const { userID } = useParams()
+  const [isLoadingArticles, setIsLoadingArticles] = useState(false)
 
   useEffect(() => {
+    setIsLoadingArticles(true)
     getUserArticles(userID)
       .then((res) => {
-        setUserArticlesData(res.data.data)
+        if (res.data.message) {
+          setUserArticlesData(res.data.data)
+          setIsLoadingArticles(false)
+        }
       })
-      .catch((err) => {
-        console.log(err.response)
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+        setIsLoadingArticles(false)
       })
-  }, [])
+  }, [userID, setIsLoadingArticles])
 
   return (
     <Block>
-      <SearchBar style={{ display: 'none' }}>
-        <SearchIcon />
-        <SearchField></SearchField>
-      </SearchBar>
+      {isLoadingArticles && <SmallRegionLoading />}
       <PostLink>
         <Link to={`../post-article`}>
           <PostIcon />
         </Link>
       </PostLink>
       <TrailsTable>
-        {userArticlesData.articles.map((article) => (
-          <TableContent>
-            <Link to={`../articles/${article.article_id}`}>
-              <CoverTd>
-                <TrailImg src={article.cover_picture_url} />
-              </CoverTd>
-            </Link>
-            <TrailsTd>{article.title}</TrailsTd>
-            <BtnTd>
-              <Link to={`../update-article/${article.article_id}`}>
-                <EditIcon />
+        {!isLoadingArticles &&
+          userArticlesData.articles.map((article) => (
+            <TableContent>
+              <Link to={`../articles/${article.article_id}`}>
+                <CoverTd>
+                  <TrailImg src={article.cover_picture_url} />
+                </CoverTd>
               </Link>
-            </BtnTd>
-            <BtnTd>
-              <BinIcon
-                onClick={() => {
-                  setPopUp({ key: article.article_id, isShow: true })
-                }}
-              />
-            </BtnTd>
-          </TableContent>
-        ))}
+              <TrailsTd>{article.title}</TrailsTd>
+              <BtnTd>
+                <Link to={`../update-article/${article.article_id}`}>
+                  <EditIcon />
+                </Link>
+              </BtnTd>
+              <BtnTd>
+                <BinIcon
+                  onClick={() => {
+                    setPopUp({ key: article.article_id, isShow: true })
+                  }}
+                />
+              </BtnTd>
+            </TableContent>
+          ))}
         {popUp.isShow === true && (
           <ConfirmBox
             popUp={popUp}
