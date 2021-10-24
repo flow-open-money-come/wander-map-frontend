@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   }
 `
 
-const Input = styled.input.attrs((props) => ({
+const Input = styled.input.attrs(() => ({
   type: 'text',
 }))`
   height: 25px;

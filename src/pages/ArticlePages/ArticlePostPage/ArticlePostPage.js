@@ -12,6 +12,7 @@ import CategoryTags from '../../../components/formSystem/CategoryTags'
 import ContentCKEditor from '../../../components/formSystem/ContentCKEditor'
 import { NavBarButton } from '../../../components/common/Button'
 import swal from 'sweetalert'
+import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 
 const ArticlePostWrapper = styled.div`
   margin: 0 auto;
@@ -68,7 +69,7 @@ const FormTitle = styled.div`
     text-align: center;
   }
   ${MEDIA_QUERY.lg} {
-    margin: 10px 40px;
+    margin: 10px 10px 10px 0px;
   }
 `
 const FormSubTitleWrapper = styled.div`
@@ -80,7 +81,7 @@ const FormSubTitleWrapper = styled.div`
     width: 500px;
   }
 `
-const Input = styled.input.attrs((props) => ({
+const Input = styled.input.attrs(() => ({
   type: 'text',
 }))`
   height: 25px;
@@ -96,7 +97,7 @@ const Input = styled.input.attrs((props) => ({
     font-size: ${FONT.md};
   }
 `
-const Date = styled.input.attrs((props) => ({
+const Date = styled.input.attrs(() => ({
   type: 'date',
 }))`
   height: 25px;
@@ -117,7 +118,7 @@ const SubmitBtn = styled.div`
     width: 500px;
   }
 `
-const Submit = styled.input.attrs((props) => ({
+const Submit = styled.input.attrs(() => ({
   type: 'submit',
   value: '確認送出',
 }))`
@@ -126,33 +127,33 @@ const Submit = styled.input.attrs((props) => ({
   color: ${COLOR.green};
   font-size: ${FONT.md};
 `
-const ErrorMessage = styled.div`
-  text-align: center;
-  margin: 20px auto;
-  color: #ff0000;
-  font-weight: 600;
-  font-size: ${FONT.s};
-`
 
 export default function ArticlePostPage() {
   const { userInfo } = useContext(AuthContext)
   let isPostPage = useRouteMatch('/post-article')
   const { articleID } = useParams()
   const history = useHistory()
-  if (!userInfo) history.push('/')
+  const [isLoadingHandleArticle, setIsLoadingArticle] = useState(false)
 
-  const [errorMessage, setErrorMessage] = useState()
+  if (!userInfo) {
+    swal('無權限', '請先登入或註冊以發表文章', 'error')
+    history.push('/login')
+  }
+
   const [formData, setFormData] = useState({
     author_id: userInfo.user_id,
   })
 
   useEffect(() => {
     if (!isPostPage) {
+      setIsLoadingArticle(true)
       getArticles(articleID)
         .then((res) => {
           setFormData(res.data.data[0])
+          setIsLoadingArticle(false)
         })
         .catch(() => {
+          setIsLoadingArticle(false)
           swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         })
     }
@@ -169,39 +170,54 @@ export default function ArticlePostPage() {
   const handlePostSubmit = (e) => {
     e.preventDefault()
     if (Object.keys(formData).indexOf('title') < 0 || formData.title === '')
-      return setErrorMessage('您好，標題為必填喔!')
+      return swal('發文失敗', '標題為必填選項喔！', 'error')
     if (Object.keys(formData).indexOf('content') < 0 || formData.content === '')
-      return setErrorMessage('您好，內文為必填喔!')
-
+      return swal('發文失敗', '內文為必填選項喔！', 'error')
+    setIsLoadingArticle(true)
     postArticles(formData)
       .then((res) => {
-        let articleID = res.data.message.split(' ').slice(-1)[0]
-        swal('發佈成功', {
-          icon: 'success',
-          button: '關閉',
-        })
-        history.push(`/articles/${articleID}`)
+        if (res.data.message) {
+          setIsLoadingArticle(false)
+          let articleID = res.data.message.split(' ').slice(-1)[0]
+          swal('發佈成功', {
+            icon: 'success',
+            button: '關閉',
+          })
+          history.push(`/articles/${articleID}`)
+        }
       })
       .catch(() => {
+        setIsLoadingArticle(false)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }
 
   const handlePatchSubmit = (e) => {
-    console.log(formData)
     e.preventDefault()
+    if (Object.keys(formData).indexOf('title') < 0 || formData.title === '')
+      return swal('發文失敗', '標題為必填選項喔！', 'error')
+    if (Object.keys(formData).indexOf('content') < 0 || formData.content === '')
+      return swal('發文失敗', '內文為必填選項喔！', 'error')
+    setIsLoadingArticle(true)
     patchArticle(articleID, formData)
       .then((res) => {
-        console.log(res.data)
-        history.push(`/articles/${articleID}`)
+        if (res.data.message) {
+          setIsLoadingArticle(false)
+          swal('文章編輯成功', {
+            icon: 'success',
+            button: '關閉',
+          })
+        }
       })
       .catch(() => {
+        setIsLoadingArticle(false)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }
 
   return (
     <ArticlePostWrapper>
+      {isLoadingHandleArticle && <SmallRegionLoading />}
       {articleID ? (
         <PageName>編輯心得</PageName>
       ) : (
@@ -210,7 +226,6 @@ export default function ArticlePostPage() {
           <PageDesc>Hey！最近去哪裡玩呀？來來分享一下這段旅程的體驗</PageDesc>
         </>
       )}
-      <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>文章標題</FormTitle>
         <Input
@@ -227,7 +242,6 @@ export default function ArticlePostPage() {
             name='cover_picture_url'
             formData={formData}
             setFormData={setFormData}
-            setErrorMessage={setErrorMessage}
           />
         </FormSubTitleWrapper>
       </FormWrapper>

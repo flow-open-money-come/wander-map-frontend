@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import ImgurUploaderInit from 'ckeditor5-imgur-uploader'
@@ -15,10 +14,8 @@ const EditorWrapper = styled.div`
 `
 
 export default function ContentCKEditor({ name, formData, setFormData }) {
-  const [data, setData] = useState(formData.content)
   const handleDataChange = (event, editor) => {
     let inputData = editor.getData()
-    setData(inputData)
     setFormData({
       ...formData,
       [name]: inputData,

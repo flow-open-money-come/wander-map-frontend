@@ -98,7 +98,6 @@ export default function CategoryTags({
     if (Object.keys(formData).length > 0) {
       if (!formData.tag_names) return
       if (!isPostPage) {
-        console.log(formData)
         setTags(
           tags.map((tag) => {
             return formData.tag_names.includes(tag.content)
