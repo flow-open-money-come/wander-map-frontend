@@ -6,8 +6,7 @@ import { ReactComponent as TemperatureIcon } from '../../icons/weather/weather-T
 import { ReactComponent as PopIcon } from '../../icons/weather/weather-RainProbability.svg'
 import WeatherIcon from './WeatherIcon.js'
 import { locationNameToCode } from './weatherUtils.js'
-import axios from 'axios'
-// import { getWeatherInfo } from '../../WebAPI.js'
+import { getWeatherInfo } from '../../WebAPI.js'
 
 const WeatherWrapper = styled.div`
   width: 100%;
@@ -123,8 +122,8 @@ const RainProbability = styled(Temperature)``
 const Weather = ({ location }) => {
   const position = location || '宜蘭縣礁溪鄉'
   const country = position.slice(0, 3)
-  // const countryCode = locationNameToCode(country)
   const town = position.slice(3, position.length)
+  const countryCode = locationNameToCode(country)
 
   const [weatherElement, setWeatherElement] = useState({
     temperature: 0,
@@ -141,18 +140,9 @@ const Weather = ({ location }) => {
       weekday: 'long'
     }).format(new window.Date(dateTime))
   }
-
-  // console.log(countryCode)
   
   useEffect(() => {
-    axios(
-      `https://opendata.cwb.gov.tw/api/v1/rest/datastore/${locationNameToCode(
-        country
-      )}?Authorization=${
-        process.env.REACT_APP_WEATHER_TOKEN
-      }&locationName=${town}&elementName=T,Wx,PoP12h`
-    )
-    // getWeatherInfo(countryCode, town)
+    getWeatherInfo(countryCode, town)
     .then((res) => {
       const locationData = res.data.records.locations[0].location[0]
       const weatherInfo = []
