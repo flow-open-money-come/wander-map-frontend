@@ -151,10 +151,9 @@ export default function ArticlePostPage() {
       getArticles(articleID)
         .then((res) => {
           setFormData(res.data.data[0])
-          console.log(formData)
         })
-        .catch((err) => {
-          console.log(err)
+        .catch(() => {
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         })
     }
   }, [articleID, isPostPage])
@@ -168,8 +167,12 @@ export default function ArticlePostPage() {
   }
 
   const handlePostSubmit = (e) => {
-    console.log(formData)
     e.preventDefault()
+    if (Object.keys(formData).indexOf('title') < 0 || formData.title === '')
+      return setErrorMessage('您好，標題為必填喔!')
+    if (Object.keys(formData).indexOf('content') < 0 || formData.content === '')
+      return setErrorMessage('您好，內文為必填喔!')
+
     postArticles(formData)
       .then((res) => {
         let articleID = res.data.message.split(' ').slice(-1)[0]
@@ -192,9 +195,8 @@ export default function ArticlePostPage() {
         console.log(res.data)
         history.push(`/articles/${articleID}`)
       })
-      .catch((err) => {
-        console.log(err.response.data)
-        setErrorMessage('您好，標題、內文為必填喔!')
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }
 
@@ -246,14 +248,26 @@ export default function ArticlePostPage() {
             name='departure_time'
             placeholder='開始日期'
             onChange={handleInputChange}
-            value={formData.departure_time}
+            value={
+              isPostPage
+                ? formData.departure_time
+                : formData.departure_time
+                ? formData.departure_time.slice(0, 10)
+                : null
+            }
           />
           　—　
           <Date
             name='end_time'
             placeholder='結束日期'
             onChange={handleInputChange}
-            value={formData.end_time}
+            value={
+              isPostPage
+                ? formData.end_time
+                : formData.end_time
+                ? formData.end_time.slice(0, 10)
+                : null
+            }
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -272,6 +286,7 @@ export default function ArticlePostPage() {
           name='tags'
           formData={formData}
           setFormData={setFormData}
+          isPostPage={isPostPage}
         />
       </FormWrapper>
       <FormWrapper>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 
@@ -49,7 +49,12 @@ const CategoryBtn = styled.input.attrs(() => ({
   border: 0;
 `
 
-export default function CategoryTags({ name, formData, setFormData }) {
+export default function CategoryTags({
+  name,
+  formData,
+  setFormData,
+  isPostPage,
+}) {
   const [tags, setTags] = useState([
     { id: 1, content: '一日', isChecked: false },
     { id: 2, content: '多日', isChecked: false },
@@ -88,6 +93,25 @@ export default function CategoryTags({ name, formData, setFormData }) {
       [name]: selectedTags,
     })
   }
+
+  useEffect(() => {
+    if (Object.keys(formData).length > 0) {
+      if (!formData.tag_names) return
+      if (!isPostPage) {
+        console.log(formData)
+        setTags(
+          tags.map((tag) => {
+            return formData.tag_names.includes(tag.content)
+              ? {
+                  ...tag,
+                  isChecked: true,
+                }
+              : tag
+          })
+        )
+      }
+    }
+  }, [formData, isPostPage, tags])
 
   return (
     <CategoryWrapper onChange={handleTagsChange}>

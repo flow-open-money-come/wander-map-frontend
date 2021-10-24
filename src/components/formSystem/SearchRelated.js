@@ -40,24 +40,31 @@ const Select = styled.select`
   }
 `
 
-export default function SearchRelated({ name, formData, setFormData }) {
+export default function SearchRelated({
+  name,
+  formData,
+  setFormData,
+  isPostPage,
+}) {
   const [keyWord, setKeyWord] = useState('')
   const [filteredData, setFilteredDate] = useState(trailsData)
+  const [relatedTrail, setRelatedTrail] = useState('')
 
   const updateSearch = (e) => {
     setKeyWord(e.target.value)
   }
-  const itemsFilter = () => {
+
+  useEffect(() => {
     setFilteredDate(
       trailsData.filter(
         (trail) => trail.toLowerCase().indexOf(keyWord.toLowerCase()) !== -1
       )
     )
-  }
-
-  useEffect(() => {
-    itemsFilter()
-  }, [keyWord])
+    if (Object.keys(formData).length > 0 && !isPostPage) {
+      if (!formData.trail_title) return
+      setRelatedTrail(formData.trail_title)
+    }
+  }, [keyWord, formData, isPostPage])
 
   const handleSelectChange = (e) => {
     setFormData({
@@ -74,10 +81,16 @@ export default function SearchRelated({ name, formData, setFormData }) {
         onChange={(e) => updateSearch(e)}
         value={keyWord}
       />
-      <Select onClick={handleSelectChange}>
-        {filteredData.map((item) => (
-          <option value={item}>{item}</option>
-        ))}
+      <Select onChange={handleSelectChange}>
+        {filteredData.map((item) =>
+          relatedTrail === item ? (
+            <option value={item} selected>
+              {item}
+            </option>
+          ) : (
+            <option value={item}>{item}</option>
+          )
+        )}
       </Select>
     </Wrapper>
   )
