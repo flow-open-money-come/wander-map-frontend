@@ -207,7 +207,8 @@ function TrailPage() {
         .then((res) => {
           const conditionList = res.data
           conditionList.forEach((trail) => {
-            if(trail.TR_CNAME === trailInfo.title) setCondition(trail)
+            if (trail.TR_CNAME === trailInfo.title && trail.TR_TYP !== '全線開放')
+              setCondition(trail)
           })
         })
         .catch((error) => {
@@ -220,7 +221,7 @@ function TrailPage() {
   return (
     <>
       {isLoading ? (
-        <SmallRegionLoading isFullScreen/>
+        <SmallRegionLoading isFullScreen />
       ) : (
         <TrailPageContainer>
           <HeadFlex>
@@ -236,7 +237,7 @@ function TrailPage() {
             )}
           </HeadFlex>
           <InfoAndWeather>
-            <TrailInfo trailInfo={trailInfo} />
+            <TrailInfo trailInfo={trailInfo} condition={condition} />
             <Weather location={trailInfo && trailInfo.location} />
           </InfoAndWeather>
           <TrailMap coordinate={trailInfo && trailInfo.coordinate} />
