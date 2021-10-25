@@ -28,6 +28,10 @@ const PostLink = styled.div`
   top: 0;
   background-color: ${COLOR.white};
   opacity: 0.7;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: ${COLOR.gray};
   svg {
     width: 30px;
     height: 30px;
@@ -55,9 +59,6 @@ const TableContent = styled.tr`
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.md};
   }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.lg};
-  }
 `
 const CoverTd = styled.td`
   display: inline;
@@ -70,18 +71,13 @@ const TrailImg = styled.img`
   object-fit: cover;
   border-radius: ${RADIUS.lg};
   background-color: #eee;
-  ${MEDIA_QUERY.md} {
-    width: 120px;
-    height: 120px;
-  }
 `
 const TrailsTd = styled.td`
   width: 70%;
   text-align: start;
   padding: 10px;
   vertical-align: middle;
-  font-size: ${FONT.lg};
-  font-weight: 700;
+  font-size: ${FONT.md};
   ${MEDIA_QUERY.md} {
     width: 80%;
   }
@@ -121,10 +117,11 @@ export default function UserArticlesManage() {
   const [isLoadingArticles, setIsLoadingArticles] = useState(false)
 
   useEffect(() => {
+    if (!userID) return
     setIsLoadingArticles(true)
     getUserArticles(userID)
       .then((res) => {
-        if (res.data.message) {
+        if (res.data.success) {
           setUserArticlesData(res.data.data)
           setIsLoadingArticles(false)
         }
@@ -139,6 +136,7 @@ export default function UserArticlesManage() {
     <Block>
       {isLoadingArticles && <SmallRegionLoading />}
       <PostLink>
+        新增文章
         <Link to={`../post-article`}>
           <PostIcon />
         </Link>

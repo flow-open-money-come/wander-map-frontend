@@ -149,8 +149,10 @@ export default function ArticlePostPage() {
       setIsLoadingArticle(true)
       getArticles(articleID)
         .then((res) => {
-          setFormData(res.data.data[0])
-          setIsLoadingArticle(false)
+          if (res.data.success) {
+            setFormData(res.data.data[0])
+            setIsLoadingArticle(false)
+          }
         })
         .catch(() => {
           setIsLoadingArticle(false)
@@ -173,17 +175,18 @@ export default function ArticlePostPage() {
       return swal('發文失敗', '標題為必填選項喔！', 'error')
     if (Object.keys(formData).indexOf('content') < 0 || formData.content === '')
       return swal('發文失敗', '內文為必填選項喔！', 'error')
+
     setIsLoadingArticle(true)
     postArticles(formData)
       .then((res) => {
-        if (res.data.message) {
+        if (res.data.success) {
           setIsLoadingArticle(false)
           let articleID = res.data.message.split(' ').slice(-1)[0]
           swal('發佈成功', {
             icon: 'success',
             button: '關閉',
           })
-          history.push(`/articles/${articleID}`)
+          return history.push(`/articles/${articleID}`)
         }
       })
       .catch(() => {
@@ -201,7 +204,7 @@ export default function ArticlePostPage() {
     setIsLoadingArticle(true)
     patchArticle(articleID, formData)
       .then((res) => {
-        if (res.data.message) {
+        if (res.data.success) {
           setIsLoadingArticle(false)
           swal('文章編輯成功', {
             icon: 'success',

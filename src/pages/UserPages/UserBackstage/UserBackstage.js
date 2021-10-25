@@ -65,6 +65,7 @@ const Profile = styled.div`
   position: relative;
   ${MEDIA_QUERY.lg} {
     border: none;
+    border-top: 1px solid ${COLOR.green_light};
     margin: 10px 0;
     padding-bottom: 0px;
     background-color: none;

@@ -117,7 +117,7 @@ export default function UserBackstageTabs({ tab, setTab }) {
         }}
       >
         <TodosIcon />
-        <TabTitle>裝備清單</TabTitle>
+        <TabTitle>待辦事項</TabTitle>
       </TodosTab>
       <CollectTab
         tab={tab}
@@ -135,7 +135,7 @@ export default function UserBackstageTabs({ tab, setTab }) {
         }}
       >
         <LikeArticlesIcon />
-        <TabTitle>按讚心得</TabTitle>
+        <TabTitle>按讚文章</TabTitle>
       </LikeTab>
     </Tabs>
   )

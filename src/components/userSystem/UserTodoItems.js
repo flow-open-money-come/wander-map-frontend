@@ -11,6 +11,9 @@ import {
 } from '../../WebAPI'
 import SmallRegionLoading from '../common/SmallRegionLoading'
 import swal from 'sweetalert'
+import { ReactComponent as CheckIcon } from '../../icons/user/user_todos_check.svg'
+import { ReactComponent as RocketIcon } from '../../icons/user/user_todos_rocket.svg'
+import { ReactComponent as DelIcon } from '../../icons/user/user_todos_del.svg'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -44,6 +47,34 @@ const TodoInput = styled.input.attrs((props) => ({
   }
 `
 
+const Hint = styled.div`
+  width: 100%;
+  text-align: center;
+  color: ${COLOR.gray};
+  background-color: ${COLOR.white};
+  padding: 20px;
+  svg {
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+  }
+  path {
+    stroke: ${COLOR.green};
+  }
+  ${MEDIA_QUERY.lg} {
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+`
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px auto;
+  width: 60%;
+`
+
 export default function UserTodoItems() {
   const { userID } = useParams()
   const [myTodos, setMyTodos] = useState([])
@@ -53,8 +84,10 @@ export default function UserTodoItems() {
     setIsLoadingTodos(true)
     getUserTodos(userID)
       .then((res) => {
-        setMyTodos(res.data.data.todos)
-        setIsLoadingTodos(false)
+        if (res.data.success) {
+          setMyTodos(res.data.data.todos)
+          setIsLoadingTodos(false)
+        }
       })
       .catch(() => {
         setIsLoadingTodos(false)
@@ -71,7 +104,7 @@ export default function UserTodoItems() {
       setIsLoadingTodos(true)
       postUserTodos(userID, { content: value })
         .then((res) => {
-          if (res.data.message) {
+          if (res.data.success) {
             setMyTodos([
               {
                 todo_id: res.data.data.result.insertId,
@@ -79,6 +112,7 @@ export default function UserTodoItems() {
               },
               ...myTodos,
             ])
+            setValue('')
             setIsLoadingTodos(false)
           }
         })
@@ -86,7 +120,6 @@ export default function UserTodoItems() {
           setIsLoadingTodos(false)
           swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         })
-      setValue('')
     }
   }
 
@@ -108,7 +141,7 @@ export default function UserTodoItems() {
           : 1,
     })
       .then((res) => {
-        if (res.data.message) {
+        if (res.data.success) {
           setIsLoadingTodos(false)
         }
       })
@@ -122,12 +155,12 @@ export default function UserTodoItems() {
     setIsLoadingTodos(true)
     deleteUserTodos(userID, todo_id)
       .then((res) => {
-        if (res.data.message) {
+        if (res.data.success) {
           setMyTodos(myTodos.filter((todo) => todo.todo_id !== todo_id))
           setIsLoadingTodos(false)
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setIsLoadingTodos(false)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
@@ -158,12 +191,14 @@ export default function UserTodoItems() {
     if (updateValue.todo_id !== todo_id) return
     setIsLoadingTodos(true)
     patchUserTodos(userID, todo_id, { content: updateValue.content })
-      .then(() => {
-        setIsLoadingTodos(false)
-        swal('已儲存更變！', {
-          icon: 'success',
-          button: '關閉',
-        })
+      .then((res) => {
+        if (res.data.success) {
+          setIsLoadingTodos(false)
+          swal('已儲存更變！', {
+            icon: 'success',
+            button: '關閉',
+          })
+        }
       })
       .catch(() => {
         setIsLoadingTodos(false)
@@ -191,6 +226,17 @@ export default function UserTodoItems() {
           handleToggleIsDone={handleToggleIsDone}
         />
       ))}
+      <Hint>
+        <IconWrapper>
+          <CheckIcon /> 標示待辦事項為已完成 / 未完成
+        </IconWrapper>
+        <IconWrapper>
+          <RocketIcon /> 儲存待辦事項更變
+        </IconWrapper>
+        <IconWrapper>
+          <DelIcon /> 刪除待辦事項
+        </IconWrapper>
+      </Hint>
     </Block>
   )
 }
