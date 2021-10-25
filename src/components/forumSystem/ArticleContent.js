@@ -3,11 +3,8 @@ import styled from 'styled-components'
 import { FONT, COLOR, MEDIA_QUERY, EFFECT } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
-import ReactHtmlParser, {
-  processNodes,
-  convertNodeToElement,
-  htmlparser2,
-} from 'react-html-parser'
+import ReactHtmlParser from 'react-html-parser'
+import { useEffect } from 'react/cjs/react.development'
 
 const UserName = styled(Link)`
   color: ${COLOR.black};
@@ -69,14 +66,13 @@ const ArticleDesc = styled.div`
   border-top: 1px solid ${COLOR.beige};
   margin: 15px 0;
   width: 100%;
-  max-height: 60rem;
+  max-height: fit-content;
   font-size: ${FONT.s};
   line-height: 40px;
   text-overflow: ellipsis;
   overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 10;
-  -webkit-box-orient: vertical;
+  display: flex;
+  flex-direction: column;
 
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
@@ -86,9 +82,6 @@ const ArticleDesc = styled.div`
     props.unfold &&
     `
     overflow: auto;
-    max-height: fit-content;
-    display: flex;
-    flex-direction: column;
    `}
 `
 
@@ -109,6 +102,11 @@ const UnfoldButton = styled.button`
 export default function ArticleContent({ post }) {
   const [unfold, setUnfold] = useState(false)
   const { userInfo } = useContext(AuthContext)
+  const [content, setContent] = useState([])
+
+  useEffect(() => {
+    setContent(post.content)
+  }, [post.content])
 
   return (
     <ArticleContentContainer>
@@ -131,10 +129,26 @@ export default function ArticleContent({ post }) {
           </ArticleDate>
         </UserInfo>
       </ArticleUser>
-      <ArticleDesc unfold={unfold}>{ReactHtmlParser(post.content)}</ArticleDesc>
-      <UnfoldButton unfold={unfold} onClick={() => setUnfold(!unfold)}>
-        {unfold ? '收合' : '展開全文'}
-      </UnfoldButton>
+      <ArticleDesc unfold={unfold}>
+        {content &&
+          ReactHtmlParser(
+            unfold
+              ? content
+              : content[600] !== undefined
+              ? `${content.slice(0, 600)}...`
+              : content.slice(0, 600)
+          )}
+      </ArticleDesc>
+      {content && content[600] !== undefined && (
+        <UnfoldButton
+          unfold={unfold}
+          onClick={() => {
+            setUnfold(!unfold)
+          }}
+        >
+          {unfold ? '收合' : '展開全文'}
+        </UnfoldButton>
+      )}
     </ArticleContentContainer>
   )
 }

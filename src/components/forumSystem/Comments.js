@@ -38,13 +38,15 @@ const CommentsHeader = styled.div`
 
 const UserAvatar = styled.img`
   border: 1px solid ${COLOR.gray_light};
-  min-width: 35px;
-  height: 35px;
+  width: 7vmin;
+  height: 7vmin;
   border-radius: 50%;
-  ${MEDIA_QUERY.lg} {
-    min-width: 50px;
-    height: 50px;
-  }
+
+  ${(props) =>
+    props.authorImg &&
+    `
+    min-width: 7vmin;
+  `}
 `
 
 const InputField = styled.input`
@@ -300,7 +302,14 @@ export default function Comments({ isMessage }) {
       }
     }
     getMessage()
-  }, [setInputValue, setEditValue, setLoadingComment, loadingComment, userInfo])
+  }, [
+    setInputValue,
+    setEditValue,
+    setLoadingComment,
+    loadingComment,
+    userInfo,
+    id,
+  ])
 
   const handleSubmit = async (e) => {
     setReminder('')
@@ -392,6 +401,7 @@ export default function Comments({ isMessage }) {
         )}
         <CommentsHeader>
           <UserAvatar
+            authorImg
             src={
               userInfo ? userInfo.icon_url : 'https://i.imgur.com/r50z0vv.png'
             }

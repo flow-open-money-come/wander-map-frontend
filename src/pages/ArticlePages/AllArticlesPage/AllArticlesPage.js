@@ -100,7 +100,7 @@ function AllArticlesPage() {
         } else {
           getArticles('?limit=5')
             .then((res) => {
-              if (res.data.status === 200) {
+              if (res.data.data.length > 0) {
                 setSlides(res.data.data)
                 setIsLoading(false)
               }
@@ -121,7 +121,7 @@ function AllArticlesPage() {
         console.log(err)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
-  }, [])
+  }, [setIsLoading])
 
   useEffect(() => {
     setIsLoading(true)
@@ -145,7 +145,7 @@ function AllArticlesPage() {
         console.log(err)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
-  }, [tagValue, filterData])
+  }, [tagValue, filterData, setIsLoading])
 
   const handleClickLoadMore = () => {
     setIsLoading(true)
