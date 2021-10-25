@@ -15,7 +15,7 @@ import TrailMap from '../../../components/trailSystem/TrailMap'
 import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
-import { getTrails, getTrailArticles, getUserCollect } from '../../../WebAPI'
+import { getTrails, getTrailArticles, getUserCollect, getTrailsCondition } from '../../../WebAPI'
 import { useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
@@ -162,6 +162,7 @@ function TrailPage() {
   const [loadingCollect, setLoadingCollect] = useState(false)
   const history = useHistory()
   const { thumb, setThumb, handleClickLike } = useLike()
+  const [ condition, setCondition ] = useState(null) 
 
   useEffect(() => {
     setIsLoading(true)
@@ -177,7 +178,7 @@ function TrailPage() {
         console.error(error)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
-    getTrailArticles(id, '?limit=3')
+    getTrailArticles(id, '')
       .then((res) => setArticles(res.data.data))
       .catch((error) => {
         console.error(error)
@@ -199,6 +200,22 @@ function TrailPage() {
         })
     }
   }, [userInfo, id, setThumb, loadingCollect])
+
+  useEffect(() => {
+    if (trailInfo) {
+      getTrailsCondition()
+        .then((res) => {
+          const conditionList = res.data
+          conditionList.forEach((trail) => {
+            if(trail.TR_CNAME === trailInfo.title) setCondition(trail)
+          })
+        })
+        .catch((error) => {
+          console.error(error)
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+        })
+    }
+  }, [trailInfo])
 
   return (
     <>

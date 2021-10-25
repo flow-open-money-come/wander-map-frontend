@@ -60,11 +60,6 @@ const InfoRow = styled.div`
     font-size: ${FONT.md};
   }
 `
-// const InfoDifficulty = styled(InfoLocation)``
-// const InfoAltitude = styled(InfoLocation)``
-// const InfoLength = styled(InfoLocation)``
-// const InfoSeason = styled(InfoLocation)``
-// const InfoFeature = styled(InfoLocation)``
 
 function TrailInfo({ trailInfo }) {
 
