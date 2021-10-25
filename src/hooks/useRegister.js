@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import useUserInfoValidation from './useUserInfoValidation'
 import { AuthContext } from '../context'
@@ -56,6 +56,13 @@ export default function useRegister() {
         }
       })
   }
+  useEffect(() => {
+    swal({
+      title: '提醒您',
+      text: '此網站為練習用途，為資安考量，請勿輸入真實資訊！',
+      button: '知道了',
+    })
+  }, [])
   return {
     handleUserInfoChange,
     handleRegister,
