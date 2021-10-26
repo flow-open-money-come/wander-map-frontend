@@ -71,7 +71,6 @@ export default function CategoryTags({
     { id: 13, content: '專業分享', isChecked: false },
     { id: 14, content: 'GPX', isChecked: false },
   ])
-  const [value, setValue] = useState('')
 
   const handleIsChecked = (id) => {
     setTags(
@@ -83,15 +82,6 @@ export default function CategoryTags({
         }
       })
     )
-  }
-
-  const handleTagsChange = (e) => {
-    let selectedTags = [e.target.value, ...value]
-    setValue(selectedTags)
-    setFormData({
-      ...formData,
-      [name]: selectedTags,
-    })
   }
 
   useEffect(() => {
@@ -112,10 +102,22 @@ export default function CategoryTags({
     }
   }, [formData, isPostPage, tags])
 
+  useEffect(() => {
+    let selectedTags = []
+    tags.forEach((tag) => {
+      if (tag.isChecked) selectedTags.push(tag.content)
+    })
+    setFormData({
+      ...formData,
+      [name]: selectedTags,
+    })
+  }, [tags])
+
   return (
-    <CategoryWrapper onChange={handleTagsChange}>
+    <CategoryWrapper>
       {tags.map((tag) => (
         <CategoryBtnLabel
+          key={tag.id}
           isChecked={tag.isChecked}
           onChange={() => {
             handleIsChecked(tag.id)

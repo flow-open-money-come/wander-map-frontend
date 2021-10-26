@@ -1,6 +1,8 @@
 import axios from 'axios'
+// import swal from 'sweetalert'
 import config from './config'
 import { getAuthToken } from './utils'
+import { setAuthToken } from './utils'
 
 const instance = axios.create({
   baseURL: config.apiHost,
@@ -11,6 +13,34 @@ instance.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${getAuthToken()}`
   return config
 })
+
+instance.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    // 當不是 refresh token 作業發生 401 才需要更新 access token 並重發
+    // 如果是就略過此刷新 access token 作業，直接不處理(因為 catch 已經攔截處理更新失敗的情況了)
+
+    const refreshTokenUrl = '/users/refresh'
+    if (error.config.url !== refreshTokenUrl) {
+      const originalRequest = error.config
+      return refreshAccessToken()
+        .then((res) => {
+          setAuthToken(res.data.data.token)
+          originalRequest.headers.Authorization =
+            'Bearer ' + res.data.data.token
+          return axios(originalRequest)
+        })
+        .catch((err) => {
+          setAuthToken('')
+          alert(`${err.response.status}: 作業逾時或無相關使用授權，請重新登入`)
+          window.location.href = '/login'
+          return Promise.reject(error)
+        })
+    }
+  }
+)
 
 // user
 export const userLogin = (payload) => instance.post('/users/login', payload)

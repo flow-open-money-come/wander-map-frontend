@@ -133,15 +133,11 @@ export default function ArticlePostPage() {
   let isPostPage = useRouteMatch('/post-article')
   const { articleID } = useParams()
   const history = useHistory()
-  const [isLoadingHandleArticle, setIsLoadingArticle] = useState(false)
-
-  if (!userInfo) {
-    swal('無權限', '請先登入或註冊以發表文章', 'error')
-    history.push('/login')
-  }
+  const [isLoadingArticle, setIsLoadingArticle] = useState(false)
+  const [isArticleRetrieve, setIsArticleRetrieve] = useState(false)
 
   const [formData, setFormData] = useState({
-    author_id: userInfo.user_id,
+    author_id: userInfo ? userInfo.user_id : null,
   })
 
   useEffect(() => {
@@ -152,9 +148,10 @@ export default function ArticlePostPage() {
           if (res.data.success) {
             setFormData(res.data.data[0])
             setIsLoadingArticle(false)
+            setIsArticleRetrieve(true)
           }
         })
-        .catch(() => {
+        .catch((err) => {
           setIsLoadingArticle(false)
           swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         })
@@ -171,6 +168,10 @@ export default function ArticlePostPage() {
 
   const handlePostSubmit = (e) => {
     e.preventDefault()
+    if (!userInfo) {
+      swal('無權限', '請先登入或註冊以發表文章', 'error')
+      history.push('/login')
+    }
     if (Object.keys(formData).indexOf('title') < 0 || formData.title === '')
       return swal('發文失敗', '標題為必填選項喔！', 'error')
     if (Object.keys(formData).indexOf('content') < 0 || formData.content === '')
@@ -197,9 +198,14 @@ export default function ArticlePostPage() {
 
   const handlePatchSubmit = (e) => {
     e.preventDefault()
-    if (Object.keys(formData).indexOf('title') < 0 || formData.title === '')
+    if (!userInfo) {
+      swal('無權限', '請先登入或註冊以發表文章', 'error')
+      history.push('/login')
+    }
+    if (!isArticleRetrieve || isPostPage) return
+    if (formData.title === '')
       return swal('發文失敗', '標題為必填選項喔！', 'error')
-    if (Object.keys(formData).indexOf('content') < 0 || formData.content === '')
+    if (formData.content === '')
       return swal('發文失敗', '內文為必填選項喔！', 'error')
     setIsLoadingArticle(true)
     patchArticle(articleID, formData)
@@ -212,7 +218,7 @@ export default function ArticlePostPage() {
           })
         }
       })
-      .catch(() => {
+      .catch((err) => {
         setIsLoadingArticle(false)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
@@ -220,7 +226,7 @@ export default function ArticlePostPage() {
 
   return (
     <ArticlePostWrapper>
-      {isLoadingHandleArticle && <SmallRegionLoading />}
+      {isLoadingArticle && <SmallRegionLoading />}
       {articleID ? (
         <PageName>編輯心得</PageName>
       ) : (
@@ -304,6 +310,7 @@ export default function ArticlePostPage() {
           formData={formData}
           setFormData={setFormData}
           isPostPage={isPostPage}
+          isArticleRetrieve={isArticleRetrieve}
         />
       </FormWrapper>
       <FormWrapper>
@@ -321,7 +328,7 @@ export default function ArticlePostPage() {
       <FormWrapper>
         <FormTitle />
         <SubmitBtn>
-          {articleID ? (
+          {!isPostPage ? (
             <Submit onClick={handlePatchSubmit} />
           ) : (
             <Submit onClick={handlePostSubmit} />
