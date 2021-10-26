@@ -363,32 +363,29 @@ export default function Comments({ isMessage }) {
       return e.preventDefault
     }
     try {
-      await swal({
+      const willDelete = await swal({
         title: '刪除',
         text: '確定要刪除嗎',
         icon: 'warning',
+        buttons: ['取消', '確定'],
         dangerMode: true,
       })
+      if (willDelete) {
+        setLoadingComment(true)
+        const res = await isMessageOrNot(deleteMessage, deleteComment)(
+          id,
+          messageId
+        )
+        if (res.status === 200) {
+          swal('已刪除', {
+            icon: 'success',
+          })
+          setLoadingComment(false)
+        }
+      }
     } catch (err) {
       console.log(err)
       swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-    }
-    setLoadingComment(true)
-    try {
-      let res = await isMessageOrNot(deleteMessage, deleteComment)(
-        id,
-        messageId
-      )
-      if (res.status === 200) {
-        swal('已刪除', {
-          icon: 'success',
-        })
-        setLoadingComment(false)
-      }
-    } catch (err) {
-      swal('刪除失敗', {
-        icon: 'error',
-      })
       setLoadingComment(false)
     }
   }
