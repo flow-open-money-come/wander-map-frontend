@@ -72,6 +72,7 @@ const Title = styled.div`
   width: fit-content;
   max-width: 80%;
   padding: 10px 20px;
+  word-break: break-word;
   background: ${COLOR.white};
   font-size: ${FONT.md};
   margin-bottom: 15px;

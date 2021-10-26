@@ -174,7 +174,11 @@ export default function TrailPostPage() {
     if (!isPostPage) {
       getTrails(trailID)
         .then((res) => {
-          setFormData(res.data.data[0])
+          setFormData({
+            ...res.data.data[0],
+            coordinateX: res.data.data[0].coordinate.x,
+            coordinateY: res.data.data[0].coordinate.y
+          })
         })
         .catch((err) => {
           console.log(err)
