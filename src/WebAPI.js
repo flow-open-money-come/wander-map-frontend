@@ -3,7 +3,7 @@ import config from './config'
 import { getAuthToken } from './utils'
 
 const instance = axios.create({
-  baseURL: 'http://localhost:5000/api/v1/'
+  baseURL: config.apiHost
 })
 
 instance.interceptors.request.use((config) => {
