@@ -1,11 +1,14 @@
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
 import useUserInfoValidation from '../../hooks/useUserInfoValidation'
-import { patchUserInfo } from '../../WebAPI'
+import { patchUserInfo, refreshAccessToken } from '../../WebAPI'
 import { AuthContext } from '../../context'
 import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
 import UserUploadImg from '../../components/userSystem/UserUploadImg'
+import swal from 'sweetalert'
+import { setAuthToken } from '../../utils'
+import { LoadingContext } from '../../context'
 
 const ModifyField = styled.div`
   z-index: 10;
@@ -96,6 +99,7 @@ export default function UserUpdateBox({
     password: '',
     confirmPassword: '',
   })
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
 
   const handleUserInfoChange = (e) => {
     const { name, value } = e.target
@@ -113,26 +117,46 @@ export default function UserUpdateBox({
       if (!validateUserInfos(updateUserData, Object.keys(updateUserData)[i]))
         return
     }
+    setIsLoading(true)
     patchUserInfo(popUp.key, updateUserData)
       .then((res) => {
-        console.log(res.data)
-        console.log('修改成功')
-        setUserData({
-          ...userData,
-          nickname: updateUserData.nickname,
-          icon_url: updateUserData.iconUrl,
-          iconUrl: updateUserData.iconUrl,
-        })
-        setUserInfo({
-          ...userInfo,
-          nickname: updateUserData.nickname,
-          icon_url: updateUserData.iconUrl,
-          iconUrl: updateUserData.iconUrl,
-        })
+        if (res.data.success) {
+          setUserData({
+            ...userData,
+            nickname: updateUserData.nickname,
+            icon_url: updateUserData.iconUrl,
+            iconUrl: updateUserData.iconUrl,
+          })
+          setUserInfo({
+            ...userInfo,
+            nickname: updateUserData.nickname,
+            icon_url: updateUserData.iconUrl,
+            iconUrl: updateUserData.iconUrl,
+          })
+          refreshAccessToken()
+            .then((res) => {
+              if (res.data.success) {
+                setAuthToken(res.data.data.token)
+                setIsLoading(false)
+                swal('修改成功', {
+                  icon: 'success',
+                  button: '關閉',
+                })
+              }
+            })
+            .catch(() => {
+              setIsLoading(false)
+              swal(
+                'Oh 不！',
+                '請求失敗！請稍候再試一次，或者聯繫我們。',
+                'error'
+              )
+            })
+        }
       })
-      .catch((err) => {
-        console.log(err.response)
-        console.log('修改不成功')
+      .catch(() => {
+        setIsLoading(false)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
     setPopUp({ ...popUp, isShow: false })
   }
