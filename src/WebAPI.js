@@ -19,20 +19,22 @@ instance.interceptors.response.use(
     return response
   },
   (error) => {
-    const refreshTokenUrl = '/users/refresh'
-    if (error.config.url !== refreshTokenUrl) {
-      const originalRequest = error.config
-      return refreshAccessToken()
-        .then((res) => {
-          setAuthToken(res.data.data.token)
-          originalRequest.headers.Authorization =
-            'Bearer ' + res.data.data.token
-          return axios(originalRequest)
-        })
-        .catch(() => {
-          setAuthToken('')
-          swal('作業逾期', '請重新登入', 'error')
-        })
+    if (error.response.status === 401) {
+      const refreshTokenUrl = '/users/refresh'
+      if (error.config.url !== refreshTokenUrl) {
+        const originalRequest = error.config
+        return refreshAccessToken()
+          .then((res) => {
+            setAuthToken(res.data.data.token)
+            originalRequest.headers.Authorization =
+              'Bearer ' + res.data.data.token
+            return axios(originalRequest)
+          })
+          .catch(() => {
+            setAuthToken('')
+            swal('作業逾期', '請重新登入', 'error')
+          })
+      }
     }
     return Promise.reject(error)
   }
@@ -52,8 +54,8 @@ export const patchUserRole = (userID, role) =>
 export const getUserInfo = (userID) => instance.get(`/users/${userID}`)
 export const patchUserInfo = (userID, data) =>
   instance.patch(`/users/${userID}`, data)
-export const getUserArticles = (userID) =>
-  instance.get(`/users/${userID}/articles`)
+export const getUserArticles = (userID, params) =>
+  instance.get(`/users/${userID}/articles${params}`)
 export const getUserCollect = (userID) =>
   instance.get(`/users/${userID}/collected-trails`)
 export const getUserLiked = (userID) =>

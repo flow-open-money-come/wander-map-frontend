@@ -119,7 +119,7 @@ export default function UserArticlesManage() {
   useEffect(() => {
     if (!userID) return
     setIsLoadingArticles(true)
-    getUserArticles(userID)
+    getUserArticles(userID, '?limit=100')
       .then((res) => {
         if (res.data.success) {
           setUserArticlesData(res.data.data)

@@ -77,7 +77,6 @@ export default function UserUploadImg({
 
     postImgur(imageData)
       .then((res) => {
-        // 預覽
         reader.onload = function () {
           setFileSrc(reader.result)
         }
@@ -85,7 +84,6 @@ export default function UserUploadImg({
         return res
       })
       .then((res) => {
-        // 回傳值
         let dataUrl = res.data.data.link
         setUpdateUserData({
           ...updateUserData,
@@ -102,6 +100,10 @@ export default function UserUploadImg({
   const handleClear = (e) => {
     e.preventDefault()
     setFileSrc(null)
+    setUpdateUserData({
+      ...updateUserData,
+      [name]: '',
+    })
   }
 
   return (

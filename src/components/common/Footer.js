@@ -1,6 +1,8 @@
 import styled from 'styled-components'
 import { COLOR, EFFECT, FONT, MEDIA_QUERY, RADIUS } from '../../constants/style'
 import { ReactComponent as GitHubIcon } from '../../icons/GitHub.svg'
+import { useContext } from 'react'
+import { LoadingContext } from '../../context'
 
 const FooterContainer = styled.footer`
   width: 100%;
@@ -9,8 +11,7 @@ const FooterContainer = styled.footer`
   font-size: ${FONT.s};
   line-height: 1.5rem;
   padding: 10px;
-  position: relative;
-  left: 0px;
+  position: sticky;
   bottom: 0px;
   display: flex;
   flex-direction: column;
@@ -20,6 +21,10 @@ const FooterContainer = styled.footer`
   ${MEDIA_QUERY.lg} {
     flex-direction: row;
   }
+  ${(props) =>
+    props.$isLoading &&
+    `
+  margin-top: 86vh`}
 `
 
 const GitHubLink = styled.a`
@@ -46,9 +51,10 @@ const GitHubLink = styled.a`
 `
 
 export default function Footer() {
+  const { isLoading } = useContext(LoadingContext)
   return (
     <>
-      <FooterContainer>
+      <FooterContainer $isLoading={isLoading}>
         Copyright © 2021 Flow Open Money Come All Rights Reserved.
         花開富貴股份有限公司版權所有。
         <GitHubLink href='https://github.com/flow-open-money-come'>
