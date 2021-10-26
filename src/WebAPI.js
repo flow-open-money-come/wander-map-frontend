@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import swal from 'sweetalert'
+import swal from 'sweetalert'
 import config from './config'
 import { getAuthToken } from './utils'
 import { setAuthToken } from './utils'
@@ -19,9 +19,6 @@ instance.interceptors.response.use(
     return response
   },
   (error) => {
-    // 當不是 refresh token 作業發生 401 才需要更新 access token 並重發
-    // 如果是就略過此刷新 access token 作業，直接不處理(因為 catch 已經攔截處理更新失敗的情況了)
-
     const refreshTokenUrl = '/users/refresh'
     if (error.config.url !== refreshTokenUrl) {
       const originalRequest = error.config
@@ -32,13 +29,12 @@ instance.interceptors.response.use(
             'Bearer ' + res.data.data.token
           return axios(originalRequest)
         })
-        .catch((err) => {
+        .catch(() => {
           setAuthToken('')
-          alert(`${err.response.status}: 作業逾時或無相關使用授權，請重新登入`)
-          window.location.href = '/login'
-          return Promise.reject(error)
+          swal('作業逾期', '請重新登入', 'error')
         })
     }
+    return Promise.reject(error)
   }
 )
 
