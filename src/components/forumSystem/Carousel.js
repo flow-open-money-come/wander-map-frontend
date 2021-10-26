@@ -296,7 +296,10 @@ export default function Carousel({ slides }) {
                       <UserInfo>
                         <UserName>{slide.nickname}</UserName>
                         <ArticleDate>
-                          {new Date(slide.created_at).toLocaleString('ja')}
+                          {new Date(
+                            new Date(slide.created_at).getTime() +
+                              8 * 3600 * 1000
+                          ).toLocaleString('ja')}
                         </ArticleDate>
                       </UserInfo>
                     </ArticleUser>

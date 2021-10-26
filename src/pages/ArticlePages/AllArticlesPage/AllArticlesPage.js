@@ -231,7 +231,9 @@ function AllArticlesPage() {
                 title={post.title}
                 user={post.nickname}
                 tags={!post.tag_names ? [] : post.tag_names.split(',')}
-                date={new Date(post.created_at).toLocaleString('ja')}
+                date={new Date(
+                  new Date(post.created_at).getTime() + 8 * 3600 * 1000
+                ).toLocaleString('ja')}
                 content={post.content}
                 avatarImgSrc={post.user_icon}
                 articlePage={`/articles/${post.article_id}`}

@@ -125,7 +125,9 @@ export default function ArticleContent({ post }) {
             {post.nickname}
           </UserName>
           <ArticleDate>
-            {new Date(post.created_at).toLocaleString('ja')}
+            {new Date(
+              new Date(post.created_at).getTime() + 8 * 3600 * 1000
+            ).toLocaleString('ja')}
           </ArticleDate>
         </UserInfo>
       </ArticleUser>

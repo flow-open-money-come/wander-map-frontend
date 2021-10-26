@@ -72,7 +72,9 @@ function TrailArticles({ articles }) {
             title={article.title}
             user={article.author_name}
             tags={!article.tag_names ? [] : article.tag_names.split(',')}
-            date={new Date(article.departure_time).toLocaleString('ja')}
+            date={new Date(
+              new Date(article.created_at).getTime() + 8 * 3600 * 1000
+            ).toLocaleString('ja')}
             content={article.content}
             articlePage={`/articles/${article.article_id}`}
             authorId={article.author_id}

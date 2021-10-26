@@ -41,6 +41,7 @@ const UserAvatar = styled.img`
   width: 7vmin;
   height: 7vmin;
   border-radius: 50%;
+  object-fit: cover;
 
   ${(props) =>
     props.authorImg &&
@@ -385,8 +386,8 @@ export default function Comments({ isMessage }) {
       }
     } catch (err) {
       console.log(err)
-      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       setLoadingComment(false)
+      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
     }
   }
 
@@ -444,7 +445,9 @@ export default function Comments({ isMessage }) {
               </CommentViewInfo>
               <CommentBtn>
                 <CommentTime>
-                  {new Date(message.created_at).toLocaleString('ja')}
+                  {new Date(
+                    new Date(message.created_at).getTime() + 8 * 3600 * 1000
+                  ).toLocaleString('ja')}
                 </CommentTime>
                 {userInfo &&
                   (userInfo.user_id === message.author_id ||

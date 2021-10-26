@@ -106,7 +106,9 @@ export default function UserLike() {
               title={article.title}
               user={article.nickname}
               tags={!article.tag_names ? [] : article.tag_names.split(',')}
-              date={article.created_at}
+              date={new Date(
+                new Date(article.created_at).getTime() + 8 * 3600 * 1000
+              ).toLocaleString('ja')}
               content={article.content ? article.content : ''}
               lessRwd={true}
               articlePage={`/articles/${article.article_id}`}
