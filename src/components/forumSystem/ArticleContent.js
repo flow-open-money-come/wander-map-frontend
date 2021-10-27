@@ -74,6 +74,11 @@ const ArticleDesc = styled.div`
   display: flex;
   flex-direction: column;
 
+  img {
+    width: 90%;
+    height: 90%;
+  }
+
   ${MEDIA_QUERY.lg} {
     font-size: ${FONT.md};
   }

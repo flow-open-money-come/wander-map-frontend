@@ -10,8 +10,13 @@ import { FONT, MEDIA_QUERY } from '../../constants/style'
 const EditorWrapper = styled.div`
   width: 320px;
   margin-bottom: 10px;
-  ${MEDIA_QUERY.lg} {
+  line-height: 1.5rem;
+  ${MEDIA_QUERY.md} {
     width: 500px;
+    font-size: ${FONT.md};
+  }
+  ${MEDIA_QUERY.lg} {
+    width: 700px;
     font-size: ${FONT.md};
   }
 `
@@ -43,7 +48,7 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
           editor.editing.view.change((writer) => {
             writer.setStyle(
               'height',
-              '300px',
+              '600px',
               editor.editing.view.document.getRoot()
             )
           })
