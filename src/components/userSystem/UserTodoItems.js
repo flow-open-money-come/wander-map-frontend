@@ -9,6 +9,11 @@ import {
   patchUserTodos,
   deleteUserTodos,
 } from '../../WebAPI'
+import SmallRegionLoading from '../common/SmallRegionLoading'
+import swal from 'sweetalert'
+import { ReactComponent as CheckIcon } from '../../icons/user/user_todos_check.svg'
+import { ReactComponent as RocketIcon } from '../../icons/user/user_todos_rocket.svg'
+import { ReactComponent as DelIcon } from '../../icons/user/user_todos_del.svg'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -18,7 +23,6 @@ const Block = styled.div`
   margin: 0 auto;
   height: 400px;
   overflow-y: scroll;
-  overflow-x: hidden;
 `
 
 const TodoInput = styled.input.attrs((props) => ({
@@ -43,48 +47,82 @@ const TodoInput = styled.input.attrs((props) => ({
   }
 `
 
+const Hint = styled.div`
+  width: 100%;
+  text-align: center;
+  color: ${COLOR.gray};
+  background-color: ${COLOR.white};
+  padding: 20px;
+  svg {
+    width: 15px;
+    height: 15px;
+    margin-right: 10px;
+  }
+  path {
+    stroke: ${COLOR.green};
+  }
+  ${MEDIA_QUERY.lg} {
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+`
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 10px auto;
+  width: 60%;
+`
+
 export default function UserTodoItems() {
   const { userID } = useParams()
   const [myTodos, setMyTodos] = useState([])
+  const [isLoadingTodos, setIsLoadingTodos] = useState(false)
 
   useEffect(() => {
+    setIsLoadingTodos(true)
     getUserTodos(userID)
       .then((res) => {
-        setMyTodos(res.data.data.todos)
-        console.log(res.data.data.todos)
+        if (res.data.success) {
+          setMyTodos(res.data.data.todos)
+          setIsLoadingTodos(false)
+        }
       })
-      .catch((err) => {
-        console.log(err.response)
+      .catch(() => {
+        setIsLoadingTodos(false)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
-  }, [])
+  }, [userID])
 
-  //新增
   const [value, setValue] = useState('')
   const handleInputChange = (e) => {
     setValue(e.target.value)
   }
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
+      setIsLoadingTodos(true)
       postUserTodos(userID, { content: value })
         .then((res) => {
-          console.log(res.data)
-          console.log('新增成功')
-          setMyTodos([
-            {
-              todo_id: res.data.data.result.insertId,
-              content: value,
-            },
-            ...myTodos,
-          ])
+          if (res.data.success) {
+            setMyTodos([
+              {
+                todo_id: res.data.data.result.insertId,
+                content: value,
+              },
+              ...myTodos,
+            ])
+            setValue('')
+            setIsLoadingTodos(false)
+          }
         })
-        .catch((err) => {
-          console.log(err.response)
+        .catch(() => {
+          setIsLoadingTodos(false)
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         })
-      setValue('')
     }
   }
 
-  //已完成未完成
   const handleToggleIsDone = (todo_id) => {
     setMyTodos(
       myTodos.map((todo) => {
@@ -95,6 +133,7 @@ export default function UserTodoItems() {
         }
       })
     )
+    setIsLoadingTodos(true)
     patchUserTodos(userID, todo_id, {
       isDone:
         myTodos.filter((todo) => todo.todo_id === todo_id)[0].is_done === 1
@@ -102,34 +141,38 @@ export default function UserTodoItems() {
           : 1,
     })
       .then((res) => {
-        console.log(res.data)
-        console.log('修改成功')
+        if (res.data.success) {
+          setIsLoadingTodos(false)
+        }
       })
-      .catch((err) => {
-        console.log(err.response)
+      .catch(() => {
+        setIsLoadingTodos(false)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }
-  //刪除
+
   const handleDeleteTodo = (todo_id) => {
+    setIsLoadingTodos(true)
     deleteUserTodos(userID, todo_id)
       .then((res) => {
-        console.log(res.data)
-        console.log('刪除成功')
-        setMyTodos(myTodos.filter((todo) => todo.todo_id !== todo_id))
+        if (res.data.success) {
+          setMyTodos(myTodos.filter((todo) => todo.todo_id !== todo_id))
+          setIsLoadingTodos(false)
+        }
       })
-      .catch((err) => {
-        console.log(err.response.data)
+      .catch(() => {
+        setIsLoadingTodos(false)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }
-  //編輯
-  const [updateValue, setUpdateValue] = useState()
+
+  const [updateValue, setUpdateValue] = useState('')
   const handleUpdateChange = (todo_id, e) => {
     setUpdateValue({
       ...updateValue,
       todo_id: todo_id,
       content: e.target.value,
     })
-    console.log(e.target.value)
     setMyTodos(
       myTodos.map((todo) => {
         if (todo.todo_id !== todo_id) return todo
@@ -140,24 +183,33 @@ export default function UserTodoItems() {
       })
     )
   }
+
   const handleUpdateTodo = (todo_id, e) => {
     if (!todo_id) {
       e.preventDefault()
     }
     if (updateValue.todo_id !== todo_id) return
+    setIsLoadingTodos(true)
     patchUserTodos(userID, todo_id, { content: updateValue.content })
       .then((res) => {
-        console.log(res.data)
-        console.log('編輯成功')
+        if (res.data.success) {
+          setIsLoadingTodos(false)
+          swal('已儲存更變！', {
+            icon: 'success',
+            button: '關閉',
+          })
+        }
       })
-      .catch((err) => {
-        console.log(err.response)
+      .catch(() => {
+        setIsLoadingTodos(false)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
     setUpdateValue('')
   }
 
   return (
     <Block>
+      {isLoadingTodos && <SmallRegionLoading />}
       <TodoInput
         placeholder='點擊新增待辦清單'
         value={value}
@@ -174,6 +226,17 @@ export default function UserTodoItems() {
           handleToggleIsDone={handleToggleIsDone}
         />
       ))}
+      <Hint>
+        <IconWrapper>
+          <CheckIcon /> 標示待辦事項為已完成 / 未完成
+        </IconWrapper>
+        <IconWrapper>
+          <RocketIcon /> 儲存待辦事項更變
+        </IconWrapper>
+        <IconWrapper>
+          <DelIcon /> 刪除待辦事項
+        </IconWrapper>
+      </Hint>
     </Block>
   )
 }

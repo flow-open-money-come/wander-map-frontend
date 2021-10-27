@@ -12,6 +12,7 @@ import {
 import { ReactComponent as ArticleIcon } from '../../../icons/user/user_article.svg'
 import { ReactComponent as EmailIcon } from '../../../icons/user/user_email.svg'
 import { ReactComponent as NicknameIcon } from '../../../icons/user/user_nickname.svg'
+import ReactHtmlParser from 'react-html-parser'
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -254,7 +255,9 @@ export default function UserOverviewPage() {
             </Link>
             <Articles>
               <ArticlesTitle>{article.title}</ArticlesTitle>
-              <ArticlesContent>{article.content}</ArticlesContent>
+              <ArticlesContent>
+                {ReactHtmlParser(article.content)}
+              </ArticlesContent>
               <ArticlesDate>
                 {new Date(article.created_at).toLocaleString('ja')}
               </ArticlesDate>

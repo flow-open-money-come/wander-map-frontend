@@ -38,13 +38,16 @@ const CommentsHeader = styled.div`
 
 const UserAvatar = styled.img`
   border: 1px solid ${COLOR.gray_light};
-  min-width: 35px;
-  height: 35px;
+  width: 7vmin;
+  height: 7vmin;
   border-radius: 50%;
-  ${MEDIA_QUERY.lg} {
-    min-width: 50px;
-    height: 50px;
-  }
+  object-fit: cover;
+
+  ${(props) =>
+    props.authorImg &&
+    `
+    min-width: 7vmin;
+  `}
 `
 
 const InputField = styled.input`
@@ -300,7 +303,14 @@ export default function Comments({ isMessage }) {
       }
     }
     getMessage()
-  }, [setInputValue, setEditValue, setLoadingComment, loadingComment, userInfo])
+  }, [
+    setInputValue,
+    setEditValue,
+    setLoadingComment,
+    loadingComment,
+    userInfo,
+    id,
+  ])
 
   const handleSubmit = async (e) => {
     setReminder('')
@@ -354,33 +364,30 @@ export default function Comments({ isMessage }) {
       return e.preventDefault
     }
     try {
-      await swal({
+      const willDelete = await swal({
         title: '刪除',
         text: '確定要刪除嗎',
         icon: 'warning',
+        buttons: ['取消', '確定'],
         dangerMode: true,
       })
-    } catch (err) {
-      console.log(err)
-      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-    }
-    setLoadingComment(true)
-    try {
-      let res = await isMessageOrNot(deleteMessage, deleteComment)(
-        id,
-        messageId
-      )
-      if (res.status === 200) {
-        swal('已刪除', {
-          icon: 'success',
-        })
-        setLoadingComment(false)
+      if (willDelete) {
+        setLoadingComment(true)
+        const res = await isMessageOrNot(deleteMessage, deleteComment)(
+          id,
+          messageId
+        )
+        if (res.status === 200) {
+          swal('已刪除', {
+            icon: 'success',
+          })
+          setLoadingComment(false)
+        }
       }
     } catch (err) {
-      swal('刪除失敗', {
-        icon: 'error',
-      })
+      console.log(err)
       setLoadingComment(false)
+      swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
     }
   }
 
@@ -392,6 +399,7 @@ export default function Comments({ isMessage }) {
         )}
         <CommentsHeader>
           <UserAvatar
+            authorImg
             src={
               userInfo ? userInfo.icon_url : 'https://i.imgur.com/r50z0vv.png'
             }
@@ -437,7 +445,9 @@ export default function Comments({ isMessage }) {
               </CommentViewInfo>
               <CommentBtn>
                 <CommentTime>
-                  {new Date(message.created_at).toLocaleString('ja')}
+                  {new Date(
+                    new Date(message.created_at).getTime() + 8 * 3600 * 1000
+                  ).toLocaleString('ja')}
                 </CommentTime>
                 {userInfo &&
                   (userInfo.user_id === message.author_id ||

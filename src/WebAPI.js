@@ -1,6 +1,8 @@
 import axios from 'axios'
+import swal from 'sweetalert'
 import config from './config'
 import { getAuthToken } from './utils'
+import { setAuthToken } from './utils'
 
 const instance = axios.create({
   baseURL: config.apiHost2,
@@ -11,6 +13,33 @@ instance.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${getAuthToken()}`
   return config
 })
+
+// jwt 2.0
+instance.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      const refreshTokenUrl = '/users/refresh'
+      if (error.config.url !== refreshTokenUrl) {
+        const originalRequest = error.config
+        return refreshAccessToken()
+          .then((res) => {
+            setAuthToken(res.data.data.token)
+            originalRequest.headers.Authorization =
+              'Bearer ' + res.data.data.token
+            return axios(originalRequest)
+          })
+          .catch(() => {
+            setAuthToken('')
+            swal('作業逾期', '請重新登入', 'error')
+          })
+      }
+    }
+    return Promise.reject(error)
+  }
+)
 
 // user
 export const userLogin = (payload) => instance.post('/users/login', payload)
@@ -26,8 +55,8 @@ export const patchUserRole = (userID, role) =>
 export const getUserInfo = (userID) => instance.get(`/users/${userID}`)
 export const patchUserInfo = (userID, data) =>
   instance.patch(`/users/${userID}`, data)
-export const getUserArticles = (userID) =>
-  instance.get(`/users/${userID}/articles`)
+export const getUserArticles = (userID, params) =>
+  instance.get(`/users/${userID}/articles/${params}`)
 export const getUserCollect = (userID) =>
   instance.get(`/users/${userID}/collected-trails`)
 export const getUserLiked = (userID) =>
@@ -126,8 +155,7 @@ export const deleteMessage = (articleID, messageID) =>
 // 其他 IMGUR WEATHER 等等
 export const getWeatherInfo = (country, town) =>
   axios.get(
-    config.weatherHost,
-    `${country}?Authorization=${process.env.REACT_APP_WEATHER_TOKEN}&locationName=${town}&elementName=T,Wx,PoP12h`
+    config.weatherHost + `${country}?Authorization=${process.env.REACT_APP_WEATHER_TOKEN}&locationName=${town}&elementName=T,Wx,PoP12h`
   )
 
 export const postImgur = (imageData) =>

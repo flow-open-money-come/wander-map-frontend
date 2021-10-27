@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react'
 import { getUserInfo } from '../../../WebAPI'
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../../constants/style'
 import UserUpdateBox from '../../../components/userSystem/UserUpdateBox '
@@ -12,8 +12,8 @@ import UserBackstageTabs from '../../../components/userSystem/UserBackstageTabs'
 import { ReactComponent as EditIcon } from '../../../icons/backstage/edit.svg'
 import { ReactComponent as EmailIcon } from '../../../icons/user/user_email.svg'
 import { ReactComponent as NicknameIcon } from '../../../icons/user/user_nickname.svg'
-import { AuthContext, LoadingContext } from '../../../context'
-import Loading from '../../../components/common/Loading'
+import { LoadingContext } from '../../../context'
+import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -33,10 +33,11 @@ const MemberProfileWrapper = styled.div`
   ${MEDIA_QUERY.lg} {
     width: 30%;
     flex-direction: column;
-    border: solid 1.5px ${COLOR.green};
+    border: solid 2px ${COLOR.green};
     border-radius: ${RADIUS.lg};
     padding: 20px;
     margin: 0;
+    background-color: ${COLOR.white};
   }
 `
 const Avatar = styled.div`
@@ -60,11 +61,14 @@ const Profile = styled.div`
   margin: 20px;
   border-radius: 3px;
   border: solid 1.5px ${COLOR.green};
+  background-color: ${COLOR.white};
   position: relative;
   ${MEDIA_QUERY.lg} {
     border: none;
+    border-top: 1px solid ${COLOR.green_light};
     margin: 10px 0;
     padding-bottom: 0px;
+    background-color: none;
   }
 `
 
@@ -115,8 +119,6 @@ const ModifyBtn = styled(EditIcon)`
 `
 
 export default function UserBackstage() {
-  const { userInfo } = useContext(AuthContext)
-  const history = useHistory()
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [tab, setTab] = useState('Articles')
   const [popUp, setPopUp] = useState({
@@ -141,7 +143,7 @@ export default function UserBackstage() {
       .catch((err) => {
         console.log(err.response)
       })
-  }, [])
+  }, [userID, setIsLoading])
 
   const handleOnClick = () => {
     setPopUp({ key: userData.user_id, isShow: true })
@@ -150,7 +152,7 @@ export default function UserBackstage() {
   return (
     <>
       {isLoading ? (
-        <Loading />
+        <SmallRegionLoading />
       ) : (
         <Wrapper>
           <MemberProfileWrapper>

@@ -15,7 +15,7 @@ import TrailMap from '../../../components/trailSystem/TrailMap'
 import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
-import { getTrails, getTrailArticles, getUserCollect } from '../../../WebAPI'
+import { getTrails, getTrailArticles, getUserCollect, getTrailsCondition } from '../../../WebAPI'
 import { useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
@@ -72,6 +72,7 @@ const Title = styled.div`
   width: fit-content;
   max-width: 80%;
   padding: 10px 20px;
+  word-break: break-word;
   background: ${COLOR.white};
   font-size: ${FONT.md};
   margin-bottom: 15px;
@@ -162,6 +163,7 @@ function TrailPage() {
   const [loadingCollect, setLoadingCollect] = useState(false)
   const history = useHistory()
   const { thumb, setThumb, handleClickLike } = useLike()
+  const [ condition, setCondition ] = useState(null) 
 
   useEffect(() => {
     setIsLoading(true)
@@ -177,7 +179,7 @@ function TrailPage() {
         console.error(error)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
-    getTrailArticles(id, '?limit=3')
+    getTrailArticles(id, '')
       .then((res) => setArticles(res.data.data))
       .catch((error) => {
         console.error(error)
@@ -200,10 +202,27 @@ function TrailPage() {
     }
   }, [userInfo, id, setThumb, loadingCollect])
 
+  useEffect(() => {
+    if (trailInfo) {
+      getTrailsCondition()
+        .then((res) => {
+          const conditionList = res.data
+          conditionList.forEach((trail) => {
+            if (trail.TR_CNAME === trailInfo.title && trail.TR_TYP !== '全線開放')
+              setCondition(trail)
+          })
+        })
+        .catch((error) => {
+          console.error(error)
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+        })
+    }
+  }, [trailInfo])
+
   return (
     <>
       {isLoading ? (
-        <SmallRegionLoading isFullScreen/>
+        <SmallRegionLoading isFullScreen />
       ) : (
         <TrailPageContainer>
           <HeadFlex>
@@ -219,7 +238,7 @@ function TrailPage() {
             )}
           </HeadFlex>
           <InfoAndWeather>
-            <TrailInfo trailInfo={trailInfo} />
+            <TrailInfo trailInfo={trailInfo} condition={condition} />
             <Weather location={trailInfo && trailInfo.location} />
           </InfoAndWeather>
           <TrailMap coordinate={trailInfo && trailInfo.coordinate} />

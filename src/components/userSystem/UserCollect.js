@@ -6,6 +6,8 @@ import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as EmptyIcon } from '../../icons/user/user_empty_collect.svg'
 import TrailCard from '../trailSystem/TrailCard'
+import SmallRegionLoading from '../common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -85,38 +87,48 @@ export default function UserCollect() {
     ],
   })
   const { userID } = useParams()
+  const [isLoadingUserCollect, setIsLoadingUserCollect] = useState(false)
 
   useEffect(() => {
+    if (!userID) return
+    setIsLoadingUserCollect(true)
     getUserCollect(userID)
       .then((res) => {
-        setUserCollectData(res.data.data)
+        if (res.data.success) {
+          setUserCollectData(res.data.data)
+          setIsLoadingUserCollect(false)
+        }
       })
-      .catch((err) => {
-        console.log(err.response)
+      .catch(() => {
+        setIsLoadingUserCollect(false)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
-  }, [])
+  }, [userID])
 
   return (
     <Block>
+      {isLoadingUserCollect && <SmallRegionLoading />}
       <SearchBar style={{ display: 'none' }}>
         <SearchIcon />
         <SearchField></SearchField>
       </SearchBar>
       <TrailsWrapper>
-        {userCollectData.trails.length !== 0 ? (
-          userCollectData.trails.map((trailInfo) => (
-            <TrailCard trailInfo={trailInfo} />
-          ))
-        ) : (
-          <EmptyInfo>
-            <EmptyIcon />
-            <EmptyMsg>
-              還沒有收藏喔～
-              <br />
-              快去看看有那些步道吧
-            </EmptyMsg>
-          </EmptyInfo>
-        )}
+        {!isLoadingUserCollect ? (
+          userCollectData.trails.length !== 0 ? (
+            userCollectData.trails.map((trailInfo) => (
+              <TrailCard trailInfo={trailInfo} />
+            ))
+          ) : (
+            <EmptyInfo>
+              <EmptyIcon />
+              <EmptyMsg>
+                還沒有收藏喔～
+                <br />
+                快去看看有那些步道吧
+              </EmptyMsg>
+            </EmptyInfo>
+          )
+        ) : null}
       </TrailsWrapper>
     </Block>
   )

@@ -117,7 +117,7 @@ function HomePage() {
 
   useEffect(() => {
     setIsLoading(true)
-    getTrailArticles(1, '')
+    getTrailArticles(1, '?limit=100')
       .then((res) => {
         if (res.data.success) {
           setActiveTrailArticles({
@@ -185,8 +185,9 @@ function HomePage() {
                           articleInfos.tag_names.split(',')
                         }
                         date={new Date(
-                          articleInfos.created_at
-                        ).toLocaleString()}
+                          new Date(articleInfos.created_at).getTime() +
+                            8 * 3600 * 1000
+                        ).toLocaleString('ja')}
                         content={articleInfos.content}
                         lessRwd={true}
                         articlePage={`/articles/${articleInfos.article_id}`}

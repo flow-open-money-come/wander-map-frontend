@@ -7,6 +7,7 @@ import { ReactComponent as Thumb } from '../../icons/thumb_up.svg'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
+import ReactHtmlParser from 'react-html-parser'
 
 const SlideImage = styled.img`
   width: 100%;
@@ -35,7 +36,7 @@ const LeftArrow = styled(Left_Arrow)`
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
-  ${MEDIA_QUERY.md} {
+  ${MEDIA_QUERY.lg} {
     top: 50%;
     left: -20px;
   }
@@ -48,7 +49,7 @@ const RightArrow = styled(Right_Arrow)`
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
-  ${MEDIA_QUERY.md} {
+  ${MEDIA_QUERY.lg} {
     top: 50%;
     right: -20px;
   }
@@ -278,7 +279,9 @@ export default function Carousel({ slides }) {
                       })
                     )}
                   </ArticleTags>
-                  <ArticleContent>{slide.content}</ArticleContent>
+                  <ArticleContent>
+                    {ReactHtmlParser(slide.content)}
+                  </ArticleContent>
                   <ArticleInfo>
                     <ArticleUser
                       to={
@@ -293,7 +296,10 @@ export default function Carousel({ slides }) {
                       <UserInfo>
                         <UserName>{slide.nickname}</UserName>
                         <ArticleDate>
-                          {new Date(slide.created_at).toLocaleString('ja')}
+                          {new Date(
+                            new Date(slide.created_at).getTime() +
+                              8 * 3600 * 1000
+                          ).toLocaleString('ja')}
                         </ArticleDate>
                       </UserInfo>
                     </ArticleUser>

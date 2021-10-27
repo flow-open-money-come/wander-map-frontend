@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
-import { ReactComponent as SearchSvg } from '../../icons/search.svg'
 import SearchBar from '../common/SearchBar'
 
 const FilterContainer = styled.div`
@@ -49,20 +48,6 @@ const FilterTag = styled.button`
     border: 1px solid ${COLOR.white};
     color:${COLOR.black};
     `}
-`
-
-const SearchBarInput = styled.input`
-  width: 80%;
-  height: 30px;
-  background-color: ${COLOR.white};
-  padding: 20px;
-  outline: none;
-  border: 1px solid ${COLOR.white};
-  transition: ${EFFECT.transition};
-`
-
-const SearchIcon = styled(SearchSvg)`
-  margin-right: 10px;
 `
 
 export default function ForumFilter({
