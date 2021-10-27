@@ -227,6 +227,7 @@ function AllArticlesPage() {
           {posts.map((post) => {
             return (
               <ArticleList
+                key={post.article_id}
                 articleImgSrc={post.cover_picture_url}
                 title={post.title}
                 user={post.nickname}

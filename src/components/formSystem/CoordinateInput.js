@@ -34,7 +34,7 @@ export default function CoordinateInput({ formData, handleInputChange }) {
         <Input
           name='coordinateY'
           onChange={handleInputChange}
-          // value={formData && formData.coordinateY}
+          value={formData && formData.coordinateY}
           min='22'
           max='25'
         />
@@ -44,7 +44,7 @@ export default function CoordinateInput({ formData, handleInputChange }) {
         <Input
           name='coordinateX'
           onChange={handleInputChange}
-          // value={formData && formData.coordinateX}
+          value={formData && formData.coordinateX}
           min='120'
           max='122'
         />

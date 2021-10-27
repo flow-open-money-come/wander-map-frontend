@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, MEDIA_QUERY } from '../../constants/style.js'
+import { COLOR, FONT, MEDIA_QUERY, RADIUS } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/trailInfo.svg'
 
 const InfoWrapper = styled.div`
@@ -60,20 +60,67 @@ const InfoRow = styled.div`
     font-size: ${FONT.md};
   }
 `
-// const InfoDifficulty = styled(InfoLocation)``
-// const InfoAltitude = styled(InfoLocation)``
-// const InfoLength = styled(InfoLocation)``
-// const InfoSeason = styled(InfoLocation)``
-// const InfoFeature = styled(InfoLocation)``
 
-function TrailInfo({ trailInfo }) {
+const ConditionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  margin: 0 auto;
+  ${MEDIA_QUERY.md} {
+    width: 320px;
+    margin-bottom: 15px;
+  }
+  ${MEDIA_QUERY.lg} {
+    width: 100%;
+    margin-bottom: 20px;
+    flex-direction: row;
+  }
+`
 
+const Condition = styled.div`
+  font-size: ${FONT.xs};
+  width: 80px;
+  padding: 5px;
+  margin-bottom: 5px;
+  text-align: center;
+  border-radius: ${RADIUS.s};
+  color: ${COLOR.white};
+  background-color: ${COLOR.green};
+  ${(props) => props.$trailConditionTag === '部分封閉' && `background-color: ${COLOR.blue};`}
+  ${(props) => props.$trailConditionTag === '暫停開放' && `background-color: ${COLOR.pink};`}
+  ${(props) => props.$trailConditionTag === '注意' && `background-color: ${COLOR.yellow};`}
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.s};
+    min-width: 100px;
+    margin-right: 5px;
+  }
+`
+
+const ConditionDesc = styled.div`
+  font-size: ${FONT.xs};
+  line-height: 1.2;
+  text-align: justify;
+  ${MEDIA_QUERY.lg} {
+    font-size: ${FONT.s};
+  }
+`
+
+function TrailInfo({ trailInfo, condition }) {
   return (
     <InfoWrapper>
       <Title>
         <TitleIcon />
         步道資訊
       </Title>
+      {condition && (
+        <ConditionWrapper>
+          <Condition $trailConditionTag={condition.TR_TYP}>{condition.TR_TYP}</Condition>
+          <ConditionDesc>{condition.TITLE}</ConditionDesc>
+        </ConditionWrapper>
+      )}
       <InfoContainer>
         <InfoRow>
           <div>地點</div>

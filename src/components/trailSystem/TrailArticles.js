@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { COLOR, FONT, MEDIA_QUERY } from '../../constants/style.js'
+import { FONT, MEDIA_QUERY } from '../../constants/style.js'
 import { ReactComponent as TitleIcon } from '../../icons/trails/article.svg'
 import ArticleList from '../forumSystem/Article.js'
-import { Link } from 'react-router-dom'
 
 const ArticlesWrapper = styled.div`
   width: 100%;
@@ -37,25 +36,12 @@ const Title = styled.div`
 `
 
 const ArticlesContainer = styled.div`
+  max-height: 650px;
+  overflow: auto;
   width: 100%;
   position: relative;
 `
 
-const More = styled(Link)`
-  position: absolute;
-  right: 0;
-  bottom: -1;
-  margin: 10px 0;
-  color: ${COLOR.green};
-  font-size: ${FONT.s};
-  font-weight: bold;
-  &:hover {
-    cursor: pointer;
-  }
-  ${MEDIA_QUERY.lg} {
-    font-size: ${FONT.md};
-  }
-`
 function TrailArticles({ articles }) {
   return (
     <ArticlesWrapper>
@@ -66,6 +52,7 @@ function TrailArticles({ articles }) {
       <ArticlesContainer>
         {articles.map((article) => (
           <ArticleList
+            key={article.article_id}
             id={article.article_id}
             articleImgSrc={article.cover_picture_url}
             avatarImgSrc={article.icon_url}
@@ -78,7 +65,6 @@ function TrailArticles({ articles }) {
             authorId={article.author_id}
           />
         ))}
-        <More to={`/articles`}>看更多</More>
       </ArticlesContainer>
     </ArticlesWrapper>
   )

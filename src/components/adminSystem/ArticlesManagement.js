@@ -5,8 +5,9 @@ import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
 import { ReactComponent as RecycleIcon } from '../../icons/backstage/recycle.svg'
+import { ReactComponent as AddIcon } from '../../icons/user/plus.svg'
 import { getArticles, deleteArticle, getDeletedArticle, recoverArticle } from '../../WebAPI'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import swal from 'sweetalert'
@@ -80,33 +81,41 @@ const BackBtn = styled.button`
   }
 `
 
-const RecycleBin = styled.div`
+const ControlBTN = styled.div`
   position: absolute;
   right: 0;
   margin: 0 10px;
+  ${MEDIA_QUERY.md} {
+    margin: 0 30px;
+  }
+`
+const RecycleBin = styled(RecycleIcon)`
   path {
     fill: ${COLOR.pink};
   }
   &:hover {
     cursor: pointer;
   }
-  svg {
-    width: 20px;
-    height: 20px;
-  }
+  width: 20px;
+  height: 20px;
   ${MEDIA_QUERY.md} {
-    margin: 0 20px;
-    svg {
-      width: 25px;
-      height: 25px;
-    }
+    margin: 0 10px;
+    width: 25px;
+    height: 25px;
   }
-  ${MEDIA_QUERY.lg} {
-    margin: 0 50px;
-    svg {
-      width: 25px;
-      height: 25px;
-    }
+`
+const AddPost = styled(AddIcon)`
+  path {
+    fill: ${COLOR.green};
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  width: 25px;
+  height: 25px;
+  ${MEDIA_QUERY.md} {
+    width: 30px;
+    height: 30px;
   }
 `
 
@@ -165,7 +174,7 @@ const CreatorTd = styled.td`
   padding: 0 3px;
   vertical-align: middle;
   ${MEDIA_QUERY.lg} {
-    width: 150px;
+    width: 10%;
   }
 `
 const DateTd = styled(CreatorTd)``
@@ -201,6 +210,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const history = useHistory()
 
   useEffect(() => {
     setIsLoading(true)
@@ -284,64 +294,88 @@ function ArticlesManagement({ recycle, setRecycle }) {
                 </BackBtn>
               </>
             ) : (
-              <RecycleBin
-                onClick={() => {
-                  setRecycle(true)
-                }}
-              >
-                <RecycleIcon />
-              </RecycleBin>
+              <ControlBTN>
+                <RecycleBin
+                  onClick={() => {
+                    setRecycle(true)
+                  }}
+                />
+                <AddPost
+                  onClick={() => {
+                    history.push(`/post-article`)
+                  }}
+                />
+              </ControlBTN>
             )}
           </RecycleBlock>
           <TrailsTable>
-            {!recycle &&
-              articles &&
-              articles.map((article) => (
-                <TableContent key={article.article_id}>
-                  <LinkDefault to={`/articles/${article.article_id}`}>
+            <tbody>
+              {!recycle &&
+                articles &&
+                articles.map((article) => (
+                  <TableContent key={article.article_id}>
                     <CoverTd>
-                      <TrailImg src={article.cover_picture_url} />
+                      <LinkDefault to={`/articles/${article.article_id}`}>
+                        <TrailImg src={article.cover_picture_url} />
+                      </LinkDefault>
                     </CoverTd>
-                    <TrailsTd>{article.title}</TrailsTd>
-                  </LinkDefault>
-                  <CreatorTd>
-                    <LinkDefault to={`/users/${article.author_id}`}>{article.nickname}</LinkDefault>
-                  </CreatorTd>
-                  <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
-                  <BtnTd>
-                    <BinIcon
-                      onClick={() => {
-                        handleDelete(article.article_id, article.title)
-                      }}
-                    />
-                  </BtnTd>
-                </TableContent>
-              ))}
-            {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
-            {recycle &&
-              deletedArticles &&
-              deletedArticles.map((article) => (
-                <TableContent key={article.article_id}>
-                  <LinkDefault to={`/articles/${article.article_id}`}>
+                    <TrailsTd>
+                      <LinkDefault to={`/articles/${article.article_id}`}>
+                        {article.title}
+                      </LinkDefault>
+                    </TrailsTd>
+                    <CreatorTd>
+                      <LinkDefault to={`/users/${article.author_id}`}>
+                        {article.nickname}
+                      </LinkDefault>
+                    </CreatorTd>
+                    <DateTd>
+                      {new Date(
+                        new Date(article.created_at).getTime() + 8 * 3600 * 1000
+                      ).toLocaleString('ja')}
+                    </DateTd>
+                    <BtnTd>
+                      <BinIcon
+                        onClick={() => {
+                          handleDelete(article.article_id, article.title)
+                        }}
+                      />
+                    </BtnTd>
+                  </TableContent>
+                ))}
+
+              {recycle &&
+                deletedArticles &&
+                deletedArticles.map((article) => (
+                  <TableContent key={article.article_id}>
                     <CoverTd>
-                      <TrailImg src={article.cover_picture_url} />
+                      <LinkDefault to={`/articles/${article.article_id}`}>
+                        <TrailImg src={article.cover_picture_url} />
+                      </LinkDefault>
                     </CoverTd>
-                    <TrailsTd>{article.title}</TrailsTd>
-                  </LinkDefault>
-                  <CreatorTd>
-                    <LinkDefault to={`/users/${article.author_id}`}>{article.nickname}</LinkDefault>
-                  </CreatorTd>
-                  <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
-                  <BtnTd>
-                    <RecoverIcon
-                      onClick={() => {
-                        handleRecover(article.article_id, article.title)
-                      }}
-                    />
-                  </BtnTd>
-                </TableContent>
-              ))}
+                    <TrailsTd>
+                      <LinkDefault to={`/articles/${article.article_id}`}>
+                        {article.title}
+                      </LinkDefault>
+                    </TrailsTd>
+                    <CreatorTd>
+                      <LinkDefault to={`/users/${article.author_id}`}>
+                        {article.nickname}
+                      </LinkDefault>
+                    </CreatorTd>
+                    <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
+                    <BtnTd>
+                      <RecoverIcon
+                        onClick={() => {
+                          handleRecover(article.article_id, article.title)
+                        }}
+                      />
+                    </BtnTd>
+                  </TableContent>
+                ))}
+            </tbody>
           </TrailsTable>
+          {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
         </>
       )}
     </>
