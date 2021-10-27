@@ -329,7 +329,11 @@ function ArticlesManagement({ recycle, setRecycle }) {
                         {article.nickname}
                       </LinkDefault>
                     </CreatorTd>
-                    <DateTd>{new Date(article.created_at).toLocaleString('ja')}</DateTd>
+                    <DateTd>
+                      {new Date(
+                        new Date(article.created_at).getTime() + 8 * 3600 * 1000
+                      ).toLocaleString('ja')}
+                    </DateTd>
                     <BtnTd>
                       <BinIcon
                         onClick={() => {
