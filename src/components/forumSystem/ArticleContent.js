@@ -75,8 +75,8 @@ const ArticleDesc = styled.div`
   flex-direction: column;
 
   img {
-    width: 90%;
-    height: 90%;
+    width: 50%;
+    height: 50%;
   }
 
   ${MEDIA_QUERY.lg} {

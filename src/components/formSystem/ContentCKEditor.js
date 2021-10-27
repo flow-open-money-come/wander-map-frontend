@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { getArticles } from '../../WebAPI'
+import React, { useState } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import ImgurUploaderInit from 'ckeditor5-imgur-uploader'
@@ -12,12 +10,11 @@ const EditorWrapper = styled.div`
   margin-bottom: 10px;
   line-height: 1.5rem;
   ${MEDIA_QUERY.md} {
-    width: 500px;
+    width: 438px;
     font-size: ${FONT.md};
   }
   ${MEDIA_QUERY.lg} {
-    width: 700px;
-    font-size: ${FONT.md};
+    width: 638px;
   }
 `
 
@@ -48,7 +45,7 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
           editor.editing.view.change((writer) => {
             writer.setStyle(
               'height',
-              '600px',
+              '400px',
               editor.editing.view.document.getRoot()
             )
           })
