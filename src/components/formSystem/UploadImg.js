@@ -74,11 +74,13 @@ export default function UploadImg({ name, formData, setFormData }) {
   const [fileSrc, setFileSrc] = useState()
 
   useEffect(() => {
-    if (formData.cover_picture_url) {
-      setFileSrc(formData.cover_picture_url)
-    } else if (formData.map_picture_url) {
-      setFileSrc(formData.map_picture_url)
-    }
+    if (
+      formData.cover_picture_url &&
+      formData.cover_picture_url !==
+        'https://images.unsplash.com/photo-1600284536251-8bb98db53468?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1770&q=80'
+    )
+      return setFileSrc(formData.cover_picture_url)
+    if (formData.map_picture_url) return setFileSrc(formData.map_picture_url)
   }, [formData])
 
   const handleUploadFile = (e) => {
@@ -116,6 +118,11 @@ export default function UploadImg({ name, formData, setFormData }) {
   const handleClear = (e) => {
     e.preventDefault()
     setFileSrc(null)
+    setFormData({
+      ...formData,
+      [name]:
+        'https://images.unsplash.com/photo-1600284536251-8bb98db53468?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1770&q=80',
+    })
   }
 
   return (
@@ -134,7 +141,7 @@ export default function UploadImg({ name, formData, setFormData }) {
           點擊上傳
           <UploadInput name={name} onChange={handleUploadFile} required />
           <UploadNotice>
-            建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
+            建議寬度大於 700 像素的橫幅照片，檔案大小限制為 3MB
           </UploadNotice>
         </>
       )}

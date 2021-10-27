@@ -77,7 +77,7 @@ export default function UserUploadImg({
 
     postImgur(imageData)
       .then((res) => {
-        reader.onload = function () {
+        reader.onload = () => {
           setFileSrc(reader.result)
         }
         reader.readAsDataURL(file)
@@ -102,7 +102,7 @@ export default function UserUploadImg({
     setFileSrc(null)
     setUpdateUserData({
       ...updateUserData,
-      [name]: '',
+      [name]: 'https://i.imgur.com/r50z0vv.png',
     })
   }
 

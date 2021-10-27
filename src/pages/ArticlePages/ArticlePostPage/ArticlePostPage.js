@@ -276,7 +276,7 @@ export default function ArticlePostPage() {
                 ? formData.departure_time
                 : formData.departure_time
                 ? formData.departure_time.slice(0, 10)
-                : null
+                : ''
             }
           />
           　—　
@@ -289,7 +289,7 @@ export default function ArticlePostPage() {
                 ? formData.end_time
                 : formData.end_time
                 ? formData.end_time.slice(0, 10)
-                : null
+                : ''
             }
           />
         </FormSubTitleWrapper>

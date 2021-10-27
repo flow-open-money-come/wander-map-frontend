@@ -99,7 +99,7 @@ export default function UserUpdateBox({
     password: '',
     confirmPassword: '',
   })
-  const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const { setIsLoading } = useContext(LoadingContext)
 
   const handleUserInfoChange = (e) => {
     const { name, value } = e.target
