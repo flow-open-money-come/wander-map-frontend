@@ -216,6 +216,7 @@ const UserAvatar = styled.img`
   border-radius: 50%;
   width: 45px;
   height: 45px;
+  object-fit: cover;
 `
 
 const SlideLink = styled(Link)`

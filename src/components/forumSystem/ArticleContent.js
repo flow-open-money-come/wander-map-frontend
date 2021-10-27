@@ -40,7 +40,7 @@ const UserAvatar = styled.img`
   border-radius: 50%;
   width: 30px;
   height: 30px;
-
+  object-fit: cover;
   ${MEDIA_QUERY.md} {
     width: 45px;
     height: 45px;

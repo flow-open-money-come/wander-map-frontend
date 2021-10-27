@@ -32,7 +32,7 @@ const UserAvatar = styled.img`
   height: 30px;
   border-radius: 50%;
   border: 1px solid ${COLOR.gray_light};
-
+  object-fit: cover;
   ${MEDIA_QUERY.md} {
     width: 45px;
     height: 45px;
@@ -41,8 +41,8 @@ const UserAvatar = styled.img`
 `
 const ArticlesTags = styled.div`
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
+  overflow: auto;
 `
 const ArticlesTag = styled.span`
   border-radius: ${RADIUS.s};
@@ -50,6 +50,7 @@ const ArticlesTag = styled.span`
   font-size: ${FONT.xs};
   margin: 5px 3px;
   padding: 4px;
+  white-space: nowrap;
   color: ${COLOR.white};
   ${(props) =>
     !props.$lessRwd &&
@@ -82,6 +83,9 @@ const ArticlesContent = styled.div`
 const ArticlesTitle = styled.div`
   margin-bottom: 5px;
   font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
   ${(props) =>
     !props.$lessRwd &&
     `

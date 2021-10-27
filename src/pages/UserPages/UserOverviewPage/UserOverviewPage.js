@@ -217,7 +217,7 @@ export default function UserOverviewPage() {
         console.log(err.response)
       })
 
-    getUserArticles(userID)
+    getUserArticles(userID, '?limit=100')
       .then((res) => {
         setUserArticlesData(res.data.data)
       })
@@ -244,10 +244,12 @@ export default function UserOverviewPage() {
         </Profile>
       </MemberProfileWrapper>
       <SectionWrapper>
-        <SectionTitle>
-          <ArticleIcon />
-          心得
-        </SectionTitle>
+        {userArticlesData.articles.length !== 0 && (
+          <SectionTitle>
+            <ArticleIcon />
+            心得
+          </SectionTitle>
+        )}
         {userArticlesData.articles.map((article) => (
           <ArticlesWrapper>
             <Link to={`../articles/${article.article_id}`}>
@@ -259,7 +261,9 @@ export default function UserOverviewPage() {
                 {ReactHtmlParser(article.content)}
               </ArticlesContent>
               <ArticlesDate>
-                {new Date(article.created_at).toLocaleString('ja')}
+                {new Date(
+                  new Date(article.created_at).getTime() + 8 * 3600 * 1000
+                ).toLocaleString('ja')}
               </ArticlesDate>
             </Articles>
           </ArticlesWrapper>
