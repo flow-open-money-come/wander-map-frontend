@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { useContext } from 'react'
+import { useContext, memo } from 'react'
 import { ReactComponent as ForumSvg } from '../../icons/forum.svg'
 import { ReactComponent as TrailSvg } from '../../icons/trails.svg'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
@@ -204,7 +204,7 @@ const Trail = styled(TrailSvg)`
   }
 `
 
-function NavBar() {
+export default memo(function NavBar() {
   const [HamburgerToggleClick, setHamburgerToggleClick] = useToggle(false)
   const { userInfo } = useContext(AuthContext)
   const { handleLogOut } = useLogout()
@@ -268,6 +268,4 @@ function NavBar() {
       </NavBarContainer>
     </>
   )
-}
-
-export default NavBar
+})

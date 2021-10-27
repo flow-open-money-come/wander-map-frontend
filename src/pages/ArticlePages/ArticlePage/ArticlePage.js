@@ -166,7 +166,6 @@ function ArticlePage() {
           history.goBack()
         }
       } catch (err) {
-        console.log(err)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       }
       setIsLoading(false)
@@ -196,7 +195,6 @@ function ArticlePage() {
           })
         }
       } catch (err) {
-        console.log(err)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       }
     }
@@ -208,7 +206,7 @@ function ArticlePage() {
   return (
     <Wrapper>
       {isLoading ? (
-        <SmallRegionLoading isFullScreen />
+        <SmallRegionLoading />
       ) : (
         <>
           <CoverImg src={post.cover_picture_url} />

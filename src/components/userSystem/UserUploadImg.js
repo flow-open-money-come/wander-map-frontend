@@ -77,15 +77,13 @@ export default function UserUploadImg({
 
     postImgur(imageData)
       .then((res) => {
-        // 預覽
-        reader.onload = function () {
+        reader.onload = () => {
           setFileSrc(reader.result)
         }
         reader.readAsDataURL(file)
         return res
       })
       .then((res) => {
-        // 回傳值
         let dataUrl = res.data.data.link
         setUpdateUserData({
           ...updateUserData,
@@ -102,6 +100,10 @@ export default function UserUploadImg({
   const handleClear = (e) => {
     e.preventDefault()
     setFileSrc(null)
+    setUpdateUserData({
+      ...updateUserData,
+      [name]: 'https://i.imgur.com/r50z0vv.png',
+    })
   }
 
   return (

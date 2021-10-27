@@ -151,7 +151,8 @@ const PageContainer = styled.div`
 
 function AdminPage() {
   const [tab, setTab] = useState('Users')
-  const [recycle, setRecycle] = useState(false)
+  const [trailRecycle, setTrailRecycle] = useState(false)
+  const [articleRecycle, setArticleRecycle] = useState(false)
   const { userInfo } = useContext(AuthContext)
   const history = useHistory()
 
@@ -194,8 +195,12 @@ function AdminPage() {
         </Tabs>
         <PageContainer>
           {tab === 'Users' && <UsersManagement />}
-          {tab === 'Trails' && <TrailsManagement recycle={recycle} setRecycle={setRecycle} />}
-          {tab === 'Articles' && <ArticlesManagement recycle={recycle} setRecycle={setRecycle} />}
+          {tab === 'Trails' && (
+            <TrailsManagement recycle={trailRecycle} setRecycle={setTrailRecycle} />
+          )}
+          {tab === 'Articles' && (
+            <ArticlesManagement recycle={articleRecycle} setRecycle={setArticleRecycle} />
+          )}
         </PageContainer>
       </ManagementContainer>
     </AdminPageContainer>

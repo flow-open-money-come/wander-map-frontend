@@ -19,10 +19,8 @@ const EditorWrapper = styled.div`
 `
 
 export default function ContentCKEditor({ name, formData, setFormData }) {
-  const [data, setData] = useState(formData.content)
   const handleDataChange = (event, editor) => {
     let inputData = editor.getData()
-    setData(inputData)
     setFormData({
       ...formData,
       [name]: inputData,
@@ -41,7 +39,6 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
           removePlugins: ['MediaEmbed'],
         }}
         onReady={(editor) => {
-          console.log('Editor is ready to use!', editor)
           editor.editing.view.change((writer) => {
             writer.setStyle(
               'height',

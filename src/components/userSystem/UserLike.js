@@ -6,6 +6,8 @@ import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as SearchIcon } from '../../icons/search.svg'
 import { ReactComponent as EmptyIcon } from '../../icons/user/user_empty_collect.svg'
 import ArticleList from '../forumSystem/Article'
+import SmallRegionLoading from '../common/SmallRegionLoading'
+import swal from 'sweetalert'
 
 const Block = styled.div`
   border: 2px solid ${COLOR.green};
@@ -78,53 +80,61 @@ export default function UserLike() {
     articles: [{ author_id: '', tag_names: '' }],
   })
   const { userID } = useParams()
+  const [isLoadingUserLike, setIsLoadingUserLike] = useState(false)
 
   useEffect(() => {
+    setIsLoadingUserLike(true)
     getUserLiked(userID)
       .then((res) => {
-        setUserLikeData(res.data.data)
-        console.log(res.data.data)
+        if (res.data.success) {
+          setUserLikeData(res.data.data)
+          setIsLoadingUserLike(false)
+        }
       })
-      .catch((err) => {
-        console.log(err)
+      .catch(() => {
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+        setIsLoadingUserLike(false)
       })
-  }, [])
+  }, [userID])
 
   return (
     <Block>
+      {isLoadingUserLike && <SmallRegionLoading />}
       <SearchBar style={{ display: 'none' }}>
         <SearchIcon />
         <SearchField></SearchField>
       </SearchBar>
       <ArticlesWrapper>
-        {userLikeData.articles.length !== 0 ? (
-          userLikeData.articles.map((article) => (
-            <ArticleList
-              key={article.article_id}
-              articleImgSrc={article.cover_picture_url}
-              avatarImgSrc={article.icon_url}
-              title={article.title}
-              user={article.nickname}
-              tags={!article.tag_names ? [] : article.tag_names.split(',')}
-              date={new Date(
+        {!isLoadingUserLike ? (
+          userLikeData.articles.length !== 0 ? (
+            userLikeData.articles.map((article) => (
+              <ArticleList
+                key={article.article_id}
+                articleImgSrc={article.cover_picture_url}
+                avatarImgSrc={article.icon_url}
+                title={article.title}
+                user={article.nickname}
+                tags={!article.tag_names ? [] : article.tag_names.split(',')}
+                date={new Date(
                 new Date(article.created_at).getTime() + 8 * 3600 * 1000
               ).toLocaleString('ja')}
-              content={article.content ? article.content : ''}
-              lessRwd={true}
-              articlePage={`/articles/${article.article_id}`}
-              authorId={article.author_id}
-            />
-          ))
-        ) : (
-          <EmptyInfo>
-            <EmptyIcon />
-            <EmptyMsg>
-              還沒有按讚喔～
-              <br />
-              快去看看大家的心得分享吧
-            </EmptyMsg>
-          </EmptyInfo>
-        )}
+                content={article.content ? article.content : ''}
+                lessRwd={true}
+                articlePage={`/articles/${article.article_id}`}
+                authorId={article.author_id}
+              />
+            ))
+          ) : (
+            <EmptyInfo>
+              <EmptyIcon />
+              <EmptyMsg>
+                還沒有按讚喔～
+                <br />
+                快去看看大家的心得分享吧
+              </EmptyMsg>
+            </EmptyInfo>
+          )
+        ) : null}
       </ArticlesWrapper>
     </Block>
   )

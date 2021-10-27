@@ -6,8 +6,9 @@ import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/backstage/edit.svg'
 import { ReactComponent as RecycleIcon } from '../../icons/backstage/recycle.svg'
 import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
+import { ReactComponent as AddIcon } from '../../icons/user/plus.svg'
 import { getTrails, deleteTrail, getDeletedTrail, recoverTrail } from '../../WebAPI'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import swal from 'sweetalert'
@@ -77,29 +78,42 @@ const BackBtn = styled.button`
     margin: 0 50px;
   }
 `
-const RecycleBin = styled.div`
+const ControlBTN = styled.div`
   position: absolute;
   right: 0;
   margin: 0 10px;
+  ${MEDIA_QUERY.md} {
+    margin: 0 30px;
+  }
+`
+const RecycleBin = styled(RecycleIcon)`
   path {
     fill: ${COLOR.pink};
   }
   &:hover {
     cursor: pointer;
   }
-  svg {
-    width: 20px;
-    height: 20px;
-  }
+  width: 20px;
+  height: 20px;
   ${MEDIA_QUERY.md} {
-    margin: 0 20px;
-    svg {
-      width: 25px;
-      height: 25px;
-    }
+    margin: 0 10px;
+    width: 25px;
+    height: 25px;
   }
-  ${MEDIA_QUERY.lg} {
-    margin: 0 50px;
+  
+`
+const AddPost = styled(AddIcon)`
+  path {
+    fill: ${COLOR.green};
+  }
+  &:hover {
+    cursor: pointer;
+  }
+  width: 25px;
+  height: 25px;
+  ${MEDIA_QUERY.md} {
+    width: 30px;
+    height: 30px;
   }
 `
 const TrailsTable = styled.table`
@@ -144,7 +158,7 @@ const TrailsTd = styled.td`
     width: 700px;
   }
   ${MEDIA_QUERY.lg} {
-    width: 900px;
+    width: 80%;
     padding-left: 20px;
   }
 `
@@ -153,7 +167,7 @@ const CreatorTd = styled.td`
   vertical-align: middle;
   padding: 0 3px;
   ${MEDIA_QUERY.lg} {
-    width: 140px;
+    width: 10%;
   }
 `
 const BtnTd = styled.td`
@@ -166,7 +180,7 @@ const BtnTd = styled.td`
     }
   }
   ${MEDIA_QUERY.lg} {
-    width: 80px;
+    width: 10%;
     svg {
       width: 20px;
       height: 20px;
@@ -187,6 +201,7 @@ function TrailsManagement({ recycle, setRecycle }) {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const history = useHistory()
 
   useEffect(() => {
     setIsLoading(true)
@@ -265,59 +280,69 @@ function TrailsManagement({ recycle, setRecycle }) {
               </>
             )}
             {!recycle && (
-              <RecycleBin
-                onClick={() => {
-                  setRecycle(true)
-                }}
-              >
-                <RecycleIcon />
-              </RecycleBin>
+              <ControlBTN>
+                <RecycleBin
+                  onClick={() => {
+                    setRecycle(true)
+                  }}
+                />
+                <AddPost
+                  onClick={() => {
+                    history.push(`/post-trail`)
+                  }}
+                />
+              </ControlBTN>
             )}
           </RecycleBlock>
           <TrailsTable>
-            {!recycle &&
-              trails &&
-              trails.map((trail) => (
-                <TableContent key={trail.trail_id}>
-                  <LinkWrapper to={`/trails/${trail.trail_id}`}>
+            <tbody>
+              {!recycle &&
+                trails &&
+                trails.map((trail) => (
+                  <TableContent key={trail.trail_id}>
+                    <CoverTd>
+                      <LinkWrapper to={`/trails/${trail.trail_id}`}>
+                        <TrailImg src={trail.cover_picture_url} />
+                      </LinkWrapper>
+                    </CoverTd>
+                    <TrailsTd>
+                      <LinkWrapper to={`/trails/${trail.trail_id}`}>{trail.title}</LinkWrapper>
+                    </TrailsTd>
+                    <CreatorTd>admin</CreatorTd>
+                    <BtnTd>
+                      <Link to={`/update-trail/${trail.trail_id}`}>
+                        <EditIcon />
+                      </Link>
+                      <BinIcon
+                        onClick={() => {
+                          handleDelete(trail.trail_id, trail.title)
+                        }}
+                      />
+                    </BtnTd>
+                  </TableContent>
+                ))}
+
+              {recycle &&
+                deletedTrails &&
+                deletedTrails.map((trail) => (
+                  <TableContent key={trail.trail_id}>
                     <CoverTd>
                       <TrailImg src={trail.cover_picture_url} />
                     </CoverTd>
                     <TrailsTd>{trail.title}</TrailsTd>
-                  </LinkWrapper>
-                  <CreatorTd>admin</CreatorTd>
-                  <BtnTd>
-                    <Link to={`/update-trail/${trail.trail_id}`}>
-                      <EditIcon />
-                    </Link>
-                    <BinIcon
-                      onClick={() => {
-                        handleDelete(trail.trail_id, trail.title)
-                      }}
-                    />
-                  </BtnTd>
-                </TableContent>
-              ))}
-            {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
-            {recycle &&
-              deletedTrails &&
-              deletedTrails.map((trail) => (
-                <TableContent key={trail.trail_id}>
-                  <CoverTd>
-                    <TrailImg src={trail.cover_picture_url} />
-                  </CoverTd>
-                  <TrailsTd>{trail.title}</TrailsTd>
-                  <CreatorTd>admin</CreatorTd>
-                  <BtnTd>
-                    <RecoverIcon
-                      onClick={() => {
-                        handleRecover(trail.trail_id, trail.title)
-                      }}
-                    />
-                  </BtnTd>
-                </TableContent>
-              ))}
+                    <CreatorTd>admin</CreatorTd>
+                    <BtnTd>
+                      <RecoverIcon
+                        onClick={() => {
+                          handleRecover(trail.trail_id, trail.title)
+                        }}
+                      />
+                    </BtnTd>
+                  </TableContent>
+                ))}
+            </tbody>
           </TrailsTable>
+          {!recycle && <Pagination page={page} setPage={setPage} totalPages={totalPages} />}
         </>
       )}
     </>

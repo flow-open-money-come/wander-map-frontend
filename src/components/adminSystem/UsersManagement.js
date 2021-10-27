@@ -167,34 +167,36 @@ function UsersManagement() {
       ) : (
         <>
           <UsersTable>
-            <TableHeader>
-              <HeaderTd>暱稱</HeaderTd>
-              <HeaderTd>帳號</HeaderTd>
-              <HeaderTd>入會日期</HeaderTd>
-              <HeaderTd>狀態</HeaderTd>
-            </TableHeader>
-            {users &&
-              users.map((user) => (
-                <TableContent key={user.user_id} $role={user.role}>
-                  <NicknameTd>
-                    <LinkDefault to={`/user/${user.user_id}`}>{user.nickname}</LinkDefault>
-                  </NicknameTd>
-                  <EmailTd>{user.email}</EmailTd>
-                  <ContentTd>{new Date(user.created_at).toLocaleDateString('ja')}</ContentTd>
-                  <ContentTd>
-                    <StatusBtn
-                      onClick={() => {
-                        handleToggleState(user.user_id, user.nickname, user.role)
-                      }}
-                      role={user.role}
-                    >
-                      {user.role === 'member' && '停權'}
-                      {user.role === 'suspended' && '復權'}
-                      {user.role === 'admin' && '管理員'}
-                    </StatusBtn>
-                  </ContentTd>
-                </TableContent>
-              ))}
+            <tbody>
+              <TableHeader>
+                <HeaderTd>暱稱</HeaderTd>
+                <HeaderTd>帳號</HeaderTd>
+                <HeaderTd>入會日期</HeaderTd>
+                <HeaderTd>狀態</HeaderTd>
+              </TableHeader>
+              {users &&
+                users.map((user) => (
+                  <TableContent key={user.user_id} $role={user.role}>
+                    <NicknameTd>
+                      <LinkDefault to={`/user/${user.user_id}`}>{user.nickname}</LinkDefault>
+                    </NicknameTd>
+                    <EmailTd>{user.email}</EmailTd>
+                    <ContentTd>{new Date(user.created_at).toLocaleDateString('ja')}</ContentTd>
+                    <ContentTd>
+                      <StatusBtn
+                        onClick={() => {
+                          handleToggleState(user.user_id, user.nickname, user.role)
+                        }}
+                        role={user.role}
+                      >
+                        {user.role === 'member' && '停權'}
+                        {user.role === 'suspended' && '復權'}
+                        {user.role === 'admin' && '管理員'}
+                      </StatusBtn>
+                    </ContentTd>
+                  </TableContent>
+                ))}
+            </tbody>
           </UsersTable>
           <Pagination page={page} setPage={setPage} totalPages={totalPages} />
         </>

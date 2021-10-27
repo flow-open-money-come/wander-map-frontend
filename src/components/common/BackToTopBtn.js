@@ -11,14 +11,16 @@ const BackToTopBtnItem = styled(BackToTopBtnSvg)`
   border-radius: ${RADIUS.md};
   box-shadow: ${EFFECT.shadow_dark};
   position: fixed;
-  bottom: 100px;
-  right: 10px;
+  bottom: 150px;
+  right: 20px;
   display: none;
+  opacity: 0.7;
   ${(props) => props.$display && `display: block`};
   transition: ${EFFECT.transition};
   &:hover {
     transform: scale(0.9);
     background-color: ${COLOR.beige};
+    opacity: 1;
   }
   ${MEDIA_QUERY.md} {
     right: 50px;
