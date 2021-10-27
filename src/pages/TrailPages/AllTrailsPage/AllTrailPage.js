@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import {
@@ -21,6 +21,7 @@ import useHotTrailsCarousel from '../../../hooks/useHotTrailsCarousel'
 import useTrailFilters from '../../../hooks/useTrialFilters'
 import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 import swal from 'sweetalert'
+import { LoadingContext } from '../../../context'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
@@ -120,23 +121,23 @@ function AllTrailPage() {
   const { keyWord, handleKeyWordChange, handleKeyWordDelete } = useSearch()
   const debouncedKeyWord = useDebounce(keyWord, 1000)
   const { numberOfDisplay, handleLoadMore } = useLoadMore()
-  const [isLoadingFilter, setIsLoadingFilter] = useState(false)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
 
   useEffect(() => {
     let params = []
     if (checkedOptions.length !== 0) params.push(`&${checkedOptions.join('&')}`)
     if (debouncedKeyWord) params.push(`&search=${debouncedKeyWord}`)
-    setIsLoadingFilter(true)
+    setIsLoading(true)
     getTrails(`?limit=126${params.join('')}`)
       .then((res) => {
         if (res.data.success) setFilteredTrailInfos(res.data.data)
-        setIsLoadingFilter(false)
+        setIsLoading(false)
       })
       .catch(() => {
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-        setIsLoadingFilter(false)
+        setIsLoading(false)
       })
-  }, [checkedOptions, debouncedKeyWord])
+  }, [checkedOptions, debouncedKeyWord, setIsLoading])
 
   return (
     <>
@@ -200,7 +201,7 @@ function AllTrailPage() {
             />
           </SearchBarWrapper>
         </DropDownContainer>
-        {isLoadingFilter ? (
+        {isLoading ? (
           <SmallRegionLoading />
         ) : (
           <FilteredTrailsWrapper>

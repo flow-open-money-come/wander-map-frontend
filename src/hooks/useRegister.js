@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { useHistory } from 'react-router'
 import useUserInfoValidation from './useUserInfoValidation'
 import { AuthContext } from '../context'
@@ -56,6 +56,7 @@ export default function useRegister() {
         }
       })
   }
+
   return {
     handleUserInfoChange,
     handleRegister,

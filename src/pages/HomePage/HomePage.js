@@ -117,7 +117,7 @@ function HomePage() {
 
   useEffect(() => {
     setIsLoading(true)
-    getTrailArticles(1, '')
+    getTrailArticles(1, '?limit=100')
       .then((res) => {
         if (res.data.success) {
           setActiveTrailArticles({

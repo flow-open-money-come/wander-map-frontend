@@ -80,15 +80,12 @@ const Map = (props) => {
         {isLoadingMap && <SmallRegionLoading isLocal />}
         {matchTrailInfos.length > 0 ? (
           matchTrailInfos.map((trailInfo) => {
-            let trailConditionsObj = Object.assign({}, ...trailConditions)
-            let trailConditionId = Object.keys(trailConditionsObj).map((id) =>
-              parseInt(id)
-            )
-            let currentId = trailInfo.trail_id
+            let trailConditionName = Object.keys(trailConditions)
+            let currentTrailName = trailInfo.title
             let trailConditionTag =
-              trailConditionId.indexOf(currentId) < 0
+              trailConditionName.indexOf(currentTrailName) < 0
                 ? '全線開放'
-                : trailConditionsObj[currentId]
+                : trailConditions[currentTrailName]
             return (
               <LocationMarker
                 key={trailInfo.trail_id}
@@ -107,8 +104,8 @@ const Map = (props) => {
             lng={props.info.coordinate.x}
             trailInfo={props.info}
             trailConditionTag={
-              Object.keys(trailConditions).indexOf(1) > 0
-                ? trailConditions[0][1]
+              Object.keys(trailConditions).indexOf('蘇花古道：大南澳越嶺段') > 0
+                ? trailConditions['蘇花古道：大南澳越嶺段']
                 : '全線開放'
             }
           />
@@ -118,7 +115,6 @@ const Map = (props) => {
   )
 }
 
-// 演示用的步道，有較多心得、比較豐富的資訊可以呈現
 Map.defaultProps = {
   info: {
     trail_id: 1,

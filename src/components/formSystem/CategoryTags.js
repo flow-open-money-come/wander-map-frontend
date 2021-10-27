@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 
@@ -49,7 +49,12 @@ const CategoryBtn = styled.input.attrs(() => ({
   border: 0;
 `
 
-export default function CategoryTags({ name, formData, setFormData }) {
+export default function CategoryTags({
+  name,
+  formData,
+  setFormData,
+  isPostPage,
+}) {
   const [tags, setTags] = useState([
     { id: 1, content: '一日', isChecked: false },
     { id: 2, content: '多日', isChecked: false },
@@ -66,7 +71,6 @@ export default function CategoryTags({ name, formData, setFormData }) {
     { id: 13, content: '專業分享', isChecked: false },
     { id: 14, content: 'GPX', isChecked: false },
   ])
-  const [value, setValue] = useState('')
 
   const handleIsChecked = (id) => {
     setTags(
@@ -80,19 +84,40 @@ export default function CategoryTags({ name, formData, setFormData }) {
     )
   }
 
-  const handleTagsChange = (e) => {
-    let selectedTags = [e.target.value, ...value]
-    setValue(selectedTags)
+  useEffect(() => {
+    if (Object.keys(formData).length > 0) {
+      if (!formData.tag_names) return
+      if (!isPostPage) {
+        setTags(
+          tags.map((tag) => {
+            return formData.tag_names.includes(tag.content)
+              ? {
+                  ...tag,
+                  isChecked: true,
+                }
+              : tag
+          })
+        )
+      }
+    }
+  }, [formData, isPostPage, tags])
+
+  useEffect(() => {
+    let selectedTags = []
+    tags.forEach((tag) => {
+      if (tag.isChecked) selectedTags.push(tag.content)
+    })
     setFormData({
       ...formData,
       [name]: selectedTags,
     })
-  }
+  }, [tags])
 
   return (
-    <CategoryWrapper onChange={handleTagsChange}>
+    <CategoryWrapper>
       {tags.map((tag) => (
         <CategoryBtnLabel
+          key={tag.id}
           isChecked={tag.isChecked}
           onChange={() => {
             handleIsChecked(tag.id)
