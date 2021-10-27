@@ -107,11 +107,6 @@ const UnfoldButton = styled.button`
 export default function ArticleContent({ post }) {
   const [unfold, setUnfold] = useState(false)
   const { userInfo } = useContext(AuthContext)
-  const [content, setContent] = useState([])
-
-  useEffect(() => {
-    setContent(post.content)
-  }, [post.content])
 
   return (
     <ArticleContentContainer>
@@ -137,16 +132,16 @@ export default function ArticleContent({ post }) {
         </UserInfo>
       </ArticleUser>
       <ArticleDesc unfold={unfold}>
-        {content &&
+        {post.content &&
           ReactHtmlParser(
             unfold
-              ? content
-              : content[600] !== undefined
-              ? `${content.slice(0, 600)}...`
-              : content.slice(0, 600)
+              ? post.content
+              : post.content[600] !== undefined
+              ? `${post.content.slice(0, 600)}...`
+              : post.content.slice(0, 600)
           )}
       </ArticleDesc>
-      {content && content[600] !== undefined && (
+      {post.content && post.content[600] !== undefined && (
         <UnfoldButton
           unfold={unfold}
           onClick={() => {
