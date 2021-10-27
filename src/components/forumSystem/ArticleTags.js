@@ -33,8 +33,8 @@ const ArticleTag = styled.div`
 export default function Tags({ tags }) {
   return (
     <ArticleTags>
-      {tags.map((tag) => (
-        <ArticleTag>{tag}</ArticleTag>
+      {tags.map((tag, index) => (
+        <ArticleTag key={index}>{tag}</ArticleTag>
       ))}
     </ArticleTags>
   )

@@ -3,11 +3,7 @@ import styled from 'styled-components'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
-import ReactHtmlParser, {
-  processNodes,
-  convertNodeToElement,
-  htmlparser2,
-} from 'react-html-parser'
+import ReactHtmlParser from 'react-html-parser'
 
 const ArticlesContainer = styled(Link)`
   color: ${COLOR.black};

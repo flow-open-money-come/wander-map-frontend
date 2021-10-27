@@ -171,15 +171,17 @@ function ArticlePage() {
       setIsLoading(false)
     }
     getPost()
-  }, [id, userInfo, setRelatedTrailID])
+  }, [id, userInfo, setRelatedTrailID, history, setIsLoading])
 
-  if (post.trail_title) {
-    getTrails(`?search=${post.trail_title}`).then((res) => {
-      if (res.data.data[0].trail_id) {
-        setRelatedTrailID(res.data.data[0].trail_id)
-      }
-    })
-  }
+  useEffect(() => {
+    if (post.trail_title) {
+      getTrails(`?search=${post.trail_title}`).then((res) => {
+        if (res.data.data[0].trail_id) {
+          setRelatedTrailID(res.data.data[0].trail_id)
+        }
+      })
+    }
+  }, [post])
 
   useEffect(() => {
     const getLike = async () => {
@@ -187,7 +189,7 @@ function ArticlePage() {
         let res = await getUserLiked(userInfo.user_id)
         if (res.data.data.articles.length > 0) {
           res.data.data.articles.map((article) => {
-            if (article.article_id == id) {
+            if (article.article_id === Number(id)) {
               setThumb(true)
             }
           })
@@ -199,7 +201,7 @@ function ArticlePage() {
     if (userInfo) {
       getLike()
     }
-  }, [loadingLike, id, userInfo])
+  }, [loadingLike, id, userInfo, setThumb])
 
   return (
     <Wrapper>

@@ -64,12 +64,12 @@ const FormTitle = styled.div`
   font-weight: 600;
   margin-bottom: 8px;
   ${MEDIA_QUERY.md} {
-    margin: 10px 20px;
+    margin: 10px 20px 10px 0;
     width: 100px;
     text-align: center;
   }
   ${MEDIA_QUERY.lg} {
-    margin: 10px 10px 10px 0px;
+    margin: 10px 40px 10px 0;
   }
 `
 const FormSubTitleWrapper = styled.div`
@@ -314,7 +314,6 @@ export default function ArticlePostPage() {
         />
       </FormWrapper>
       <FormWrapper>
-        <FormTitle />
         <ContentCKEditor
           name='content'
           formData={formData}
