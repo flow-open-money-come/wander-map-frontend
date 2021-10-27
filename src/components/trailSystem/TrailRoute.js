@@ -46,10 +46,12 @@ const RouteImg = styled.img`
 function TrailRoute({ routePic }) {
   return (
     <RouteWrapper>
-      <Title>
-        <TitleIcon />
-        路線資訊
-      </Title>
+      {routePic && (
+        <Title>
+          <TitleIcon />
+          路線資訊
+        </Title>
+      )}
 
       <RouteImg src={routePic} />
     </RouteWrapper>

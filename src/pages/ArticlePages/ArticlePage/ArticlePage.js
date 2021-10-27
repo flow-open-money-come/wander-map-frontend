@@ -250,27 +250,7 @@ function ArticlePage() {
           ) : (
             ''
           )}
-          {/* {post.time_spent ? (
-        <ArticleStandardInformation>
-          行進時間：{post.time_spent} 小時
-        </ArticleStandardInformation>
-      ) : (
-        ''
-      )}
-      {post.length ? (
-        <ArticleStandardInformation>
-          距離：{post.length} 公里
-        </ArticleStandardInformation>
-      ) : (
-        ''
-      )}
-      {post.gpx_url ? (
-        <ArticleStandardInformation>
-          GPX：{post.gpx_url}
-        </ArticleStandardInformation>
-      ) : (
-        ''
-      )} */}
+
           <ArticleContent post={post} />
           <FlexGroup>
             <ReviewIcon />
