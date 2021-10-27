@@ -31,9 +31,12 @@ export const ResetStyle = createGlobalStyle`
   html {
     text-size-adjust: 100%;
     box-sizing: border-box;
+    height: 100%;
   }
   body {
       line-height: 1;
+      height: 100%;
+      margin: 0
   }
   ol, ul {
     list-style: none;

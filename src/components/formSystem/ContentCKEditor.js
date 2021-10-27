@@ -1,6 +1,3 @@
-import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
-import { getArticles } from '../../WebAPI'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import ImgurUploaderInit from 'ckeditor5-imgur-uploader'
@@ -17,10 +14,8 @@ const EditorWrapper = styled.div`
 `
 
 export default function ContentCKEditor({ name, formData, setFormData }) {
-  const [data, setData] = useState(formData.content)
   const handleDataChange = (event, editor) => {
     let inputData = editor.getData()
-    setData(inputData)
     setFormData({
       ...formData,
       [name]: inputData,
@@ -39,7 +34,6 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
           removePlugins: ['MediaEmbed'],
         }}
         onReady={(editor) => {
-          console.log('Editor is ready to use!', editor)
           editor.editing.view.change((writer) => {
             writer.setStyle(
               'height',

@@ -76,18 +76,24 @@ function App() {
               <Route path='/register'>
                 <RegisterPage />
               </Route>
-              <Route path='/post-trail'>
-                <TrailPostPage />
-              </Route>
+              {userInfo && userInfo.role === 'admin' && (
+                <Route path='/post-trail'>
+                  <TrailPostPage />
+                </Route>
+              )}
               <Route path='/update-trail/:trailID?'>
                 <TrailPostPage />
               </Route>
-              <Route path='/post-article'>
-                <ArticlePostPage />
-              </Route>
-              <Route path='/update-article/:articleID?'>
-                <ArticlePostPage />
-              </Route>
+              {userInfo && (
+                <Route path='/post-article'>
+                  <ArticlePostPage />
+                </Route>
+              )}
+              {userInfo && (
+                <Route path='/update-article/:articleID?'>
+                  <ArticlePostPage />
+                </Route>
+              )}
               <Route exact path='/articles'>
                 <AllArticlesPage />
               </Route>
@@ -97,12 +103,16 @@ function App() {
               <Route path='/user/:userID'>
                 <UserOverviewPage />
               </Route>
-              <Route path='/admin'>
-                <AdminPage />
-              </Route>
-              <Route path='/backstage/:userID'>
-                <UserBackstage />
-              </Route>
+              {userInfo && userInfo.role === 'admin' && (
+                <Route path='/admin'>
+                  <AdminPage />
+                </Route>
+              )}
+              {userInfo && (
+                <Route path='/backstage/:userID'>
+                  <UserBackstage />
+                </Route>
+              )}
               <Route path='/articles/:id'>
                 <ArticlePage />
               </Route>

@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { FONT, COLOR } from '../../constants/style'
+import { FONT, COLOR, EFFECT } from '../../constants/style'
 import { ReactComponent as ImageSvg } from '../../icons/image.svg'
 import { NavBarButton } from '../../components/common/Button'
 import { postImgur } from '../../WebAPI'
+import swal from 'sweetalert'
 
 const PicHolder = styled.label`
   width: 500px;
   height: 180px;
-  background-color: ${COLOR.gray_light};
   border-radius: 3px;
   cursor: pointer;
   display: flex;
@@ -16,6 +16,11 @@ const PicHolder = styled.label`
   justify-content: flex-end;
   align-items: center;
   text-align: center;
+  transition: ${EFFECT.transition};
+  border: 1px solid ${COLOR.gray};
+  &:hover {
+    background-color: ${COLOR.gray_light};
+  }
 `
 const UploadInput = styled.input.attrs({
   type: 'file',
@@ -65,19 +70,17 @@ const ClearBtn = styled.button`
   }
 `
 
-export default function UploadImg({
-  name,
-  formData,
-  setFormData,
-  setErrorMessage,
-}) {
+export default function UploadImg({ name, formData, setFormData }) {
   const [fileSrc, setFileSrc] = useState()
+
   useEffect(() => {
-    if (formData.cover_picture_url) {
-      setFileSrc(formData.cover_picture_url)
-    } else if (formData.map_picture_url) {
-      setFileSrc(formData.map_picture_url)
-    }
+    if (
+      formData.cover_picture_url &&
+      formData.cover_picture_url !==
+        'https://images.unsplash.com/photo-1600284536251-8bb98db53468?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1770&q=80'
+    )
+      return setFileSrc(formData.cover_picture_url)
+    if (formData.map_picture_url) return setFileSrc(formData.map_picture_url)
   }, [formData])
 
   const handleUploadFile = (e) => {
@@ -87,10 +90,8 @@ export default function UploadImg({
     let imageData = new FormData()
     imageData.append('image', file)
     imageData.append('album', 'Znitr92')
-
     postImgur(imageData)
       .then((res) => {
-        // 預覽
         reader.onload = function () {
           setFileSrc(reader.result)
         }
@@ -98,7 +99,6 @@ export default function UploadImg({
         return res
       })
       .then((res) => {
-        // 回傳值
         let dataUrl = res.data.data.link
         setFormData({
           ...formData,
@@ -106,11 +106,10 @@ export default function UploadImg({
         })
       })
       .catch((err) => {
-        console.log('沒打成功')
-        console.log(err.response)
-        if (err.response.status === 400) {
-          setErrorMessage('圖片檔案過大，請重新上傳')
+        if (err.response.data.data.error.includes('over the size limit')) {
+          swal('上傳失敗！', '圖片過大，請上傳不大於 3 MB 的圖片。', 'error')
         }
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
 
     e.target.value = ''
@@ -119,6 +118,11 @@ export default function UploadImg({
   const handleClear = (e) => {
     e.preventDefault()
     setFileSrc(null)
+    setFormData({
+      ...formData,
+      [name]:
+        'https://images.unsplash.com/photo-1600284536251-8bb98db53468?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1770&q=80',
+    })
   }
 
   return (
@@ -137,7 +141,7 @@ export default function UploadImg({
           點擊上傳
           <UploadInput name={name} onChange={handleUploadFile} required />
           <UploadNotice>
-            建議寬度大於700像素的橫幅照片，檔案大小限制為3MB
+            建議寬度大於 700 像素的橫幅照片，檔案大小限制為 3MB
           </UploadNotice>
         </>
       )}
