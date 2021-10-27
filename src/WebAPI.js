@@ -14,6 +14,7 @@ instance.interceptors.request.use((config) => {
   return config
 })
 
+// jwt 2.0
 instance.interceptors.response.use(
   (response) => {
     return response
@@ -55,7 +56,7 @@ export const getUserInfo = (userID) => instance.get(`/users/${userID}`)
 export const patchUserInfo = (userID, data) =>
   instance.patch(`/users/${userID}`, data)
 export const getUserArticles = (userID, params) =>
-  instance.get(`/users/${userID}/articles${params}`)
+  instance.get(`/users/${userID}/articles/${params}`)
 export const getUserCollect = (userID) =>
   instance.get(`/users/${userID}/collected-trails`)
 export const getUserLiked = (userID) =>
