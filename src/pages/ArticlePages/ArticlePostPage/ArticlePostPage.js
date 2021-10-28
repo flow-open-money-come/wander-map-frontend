@@ -151,8 +151,9 @@ export default function ArticlePostPage() {
             setIsArticleRetrieve(true)
           }
         })
-        .catch((err) => {
+        .catch(() => {
           setIsLoadingArticle(false)
+          setIsArticleRetrieve(false)
           swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         })
     }
@@ -172,6 +173,7 @@ export default function ArticlePostPage() {
       swal('無權限', '請先登入或註冊以發表文章', 'error')
       history.push('/login')
     }
+    if (!isPostPage) return
     if (Object.keys(formData).indexOf('title') < 0 || formData.title === '')
       return swal('發文失敗', '標題為必填選項喔！', 'error')
     if (Object.keys(formData).indexOf('content') < 0 || formData.content === '')
@@ -202,11 +204,12 @@ export default function ArticlePostPage() {
       swal('無權限', '請先登入或註冊以發表文章', 'error')
       history.push('/login')
     }
-    if (!isArticleRetrieve || isPostPage) return
+    if (isPostPage) return
+    if (!isArticleRetrieve) return
     if (formData.title === '')
-      return swal('發文失敗', '標題為必填選項喔！', 'error')
+      return swal('編輯失敗', '標題為必填選項喔！', 'error')
     if (formData.content === '')
-      return swal('發文失敗', '內文為必填選項喔！', 'error')
+      return swal('編輯失敗', '內文為必填選項喔！', 'error')
     setIsLoadingArticle(true)
     patchArticle(articleID, formData)
       .then((res) => {
@@ -272,11 +275,9 @@ export default function ArticlePostPage() {
             placeholder='開始日期'
             onChange={handleInputChange}
             value={
-              isPostPage
-                ? formData.departure_time
-                : formData.departure_time
-                ? formData.departure_time.slice(0, 10)
-                : ''
+              !isPostPage &&
+              formData.departure_time &&
+              formData.departure_time.slice(0, 10)
             }
           />
           　—　
@@ -285,11 +286,7 @@ export default function ArticlePostPage() {
             placeholder='結束日期'
             onChange={handleInputChange}
             value={
-              isPostPage
-                ? formData.end_time
-                : formData.end_time
-                ? formData.end_time.slice(0, 10)
-                : ''
+              !isPostPage && formData.end_time && formData.end_time.slice(0, 10)
             }
           />
         </FormSubTitleWrapper>

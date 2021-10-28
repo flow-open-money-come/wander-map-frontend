@@ -138,7 +138,6 @@ function AllTrailPage() {
         setIsLoading(false)
       })
   }, [checkedOptions, debouncedKeyWord, setIsLoading])
-
   return (
     <>
       <AllTrailsPageWrapper>
