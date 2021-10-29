@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
@@ -282,19 +282,24 @@ export default function Comments({ isMessage }) {
   const [editing, setEditing] = useState(false)
   const { userInfo } = useContext(AuthContext)
   const [loadingComment, setLoadingComment] = useState(false)
-  function isMessageOrNot(message, comment) {
-    return isMessage ? message : comment
-  }
+
+  const isMessageOrNot = useCallback(
+    (message, comment) => {
+      return isMessage ? message : comment
+    },
+    [isMessage]
+  )
 
   if (trailID) {
     id = trailID
   }
 
   useEffect(() => {
+    let isUnmount = false
     const getMessage = async () => {
       try {
         let res = await isMessageOrNot(getMessages, getComments)(id)
-        if (res.status === 200) {
+        if (res.status === 200 && !isUnmount) {
           setMessages(res.data.data)
         }
       } catch (err) {
@@ -303,13 +308,14 @@ export default function Comments({ isMessage }) {
       }
     }
     getMessage()
+    return () => (isUnmount = true)
   }, [
     setInputValue,
     setEditValue,
     setLoadingComment,
     loadingComment,
+    isMessageOrNot,
     userInfo,
-    id,
   ])
 
   const handleSubmit = async (e) => {
@@ -418,7 +424,7 @@ export default function Comments({ isMessage }) {
           </SentBtn>
         </CommentsHeader>
         {messages.map((message) => (
-          <Card>
+          <Card key={isMessageOrNot(message.message_id, message.comment_id)}>
             <CommentInfo>
               <CommentViewInfo>
                 <UserAvatar

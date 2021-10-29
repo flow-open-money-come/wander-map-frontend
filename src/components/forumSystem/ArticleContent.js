@@ -4,7 +4,6 @@ import { FONT, COLOR, MEDIA_QUERY, EFFECT } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 import ReactHtmlParser from 'react-html-parser'
-import { useEffect } from 'react/cjs/react.development'
 
 const UserName = styled(Link)`
   color: ${COLOR.black};

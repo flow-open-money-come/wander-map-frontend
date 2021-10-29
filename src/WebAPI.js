@@ -155,7 +155,8 @@ export const deleteMessage = (articleID, messageID) =>
 // 其他 IMGUR WEATHER 等等
 export const getWeatherInfo = (country, town) =>
   axios.get(
-    config.weatherHost + `${country}?Authorization=${process.env.REACT_APP_WEATHER_TOKEN}&locationName=${town}&elementName=T,Wx,PoP12h`
+    config.weatherHost +
+      `${country}?Authorization=${process.env.REACT_APP_WEATHER_TOKEN}&locationName=${town}&elementName=T,Wx,PoP12h`
   )
 
 export const postImgur = (imageData) =>

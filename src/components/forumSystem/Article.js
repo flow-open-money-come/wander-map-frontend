@@ -159,8 +159,9 @@ export default function ArticleList({
   authorId,
 }) {
   const { userInfo } = useContext(AuthContext)
+
   return (
-    <ArticlesContainer key={id} to={articlePage}>
+    <ArticlesContainer to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>

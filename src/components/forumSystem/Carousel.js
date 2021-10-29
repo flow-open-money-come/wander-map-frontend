@@ -257,60 +257,60 @@ export default function Carousel({ slides }) {
     <Slider>
       <LeftArrow onClick={prevSlide}></LeftArrow>
       <RightArrow onClick={nextSlide}></RightArrow>
-      {slides.map((slide, index) => {
-        return (
-          <>
-            {index === current && (
-              <SlideLink to={`/articles/${slide.article_id}`}>
-                <SlideImage src={slide.cover_picture_url} />
-                <ArticleInfoContainer>
-                  <ArticleTitleAndLikes>
-                    <ArticleTitle>{slide.title}</ArticleTitle>
-                    <ArticleLikes>
-                      {slide.count}
-                      <ThumbUp />
-                    </ArticleLikes>
-                  </ArticleTitleAndLikes>
-                  <ArticleTags>
-                    {!slide.tag_names ? (
-                      <ArticleTag noTag></ArticleTag>
-                    ) : (
-                      slide.tag_names.split(',').map((tag) => {
-                        return <ArticleTag>{tag}</ArticleTag>
-                      })
-                    )}
-                  </ArticleTags>
-                  <ArticleContent>
-                    {ReactHtmlParser(slide.content)}
-                  </ArticleContent>
-                  <ArticleInfo>
-                    <ArticleUser
-                      to={
-                        userInfo && userInfo.user_id === slide.author_id
-                          ? userInfo.role === 'admin'
-                            ? `/admin`
-                            : `/backstage/${slide.author_id}`
-                          : `/user/${slide.author_id}`
-                      }
-                    >
-                      <UserAvatar src={slide.icon_url} />
-                      <UserInfo>
-                        <UserName>{slide.nickname}</UserName>
-                        <ArticleDate>
-                          {new Date(
-                            new Date(slide.created_at).getTime() +
-                              8 * 3600 * 1000
-                          ).toLocaleString('ja')}
-                        </ArticleDate>
-                      </UserInfo>
-                    </ArticleUser>
-                  </ArticleInfo>
-                </ArticleInfoContainer>
-              </SlideLink>
-            )}
-          </>
-        )
-      })}
+      {slides.map((slide, index) => (
+        <>
+          {index === current && (
+            <SlideLink
+              key={slide.article_id}
+              to={`/articles/${slide.article_id}`}
+            >
+              <SlideImage src={slide.cover_picture_url} />
+              <ArticleInfoContainer>
+                <ArticleTitleAndLikes>
+                  <ArticleTitle>{slide.title}</ArticleTitle>
+                  <ArticleLikes>
+                    {slide.count}
+                    <ThumbUp />
+                  </ArticleLikes>
+                </ArticleTitleAndLikes>
+                <ArticleTags>
+                  {!slide.tag_names ? (
+                    <ArticleTag noTag></ArticleTag>
+                  ) : (
+                    slide.tag_names.split(',').map((tag) => {
+                      return <ArticleTag>{tag}</ArticleTag>
+                    })
+                  )}
+                </ArticleTags>
+                <ArticleContent>
+                  {ReactHtmlParser(slide.content)}
+                </ArticleContent>
+                <ArticleInfo>
+                  <ArticleUser
+                    to={
+                      userInfo && userInfo.user_id === slide.author_id
+                        ? userInfo.role === 'admin'
+                          ? `/admin`
+                          : `/backstage/${slide.author_id}`
+                        : `/user/${slide.author_id}`
+                    }
+                  >
+                    <UserAvatar src={slide.icon_url} />
+                    <UserInfo>
+                      <UserName>{slide.nickname}</UserName>
+                      <ArticleDate>
+                        {new Date(
+                          new Date(slide.created_at).getTime() + 8 * 3600 * 1000
+                        ).toLocaleString('ja')}
+                      </ArticleDate>
+                    </UserInfo>
+                  </ArticleUser>
+                </ArticleInfo>
+              </ArticleInfoContainer>
+            </SlideLink>
+          )}
+        </>
+      ))}
     </Slider>
   )
 }
