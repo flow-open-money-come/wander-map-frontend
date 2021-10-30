@@ -7,7 +7,7 @@ const useDidMountEffect = (myFunc, dependencies) => {
   useEffect(() => {
     if (didMount.current) myFunc()
     else didMount.current = true
-  }, dependencies)
+  }, [dependencies])
 }
 
 export default useDidMountEffect

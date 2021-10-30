@@ -159,10 +159,7 @@ const NavBarHamburgerLine = styled.div`
   background-color: ${COLOR.green};
   top: 50%;
   transform: translateY(-50%);
-  ${(props) =>
-    props.$isActive &&
-    `
-      display:none`};
+  display: none;
 `
 
 const NavBarMobile = styled.div`
