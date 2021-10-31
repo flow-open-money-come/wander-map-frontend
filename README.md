@@ -62,7 +62,7 @@
 
 |測試帳號|密碼|權限|
 |---|---|---|
-|admin@gmail.com|Wandermap587!|管理員|
+|admintest@gmail.com|admintest123|管理員|
 |yoyo@gmail.com|123123qweqwe|普通會員|
 
 
