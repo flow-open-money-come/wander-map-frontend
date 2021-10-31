@@ -36,7 +36,9 @@ export const ResetStyle = createGlobalStyle`
   body {
       line-height: 1;
       height: 100%;
-      margin: 0
+      margin: 0;
+      display: flex;
+      flex-direction: column;
   }
   ol, ul {
     list-style: none;
