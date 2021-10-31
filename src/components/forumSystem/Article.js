@@ -146,7 +146,7 @@ const ArticlesInfo = styled.div`
 `
 
 export default function ArticleList({
-  id,
+  key,
   title,
   content,
   tags,
@@ -160,7 +160,7 @@ export default function ArticleList({
 }) {
   const { userInfo } = useContext(AuthContext)
   return (
-    <ArticlesContainer key={id} to={articlePage}>
+    <ArticlesContainer key={key} to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>

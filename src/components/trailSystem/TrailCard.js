@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, MEDIA_QUERY, RADIUS } from '../../constants/style'
 import { ReactComponent as LocationSvg } from '../../icons/location_s.svg'
-import { useHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 
-const FilteredTrailCard = styled.div`
+const FilteredTrailCard = styled(Link)`
+  color: black;
   width: 250px;
   height: 280px;
   border-radius: ${RADIUS.md};
@@ -72,14 +73,11 @@ const Location = styled(LocationSvg)`
 `
 
 export default function TrailCard({ trailInfo }) {
-  const history = useHistory()
   return (
     <>
       <FilteredTrailCard
         key={trailInfo.trail_id}
-        onClick={() => {
-          history.push(`/trails/${trailInfo.trail_id}`)
-        }}
+        to={`/trails/${trailInfo.trail_id}`}
       >
         <FilteredTrailImgWrapper>
           <FilteredTrailImg src={trailInfo.cover_picture_url} />

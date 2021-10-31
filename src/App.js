@@ -119,6 +119,9 @@ function App() {
               <Route path='/trails/:id'>
                 <TrailPage />
               </Route>
+              <Route path='*'>
+                <HomePage />
+              </Route>
             </Switch>
             <BackToTopBtn />
             <Footer />
