@@ -44,21 +44,26 @@
 
 ### 論壇系統
 
-使用者在論壇當中可以關鍵字或標籤來搜尋心得。
+使用者在論壇當中可以關鍵字或標籤來搜尋心得文章。
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E8%AB%96%E5%A3%87%E6%90%9C%E5%B0%8B%E7%AF%A9%E9%81%B8%E6%96%87%E7%AB%A0.gif)
 
 
-並且在每篇心得底下，會員們能夠一起討論交流！
+並且在每篇心得文章底下，會員們能夠一起討論交流！
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E5%96%AE%E4%B8%80%E5%BF%83%E5%BE%97%E9%A0%81%E9%9D%A2.gif)
 
 ### 會員系統
 
-註冊成為會員之使用者可以發表心得 (CRUD) 及評論 (CRUD)。在個人後台除了能檢視個人資訊外，也可管理個人發表過的文章、收藏之步道、按讚過的步道，也能擁有自己專屬的裝備清單 (CRUD)。
+註冊成為會員之使用者可以發表心得文章 (CRUD) 及評論 (CRUD)。在個人後台除了能檢視個人資訊外，也可管理個人發表過的文章、收藏之步道、按讚過的步道，也能擁有自己專屬的裝備清單 (CRUD)。
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E8%A8%BB%E5%86%8A%E6%88%90%E5%8A%9F.gif)
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E5%BE%8C%E5%8F%B0%E4%BF%AE%E6%94%B9%E8%B3%87%E8%A8%8A.gif)
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E6%96%B0%E5%A2%9E%E6%96%87%E7%AB%A0%E4%B8%A6%E6%94%B6%E8%97%8F.gif)
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E8%A3%9D%E5%82%99%E6%B8%85%E5%96%AE.gif)
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E6%94%B6%E8%97%8F%E6%96%87%E7%AB%A0.gif)
+
+|測試帳號|密碼|權限|
+|---|---|---|
+|admin@gmail.com|Wandermap587!|管理員|
+|yoyo@gmail.com|123123qweqwe|普通會員|
 
 
 > 權限系統： 主要三種角色，權限低到高分別為未登入使用者、會員及管理員。
@@ -178,7 +183,7 @@
  . ＿＿ ∧ ∧             
 ／＼   (*ﾟ∀ﾟ)＼      專案構想、wireframe 繪製、
 ＼／|￣￣∪ ∪￣|＼   前端（會員個人頁面（公開＆會員）、
- ＼|    Cmt   |     新增步道頁面、新增心得頁面）
+ ＼|    Cmt   |     新增步道頁面、新增文章頁面）
      ￣￣￣￣￣
 ```
 
@@ -186,7 +191,7 @@
 ```markdown
  . ＿＿ ∧ ∧             
 ／＼   (*ﾟ∀ﾟ)＼      專案雛形發想、wireframe 繪製、
-＼／|￣￣∪ ∪￣|＼   前端（管理員後台、單一步道頁面）、
+＼／|￣￣∪ ∪￣|＼   前端（管理員後台、單一步道頁面、新增編輯步道頁面）、
  ＼|   Dylan  |     後端（trail API、article API、swagger 文件、部署）
      ￣￣￣￣￣
 ```
@@ -204,8 +209,8 @@
 ```markdown
  . ＿＿ ∧ ∧             
 ／＼   (*ﾟ∀ﾟ)＼      專案構想、wireframe 繪製、
-＼／|￣￣∪ ∪￣|＼   前端 （功能測試（google map, 圖片上傳, ckeditor 串接）、
- ＼|     Yu   |     首頁、全部步道頁面、會員系統、部署）
+＼／|￣￣∪ ∪￣|＼   前端 （首頁、全部步道頁面、會員系統、
+ ＼|     Yu   |      新增編輯文章頁面、會員後台、部署）
      ￣￣￣￣￣
 ```
 
@@ -213,7 +218,7 @@
 ```markdown
  . ＿＿ ∧ ∧             
 ／＼   (*ﾟ∀ﾟ)＼      專案雛形發想、專案構想、wireframe 繪製、
-＼／|￣￣∪ ∪￣|＼   前端 （單一心得頁面、全部心得頁面）、
+＼／|￣￣∪ ∪￣|＼   前端 （單一文章頁面、全部文章頁面）、
  ＼|    Ader  |     後端（article API）
      ￣￣￣￣￣
 ```
