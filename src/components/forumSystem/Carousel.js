@@ -176,6 +176,9 @@ const ArticleTag = styled.div`
 
 const ArticleInfo = styled.div`
   display: none;
+  &:hover {
+    opacity: 0.8;
+  }
 
   ${MEDIA_QUERY.lg} {
     display: flex;

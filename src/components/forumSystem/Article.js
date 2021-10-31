@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, memo } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
@@ -140,12 +140,15 @@ const ArticlesInfo = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+  &:hover {
+    opacity: 0.9;
+  }
   ${MEDIA_QUERY.md} {
     justify-content: space-between;
   }
 `
 
-export default function ArticleList({
+function ArticleList({
   id,
   title,
   content,
@@ -159,9 +162,9 @@ export default function ArticleList({
   authorId,
 }) {
   const { userInfo } = useContext(AuthContext)
-
+  console.log('test')
   return (
-    <ArticlesContainer to={articlePage}>
+    <ArticlesContainer key={id} to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
@@ -195,3 +198,5 @@ export default function ArticleList({
     </ArticlesContainer>
   )
 }
+
+export default memo(ArticleList)
