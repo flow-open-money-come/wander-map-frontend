@@ -107,9 +107,10 @@ export default function DropDownCheckBoxList({
           <ArrowUp $isActive={arrowToggleClick} onClick={setArrowToggleClick} />
         </DropDownCheckBoxTitle>
         <DropDownCheckBoxes $isActive={arrowToggleClick}>
-          {options.map((option) => {
+          {options.map((option, index) => {
             return (
               <DropDownCheckBox
+                key={index}
                 option={option}
                 filter={filter}
               ></DropDownCheckBox>

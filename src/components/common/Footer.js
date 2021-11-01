@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { COLOR, EFFECT, FONT, MEDIA_QUERY, RADIUS } from '../../constants/style'
 import { ReactComponent as GitHubIcon } from '../../icons/GitHub.svg'
-import { useContext } from 'react'
+import { useContext, memo } from 'react'
 import { LoadingContext } from '../../context'
 
 const FooterContainer = styled.footer`
@@ -50,7 +50,7 @@ const GitHubLink = styled.a`
   }
 `
 
-export default function Footer() {
+export default memo(function Footer() {
   const { isLoading } = useContext(LoadingContext)
   return (
     <>
@@ -63,4 +63,4 @@ export default function Footer() {
       </FooterContainer>
     </>
   )
-}
+})

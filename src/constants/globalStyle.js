@@ -35,7 +35,7 @@ export const ResetStyle = createGlobalStyle`
   }
   body {
       line-height: 1;
-      height: 100%;
+      height: 100vh;
       margin: 0;
       display: flex;
       flex-direction: column;
