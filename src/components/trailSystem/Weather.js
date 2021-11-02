@@ -169,7 +169,7 @@ const Weather = ({ location }) => {
         rainPossibility: weekRainPossibility
       })
     })
-  }, [country, town])
+  }, [country, town, countryCode])
 
   const dayLoop = [0, 1, 2, 3, 4, 5, 6]
 
