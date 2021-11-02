@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import styled from 'styled-components'
 import {
   COLOR,
@@ -166,25 +166,28 @@ function TrailPage() {
   const [ condition, setCondition ] = useState(null) 
 
   useEffect(() => {
-    setIsLoading(true)
-    getTrails(id)
-      .then((res) => {
-        res.data.data[0]
-          ? setTrailInfo(res.data.data[0])
-          : history.push(`/trails`)
-        setLoadingCollect(true)
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        console.error(error)
-        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-      })
-    getTrailArticles(id, '')
-      .then((res) => setArticles(res.data.data))
-      .catch((error) => {
-        console.error(error)
-        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-    })
+    const fetchData = async () => {
+      setIsLoading(true)
+      const [trailData, articlesData] = await Promise.all([
+        getTrails(id)
+          .then((res) => res.data.data[0])
+          .catch((error) => {
+            console.error(error)
+            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          }),
+        getTrailArticles(id, '')
+          .then((res) => res.data.data)
+          .catch((error) => {
+            console.error(error)
+            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          })
+      ])
+      trailData ? setTrailInfo(trailData) : history.push(`/trails`)
+      setArticles(articlesData)
+      setLoadingCollect(true)
+      setIsLoading(false)
+    }
+    fetchData()
   }, [id, history, setIsLoading])
 
   useEffect(() => {
