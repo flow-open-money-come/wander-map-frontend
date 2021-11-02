@@ -11,6 +11,8 @@ import CoordinateInput from '../../../components/formSystem/CoordinateInput'
 import SelectSeason from '../../../components/formSystem/SelectSeason'
 import UploadGpx from '../../../components/formSystem/UploadGpx'
 import { NavBarButton } from '../../../components/common/Button'
+import swal from 'sweetalert'
+import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 
 const TrailsPostWrapper = styled.div`
   margin: 0 auto;
@@ -164,24 +166,29 @@ export default function TrailPostPage() {
   let isPostPage = useRouteMatch('/post-trail')
   const { trailID } = useParams()
   const history = useHistory()
-
-  const [errorMessage, setErrorMessage] = useState()
+  const [isLoadingTrail, setIsLoadingTrail] = useState(false)
+  const [isTrailRetrieve, setIsTrailRetrieve] = useState(false)
   const [formData, setFormData] = useState({ author_id: userInfo.user_id })
 
   if (!userInfo || userInfo.role !== 'admin') history.push('/')
 
   useEffect(() => {
     if (!isPostPage) {
+      setIsLoadingTrail(true)
       getTrails(trailID)
         .then((res) => {
           setFormData({
             ...res.data.data[0],
             coordinateX: res.data.data[0].coordinate.x,
-            coordinateY: res.data.data[0].coordinate.y
+            coordinateY: res.data.data[0].coordinate.y,
           })
+          setIsLoadingTrail(false)
+          setIsTrailRetrieve(true)
         })
         .catch((err) => {
-          console.log(err)
+          setIsLoadingTrail(false)
+          setIsTrailRetrieve(false)
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         })
     }
   }, [trailID, isPostPage])
@@ -195,36 +202,44 @@ export default function TrailPostPage() {
   }
 
   const handlePostSubmit = (e) => {
-    // console.log(formData)
     e.preventDefault()
+    if (!isPostPage) return
+    if (Object.keys(formData).indexOf('title') < 0 || formData.title === '')
+      return swal('發文失敗', '標題為必填選項喔！', 'error')
+    if (Object.keys(formData).indexOf('content') < 0 || formData.content === '')
+      return swal('發文失敗', '內文為必填選項喔！', 'error')
+    setIsLoadingTrail(true)
     postTrails(formData)
       .then((res) => {
-        console.log('PostSubmit', res.data)
+        setIsLoadingTrail(false)
         const id = res.data.data.insertId
-        history.push(`/trails/${id}`)
+        swal('發佈成功', {
+          icon: 'success',
+          button: '關閉',
+        })
+        return history.push(`/trails/${id}`)
       })
       .catch((err) => {
-        console.log(err.response)
-        setErrorMessage('親愛的管理員您好，所有欄位皆必填喔!')
+        setIsLoadingTrail(false)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }
 
   const handlePatchSubmit = (e) => {
-    console.log('before PatchSubmit', formData)
     e.preventDefault()
     patchTrail(trailID, formData)
       .then((res) => {
-        console.log('patchTrail', res.data)
         history.push(`/trails/${trailID}`)
       })
       .catch((err) => {
-        console.log(err.response.data)
-        setErrorMessage('親愛的管理員您好，所有欄位皆必填喔!')
+        setIsLoadingTrail(false)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
   }
 
   return (
     <TrailsPostWrapper>
+      {isLoadingTrail && <SmallRegionLoading />}
       {isPostPage ? (
         <>
           <PageName>新增步道</PageName>
@@ -233,7 +248,6 @@ export default function TrailPostPage() {
       ) : (
         <PageName>編輯步道</PageName>
       )}
-      <ErrorMessage>{errorMessage}</ErrorMessage>
       <FormWrapper>
         <FormTitle>步道名稱</FormTitle>
         <Input
@@ -250,7 +264,6 @@ export default function TrailPostPage() {
             name='cover_picture_url'
             formData={formData}
             setFormData={setFormData}
-            setErrorMessage={setErrorMessage}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
@@ -345,7 +358,6 @@ export default function TrailPostPage() {
             name='map_picture_url'
             formData={formData}
             setFormData={setFormData}
-            setErrorMessage={setErrorMessage}
           />
         </FormSubTitleWrapper>
       </FormWrapper>
