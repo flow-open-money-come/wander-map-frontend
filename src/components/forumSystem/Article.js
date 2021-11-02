@@ -162,7 +162,6 @@ function ArticleList({
   authorId,
 }) {
   const { userInfo } = useContext(AuthContext)
-  console.log('test')
   return (
     <ArticlesContainer key={id} to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
