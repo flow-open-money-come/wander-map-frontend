@@ -60,6 +60,7 @@ const ArticleInfoContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   ${MEDIA_QUERY.lg} {
+    width: 72%;
     text-overflow: ellipsis;
     overflow: hidden;
   }
@@ -121,7 +122,6 @@ const ArticleContent = styled.div`
   display: none;
 
   ${MEDIA_QUERY.lg} {
-    width: 100%;
     display: block;
     padding: 10px 10px 10px 0;
     line-height: 2rem;

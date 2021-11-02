@@ -190,6 +190,7 @@ function ArticlePage() {
   }, [post])
 
   useEffect(() => {
+    setThumb(false)
     const getLike = async () => {
       try {
         let res = await getUserLiked(userInfo.user_id)
