@@ -153,14 +153,6 @@ const Submit = styled.input.attrs((props) => ({
   font-size: ${FONT.md};
 `
 
-const ErrorMessage = styled.div`
-  text-align: center;
-  margin: 20px auto;
-  color: #ff0000;
-  font-weight: 600;
-  font-size: ${FONT.s};
-`
-
 export default function TrailPostPage() {
   const { userInfo } = useContext(AuthContext)
   let isPostPage = useRouteMatch('/post-trail')
@@ -206,7 +198,10 @@ export default function TrailPostPage() {
     if (!isPostPage) return
     if (Object.keys(formData).indexOf('title') < 0 || formData.title === '')
       return swal('發文失敗', '標題為必填選項喔！', 'error')
-    if (Object.keys(formData).indexOf('content') < 0 || formData.content === '')
+    if (
+      Object.keys(formData).indexOf('description') < 0 ||
+      formData.description === ''
+    )
       return swal('發文失敗', '內文為必填選項喔！', 'error')
     setIsLoadingTrail(true)
     postTrails(formData)
