@@ -13,6 +13,7 @@ import { AuthContext, LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import swal from 'sweetalert'
 import SmallRegionLoading from '../common/SmallRegionLoading'
+import useDeleteToggle from '../../hooks/useDeleteToggle'
 
 
 const SearchBar = styled.div`
@@ -202,11 +203,14 @@ function TrailsManagement({ recycle, setRecycle }) {
   const [totalPages, setTotalPages] = useState(0)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const history = useHistory()
+  const { handleDelete, handleRecover } = useDeleteToggle()
 
   useEffect(() => {
+    let isMounted = false
     setIsLoading(true)
     getTrails(`?offset=${(page - 1) * 20}&search=${searchResults}`)
       .then((res) => {
+        if (isMounted) return
         setTrails(res.data.data)
         setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
         setIsLoading(false)
@@ -221,46 +225,15 @@ function TrailsManagement({ recycle, setRecycle }) {
         console.error(err)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
+    return () => {
+      isMounted = true
+    }
   }, [page, searchResults, recycle, setIsLoading])
 
 
   useEffect(() => {
     if (!searchValue) setSearchResults('')
   }, [searchValue])
-
-  const handleDelete = (trailID, trailTitle) => {
-    if (!userInfo || userInfo.role !== 'admin') return
-    swal({
-      title: '確定刪除嗎？',
-      icon: 'warning',
-      buttons: ['取消', '確定'],
-      dangerMode: true
-    }).then((willDo) => {
-      if (willDo) {
-        deleteTrail(trailID)
-          .then((res) => {
-            if (res.data.success) {
-              setTrails(trails.filter((trail) => trail.trail_id !== trailID))
-              swal(`已刪除步道 ${trailTitle}`, {
-                icon: 'success',
-                button: '關閉'
-              })
-            }
-          })
-          .catch((err) => {
-            console.log(err.response)
-            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-        })
-      }
-    })
-  }
-
-  const handleRecover = (trailID, trailTitle) => {
-    if (!userInfo || userInfo.role !== 'admin') return
-    recoverTrail(trailID).then()
-    swal(`恢復步道`, `${trailTitle}`, 'success')
-    setDeletedTrails(deletedTrails.filter((trail) => trail.trail_id !== trailID))
-  }
 
   return (
     <>
@@ -321,7 +294,7 @@ function TrailsManagement({ recycle, setRecycle }) {
                       </Link>
                       <BinIcon
                         onClick={() => {
-                          handleDelete(trail.trail_id, trail.title)
+                          handleDelete(trail.trail_id, trail.title, setTrails, trails, false)
                         }}
                       />
                     </BtnTd>
@@ -340,7 +313,13 @@ function TrailsManagement({ recycle, setRecycle }) {
                     <BtnTd>
                       <RecoverIcon
                         onClick={() => {
-                          handleRecover(trail.trail_id, trail.title)
+                          handleRecover(
+                            trail.trail_id,
+                            trail.title,
+                            setDeletedTrails,
+                            deletedTrails,
+                            false
+                          )
                         }}
                       />
                     </BtnTd>

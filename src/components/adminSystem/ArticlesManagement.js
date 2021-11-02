@@ -6,12 +6,13 @@ import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg'
 import { ReactComponent as RecycleIcon } from '../../icons/backstage/recycle.svg'
 import { ReactComponent as AddIcon } from '../../icons/user/plus.svg'
-import { getArticles, deleteArticle, getDeletedArticle, recoverArticle } from '../../WebAPI'
+import { getArticles, getDeletedArticle } from '../../WebAPI'
 import { Link, useHistory } from 'react-router-dom'
-import { AuthContext, LoadingContext } from '../../context'
+import { LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import swal from 'sweetalert'
 import SmallRegionLoading from '../common/SmallRegionLoading'
+import useDeleteToggle from '../../hooks/useDeleteToggle'
 
 const SearchBar = styled.div`
   border: 1px solid #c4c4c4;
@@ -206,16 +207,18 @@ function ArticlesManagement({ recycle, setRecycle }) {
   const [deletedArticles, setDeletedArticles] = useState(null)
   const [searchValue, setSearchValue] = useState('')
   const [searchResults, setSearchResults] = useState('')
-  const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const history = useHistory()
+  const { handleDelete, handleRecover } = useDeleteToggle()
 
   useEffect(() => {
+    let isMounted = false
     setIsLoading(true)
     getArticles(`?offset=${(page - 1) * 20}&search=${searchResults}`)
       .then((res) => {
+        if (isMounted) return
         setArticles(res.data.data)
         setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
         setIsLoading(false)
@@ -230,46 +233,14 @@ function ArticlesManagement({ recycle, setRecycle }) {
         console.error(err)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
+    return () => {
+      isMounted = true
+    }
   }, [page, searchResults, recycle, setIsLoading])
 
   useEffect(() => {
     if (!searchValue) setSearchResults('')
   }, [searchValue])
-
-
-  const handleDelete = (articleID, articleTitle) => {
-    if (!userInfo || userInfo.role !== 'admin') return
-    swal({
-      title: '確定刪除嗎？',
-      icon: 'warning',
-      buttons: ['取消', '確定'],
-      dangerMode: true
-    }).then((willDo) => {
-      if (willDo) {
-        deleteArticle(articleID)
-          .then((res) => {
-            if (res.data.success) {
-              setArticles(articles.filter((article) => article.article_id !== articleID))
-              swal(`已刪除文章 ${articleTitle}`, {
-                icon: 'success',
-                button: '關閉'
-              })
-            }
-          })
-          .catch((err) => {
-            console.log(err.response)
-            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-          })
-      }
-    })
-  }
-
-  const handleRecover = (articleID, articleTitle) => {
-    if (!userInfo || userInfo.role !== 'admin') return
-    recoverArticle(articleID).then()
-    swal(`恢復文章`, `${articleTitle}`, 'success')
-    setDeletedArticles(deletedArticles.filter((article) => article.article_id !== articleID))
-  }
 
   return (
     <>
@@ -343,7 +314,7 @@ function ArticlesManagement({ recycle, setRecycle }) {
                     <BtnTd>
                       <BinIcon
                         onClick={() => {
-                          handleDelete(article.article_id, article.title)
+                          handleDelete(article.article_id, article.title, setArticles, articles, true)
                         }}
                       />
                     </BtnTd>
@@ -373,7 +344,13 @@ function ArticlesManagement({ recycle, setRecycle }) {
                     <BtnTd>
                       <RecoverIcon
                         onClick={() => {
-                          handleRecover(article.article_id, article.title)
+                          handleRecover(
+                            article.article_id,
+                            article.title,
+                            setDeletedArticles,
+                            deletedArticles,
+                            true
+                          )
                         }}
                       />
                     </BtnTd>

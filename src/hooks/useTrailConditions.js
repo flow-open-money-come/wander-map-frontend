@@ -11,7 +11,7 @@ export default function useTrailConditions() {
           {},
           ...res.data.map((data) => {
             return {
-              [data.TR_CNAME]: data.TR_TYP,
+              [data.TR_CNAME]: [data.TR_TYP, data.TITLE],
             }
           })
         )
