@@ -202,7 +202,7 @@ export default function TrailPostPage() {
       Object.keys(formData).indexOf('description') < 0 ||
       formData.description === ''
     )
-      return swal('發文失敗', '內文為必填選項喔！', 'error')
+      return swal('發文失敗', '簡介為必填選項喔！', 'error')
     setIsLoadingTrail(true)
     postTrails(formData)
       .then((res) => {
@@ -222,8 +222,20 @@ export default function TrailPostPage() {
 
   const handlePatchSubmit = (e) => {
     e.preventDefault()
+    if (isPostPage) return
+    if (!isTrailRetrieve) return
+    if (formData.title === '')
+      return swal('編輯失敗', '標題為必填選項喔！', 'error')
+    if (formData.description === '')
+      return swal('編輯失敗', '簡介為必填選項喔！', 'error')
+    setIsLoadingTrail(true)
     patchTrail(trailID, formData)
       .then((res) => {
+        setIsLoadingTrail(false)
+        swal('文章編輯成功', {
+          icon: 'success',
+          button: '關閉',
+        })
         history.push(`/trails/${trailID}`)
       })
       .catch((err) => {
