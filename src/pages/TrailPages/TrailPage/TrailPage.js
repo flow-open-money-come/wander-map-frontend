@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import {
   COLOR,
@@ -191,11 +191,12 @@ function TrailPage() {
   }, [id, history, setIsLoading])
 
   useEffect(() => {
+    setThumb(false)
     if (userInfo) {
       getUserCollect(userInfo.user_id)
         .then((res) =>
           res.data.data.trails.forEach((trail) => {
-            if (trail.trail_id == id) setThumb(true)
+            if (trail.trail_id === Number(id))  setThumb(true)
           })
         )
         .catch((error) => {
@@ -207,6 +208,7 @@ function TrailPage() {
 
   useEffect(() => {
     if (trailInfo) {
+      setCondition(null)
       getTrailsCondition()
         .then((res) => {
           const conditionList = res.data

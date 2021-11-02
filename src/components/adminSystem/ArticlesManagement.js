@@ -226,7 +226,10 @@ function ArticlesManagement({ recycle, setRecycle }) {
       })
     getDeletedArticle(`?offset=${(page - 1) * 20}`)
       .then((res) => setDeletedArticles(res.data.data))
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+      })
   }, [page, searchResults, recycle, setIsLoading])
 
   useEffect(() => {
@@ -253,7 +256,10 @@ function ArticlesManagement({ recycle, setRecycle }) {
               })
             }
           })
-          .catch((err) => console.log(err.response))
+          .catch((err) => {
+            console.log(err.response)
+            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          })
       }
     })
   }

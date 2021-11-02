@@ -2,6 +2,7 @@ import { useState, useContext } from 'react'
 import { useParams, useRouteMatch } from 'react-router-dom'
 import { AuthContext } from '../context'
 import { postArticleLike, removeArticleLike, collectTrail, cancelCollected } from '../WebAPI'
+import swal from 'sweetalert'
 
 export default function useLike() {
   const [thumb, setThumb] = useState(false)
@@ -20,7 +21,7 @@ export default function useLike() {
           ? postArticleLike(userInfo.user_id, id)
           : collectTrail(userInfo.user_id, id))
         if (res.status !== 200) {
-          alert('按讚失敗')
+          swal('按讚失敗！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         }
       } catch (err) {
         console.log(err)
@@ -32,7 +33,7 @@ export default function useLike() {
           ? removeArticleLike(userInfo.user_id, id)
           : cancelCollected(userInfo.user_id, id))
         if (res.status !== 200) {
-          alert('取消按讚失敗')
+          swal('取消按讚失敗！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         }
       } catch (err) {
         console.log(err)
