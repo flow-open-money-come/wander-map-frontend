@@ -29,13 +29,13 @@ const ArticlesImg = styled.img`
   }
 `
 const UserAvatar = styled.img`
-  width: 30px;
+  min-width: 30px;
   height: 30px;
   border-radius: 50%;
   border: 1px solid ${COLOR.gray_light};
   object-fit: cover;
   ${MEDIA_QUERY.md} {
-    width: 45px;
+    min-width: 45px;
     height: 45px;
     margin-right: 13px;
   }
