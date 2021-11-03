@@ -19,6 +19,7 @@ const Wrapper = styled.div`
   width: 90%;
   display: flex;
   flex-wrap: wrap;
+  min-height: 86vh;
 `
 
 const MemberProfileWrapper = styled.div`
