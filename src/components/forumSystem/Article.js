@@ -1,4 +1,4 @@
-import React, { useContext, memo } from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
@@ -209,4 +209,4 @@ function ArticleList({
   )
 }
 
-export default memo(ArticleList)
+export default ArticleList
