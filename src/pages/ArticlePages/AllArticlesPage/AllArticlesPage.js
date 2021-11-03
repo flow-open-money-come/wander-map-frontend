@@ -18,6 +18,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  min-height: 86vh;
 
   ${MEDIA_QUERY.md} {
     width: 90%;
@@ -241,7 +242,7 @@ function AllArticlesPage() {
               authorId={post.author_id}
             />
           ))}
-          {tagValue && posts.length === 0 && (
+          {tagValue && posts.length === 0 && !isLoading && (
             <NoRelatedArticleNotice>暫無相關文章</NoRelatedArticleNotice>
           )}
           {posts.length !== 0 && !overLoad && (

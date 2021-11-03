@@ -29,16 +29,27 @@ const ArticlesImg = styled.img`
   }
 `
 const UserAvatar = styled.img`
-  min-width: 30px;
+  width: 30px;
   height: 30px;
   border-radius: 50%;
   border: 1px solid ${COLOR.gray_light};
   object-fit: cover;
+
   ${MEDIA_QUERY.md} {
-    min-width: 45px;
+    width: 45px;
     height: 45px;
     margin-right: 13px;
   }
+
+  ${(props) =>
+    props.width === true &&
+    `
+      min-width: 30px;
+
+      ${MEDIA_QUERY.md} {
+        min-width: 45px;
+      }
+  `}
 `
 const ArticlesTags = styled.div`
   display: flex;
@@ -161,6 +172,7 @@ function ArticleList({
   lessRwd,
   articlePage,
   authorId,
+  width,
 }) {
   const { userInfo } = useContext(AuthContext)
   const { toUserInfo } = useUserInfo()
@@ -185,7 +197,7 @@ function ArticleList({
         </ArticlesContent>
         <ArticlesInfo>
           <ArticlesUser to={toUserInfo(authorId, userInfo)}>
-            <UserAvatar src={avatarImgSrc} />
+            <UserAvatar width={width} src={avatarImgSrc} />
             <UserInfo>
               <UserName>{user}</UserName>
               <ArticlesDate>{date}</ArticlesDate>
