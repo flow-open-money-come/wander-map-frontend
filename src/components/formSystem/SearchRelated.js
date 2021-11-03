@@ -56,10 +56,9 @@ export default function SearchRelated({
 
   useEffect(() => {
     setFilteredDate(
-      trailsData.filter(
-        (trail) => trail.toLowerCase().indexOf(keyWord.toLowerCase()) !== -1
-      )
+      trailsData.filter((trail) => trail.toLowerCase().indexOf(keyWord) > -1)
     )
+
     if (Object.keys(formData).length > 0 && !isPostPage) {
       if (!formData.trail_title) return
       setRelatedTrail(formData.trail_title)

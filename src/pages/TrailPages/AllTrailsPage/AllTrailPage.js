@@ -28,6 +28,7 @@ const AllTrailsPageWrapper = styled.div`
   margin: 0 auto;
   position: relative;
   padding-bottom: 50px;
+  flex-grow: 1;
 `
 const AllTrailsPageTitleWrapper = styled.div`
   font-size: ${FONT.lg};
@@ -138,7 +139,6 @@ function AllTrailPage() {
         setIsLoading(false)
       })
   }, [checkedOptions, debouncedKeyWord, setIsLoading])
-
   return (
     <>
       <AllTrailsPageWrapper>

@@ -11,7 +11,7 @@ const FooterContainer = styled.footer`
   font-size: ${FONT.s};
   line-height: 1.5rem;
   padding: 10px;
-  position: sticky;
+  position: relative;
   bottom: 0px;
   display: flex;
   flex-direction: column;
