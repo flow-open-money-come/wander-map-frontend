@@ -18,6 +18,7 @@ import {
 import { AuthContext } from '../../../src/context'
 import SmallRegionLoading from '../../components/common/SmallRegionLoading'
 import { useInput } from '../../hooks/useInput'
+import useUserInfo from '../../hooks/useUserInfo'
 import swal from 'sweetalert'
 
 const CommentsContainer = styled.div`
@@ -277,6 +278,7 @@ export default function Comments({ isMessage }) {
   const { trailID } = useParams()
   const [reminder, setReminder] = useState('')
   const { inputValue, setInputValue, handleInputChange } = useInput()
+  const { toUserInfo } = useUserInfo()
   const [messages, setMessages] = useState([])
   const [editValue, setEditValue] = useState('')
   const [editing, setEditing] = useState(false)
@@ -428,24 +430,10 @@ export default function Comments({ isMessage }) {
             <CommentInfo>
               <CommentViewInfo>
                 <UserAvatar
-                  to={
-                    userInfo && userInfo.user_id === message.author_id
-                      ? userInfo.role === 'admin'
-                        ? `/admin`
-                        : `/backstage/${message.author_id}`
-                      : `/user/${message.author_id}`
-                  }
+                  to={toUserInfo(message.author_id, userInfo)}
                   src={message.icon_url}
                 />
-                <CommentNickname
-                  to={
-                    userInfo && userInfo.user_id === message.author_id
-                      ? userInfo.role === 'admin'
-                        ? `/admin`
-                        : `/backstage/${message.author_id}`
-                      : `/user/${message.author_id}`
-                  }
-                >
+                <CommentNickname to={toUserInfo(message.author_id, userInfo)}>
                   {message.nickname}
                 </CommentNickname>
               </CommentViewInfo>

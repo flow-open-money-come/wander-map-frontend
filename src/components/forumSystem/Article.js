@@ -4,6 +4,7 @@ import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 import ReactHtmlParser from 'react-html-parser'
+import useUserInfo from '../../hooks/useUserInfo'
 
 const ArticlesContainer = styled(Link)`
   color: ${COLOR.black};
@@ -162,30 +163,28 @@ function ArticleList({
   authorId,
 }) {
   const { userInfo } = useContext(AuthContext)
+  const { toUserInfo } = useUserInfo()
+
   return (
-    <ArticlesContainer key={id} to={articlePage}>
+    <ArticlesContainer to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
         <ArticlesTags>
           {tags &&
             tags.map((tag) => {
-              return <ArticlesTag $lessRwd={lessRwd}>{tag}</ArticlesTag>
+              return (
+                <ArticlesTag key={tag} $lessRwd={lessRwd}>
+                  {tag}
+                </ArticlesTag>
+              )
             })}
         </ArticlesTags>
         <ArticlesContent $lessRwd={lessRwd}>
           {ReactHtmlParser(content.replace(/<img[^>]*>/g, ''))}
         </ArticlesContent>
         <ArticlesInfo>
-          <ArticlesUser
-            to={
-              userInfo && userInfo.user_id === authorId
-                ? userInfo.role === 'admin'
-                  ? `/admin`
-                  : `/backstage/${authorId}`
-                : `/user/${authorId}`
-            }
-          >
+          <ArticlesUser to={toUserInfo(authorId, userInfo)}>
             <UserAvatar src={avatarImgSrc} />
             <UserInfo>
               <UserName>{user}</UserName>

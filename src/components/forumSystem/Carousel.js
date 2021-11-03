@@ -8,6 +8,7 @@ import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 import ReactHtmlParser from 'react-html-parser'
+import useUserInfo from '../../hooks/useUserInfo'
 
 const SlideImage = styled.img`
   width: 100%;
@@ -243,6 +244,7 @@ export default function Carousel({ slides }) {
   const [current, setCurrent] = useState(0)
   const length = slides.length
   const { userInfo } = useContext(AuthContext)
+  const { toUserInfo } = useUserInfo()
 
   if (!Array.isArray(slides) || slides.length === 0) {
     return null
@@ -289,15 +291,7 @@ export default function Carousel({ slides }) {
                   {ReactHtmlParser(slide.content)}
                 </ArticleContent>
                 <ArticleInfo>
-                  <ArticleUser
-                    to={
-                      userInfo && userInfo.user_id === slide.author_id
-                        ? userInfo.role === 'admin'
-                          ? `/admin`
-                          : `/backstage/${slide.author_id}`
-                        : `/user/${slide.author_id}`
-                    }
-                  >
+                  <ArticleUser to={toUserInfo(slide.author_id, userInfo)}>
                     <UserAvatar src={slide.icon_url} />
                     <UserInfo>
                       <UserName>{slide.nickname}</UserName>
