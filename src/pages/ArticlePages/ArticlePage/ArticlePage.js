@@ -171,19 +171,26 @@ function ArticlePage() {
       setIsLoading(false)
     }
     getPost()
-  }, [id, userInfo, setRelatedTrailID, history, setIsLoading])
+  }, [id, setRelatedTrailID, history, setIsLoading])
 
   useEffect(() => {
     if (post.trail_title) {
-      getTrails(`?search=${post.trail_title}`).then((res) => {
-        if (res.data.data[0].trail_id) {
-          setRelatedTrailID(res.data.data[0].trail_id)
+      const getTrailID = async () => {
+        try {
+          let res = await getTrails(`?search=${post.trail_title}`)
+          if (res.data.data[0].trail_id) {
+            setRelatedTrailID(res.data.data[0].trail_id)
+          }
+        } catch (err) {
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         }
-      })
+      }
+      getTrailID()
     }
   }, [post])
 
   useEffect(() => {
+    setThumb(false)
     const getLike = async () => {
       try {
         let res = await getUserLiked(userInfo.user_id)
@@ -201,7 +208,7 @@ function ArticlePage() {
     if (userInfo) {
       getLike()
     }
-  }, [loadingLike, id, userInfo, setThumb])
+  }, [loadingLike, id, setThumb])
 
   return (
     <Wrapper>
