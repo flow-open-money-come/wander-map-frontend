@@ -14,12 +14,12 @@ const SlideImage = styled.img`
   width: 100%;
   height: 100%;
   border-radius: ${RADIUS.lg};
+  object-fit: cover;
 
   ${MEDIA_QUERY.lg} {
     width: 300px;
     height: 300px;
     margin-right: 21px;
-    object-fit: cover;
   }
 `
 
@@ -32,11 +32,12 @@ const Slider = styled.div`
 
 const LeftArrow = styled(Left_Arrow)`
   position: absolute;
-  top: 43%;
+  top: 45%;
   left: -15px;
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
+
   ${MEDIA_QUERY.lg} {
     top: 50%;
     left: -20px;
@@ -45,11 +46,12 @@ const LeftArrow = styled(Left_Arrow)`
 
 const RightArrow = styled(Right_Arrow)`
   position: absolute;
-  top: 43%;
+  top: 45%;
   right: -15px;
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
+
   ${MEDIA_QUERY.lg} {
     top: 50%;
     right: -20px;
@@ -226,9 +228,12 @@ const UserAvatar = styled.img`
 const SlideLink = styled(Link)`
   color: ${COLOR.black};
   width: 100%;
-  height: 100%;
+  height: 250px;
   margin: 10px;
 
+  ${MEDIA_QUERY.md} {
+    height: 300px;
+  }
   ${MEDIA_QUERY.lg} {
     display: flex;
     border-radius: ${RADIUS.lg};
