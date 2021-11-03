@@ -140,7 +140,9 @@ export default function UserBackstage() {
         setUserData(res.data.data)
         setIsLoading(false)
       })
-      .catch((err) => {})
+      .catch((err) => {
+        console.log(err.response)
+      })
   }, [userID, setIsLoading])
 
   const handleOnClick = () => {
