@@ -66,6 +66,9 @@
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E8%A3%9D%E5%82%99%E6%B8%85%E5%96%AE.gif)
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E6%94%B6%E8%97%8F%E6%96%87%E7%AB%A0.gif)
 
+身為管理員，能夠管理步道 (CRUD)、管理使用者（停權復權）及管理文章 (CRUD)。
+![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E7%AE%A1%E7%90%86%E5%93%A1%E5%BE%8C%E5%8F%B0.gif)
+
 |測試帳號|密碼|權限|
 |---|---|---|
 |admintest@gmail.com|admintest123|管理員|
