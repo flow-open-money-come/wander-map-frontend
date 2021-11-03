@@ -1,6 +1,12 @@
-# Wander Map
+# wander-map-frontend
+
+[![badge](https://img.shields.io/badge/API%20Documentation-OK-brightgreen)](https://hackmd.io/@FPgogo/H1l8ogI-Y/https%3A%2F%2Fhackmd.io%2FGMJP6yXKQXCXAT4gDXsJPQ)
+[![badge](https://img.shields.io/badge/Database%20Structure-OK-brightgreen)](https://dbdiagram.io/d/61386313825b5b0146f81dd5)
 
 > _Wondering where to go? [Wandermap](https://wandermap.netlify.app)!_
+
+☞ [介紹影片點這邊](https://www.youtube.com/watch?v=zMnWJXnUKdg&feature=youtu.be&ab_channel=cmt)
+
 
 ## 專案簡介
 
