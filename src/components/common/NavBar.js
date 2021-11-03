@@ -256,10 +256,7 @@ export default memo(function NavBar() {
             $isActive={HamburgerToggleClick}
             onClick={setHamburgerToggleClick}
           >
-            <NavBarHamburgerLine
-              $isActive={HamburgerToggleClick}
-              onClick={setHamburgerToggleClick}
-            />
+            <NavBarHamburgerLine $isActive={HamburgerToggleClick} />
           </NavBarHamburger>
         </NavBarWrapper>
       </NavBarContainer>

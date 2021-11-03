@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { ReactComponent as SendIcon } from '../../icons/send.svg'
@@ -18,6 +18,7 @@ import {
 import { AuthContext } from '../../../src/context'
 import SmallRegionLoading from '../../components/common/SmallRegionLoading'
 import { useInput } from '../../hooks/useInput'
+import useUserInfo from '../../hooks/useUserInfo'
 import swal from 'sweetalert'
 
 const CommentsContainer = styled.div`
@@ -277,24 +278,30 @@ export default function Comments({ isMessage }) {
   const { trailID } = useParams()
   const [reminder, setReminder] = useState('')
   const { inputValue, setInputValue, handleInputChange } = useInput()
+  const { toUserInfo } = useUserInfo()
   const [messages, setMessages] = useState([])
   const [editValue, setEditValue] = useState('')
   const [editing, setEditing] = useState(false)
   const { userInfo } = useContext(AuthContext)
   const [loadingComment, setLoadingComment] = useState(false)
-  function isMessageOrNot(message, comment) {
-    return isMessage ? message : comment
-  }
+
+  const isMessageOrNot = useCallback(
+    (message, comment) => {
+      return isMessage ? message : comment
+    },
+    [isMessage]
+  )
 
   if (trailID) {
     id = trailID
   }
 
   useEffect(() => {
+    let isUnmount = false
     const getMessage = async () => {
       try {
         let res = await isMessageOrNot(getMessages, getComments)(id)
-        if (res.status === 200) {
+        if (res.status === 200 && !isUnmount) {
           setMessages(res.data.data)
         }
       } catch (err) {
@@ -303,13 +310,14 @@ export default function Comments({ isMessage }) {
       }
     }
     getMessage()
+    return () => (isUnmount = true)
   }, [
     setInputValue,
     setEditValue,
     setLoadingComment,
     loadingComment,
+    isMessageOrNot,
     userInfo,
-    id,
   ])
 
   const handleSubmit = async (e) => {
@@ -418,28 +426,14 @@ export default function Comments({ isMessage }) {
           </SentBtn>
         </CommentsHeader>
         {messages.map((message) => (
-          <Card>
+          <Card key={isMessageOrNot(message.message_id, message.comment_id)}>
             <CommentInfo>
               <CommentViewInfo>
                 <UserAvatar
-                  to={
-                    userInfo && userInfo.user_id === message.author_id
-                      ? userInfo.role === 'admin'
-                        ? `/admin`
-                        : `/backstage/${message.author_id}`
-                      : `/user/${message.author_id}`
-                  }
+                  to={toUserInfo(message.author_id, userInfo)}
                   src={message.icon_url}
                 />
-                <CommentNickname
-                  to={
-                    userInfo && userInfo.user_id === message.author_id
-                      ? userInfo.role === 'admin'
-                        ? `/admin`
-                        : `/backstage/${message.author_id}`
-                      : `/user/${message.author_id}`
-                  }
-                >
+                <CommentNickname to={toUserInfo(message.author_id, userInfo)}>
                   {message.nickname}
                 </CommentNickname>
               </CommentViewInfo>

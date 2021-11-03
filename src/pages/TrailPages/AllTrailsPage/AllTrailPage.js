@@ -25,6 +25,7 @@ import { LoadingContext } from '../../../context'
 
 const AllTrailsPageWrapper = styled.div`
   width: 90%;
+  min-height: 86vh;
   margin: 0 auto;
   position: relative;
   padding-bottom: 50px;
@@ -139,6 +140,7 @@ function AllTrailPage() {
         setIsLoading(false)
       })
   }, [checkedOptions, debouncedKeyWord, setIsLoading])
+
   return (
     <>
       <AllTrailsPageWrapper>
@@ -217,7 +219,8 @@ function AllTrailPage() {
           </FilteredTrailsWrapper>
         )}
 
-        {filteredTrailInfos.length > 21 &&
+        {!isLoading &&
+          filteredTrailInfos.length > 21 &&
           numberOfDisplay < filteredTrailInfos.length && (
             <LoadMoreBtn onClick={handleLoadMore}>看更多</LoadMoreBtn>
           )}
