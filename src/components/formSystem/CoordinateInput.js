@@ -26,7 +26,6 @@ const Input = styled.input.attrs(() => ({
 `
 
 export default function CoordinateInput({ formData, handleInputChange }) {
-  console.log('CoordinateInput', formData)
   return (
     <>
       <InputWrapper>
