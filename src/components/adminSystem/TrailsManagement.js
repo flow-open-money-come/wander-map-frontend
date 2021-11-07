@@ -9,7 +9,7 @@ import { ReactComponent as RecoverIcon } from '../../icons/backstage/refresh.svg
 import { ReactComponent as AddIcon } from '../../icons/user/plus.svg'
 import { getTrails, getDeletedTrail } from '../../WebAPI'
 import { Link, useHistory } from 'react-router-dom'
-import { AuthContext, LoadingContext } from '../../context'
+import { LoadingContext } from '../../context'
 import Pagination from './Pagination'
 import swal from 'sweetalert'
 import SmallRegionLoading from '../common/SmallRegionLoading'
@@ -198,7 +198,6 @@ function TrailsManagement({ recycle, setRecycle }) {
   const [deletedTrails, setDeletedTrails] = useState(null)
   const [searchValue, setSearchValue] = useState('')
   const [searchResults, setSearchResults] = useState('')
-  const { userInfo } = useContext(AuthContext)
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(0)
   const { isLoading, setIsLoading } = useContext(LoadingContext)

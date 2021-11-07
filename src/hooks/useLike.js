@@ -21,10 +21,11 @@ export default function useLike() {
           ? postArticleLike(userInfo.user_id, id)
           : collectTrail(userInfo.user_id, id))
         if (res.status !== 200) {
-          swal('按讚失敗！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          swal('Oh 不！', '按讚失敗！請稍候再試一次，或者聯繫我們。', 'error')
         }
       } catch (err) {
         console.log(err)
+        swal('Oh 不！', '按讚失敗！請稍候再試一次，或者聯繫我們。', 'error')
       }
     }
     const removeLike = async (isArticlePage) => {
@@ -37,6 +38,7 @@ export default function useLike() {
         }
       } catch (err) {
         console.log(err)
+        swal('Oh 不！', '取消按讚失敗！請稍候再試一次，或者聯繫我們。', 'error')
       }
     }
     if (thumb) {
@@ -50,6 +52,6 @@ export default function useLike() {
     setThumb,
     handleClickLike,
     count,
-    setCount
+    setCount,
   }
 }

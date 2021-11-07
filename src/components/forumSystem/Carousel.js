@@ -8,17 +8,18 @@ import { FONT, COLOR, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 import ReactHtmlParser from 'react-html-parser'
+import useUserInfo from '../../hooks/useUserInfo'
 
 const SlideImage = styled.img`
   width: 100%;
   height: 100%;
   border-radius: ${RADIUS.lg};
+  object-fit: cover;
 
   ${MEDIA_QUERY.lg} {
     width: 300px;
     height: 300px;
     margin-right: 21px;
-    object-fit: cover;
   }
 `
 
@@ -31,11 +32,12 @@ const Slider = styled.div`
 
 const LeftArrow = styled(Left_Arrow)`
   position: absolute;
-  top: 43%;
+  top: 45%;
   left: -15px;
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
+
   ${MEDIA_QUERY.lg} {
     top: 50%;
     left: -20px;
@@ -44,11 +46,12 @@ const LeftArrow = styled(Left_Arrow)`
 
 const RightArrow = styled(Right_Arrow)`
   position: absolute;
-  top: 43%;
+  top: 45%;
   right: -15px;
   font-size: 2rem;
   cursor: pointer;
   user-select: none;
+
   ${MEDIA_QUERY.lg} {
     top: 50%;
     right: -20px;
@@ -60,6 +63,7 @@ const ArticleInfoContainer = styled.div`
   flex-direction: column;
   justify-content: space-between;
   ${MEDIA_QUERY.lg} {
+    width: 72%;
     text-overflow: ellipsis;
     overflow: hidden;
   }
@@ -121,7 +125,6 @@ const ArticleContent = styled.div`
   display: none;
 
   ${MEDIA_QUERY.lg} {
-    width: 100%;
     display: block;
     padding: 10px 10px 10px 0;
     line-height: 2rem;
@@ -176,6 +179,9 @@ const ArticleTag = styled.div`
 
 const ArticleInfo = styled.div`
   display: none;
+  &:hover {
+    opacity: 0.8;
+  }
 
   ${MEDIA_QUERY.lg} {
     display: flex;
@@ -222,9 +228,12 @@ const UserAvatar = styled.img`
 const SlideLink = styled(Link)`
   color: ${COLOR.black};
   width: 100%;
-  height: 100%;
+  height: 250px;
   margin: 10px;
 
+  ${MEDIA_QUERY.md} {
+    height: 300px;
+  }
   ${MEDIA_QUERY.lg} {
     display: flex;
     border-radius: ${RADIUS.lg};
@@ -240,6 +249,7 @@ export default function Carousel({ slides }) {
   const [current, setCurrent] = useState(0)
   const length = slides.length
   const { userInfo } = useContext(AuthContext)
+  const { toUserInfo } = useUserInfo()
 
   if (!Array.isArray(slides) || slides.length === 0) {
     return null
@@ -257,60 +267,52 @@ export default function Carousel({ slides }) {
     <Slider>
       <LeftArrow onClick={prevSlide}></LeftArrow>
       <RightArrow onClick={nextSlide}></RightArrow>
-      {slides.map((slide, index) => {
-        return (
-          <>
-            {index === current && (
-              <SlideLink to={`/articles/${slide.article_id}`}>
-                <SlideImage src={slide.cover_picture_url} />
-                <ArticleInfoContainer>
-                  <ArticleTitleAndLikes>
-                    <ArticleTitle>{slide.title}</ArticleTitle>
-                    <ArticleLikes>
-                      {slide.count}
-                      <ThumbUp />
-                    </ArticleLikes>
-                  </ArticleTitleAndLikes>
-                  <ArticleTags>
-                    {!slide.tag_names ? (
-                      <ArticleTag noTag></ArticleTag>
-                    ) : (
-                      slide.tag_names.split(',').map((tag) => {
-                        return <ArticleTag>{tag}</ArticleTag>
-                      })
-                    )}
-                  </ArticleTags>
-                  <ArticleContent>
-                    {ReactHtmlParser(slide.content)}
-                  </ArticleContent>
-                  <ArticleInfo>
-                    <ArticleUser
-                      to={
-                        userInfo && userInfo.user_id === slide.author_id
-                          ? userInfo.role === 'admin'
-                            ? `/admin`
-                            : `/backstage/${slide.author_id}`
-                          : `/user/${slide.author_id}`
-                      }
-                    >
-                      <UserAvatar src={slide.icon_url} />
-                      <UserInfo>
-                        <UserName>{slide.nickname}</UserName>
-                        <ArticleDate>
-                          {new Date(
-                            new Date(slide.created_at).getTime() +
-                              8 * 3600 * 1000
-                          ).toLocaleString('ja')}
-                        </ArticleDate>
-                      </UserInfo>
-                    </ArticleUser>
-                  </ArticleInfo>
-                </ArticleInfoContainer>
-              </SlideLink>
-            )}
-          </>
-        )
-      })}
+      {slides.map((slide, index) => (
+        <>
+          {index === current && (
+            <SlideLink
+              key={slide.article_id}
+              to={`/articles/${slide.article_id}`}
+            >
+              <SlideImage src={slide.cover_picture_url} />
+              <ArticleInfoContainer>
+                <ArticleTitleAndLikes>
+                  <ArticleTitle>{slide.title}</ArticleTitle>
+                  <ArticleLikes>
+                    {slide.count}
+                    <ThumbUp />
+                  </ArticleLikes>
+                </ArticleTitleAndLikes>
+                <ArticleTags>
+                  {!slide.tag_names ? (
+                    <ArticleTag noTag></ArticleTag>
+                  ) : (
+                    slide.tag_names.split(',').map((tag) => {
+                      return <ArticleTag>{tag}</ArticleTag>
+                    })
+                  )}
+                </ArticleTags>
+                <ArticleContent>
+                  {ReactHtmlParser(slide.content)}
+                </ArticleContent>
+                <ArticleInfo>
+                  <ArticleUser to={toUserInfo(slide.author_id, userInfo)}>
+                    <UserAvatar src={slide.icon_url} />
+                    <UserInfo>
+                      <UserName>{slide.nickname}</UserName>
+                      <ArticleDate>
+                        {new Date(
+                          new Date(slide.created_at).getTime() + 8 * 3600 * 1000
+                        ).toLocaleString('ja')}
+                      </ArticleDate>
+                    </UserInfo>
+                  </ArticleUser>
+                </ArticleInfo>
+              </ArticleInfoContainer>
+            </SlideLink>
+          )}
+        </>
+      ))}
     </Slider>
   )
 }

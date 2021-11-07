@@ -1,6 +1,12 @@
-# Wander Map
+# wander-map-frontend
+
+[![badge](https://img.shields.io/badge/API%20Documentation-OK-brightgreen)](https://hackmd.io/@FPgogo/H1l8ogI-Y/https%3A%2F%2Fhackmd.io%2FGMJP6yXKQXCXAT4gDXsJPQ)
+[![badge](https://img.shields.io/badge/Database%20Structure-OK-brightgreen)](https://dbdiagram.io/d/61386313825b5b0146f81dd5)
 
 > _Wondering where to go? [Wandermap](https://wandermap.netlify.app)!_
+
+☞ [介紹影片點這邊](https://www.youtube.com/watch?v=zMnWJXnUKdg&feature=youtu.be&ab_channel=cmt)
+
 
 ## 專案簡介
 
@@ -60,9 +66,12 @@
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E8%A3%9D%E5%82%99%E6%B8%85%E5%96%AE.gif)
 ![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E6%94%B6%E8%97%8F%E6%96%87%E7%AB%A0.gif)
 
+身為管理員，能夠管理步道 (CRUD)、管理使用者（停權復權）及管理文章 (CRUD)。
+![](https://github.com/flow-open-money-come/wander-map-frontend/blob/readme/%E7%AE%A1%E7%90%86%E5%93%A1%E5%BE%8C%E5%8F%B0.gif)
+
 |測試帳號|密碼|權限|
 |---|---|---|
-|admin@gmail.com|Wandermap587!|管理員|
+|admintest@gmail.com|admintest123|管理員|
 |yoyo@gmail.com|123123qweqwe|普通會員|
 
 

@@ -4,7 +4,7 @@ import { FONT, COLOR, MEDIA_QUERY, EFFECT } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 import ReactHtmlParser from 'react-html-parser'
-import { useEffect } from 'react/cjs/react.development'
+import useUserInfo from '../../hooks/useUserInfo'
 
 const UserName = styled(Link)`
   color: ${COLOR.black};
@@ -107,21 +107,14 @@ const UnfoldButton = styled.button`
 export default function ArticleContent({ post }) {
   const [unfold, setUnfold] = useState(false)
   const { userInfo } = useContext(AuthContext)
+  const { toUserInfo } = useUserInfo()
 
   return (
     <ArticleContentContainer>
       <ArticleUser>
         <UserAvatar src={post.icon_url} />
         <UserInfo>
-          <UserName
-            to={
-              userInfo && userInfo.user_id === post.author_id
-                ? userInfo.role === 'admin'
-                  ? `/admin`
-                  : `/backstage/${post.author_id}`
-                : `/user/${post.author_id}`
-            }
-          >
+          <UserName to={toUserInfo(post.author_id, userInfo)}>
             {post.nickname}
           </UserName>
           <ArticleDate>

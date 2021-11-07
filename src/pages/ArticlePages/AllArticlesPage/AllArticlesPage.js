@@ -18,6 +18,7 @@ const Wrapper = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  min-height: 86vh;
 
   ${MEDIA_QUERY.md} {
     width: 90%;
@@ -224,25 +225,24 @@ function AllArticlesPage() {
         />
         {isLoading && <SmallRegionLoading isFullScreen />}
         <ArticleListWrapper overLoad={overLoad}>
-          {posts.map((post) => {
-            return (
-              <ArticleList
-                key={post.article_id}
-                articleImgSrc={post.cover_picture_url}
-                title={post.title}
-                user={post.nickname}
-                tags={!post.tag_names ? [] : post.tag_names.split(',')}
-                date={new Date(
-                  new Date(post.created_at).getTime() + 8 * 3600 * 1000
-                ).toLocaleString('ja')}
-                content={post.content}
-                avatarImgSrc={post.user_icon}
-                articlePage={`/articles/${post.article_id}`}
-                authorId={post.author_id}
-              />
-            )
-          })}
-          {tagValue && posts.length === 0 && (
+          {posts.map((post) => (
+            <ArticleList
+              key={post.article_id}
+              id={post.article_id}
+              articleImgSrc={post.cover_picture_url}
+              title={post.title}
+              user={post.nickname}
+              tags={!post.tag_names ? [] : post.tag_names.split(',')}
+              date={new Date(
+                new Date(post.created_at).getTime() + 8 * 3600 * 1000
+              ).toLocaleString('ja')}
+              content={post.content}
+              avatarImgSrc={post.user_icon}
+              articlePage={`/articles/${post.article_id}`}
+              authorId={post.author_id}
+            />
+          ))}
+          {tagValue && posts.length === 0 && !isLoading && (
             <NoRelatedArticleNotice>暫無相關文章</NoRelatedArticleNotice>
           )}
           {posts.length !== 0 && !overLoad && (
