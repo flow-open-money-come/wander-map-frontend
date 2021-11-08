@@ -1,9 +1,10 @@
-import React, { useContext } from 'react'
+import React, { useContext, memo } from 'react'
 import styled from 'styled-components'
 import { FONT, COLOR, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { Link } from 'react-router-dom'
 import { AuthContext } from '../../context'
 import ReactHtmlParser from 'react-html-parser'
+import useUserInfo from '../../hooks/useUserInfo'
 
 const ArticlesContainer = styled(Link)`
   color: ${COLOR.black};
@@ -33,11 +34,22 @@ const UserAvatar = styled.img`
   border-radius: 50%;
   border: 1px solid ${COLOR.gray_light};
   object-fit: cover;
+
   ${MEDIA_QUERY.md} {
     width: 45px;
     height: 45px;
     margin-right: 13px;
   }
+
+  ${(props) =>
+    props.width === true &&
+    `
+      min-width: 30px;
+
+      ${MEDIA_QUERY.md} {
+        min-width: 45px;
+      }
+  `}
 `
 const ArticlesTags = styled.div`
   display: flex;
@@ -140,12 +152,15 @@ const ArticlesInfo = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+  &:hover {
+    opacity: 0.9;
+  }
   ${MEDIA_QUERY.md} {
     justify-content: space-between;
   }
 `
 
-export default function ArticleList({
+function ArticleList({
   id,
   title,
   content,
@@ -157,33 +172,32 @@ export default function ArticleList({
   lessRwd,
   articlePage,
   authorId,
+  width,
 }) {
   const { userInfo } = useContext(AuthContext)
+  const { toUserInfo } = useUserInfo()
+
   return (
-    <ArticlesContainer key={id} to={articlePage}>
+    <ArticlesContainer to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>
         <ArticlesTags>
           {tags &&
             tags.map((tag) => {
-              return <ArticlesTag $lessRwd={lessRwd}>{tag}</ArticlesTag>
+              return (
+                <ArticlesTag key={tag} $lessRwd={lessRwd}>
+                  {tag}
+                </ArticlesTag>
+              )
             })}
         </ArticlesTags>
         <ArticlesContent $lessRwd={lessRwd}>
           {ReactHtmlParser(content.replace(/<img[^>]*>/g, ''))}
         </ArticlesContent>
         <ArticlesInfo>
-          <ArticlesUser
-            to={
-              userInfo && userInfo.user_id === authorId
-                ? userInfo.role === 'admin'
-                  ? `/admin`
-                  : `/backstage/${authorId}`
-                : `/user/${authorId}`
-            }
-          >
-            <UserAvatar src={avatarImgSrc} />
+          <ArticlesUser to={toUserInfo(authorId, userInfo)}>
+            <UserAvatar width={width} src={avatarImgSrc} />
             <UserInfo>
               <UserName>{user}</UserName>
               <ArticlesDate>{date}</ArticlesDate>
@@ -194,3 +208,5 @@ export default function ArticleList({
     </ArticlesContainer>
   )
 }
+
+export default memo(ArticleList)

@@ -192,6 +192,7 @@ function HomePage() {
                         lessRwd={true}
                         articlePage={`/articles/${articleInfos.article_id}`}
                         authorId={articleInfos.author_id}
+                        width
                       />
                     ))
                   ) : (
