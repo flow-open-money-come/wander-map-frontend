@@ -6,7 +6,6 @@ const countriesData = [
   {
     name: '基隆市',
     states: [
-      '請選擇',
       '仁愛區',
       '中正區',
       '信義區',
@@ -19,7 +18,6 @@ const countriesData = [
   {
     name: '臺北市',
     states: [
-      '請選擇',
       '中正區',
       '大同區',
       '中山區',
@@ -37,7 +35,6 @@ const countriesData = [
   {
     name: '新北市',
     states: [
-      '請選擇',
       '板橋區',
       '新莊區',
       '中和區',
@@ -72,7 +69,6 @@ const countriesData = [
   {
     name: '宜蘭縣',
     states: [
-      '請選擇',
       '宜蘭市',
       '頭城鎮',
       '羅東鎮',
@@ -89,12 +85,11 @@ const countriesData = [
   },
   {
     name: '新竹市',
-    states: ['請選擇', '東區', '北區', '香山區'],
+    states: ['東區', '北區', '香山區'],
   },
   {
     name: '新竹縣',
     states: [
-      '請選擇',
       '竹北市',
       '竹東鎮',
       '新埔鎮',
@@ -113,7 +108,6 @@ const countriesData = [
   {
     name: '桃園市',
     states: [
-      '請選擇',
       '桃園區',
       '中壢區',
       '平鎮區',
@@ -132,7 +126,6 @@ const countriesData = [
   {
     name: '苗栗縣',
     states: [
-      '請選擇',
       '苗栗市',
       '頭份市',
       '竹南鎮',
@@ -156,7 +149,6 @@ const countriesData = [
   {
     name: '臺中市',
     states: [
-      '請選擇',
       '中區',
       '東區',
       '南區',
@@ -191,7 +183,6 @@ const countriesData = [
   {
     name: '彰化縣',
     states: [
-      '請選擇',
       '彰化市',
       '員林市',
       '和美鎮',
@@ -223,7 +214,6 @@ const countriesData = [
   {
     name: '南投縣',
     states: [
-      '請選擇',
       '南投市',
       '埔里鎮',
       '草屯鎮',
@@ -241,7 +231,7 @@ const countriesData = [
   },
   {
     name: '嘉義市',
-    states: ['請選擇', '東區', '西區'],
+    states: ['東區', '西區'],
   },
   {
     name: '嘉義縣',
@@ -269,7 +259,6 @@ const countriesData = [
   {
     name: '雲林縣',
     states: [
-      '請選擇',
       '斗六市',
       '斗南鎮',
       '虎尾鎮',
@@ -295,7 +284,6 @@ const countriesData = [
   {
     name: '臺南市',
     states: [
-      '請選擇',
       '中西區',
       '東區',
       '南區',
@@ -338,7 +326,6 @@ const countriesData = [
   {
     name: '高雄市',
     states: [
-      '請選擇',
       '楠梓區',
       '左營區',
       '鼓山區',
@@ -381,20 +368,11 @@ const countriesData = [
   },
   {
     name: '澎湖縣',
-    states: [
-      '請選擇',
-      '馬公市',
-      '湖西鄉',
-      '白沙鄉',
-      '西嶼鄉',
-      '望安鄉',
-      '七美鄉',
-    ],
+    states: ['馬公市', '湖西鄉', '白沙鄉', '西嶼鄉', '望安鄉', '七美鄉'],
   },
   {
     name: '屏東縣',
     states: [
-      '請選擇',
       '屏東市',
       '潮州鎮',
       '東港鎮',
@@ -433,7 +411,6 @@ const countriesData = [
   {
     name: '臺東縣',
     states: [
-      '請選擇',
       '臺東市',
       '成功鎮',
       '關山鎮',
@@ -455,7 +432,6 @@ const countriesData = [
   {
     name: '花蓮縣',
     states: [
-      '請選擇',
       '花蓮市',
       '鳳林鎮',
       '玉里鎮',
@@ -473,19 +449,11 @@ const countriesData = [
   },
   {
     name: '金門縣',
-    states: [
-      '請選擇',
-      '金城鎮',
-      '金湖鎮',
-      '金沙鎮',
-      '金寧鄉',
-      '烈嶼鄉',
-      '烏坵鄉',
-    ],
+    states: ['金城鎮', '金湖鎮', '金沙鎮', '金寧鄉', '烈嶼鄉', '烏坵鄉'],
   },
   {
     name: '連江縣',
-    states: ['請選擇', '南竿鄉', '北竿鄉', '莒光鄉', '東引鄉'],
+    states: ['南竿鄉', '北竿鄉', '莒光鄉', '東引鄉'],
   },
 ]
 

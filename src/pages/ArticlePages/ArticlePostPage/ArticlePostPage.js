@@ -222,7 +222,7 @@ export default function ArticlePostPage() {
           return history.push(`/articles/${articleID}`)
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setIsLoadingArticle(false)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
