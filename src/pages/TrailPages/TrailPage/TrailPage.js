@@ -15,12 +15,13 @@ import TrailMap from '../../../components/trailSystem/TrailMap'
 import TrailRoute from '../../../components/trailSystem/TrailRoute'
 import TrailArticles from '../../../components/trailSystem/TrailArticles'
 import TrailReviews from '../../../components/trailSystem/TrailReviews'
-import { getTrails, getTrailArticles, getUserCollect, getTrailsCondition } from '../../../WebAPI'
+import { getTrails, getTrailArticles, getUserCollect } from '../../../WebAPI'
 import { useHistory } from 'react-router-dom'
 import { AuthContext, LoadingContext } from '../../../context'
 import useLike from '../../../hooks/useLike'
 import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 import swal from 'sweetalert'
+import useTrailConditions from '../../../hooks/useTrailConditions'
 
 const TrailPageContainer = styled.div`
   width: 80%;
@@ -164,35 +165,40 @@ function TrailPage() {
   const history = useHistory()
   const { thumb, setThumb, handleClickLike } = useLike()
   const [ condition, setCondition ] = useState(null) 
+  const { trailConditions } = useTrailConditions()
 
   useEffect(() => {
-    setIsLoading(true)
-    getTrails(id)
-      .then((res) => {
-        res.data.data[0]
-          ? setTrailInfo(res.data.data[0])
-          : history.push(`/trails`)
-        setLoadingCollect(true)
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        console.error(error)
-        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-      })
-    getTrailArticles(id, '')
-      .then((res) => setArticles(res.data.data))
-      .catch((error) => {
-        console.error(error)
-        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-    })
+    const fetchData = async () => {
+      setIsLoading(true)
+      const [trailData, articlesData] = await Promise.all([
+        getTrails(id)
+          .then((res) => res.data.data[0])
+          .catch((error) => {
+            console.error(error)
+            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          }),
+        getTrailArticles(id, '')
+          .then((res) => res.data.data)
+          .catch((error) => {
+            console.error(error)
+            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          })
+      ])
+      trailData ? setTrailInfo(trailData) : history.push(`/trails`)
+      setArticles(articlesData)
+      setLoadingCollect(true)
+      setIsLoading(false)
+    }
+    fetchData()
   }, [id, history, setIsLoading])
 
   useEffect(() => {
+    setThumb(false)
     if (userInfo) {
       getUserCollect(userInfo.user_id)
         .then((res) =>
           res.data.data.trails.forEach((trail) => {
-            if (trail.trail_id == id) setThumb(true)
+            if (trail.trail_id === Number(id))  setThumb(true)
           })
         )
         .catch((error) => {
@@ -204,20 +210,13 @@ function TrailPage() {
 
   useEffect(() => {
     if (trailInfo) {
-      getTrailsCondition()
-        .then((res) => {
-          const conditionList = res.data
-          conditionList.forEach((trail) => {
-            if (trail.TR_CNAME === trailInfo.title && trail.TR_TYP !== '全線開放')
-              setCondition(trail)
-          })
-        })
-        .catch((error) => {
-          console.error(error)
-          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-        })
+      setCondition(null)
+      for (const [key, value] of Object.entries(trailConditions)) {
+        console.log(value)
+        if (key === trailInfo.title && value[0] !== '全線開放') setCondition(value)
+      }
     }
-  }, [trailInfo])
+  }, [trailConditions, trailInfo])
 
   return (
     <>

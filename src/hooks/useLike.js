@@ -1,12 +1,7 @@
 import { useState, useContext } from 'react'
 import { useParams, useRouteMatch } from 'react-router-dom'
 import { AuthContext } from '../context'
-import {
-  postArticleLike,
-  removeArticleLike,
-  collectTrail,
-  cancelCollected,
-} from '../WebAPI'
+import { postArticleLike, removeArticleLike, collectTrail, cancelCollected } from '../WebAPI'
 import swal from 'sweetalert'
 
 export default function useLike() {
@@ -39,11 +34,7 @@ export default function useLike() {
           ? removeArticleLike(userInfo.user_id, id)
           : cancelCollected(userInfo.user_id, id))
         if (res.status !== 200) {
-          swal(
-            'Oh 不！',
-            '取消按讚失敗！請稍候再試一次，或者聯繫我們。',
-            'error'
-          )
+          swal('取消按讚失敗！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
         }
       } catch (err) {
         console.log(err)
