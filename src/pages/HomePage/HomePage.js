@@ -61,12 +61,15 @@ const TrialTitleWrapper = styled.div`
 
 const TrialTitleName = styled(Link)`
   font-size: ${FONT.lg};
-  color: black;
   border-left: 20px solid ${COLOR.brown};
   padding-left: 10px;
+  color: black;
   ${MEDIA_QUERY.lg} {
     border-left: none;
     font-size: ${FONT.logo};
+  }
+  &:hover {
+    color: ${COLOR.gray};
   }
 `
 const TrialTitleLocation = styled.div`
@@ -117,7 +120,7 @@ function HomePage() {
 
   useEffect(() => {
     setIsLoading(true)
-    getTrailArticles(1, '?limit=100')
+    getTrailArticles(1, '')
       .then((res) => {
         if (res.data.success) {
           setActiveTrailArticles({

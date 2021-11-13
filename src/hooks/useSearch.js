@@ -1,4 +1,5 @@
 import { useInput } from './useInput'
+import { useCallback } from 'react'
 
 export default function useSearch() {
   const {
@@ -6,9 +7,10 @@ export default function useSearch() {
     setInputValue: setKeyWord,
     handleInputChange: handleKeyWordChange,
   } = useInput()
-  const handleKeyWordDelete = () => {
+  const handleKeyWordDelete = useCallback(() => {
     setKeyWord('')
-  }
+  }, [setKeyWord])
+
   return {
     keyWord,
     handleKeyWordChange,
