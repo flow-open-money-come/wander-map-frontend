@@ -212,7 +212,6 @@ function TrailPage() {
     if (trailInfo) {
       setCondition(null)
       for (const [key, value] of Object.entries(trailConditions)) {
-        console.log(value)
         if (key === trailInfo.title && value[0] !== '全線開放') setCondition(value)
       }
     }
