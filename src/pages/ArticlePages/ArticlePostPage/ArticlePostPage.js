@@ -219,6 +219,7 @@ export default function ArticlePostPage() {
             icon: 'success',
             button: '關閉',
           })
+          return history.push(`/articles/${articleID}`)
         }
       })
       .catch((err) => {

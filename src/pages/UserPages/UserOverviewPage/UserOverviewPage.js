@@ -214,17 +214,13 @@ export default function UserOverviewPage() {
       .then((res) => {
         setUserData(res.data.data)
       })
-      .catch((err) => {
-        console.log(err.response)
-      })
+      .catch((err) => {})
 
     getUserArticles(userID, '?limit=100')
       .then((res) => {
         setUserArticlesData(res.data.data)
       })
-      .catch((err) => {
-        console.log(err.response)
-      })
+      .catch((err) => {})
   }, [])
 
   return (
@@ -259,7 +255,7 @@ export default function UserOverviewPage() {
             <Articles>
               <ArticlesTitle>{article.title}</ArticlesTitle>
               <ArticlesContent>
-                {ReactHtmlParser(article.content)}
+                {ReactHtmlParser(article.content.replace(/<img[^>]*>/g, ''))}
               </ArticlesContent>
               <ArticlesDate>
                 {new Date(
