@@ -6,7 +6,6 @@ import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/user/user_article_manage_edit.svg'
 import { ReactComponent as PostIcon } from '../../icons/user/user_post.svg'
-import ConfirmBox from './ConfirmBox'
 import SmallRegionLoading from '../common/SmallRegionLoading'
 import swal from 'sweetalert'
 
@@ -114,24 +113,27 @@ export default function UserArticlesManage() {
   const [isLoadingArticles, setIsLoadingArticles] = useState(false)
 
   useEffect(() => {
+    let isUnmount = false
     if (!userID) return
     setIsLoadingArticles(true)
     getUserArticles(userID, '?limit=100')
       .then((res) => {
-        if (res.data.success) {
+        if (res.data.success && !isUnmount) {
           setUserArticlesData(res.data.data)
           setIsLoadingArticles(false)
         }
       })
       .catch(() => {
-        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-        setIsLoadingArticles(false)
+        if (!isUnmount) {
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          setIsLoadingArticles(false)
+        }
       })
+    return () => (isUnmount = true)
   }, [userID, setIsLoadingArticles])
 
   const handleDelete = (articleID, articleTitle) => {
     if (!userID) return
-    console.log(articleID, articleTitle)
     swal({
       title: '確定刪除嗎？',
       icon: 'warning',
@@ -171,7 +173,7 @@ export default function UserArticlesManage() {
         <tbody>
           {!isLoadingArticles &&
             userArticlesData.articles.map((article) => (
-              <TableContent>
+              <TableContent key={`${article.article_id}`}>
                 <CoverTd>
                   <Link to={`../articles/${article.article_id}`}>
                     <TrailImg src={article.cover_picture_url} />

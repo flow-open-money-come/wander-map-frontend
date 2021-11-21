@@ -15,6 +15,10 @@ const EditorWrapper = styled.div`
   ${MEDIA_QUERY.lg} {
     width: 638px;
   }
+  ul,
+  ol {
+    padding-left: 20px;
+  }
 `
 
 export default function ContentCKEditor({ name, formData, setFormData }) {
@@ -35,7 +39,7 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
         editor={ClassicEditor}
         config={{
           extraPlugins: [ImgurUploader],
-          removePlugins: ['MediaEmbed'],
+          removePlugins: ['Heading', 'MediaEmbed'],
         }}
         onReady={(editor) => {
           editor.editing.view.change((writer) => {
