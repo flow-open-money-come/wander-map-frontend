@@ -230,6 +230,26 @@ const SlideLink = styled(Link)`
   width: 100%;
   height: 250px;
   margin: 10px;
+  overflow: hidden;
+  transition: transform 1s;
+  transform: translate(30%, 0);
+
+  ${(props) =>
+    props.item === props.current &&
+    `
+      min-width: 90%;
+      transform: translate(${
+        props.item === 0
+          ? 3.75
+          : props.item === props.length - 1
+          ? -3.75
+          : props.item === 1
+          ? 1.5
+          : props.item === props.length - 2
+          ? -1.5
+          : 0
+      }vh, 0);
+      `}
 
   ${MEDIA_QUERY.md} {
     height: 300px;
@@ -242,6 +262,22 @@ const SlideLink = styled(Link)`
     height: 300px;
     margin: 20px;
     box-shadow: ${EFFECT.shadow_light};
+
+    ${(props) =>
+      props.item === props.current &&
+      `
+      transform: translate(${
+        props.item === 0
+          ? 7.5
+          : props.item === props.length - 1
+          ? -7.5
+          : props.item === 1
+          ? 2.5
+          : props.item === props.length - 2
+          ? -2.5
+          : 0
+      }vh, 0);
+      `}
   }
 `
 
@@ -269,48 +305,49 @@ export default function Carousel({ slides }) {
       <RightArrow onClick={nextSlide}></RightArrow>
       {slides.map((slide, index) => (
         <>
-          {index === current && (
-            <SlideLink
-              key={slide.article_id}
-              to={`/articles/${slide.article_id}`}
-            >
-              <SlideImage src={slide.cover_picture_url} />
-              <ArticleInfoContainer>
-                <ArticleTitleAndLikes>
-                  <ArticleTitle>{slide.title}</ArticleTitle>
-                  <ArticleLikes>
-                    {slide.count}
-                    <ThumbUp />
-                  </ArticleLikes>
-                </ArticleTitleAndLikes>
-                <ArticleTags>
-                  {!slide.tag_names ? (
-                    <ArticleTag noTag></ArticleTag>
-                  ) : (
-                    slide.tag_names.split(',').map((tag) => {
-                      return <ArticleTag>{tag}</ArticleTag>
-                    })
-                  )}
-                </ArticleTags>
-                <ArticleContent>
-                  {ReactHtmlParser(slide.content)}
-                </ArticleContent>
-                <ArticleInfo>
-                  <ArticleUser to={toUserInfo(slide.author_id, userInfo)}>
-                    <UserAvatar src={slide.icon_url} />
-                    <UserInfo>
-                      <UserName>{slide.nickname}</UserName>
-                      <ArticleDate>
-                        {new Date(
-                          new Date(slide.created_at).getTime() + 8 * 3600 * 1000
-                        ).toLocaleString('ja')}
-                      </ArticleDate>
-                    </UserInfo>
-                  </ArticleUser>
-                </ArticleInfo>
-              </ArticleInfoContainer>
-            </SlideLink>
-          )}
+          <SlideLink
+            item={index}
+            current={current}
+            length={length}
+            key={slide.article_id}
+            to={`/articles/${slide.article_id}`}
+          >
+            <SlideImage src={slide.cover_picture_url} />
+            <ArticleInfoContainer>
+              <ArticleTitleAndLikes>
+                <ArticleTitle>{slide.title}</ArticleTitle>
+                <ArticleLikes>
+                  {slide.count}
+                  <ThumbUp />
+                </ArticleLikes>
+              </ArticleTitleAndLikes>
+              <ArticleTags>
+                {!slide.tag_names ? (
+                  <ArticleTag noTag></ArticleTag>
+                ) : (
+                  slide.tag_names.split(',').map((tag) => {
+                    return <ArticleTag>{tag}</ArticleTag>
+                  })
+                )}
+              </ArticleTags>
+              <ArticleContent>
+                {ReactHtmlParser(slide.content.replace(/<img[^>]*>/g, ''))}
+              </ArticleContent>
+              <ArticleInfo>
+                <ArticleUser to={toUserInfo(slide.author_id, userInfo)}>
+                  <UserAvatar src={slide.icon_url} />
+                  <UserInfo>
+                    <UserName>{slide.nickname}</UserName>
+                    <ArticleDate>
+                      {new Date(
+                        new Date(slide.created_at).getTime() + 8 * 3600 * 1000
+                      ).toLocaleString('ja')}
+                    </ArticleDate>
+                  </UserInfo>
+                </ArticleUser>
+              </ArticleInfo>
+            </ArticleInfoContainer>
+          </SlideLink>
         </>
       ))}
     </Slider>

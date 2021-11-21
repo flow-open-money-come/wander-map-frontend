@@ -45,28 +45,40 @@ const ArticleLikes = styled.span`
   margin-right: 7px;
   color: ${COLOR.green};
   font-size: ${FONT.md};
+  height: 20px;
 
   ${MEDIA_QUERY.md} {
     font-size: ${FONT.logo};
+    height: 30px;
   }
 `
 
 const ThumbUp = styled.span`
   background-image: url('${thumbSVG}');
   background-size: contain;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   cursor: pointer;
   margin-right: 5px;
   justify-content: center;
+
+  :hover {
+    ${(props) =>
+      !props.thumb &&
+      `transform: translate(-2px, -2px);
+      background-image: url('${thumbGreenSVG}');
+      width: 17px;
+      height: 17px;
+    `}
+  }
 
   ${(props) =>
     props.thumb &&
     `
       transform: translate(-2px, -2px);
       background-image: url('${thumbGreenSVG}');
-      width: 25px;
-      height: 25px;
+      width: 17px;
+      height: 17px;
     `}
 
   ${(props) =>
@@ -74,6 +86,27 @@ const ThumbUp = styled.span`
     `
     pointer-events: none;  
     `}
+
+  ${MEDIA_QUERY.md} {
+    width: 30px;
+    height: 30px;
+
+    :hover {
+      ${(props) =>
+        !props.thumb &&
+        `
+      width: 25px;
+      height: 25px;
+    `}
+    }
+
+    ${(props) =>
+      props.thumb &&
+      `
+      width: 25px;
+      height: 25px;
+    `}
+  }
 `
 
 const ArticleTitleAndLikes = styled.div`
