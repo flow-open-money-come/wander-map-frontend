@@ -178,7 +178,7 @@ function ArticleList({
   const { toUserInfo } = useUserInfo()
 
   return (
-    <ArticlesContainer to={articlePage}>
+    <ArticlesContainer key={id} to={articlePage}>
       <ArticlesImg src={articleImgSrc} />
       <ArticlesInfoContainer>
         <ArticlesTitle $lessRwd={lessRwd}>{title}</ArticlesTitle>

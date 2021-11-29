@@ -6,14 +6,14 @@ export default function useTrailConditions() {
   const [trailConditions, setTrailConditions] = useState([{}])
   useEffect(() => {
     let isMounted = false
-    if (!isMounted) return
     getTrailsCondition()
       .then((res) => {
+        if (isMounted) return
         let trailConditionsObj = Object.assign(
           {},
           ...res.data.map((data) => {
             return {
-              [data.TR_CNAME]: data.TR_TYP,
+              [data.TR_CNAME]: [data.TR_TYP, data.TITLE],
             }
           })
         )

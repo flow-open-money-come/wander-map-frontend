@@ -142,8 +142,10 @@ const Weather = ({ location }) => {
   }
   
   useEffect(() => {
+    let isMounted = false
     getWeatherInfo(countryCode, town)
     .then((res) => {
+      if (isMounted) return
       const locationData = res.data.records.locations[0].location[0]
       const weatherInfo = []
       for (let i = 0; i < 14; i += 2) {
@@ -169,7 +171,10 @@ const Weather = ({ location }) => {
         rainPossibility: weekRainPossibility
       })
     })
-  }, [country, town])
+    return () => {
+      isMounted = true
+    }
+  }, [town, countryCode])
 
   const dayLoop = [0, 1, 2, 3, 4, 5, 6]
 

@@ -85,7 +85,7 @@ const Map = (props) => {
             let trailConditionTag =
               trailConditionName.indexOf(currentTrailName) < 0
                 ? '全線開放'
-                : trailConditions[currentTrailName]
+                : trailConditions[currentTrailName][0]
             return (
               <LocationMarker
                 key={trailInfo.trail_id}
