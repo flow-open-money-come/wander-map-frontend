@@ -17,23 +17,22 @@ export default function useLogout() {
       buttons: ['取消', '確定'],
       dangerMode: true,
     }).then((willLogout) => {
-      if (willLogout) {
-        userLogout()
-          .then((res) => {
-            if (res.data.success) {
-              setAuthToken('')
-              setUserInfo(null)
-              swal('登出成功！', {
-                icon: 'success',
-                button: '關閉',
-              })
-              if (location.pathname !== '/') return history.push('/')
-            }
-          })
-          .catch(() => {
-            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-          })
-      }
+      if (!willLogout) return
+      userLogout()
+        .then((res) => {
+          if (res.data.success) {
+            setAuthToken('')
+            setUserInfo(null)
+            swal('登出成功！', {
+              icon: 'success',
+              button: '關閉',
+            })
+            if (location.pathname !== '/') return history.push('/')
+          }
+        })
+        .catch(() => {
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+        })
     })
   }
 

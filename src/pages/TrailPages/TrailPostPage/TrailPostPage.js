@@ -206,15 +206,17 @@ export default function TrailPostPage() {
     setIsLoadingTrail(true)
     postTrails(formData)
       .then((res) => {
-        setIsLoadingTrail(false)
-        const id = res.data.data.insertId
-        swal('發佈成功', {
-          icon: 'success',
-          button: '關閉',
-        })
-        return history.push(`/trails/${id}`)
+        if (res.data.success) {
+          setIsLoadingTrail(false)
+          const id = res.data.data.insertId
+          swal('發佈成功', {
+            icon: 'success',
+            button: '關閉',
+          })
+          return history.push(`/trails/${id}`)
+        }
       })
-      .catch((err) => {
+      .catch(() => {
         setIsLoadingTrail(false)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
@@ -231,14 +233,16 @@ export default function TrailPostPage() {
     setIsLoadingTrail(true)
     patchTrail(trailID, formData)
       .then((res) => {
-        setIsLoadingTrail(false)
-        swal('文章編輯成功', {
-          icon: 'success',
-          button: '關閉',
-        })
-        history.push(`/trails/${trailID}`)
+        if (res.data.success) {
+          setIsLoadingTrail(false)
+          swal('文章編輯成功', {
+            icon: 'success',
+            button: '關閉',
+          })
+          history.push(`/trails/${trailID}`)
+        }
       })
-      .catch((err) => {
+      .catch(() => {
         setIsLoadingTrail(false)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })

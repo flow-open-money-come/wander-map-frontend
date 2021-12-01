@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { getUserArticles } from '../../WebAPI'
+import { getUserArticles, deleteArticle } from '../../WebAPI'
 import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, RADIUS, MEDIA_QUERY } from '../../constants/style'
 import { ReactComponent as BinIcon } from '../../icons/backstage/bin.svg'
 import { ReactComponent as EditIcon } from '../../icons/user/user_article_manage_edit.svg'
 import { ReactComponent as PostIcon } from '../../icons/user/user_post.svg'
-import ConfirmBox from './ConfirmBox'
 import SmallRegionLoading from '../common/SmallRegionLoading'
 import swal from 'sweetalert'
 
@@ -99,10 +98,6 @@ const BtnTd = styled.td`
 `
 
 export default function UserArticlesManage() {
-  const [popUp, setPopUp] = useState({
-    key: '',
-    isShow: false,
-  })
   const [userArticlesData, setUserArticlesData] = useState({
     articles: [
       {
@@ -113,24 +108,57 @@ export default function UserArticlesManage() {
       },
     ],
   })
+  const [articles, setArticles] = useState(null)
   const { userID } = useParams()
   const [isLoadingArticles, setIsLoadingArticles] = useState(false)
 
   useEffect(() => {
+    let isUnmount = false
     if (!userID) return
     setIsLoadingArticles(true)
     getUserArticles(userID, '?limit=100')
       .then((res) => {
-        if (res.data.success) {
+        if (res.data.success && !isUnmount) {
           setUserArticlesData(res.data.data)
           setIsLoadingArticles(false)
         }
       })
       .catch(() => {
-        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
-        setIsLoadingArticles(false)
+        if (!isUnmount) {
+          swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          setIsLoadingArticles(false)
+        }
       })
+    return () => (isUnmount = true)
   }, [userID, setIsLoadingArticles])
+
+  const handleDelete = (articleID, articleTitle) => {
+    if (!userID) return
+    swal({
+      title: '確定刪除嗎？',
+      icon: 'warning',
+      buttons: ['取消', '確定'],
+      dangerMode: true,
+    }).then((willDo) => {
+      if (willDo) {
+        deleteArticle(articleID)
+          .then((res) => {
+            if (res.data.success) {
+              setArticles(
+                articles.filter((article) => article.article_id !== articleID)
+              )
+              swal(`已刪除文章 ${articleTitle}`, {
+                icon: 'success',
+                button: '關閉',
+              })
+            }
+          })
+          .catch(() => {
+            swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+          })
+      }
+    })
+  }
 
   return (
     <Block>
@@ -142,36 +170,31 @@ export default function UserArticlesManage() {
         </Link>
       </PostLink>
       <TrailsTable>
-        {!isLoadingArticles &&
-          userArticlesData.articles.map((article) => (
-            <TableContent>
-              <Link to={`../articles/${article.article_id}`}>
+        <tbody>
+          {!isLoadingArticles &&
+            userArticlesData.articles.map((article) => (
+              <TableContent key={`${article.article_id}`}>
                 <CoverTd>
-                  <TrailImg src={article.cover_picture_url} />
+                  <Link to={`../articles/${article.article_id}`}>
+                    <TrailImg src={article.cover_picture_url} />
+                  </Link>
                 </CoverTd>
-              </Link>
-              <TrailsTd>{article.title}</TrailsTd>
-              <BtnTd>
-                <Link to={`../update-article/${article.article_id}`}>
-                  <EditIcon />
-                </Link>
-              </BtnTd>
-              <BtnTd>
-                <BinIcon
-                  onClick={() => {
-                    setPopUp({ key: article.article_id, isShow: true })
-                  }}
-                />
-              </BtnTd>
-            </TableContent>
-          ))}
-        {popUp.isShow === true && (
-          <ConfirmBox
-            popUp={popUp}
-            setPopUp={setPopUp}
-            setUserArticlesData={setUserArticlesData}
-          />
-        )}
+                <TrailsTd>{article.title}</TrailsTd>
+                <BtnTd>
+                  <Link to={`../update-article/${article.article_id}`}>
+                    <EditIcon />
+                  </Link>
+                </BtnTd>
+                <BtnTd>
+                  <BinIcon
+                    onClick={() => {
+                      handleDelete(article.article_id, article.title)
+                    }}
+                  />
+                </BtnTd>
+              </TableContent>
+            ))}
+        </tbody>
       </TrailsTable>
     </Block>
   )

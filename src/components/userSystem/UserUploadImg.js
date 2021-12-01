@@ -64,6 +64,7 @@ export default function UserUploadImg({
   name,
   updateUserData,
   setUpdateUserData,
+  setErrMsg,
 }) {
   const [fileSrc, setFileSrc] = useState(updateUserData.iconUrl)
 
@@ -91,7 +92,9 @@ export default function UserUploadImg({
         })
       })
       .catch((err) => {
-        console.log(err.response)
+        if (err.response.status === 400) {
+          setErrMsg('檔案過大請重新上傳3MB以下之檔案')
+        }
       })
 
     e.target.value = ''

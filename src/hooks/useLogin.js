@@ -34,7 +34,8 @@ export default function useLogin() {
     setIsLoadingLogin(true)
     userLogin(loginInfo)
       .then((res) => {
-        if (res.data.success) {
+        if (!res) return setIsLoadingLogin(false)
+        if (res && res.data.success) {
           setAuthToken(res.data.data.token)
           setUserInfo(jwt_decode(res.data.data.token))
           setIsLoadingLogin(false)
@@ -43,10 +44,11 @@ export default function useLogin() {
             button: '關閉',
           })
           history.push('/')
+          return
         }
       })
       .catch((err) => {
-        setErrMsg(err.response.data.message)
+        if (err.response) setErrMsg(err.response.data.message)
         setIsLoadingLogin(false)
       })
   }
