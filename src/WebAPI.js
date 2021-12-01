@@ -22,6 +22,8 @@ instance.interceptors.response.use(
   (error) => {
     if (error.response.status === 401) {
       const refreshTokenUrl = '/users/refresh'
+      if (error.config.url === '/users/login')
+        return swal('登入失敗', '帳號或密碼輸入錯誤', 'error')
       if (error.config.url !== refreshTokenUrl) {
         const originalRequest = error.config
         return refreshAccessToken()
