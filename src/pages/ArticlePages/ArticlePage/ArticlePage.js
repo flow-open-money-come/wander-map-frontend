@@ -236,6 +236,7 @@ function ArticlePage() {
         }
       } catch (err) {
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+        setThumb(false)
       }
     }
     if (userInfo) {

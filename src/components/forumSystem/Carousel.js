@@ -235,20 +235,23 @@ const SlideLink = styled(Link)`
   transform: translate(30%, 0);
 
   ${(props) =>
-    props.item === props.current &&
-    `
+    props.item === props.current
+      ? `
       min-width: 90%;
       transform: translate(${
         props.item === 0
           ? 3.75
           : props.item === props.length - 1
           ? -3.75
-          : props.item === 1
+          : props.item === props.length - 3
           ? 1.5
           : props.item === props.length - 2
           ? -1.5
           : 0
       }vh, 0);
+      `
+      : `
+        visibility: hidden;
       `}
 
   ${MEDIA_QUERY.md} {
@@ -271,7 +274,7 @@ const SlideLink = styled(Link)`
           ? 7.5
           : props.item === props.length - 1
           ? -7.5
-          : props.item === 1
+          : props.item === props.length - 3
           ? 2.5
           : props.item === props.length - 2
           ? -2.5
