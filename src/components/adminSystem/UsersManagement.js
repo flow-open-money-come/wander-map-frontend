@@ -97,14 +97,22 @@ function UsersManagement() {
   const { isLoading, setIsLoading } = useContext(LoadingContext)
 
   useEffect(() => {
+    let isMounted = false
     setIsLoading(true)
     getAllUsers(`?offset=${(page - 1) * 20}`)
       .then((res) => {
+        if (isMounted) return
         setUsers(res.data.data.users)
         setTotalPages(Math.ceil(res.headers['x-total-count'] / 20))
         setIsLoading(false)
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error(err)
+        swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+      })
+    return () => {
+      isMounted = true
+    }
   }, [page, setIsLoading, toggleStatus])
 
   const handleToggleState = (userID, nickname, role) => {
@@ -130,7 +138,10 @@ function UsersManagement() {
                 })
               }
             })
-            .catch((err) => console.log(err.response))
+            .catch((err) => {
+              console.log(err.response)
+              swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+            })
         }
       })
     }
@@ -154,7 +165,10 @@ function UsersManagement() {
                 })
               }
             })
-            .catch((err) => console.log(err.response))
+            .catch((err) => {
+              console.log(err.response)
+              swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
+            })
         }
       })
     }

@@ -5,25 +5,25 @@ import { patchUserInfo, refreshAccessToken } from '../../WebAPI'
 import { AuthContext } from '../../context'
 import styled from 'styled-components'
 import { COLOR, FONT, EFFECT, RADIUS } from '../../constants/style'
-import UserUploadImg from '../../components/userSystem/UserUploadImg'
 import swal from 'sweetalert'
 import { setAuthToken } from '../../utils'
 import { LoadingContext } from '../../context'
 
 const ModifyField = styled.div`
   z-index: 10;
-  width: 400px;
-  padding: 30px;
+  width: 360px;
+  padding: 30px 10px;
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: white;
   border: 1px solid ${COLOR.gray};
-  border-radius: ${RADIUS.s};
+  border-radius: ${RADIUS.md};
 `
 const Title = styled.div`
-  margin: 10px;
+  margin: 20px 10px;
+  margin-bottom: 40px;
   text-align: center;
   font-size: ${FONT.lg};
 `
@@ -124,14 +124,10 @@ export default function UserUpdateBox({
           setUserData({
             ...userData,
             nickname: updateUserData.nickname,
-            icon_url: updateUserData.iconUrl,
-            iconUrl: updateUserData.iconUrl,
           })
           setUserInfo({
             ...userInfo,
             nickname: updateUserData.nickname,
-            icon_url: updateUserData.iconUrl,
-            iconUrl: updateUserData.iconUrl,
           })
           refreshAccessToken()
             .then((res) => {
@@ -166,12 +162,6 @@ export default function UserUpdateBox({
       <Title>修改會員資料</Title>
       <InputWrapper>
         <AlertMsg $error>{errMsg}</AlertMsg>
-        <UserUploadImg
-          name='iconUrl'
-          updateUserData={updateUserData}
-          setUpdateUserData={setUpdateUserData}
-        />
-        <AlertMsg>檔案大小限制為3MB</AlertMsg>
         <Input
           name='nickname'
           placeholder='使用者名稱'

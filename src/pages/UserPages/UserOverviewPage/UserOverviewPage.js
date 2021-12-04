@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { getUserInfo, getUserArticles } from '../../../WebAPI'
 import { Link, useParams } from 'react-router-dom'
 import styled from 'styled-components'
@@ -13,6 +13,8 @@ import { ReactComponent as ArticleIcon } from '../../../icons/user/user_article.
 import { ReactComponent as EmailIcon } from '../../../icons/user/user_email.svg'
 import { ReactComponent as NicknameIcon } from '../../../icons/user/user_nickname.svg'
 import ReactHtmlParser from 'react-html-parser'
+import { LoadingContext } from '../../../context'
+import SmallRegionLoading from '../../../components/common/SmallRegionLoading'
 
 const Wrapper = styled.div`
   margin: 0 auto;
@@ -191,6 +193,7 @@ const ArticlesDate = styled.div`
 `
 
 export default function UserOverviewPage() {
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [userData, setUserData] = useState({
     user_id: '',
     nickname: '',
@@ -208,68 +211,75 @@ export default function UserOverviewPage() {
     ],
   })
   const { userID } = useParams()
-
   useEffect(() => {
+    setIsLoading(true)
     getUserInfo(userID)
       .then((res) => {
-        setUserData(res.data.data)
+        if (res.data.success) {
+          setUserData(res.data.data)
+          setIsLoading(false)
+        }
       })
-      .catch((err) => {
-        console.log(err.response)
-      })
+      .catch(() => {})
 
     getUserArticles(userID, '?limit=100')
       .then((res) => {
         setUserArticlesData(res.data.data)
       })
-      .catch((err) => {
-        console.log(err.response)
-      })
-  }, [])
+      .catch(() => {})
+  }, [userID, setIsLoading])
 
   return (
-    <Wrapper>
-      <MemberProfileWrapper>
-        <Avatar>
-          <AvatarPic src={`${userData.icon_url}`} />
-        </Avatar>
-        <Profile>
-          <Info>
-            <NicknameIcon />
-            {userData.nickname}
-          </Info>
-          <Info>
-            <EmailIcon />
-            {userData.email}
-          </Info>
-        </Profile>
-      </MemberProfileWrapper>
-      <SectionWrapper>
-        {userArticlesData.articles.length !== 0 && (
-          <SectionTitle>
-            <ArticleIcon />
-            心得
-          </SectionTitle>
-        )}
-        {userArticlesData.articles.map((article) => (
-          <ArticlesWrapper>
-            <Link to={`../articles/${article.article_id}`}>
-              <ArticlesPic src={article.cover_picture_url} />
-            </Link>
-            <Articles>
-              <ArticlesTitle>{article.title}</ArticlesTitle>
-              <ArticlesContent>
-                {ReactHtmlParser(article.content)}
-              </ArticlesContent>
-              <ArticlesDate>
-                {new Date(
-                  new Date(article.created_at).getTime() + 8 * 3600 * 1000
-                ).toLocaleString('ja')}
-              </ArticlesDate>
-            </Articles>
-          </ArticlesWrapper>
-        ))}
-      </SectionWrapper>
-    </Wrapper>
+    <>
+      {isLoading ? (
+        <SmallRegionLoading />
+      ) : (
+        <Wrapper>
+          <MemberProfileWrapper>
+            <Avatar>
+              <AvatarPic src={`${userData.icon_url}`} />
+            </Avatar>
+            <Profile>
+              <Info>
+                <NicknameIcon />
+                {userData.nickname}
+              </Info>
+              <Info>
+                <EmailIcon />
+                {userData.email}
+              </Info>
+            </Profile>
+          </MemberProfileWrapper>
+          <SectionWrapper>
+            {userArticlesData.articles.length !== 0 && (
+              <SectionTitle>
+                <ArticleIcon />
+                心得
+              </SectionTitle>
+            )}
+            {userArticlesData.articles.map((article) => (
+              <ArticlesWrapper>
+                <Link to={`../articles/${article.article_id}`}>
+                  <ArticlesPic src={article.cover_picture_url} />
+                </Link>
+                <Articles>
+                  <ArticlesTitle>{article.title}</ArticlesTitle>
+                  <ArticlesContent>
+                    {ReactHtmlParser(
+                      article.content.replace(/<img[^>]*>/g, '')
+                    )}
+                  </ArticlesContent>
+                  <ArticlesDate>
+                    {new Date(
+                      new Date(article.created_at).getTime() + 8 * 3600 * 1000
+                    ).toLocaleString('ja')}
+                  </ArticlesDate>
+                </Articles>
+              </ArticlesWrapper>
+            ))}
+          </SectionWrapper>
+        </Wrapper>
+      )}
+    </>
   )
 }

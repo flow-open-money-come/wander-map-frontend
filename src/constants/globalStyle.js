@@ -2,7 +2,7 @@ import { createGlobalStyle } from 'styled-components'
 import '@fontsource/source-sans-pro'
 
 export const ResetStyle = createGlobalStyle`
-  html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike,  sub, sup, tt, var, b, u, center, dl, dt, dd, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
     margin: 0;
     padding: 0;
     border: 0;
@@ -11,7 +11,7 @@ export const ResetStyle = createGlobalStyle`
     vertical-align: baseline;
     box-sizing: border-box;
   }
-  address, caption, cite, code, dfn, em, strong, th, var, b {
+  address, caption, cite, code, dfn, em,  th, var, b {
     font-weight: normal;
     font-style: normal;
   }
@@ -35,23 +35,16 @@ export const ResetStyle = createGlobalStyle`
   }
   body {
       line-height: 1;
-      height: 100%;
+      height: 100vh;
       margin: 0;
       display: flex;
       flex-direction: column;
   }
-  ol, ul {
-    list-style: none;
-  }
-  blockquote, q {
+  
+  q {
     quotes: none;
   }
-  blockquote {
-    &:before,   &:after {
-      content: '';
-      content: none;
-    }
-  }
+
   q {
     &:before,   &:after {
       content: '';

@@ -117,8 +117,8 @@ function TrailInfo({ trailInfo, condition }) {
       </Title>
       {condition && (
         <ConditionWrapper>
-          <Condition $trailConditionTag={condition.TR_TYP}>{condition.TR_TYP}</Condition>
-          <ConditionDesc>{condition.TITLE}</ConditionDesc>
+          <Condition $trailConditionTag={condition[0]}>{condition[0]}</Condition>
+          <ConditionDesc>{condition[1]}</ConditionDesc>
         </ConditionWrapper>
       )}
       <InfoContainer>

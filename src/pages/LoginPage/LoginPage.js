@@ -6,7 +6,7 @@ import SmallRegionLoading from '../../components/common/SmallRegionLoading'
 
 const LoginPageWrapper = styled.div`
   width: 100%;
-  height: 100vh;
+  height: 86vh;
   background-image: linear-gradient(
       to bottom,
       rgba(0, 0, 0, 0.2) 0%,

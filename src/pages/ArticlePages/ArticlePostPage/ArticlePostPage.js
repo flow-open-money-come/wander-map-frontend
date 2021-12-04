@@ -219,9 +219,10 @@ export default function ArticlePostPage() {
             icon: 'success',
             button: '關閉',
           })
+          return history.push(`/articles/${articleID}`)
         }
       })
-      .catch((err) => {
+      .catch(() => {
         setIsLoadingArticle(false)
         swal('Oh 不！', '請求失敗！請稍候再試一次，或者聯繫我們。', 'error')
       })
@@ -275,9 +276,7 @@ export default function ArticlePostPage() {
             placeholder='開始日期'
             onChange={handleInputChange}
             value={
-              !isPostPage &&
-              formData.departure_time &&
-              formData.departure_time.slice(0, 10)
+              formData.departure_time && formData.departure_time.slice(0, 10)
             }
           />
           　—　
@@ -285,9 +284,7 @@ export default function ArticlePostPage() {
             name='end_time'
             placeholder='結束日期'
             onChange={handleInputChange}
-            value={
-              !isPostPage && formData.end_time && formData.end_time.slice(0, 10)
-            }
+            value={formData.end_time && formData.end_time.slice(0, 10)}
           />
         </FormSubTitleWrapper>
       </FormWrapper>

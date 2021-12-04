@@ -81,7 +81,7 @@ const NavBarLinkWrapper = styled.div`
     align-items: baseline;
   }
 `
-const Avatar = styled(Link)`
+const Avatar = styled.div`
   display: inline-block;
   min-width: 40px;
   min-height: 40px;
@@ -231,11 +231,6 @@ export default memo(function NavBar() {
                   $noBackground
                 >
                   <Avatar
-                    to={
-                      userInfo.role === 'admin'
-                        ? `/admin`
-                        : `/backstage/${userInfo.user_id}`
-                    }
                     $avatar={
                       userInfo.icon_url !== null ? userInfo.icon_url : false
                     }
@@ -256,10 +251,7 @@ export default memo(function NavBar() {
             $isActive={HamburgerToggleClick}
             onClick={setHamburgerToggleClick}
           >
-            <NavBarHamburgerLine
-              $isActive={HamburgerToggleClick}
-              onClick={setHamburgerToggleClick}
-            />
+            <NavBarHamburgerLine $isActive={HamburgerToggleClick} />
           </NavBarHamburger>
         </NavBarWrapper>
       </NavBarContainer>

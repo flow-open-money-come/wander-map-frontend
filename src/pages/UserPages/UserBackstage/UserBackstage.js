@@ -3,7 +3,8 @@ import { getUserInfo } from '../../../WebAPI'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { COLOR, FONT, RADIUS, MEDIA_QUERY } from '../../../constants/style'
-import UserUpdateBox from '../../../components/userSystem/UserUpdateBox '
+import UserUpdateBox from '../../../components/userSystem/UserUpdateBox'
+import UserUpdateAvatarBox from '../../../components/userSystem/UserUpdateAvatarBox'
 import UserArticlesManage from '../../../components/userSystem/UserArticlesManage'
 import UserTodoItems from '../../../components/userSystem/UserTodoItems'
 import UserCollect from '../../../components/userSystem/UserCollect'
@@ -30,6 +31,7 @@ const MemberProfileWrapper = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 20px;
+  position: relative;
   ${MEDIA_QUERY.lg} {
     width: 30%;
     flex-direction: column;
@@ -41,6 +43,11 @@ const MemberProfileWrapper = styled.div`
   }
 `
 const Avatar = styled.div`
+  position: relative;
+  padding: 10px;
+`
+
+const AvatarPicWrapper = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: 50%;
@@ -58,7 +65,7 @@ const AvatarPic = styled.img`
 `
 const Profile = styled.div`
   padding: 10px;
-  margin: 20px;
+  margin-left: 10px;
   border-radius: 3px;
   border: solid 1.5px ${COLOR.green};
   background-color: ${COLOR.white};
@@ -108,13 +115,23 @@ const ModifyBtn = styled(EditIcon)`
   width: 12px;
   height: 12px;
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 5px;
+  right: 5px;
   margin: 6px;
   color: ${COLOR.green};
+  &:hover {
+    cursor: pointer;
+  }
   ${MEDIA_QUERY.lg} {
     width: 20px;
     height: 20px;
+  }
+`
+const ModifyAvatarBtn = styled(ModifyBtn)`
+  top: 80px;
+  right: 0;
+  ${MEDIA_QUERY.lg} {
+    top: 0;
   }
 `
 
@@ -122,6 +139,10 @@ export default function UserBackstage() {
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [tab, setTab] = useState('Articles')
   const [popUp, setPopUp] = useState({
+    key: '',
+    isShow: false,
+  })
+  const [avatarPop, setAvatarPop] = useState({
     key: '',
     isShow: false,
   })
@@ -140,9 +161,7 @@ export default function UserBackstage() {
         setUserData(res.data.data)
         setIsLoading(false)
       })
-      .catch((err) => {
-        console.log(err.response)
-      })
+      .catch((err) => {})
   }, [userID, setIsLoading])
 
   const handleOnClick = () => {
@@ -157,7 +176,22 @@ export default function UserBackstage() {
         <Wrapper>
           <MemberProfileWrapper>
             <Avatar>
-              <AvatarPic src={`${userData.icon_url}`} />
+              <AvatarPicWrapper>
+                <AvatarPic src={`${userData.icon_url}`} />
+              </AvatarPicWrapper>
+              <ModifyAvatarBtn
+                onClick={() => {
+                  setAvatarPop({ key: userData.user_id, isShow: true })
+                }}
+              />
+              {avatarPop.isShow === true && (
+                <UserUpdateAvatarBox
+                  avatarPop={avatarPop}
+                  setAvatarPop={setAvatarPop}
+                  userData={userData}
+                  setUserData={setUserData}
+                />
+              )}
             </Avatar>
             <Profile>
               <ModifyBtn onClick={handleOnClick} />

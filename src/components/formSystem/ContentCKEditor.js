@@ -1,4 +1,3 @@
-import React, { useState } from 'react'
 import { CKEditor } from '@ckeditor/ckeditor5-react'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import ImgurUploaderInit from 'ckeditor5-imgur-uploader'
@@ -15,6 +14,10 @@ const EditorWrapper = styled.div`
   }
   ${MEDIA_QUERY.lg} {
     width: 638px;
+  }
+  ul,
+  ol {
+    padding-left: 20px;
   }
 `
 
@@ -36,7 +39,7 @@ export default function ContentCKEditor({ name, formData, setFormData }) {
         editor={ClassicEditor}
         config={{
           extraPlugins: [ImgurUploader],
-          removePlugins: ['MediaEmbed'],
+          removePlugins: ['Heading', 'MediaEmbed'],
         }}
         onReady={(editor) => {
           editor.editing.view.change((writer) => {
